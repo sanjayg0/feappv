@@ -1,4 +1,3 @@
-
 # N.B.  It is necessary to modify 'makefile.in' before using make.
 
 include $(FEAPPVHOME4_1)/makefile.in

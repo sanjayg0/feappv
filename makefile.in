@@ -25,7 +25,7 @@
 
 # Location of C-compiler include files (depends where compiler installed)
 
-  CINCLUDE = /usr/X11R6/include -I$(FEAFPPVHOME4_1)/include
+  CINCLUDE = /usr/X11R6/include -I$(FEAPPVHOME4_1)/include
 # CINCLUDE = /opt/local/include -I$(FEAFPPVHOME4_1)/include
 
 #------------------------------------------------------------------------

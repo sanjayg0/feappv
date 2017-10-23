@@ -2,9 +2,12 @@
 
 /*      * * F E A P * * A Finite Element Analysis Program               */
 
-/*....  Copyright (c) 1984-2016: Regents of the University of California*/
+/*....  Copyright (c) 1984-2017: Regents of the University of California*/
 /*                               All rights reserved                    */
-
+/*----[--.----+----.----+----.-----------------------------------------]
+ *    Modification log                                Date (dd-mm-year)
+ *      1. Add cinput()                                     23-10-2017
+ */
 /*-----[--.----+----.----+----.-----------------------------------------*/
 /*     Purpose: FEAP driver for X windows Version 11, Release 6.        */
 
@@ -1386,4 +1389,98 @@ void gdx11_( op_code, x_data, y_data )
     jump_table[*op_code-1](current_dw,x_data,y_data);
   if (DEBUG>=3) fprintf(stderr,"FEAP-X11 done with op_code = %d\n",*op_code);
 }
+
+/*
+ *  C-based input routines to allow for DIGWin Event Handeling if
+ *  the graphics window has been created.
+ *
+ *  SG: 04/18/2005 (based upon DSB's GPL version)
+ *
+ */
+
+
+/* FEAP's comrec common block */
+struct {
+          char record[256];
+} comrec_;
+
+/*
+ * C stub for overloaded X11 input.
+ *
+ * Assumes that Fortran True == 1 and Fortran False == 0
+ */
+
+
+int cinput_nox()
+{
+        int stlen;
+        if ( NULL != fgets(comrec_.record,256,stdin) ) {
+           stlen = strlen(comrec_.record);
+           comrec_.record[stlen]   = ' ';
+           comrec_.record[stlen-1] = ' ';
+           return 1;
+        }
+        else {
+           return 0;
+        }
+
+}
+/*
+ * Select switch loop to look for X11 events and keyboard events
+ */
+
+int cinput_x()
+{
+    fd_set readfds;
+    struct timeval timeout;
+
+    int n, retv;
+    int fd, cinput_x_unfinished;
+
+    cinput_x_unfinished = 1;
+    retv                = 0;
+
+    fd = ConnectionNumber(current_dw->xdisplay);
+
+    while (cinput_x_unfinished) {
+
+        timeout.tv_sec  = 2;
+        timeout.tv_usec = 0;
+
+        FD_ZERO(&readfds);
+        FD_SET (0,  &readfds);
+        FD_SET (fd, &readfds);
+
+        /* Select on fd's, process input as needed */
+        n = select(fd + 1, &readfds, NULL, NULL, &timeout);
+
+        /* Data on stdin */
+        if (FD_ISSET(0, &readfds)) {
+           retv = cinput_nox();
+           cinput_x_unfinished = 0;
+        }
+
+        /* Data on X11 pipe */
+        if(FD_ISSET(fd, &readfds)) {
+            DIGWin *dw = current_dw;
+            XEvent event;
+            while (XCheckWindowEvent(dw->xdisplay,dw->xwin,
+                                     dw->xwa.your_event_mask,&event))
+                gdx11_handle_digwin_event(dw,&event,0,0);
+        }
+
+    }
+
+    return retv;
+}
+
+/* Input routine for stdin via C */
+int cinput_()
+{
+    if (current_dw == NULL)
+        return cinput_nox();
+    else
+        return cinput_x();
+}
+
 

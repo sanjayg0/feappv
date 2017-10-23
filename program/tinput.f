@@ -31,6 +31,7 @@
       include  'iofile.h'
       include  'iosave.h'
 
+      logical   cinput
       logical   vinput, pcomp, cksep, first
       integer   i,j,mc,mm,mt,nn,lrec, iskip
       character txl*15,tx(*)*15,tl(16)*15

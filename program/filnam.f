@@ -26,7 +26,7 @@
       include  'psize.h'
       include  'vdata.h'
 
-      logical   pcomp,lfil,linp,lout,lres,lsav
+      logical   pcomp,lfil,linp,lout,lres,lsav,cinput
       character wd(2)*6,y*1
       character dinp*128,dout*128,dres*128
       character pinp*128,pout*128,pres*128,psav*128,pplt*128,filein*128
@@ -99,8 +99,13 @@
 
 !     User input of filenames
 
+      record = ' '
       write(*,2006)
-      read (*,1000,err=901,end=902) filein
+!      read (*,1000,err=901,end=902) filein
+      if(.not.cinput()) then
+        goto 902
+      end if
+      filein = record(1:128)
 
 !     Check for stop
 
@@ -160,7 +165,11 @@
       ierr =  2
       fout = pout
 2     write(*,2003) pout
-      read (*,1000,err=901,end=902) filein
+!     read (*,1000,err=901,end=902) filein
+      if(.not.cinput()) then
+        goto 902
+      end if
+      filein = record(1:128) 
       if (.not.pcomp(filein,' ',1)) fout = filein
 20    pout = fout
 
@@ -169,7 +178,11 @@
       ierr =  3
       fres = pres
 3     write(*,2004) pres
-      read (*,1000,err=901,end=902) filein
+!     read (*,1000,err=901,end=902) filein
+      if(.not.cinput()) then
+        goto 902
+      end if
+      filein = record(1:128)
       if (.not.pcomp(filein,' ',1)) fres = filein
 30    pres = fres
 
@@ -178,7 +191,11 @@
       ierr = 4
       fsav = psav
 4     write(*,2005) psav
-      read (*,1000,err=901,end=902) filein
+!     read (*,1000,err=901,end=902) filein
+      if(.not.cinput()) then
+        goto 902
+      end if
+      filein = record(1:128)
       if (.not.pcomp(filein,' ',1)) fsav = filein
 40    psav = fsav
 
@@ -212,7 +229,11 @@
       if(.not.fileck) go to 300
       write(*,2008)
       ierr =  5
-5     read(*,1000,err=901,end=901) y
+!5    read(*,1000,err=901,end=901) y
+5     if(.not.cinput()) then
+        goto 901
+      end if
+      y = record(1:1) 
       if(y.eq.'S' .or. y.eq.'s') call plstop(.false.)
       if(y.ne.'Y' .and. y.ne.'y') go to 100
 
@@ -272,7 +293,7 @@
 
 !     Formats
 
-1000  format(a)
+!1000  format(a)
 
 2000  format(//
      & '    F I N I T E   E L E M E N T   A N A L Y S I S',
@@ -287,7 +308,7 @@
 2003  format(13x,'Output  Data (default: ',a32,') :',$)
 2004  format(13x,'Restart Read (default: ',a32,') :',$)
 2005  format(13x,'Restart Save (default: ',a32,') :',$)
-2006  format(22x,'Enter Name --> ',$)
+2006  format(/22x,'Enter Name --> ',$)
 
 2007  format(/8x,' Files are set as:     Status  Filename'//
      &       13x,'Input   (read ) : ',a6,2x,a32/

@@ -1,5 +1,5 @@
 !$Id:$
-      subroutine restrt(fres,u,ndm,ndf,nneq,isw)
+      subroutine restrt(fresx,u,ndm,ndf,nneq,isw)
 
 !      * * F E A P * * A Finite Element Analysis Program
 
@@ -10,7 +10,7 @@
 !      Purpose: Read/save restart files for resolutions
 
 !      Inputs:
-!         fres    - Name of restart file to read/save
+!         fresx   - Name of restart file to read/save
 !         u(*)    - Solution state to save
 !         ndm     - Spatial dimension of mesh
 !         ndf     - Number dof/node
@@ -27,6 +27,7 @@
       include  'arclel.h'
       include  'arcler.h'
       include  'cdata.h'
+      include  'comfil.h'
       include  'counts.h'
       include  'ddata.h'
       include  'dyndat.h'
@@ -45,10 +46,10 @@
       include  'tdata.h'
       include  'comblk.h'
 
-      logical   exst,sfl,fl9,setvar,palloc
+      logical   exst,sfl,fl9,setvar,palloc,cinput
       integer   i,ndm,ndf,nneq,isw
       integer   nnpo,nnlo,nnmo,ndmo,ndfo, nlen
-      character fres*17,yorn*1
+      character fresx*(*),yorn*1
 
       real*8    u(*)
 
@@ -56,16 +57,24 @@
 
 !     Check file status
 
-1     inquire(file=fres,exist=exst)
+1     inquire(file=fresx,exist=exst)
       if(.not.exst.and.isw.eq.1) then
-        write(iow,3002) fres
+        write(iow,3002) fresx
         if(ior.lt.0) then
-          write(*,3002) fres
+          write(*,3002) fresx
           write(*,3003)
-          read (*,1000) yorn
+!         read (*,1000) yorn
+          if(.not.cinput()) then
+            write(*,*) 'CINPUT error in RESTRT'
+          end if
+          yorn = record(1:1)
           if(yorn.eq.'y' .or. yorn.eq.'Y') then
             write(*,3004)
-            read (*,1000) fres
+!           read (*,1000) fresx
+            if(.not.cinput()) then
+              write(*,*) 'CINPUT error in RESTRT'
+            end if
+            fresx = record
             goto  1
           endif
         endif
@@ -75,9 +84,9 @@
 !     Open file
 
       if(exst) then
-        open (ios,file=fres,form='unformatted',status='old')
+        open (ios,file=fresx,form='unformatted',status='old')
       else
-        open (ios,file=fres,form='unformatted',status='new')
+        open (ios,file=fresx,form='unformatted',status='new')
       endif
       rewind ios
 
@@ -212,7 +221,7 @@
 
 !     Formats
 
-1000  format(a)
+!1000  format(a)
 
 2000  Format('   R e s t a r t    I n p u t   D a t a'/
      &       10x,'Time step number  =',i8/

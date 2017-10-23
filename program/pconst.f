@@ -22,7 +22,7 @@
       include  'ioincl.h'
       include  'iodata.h'
 
-      logical   prt, redo, pconset, lopn
+      logical   prt, redo, pconset, lopn, cinput
       integer   i
 
       save
@@ -42,7 +42,10 @@
         irecrd(isf) = irecrd(isf) + 1
       else
         write(*,3000)
-        read (  *,1000,err=901,end=902) record
+!        read (  *,1000,err=901,end=902) record
+        if(.not.cinput()) then
+          goto 902
+        endif
       endif
 
       if(lopn) then

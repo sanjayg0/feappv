@@ -35,6 +35,7 @@
       implicit  none
 
       include  'cdata.h'
+      include  'comfil.h'
       include  'fdata.h'
       include  'iofile.h'
       include  'pbody.h'
@@ -49,7 +50,7 @@
       include  'rpdata.h'
 
       character y*1
-      logical   tvc(9,9),vflg,errck,cont
+      logical   tvc(9,9),vflg,errck,cont,cinput
       logical   pinput,label,labl
       integer   nie,ndm,ndf,nen1,ic,mc,lc,mmc,icolor
       integer   i,n,ma,maold,nc,nnc,nerr,nlabi, iplt(30)
@@ -164,9 +165,14 @@
 
       if(ior.lt.0 .and. prompt .and. .not.defalt) then
         write(*,2006)
-20      read (*,1000,err=21,end=22) y
+!20     read (*,1000,err=21,end=22) y
+20      if(.not.cinput()) then
+          goto 22
+        end if
+        y = record(1:1)
         goto  23
-21      call  errclr ('PLTCON')
+!21     call  errclr ('PLTCON')
+        call  errclr ('PLTCON')
         goto  20
 22      call  endclr ('PLTCON',y)
 23      if(y.eq.'c' .or.y.eq.'C') return
@@ -323,7 +329,7 @@
 
 !     Formats
 
-1000  format(a)
+!1000  format(a)
 2000  format('   ------ Contour Values for Plot ------'/(3x,1p,5e15.6))
 2001  format(' Input',i3,' Contour Values for Plot - 8 Values/Line')
 2002  format(' Input number for first contour label > ',$)

@@ -20,6 +20,7 @@
       include  'allotn.h'
       include  'allotd.h'
       include  'cdata.h'
+      include  'comfil.h'
       include  'iofile.h'
       include  'memuse.h'
       include  'pdata2.h'
@@ -27,7 +28,7 @@
       include  'pointer.h'
 
       character c*1, ptype(2)*8
-      logical   skip
+      logical   skip,cinput
       integer   i, j, ity, lines
 
       save
@@ -65,14 +66,22 @@
         end do ! i
         if(skip .and. min(j+lines,ndict).ne.ndict) then
           write(*,*) '   ** PRESS ENTER **'
-          read(*,1000) c
+!          read(*,1000) c
+          if(.not.cinput()) then
+            write(*,*) 'CINPUT error in PPRTD'
+          end if
+          c = record(1:1)
           write(  *,2000)
         endif
       end do ! j
       if(maxuse.gt.0) then
         if(skip) then
           write(*,*) '   ** PRESS ENTER **'
-          read(*,1000) c
+!          read(*,1000) c
+          if(.not.cinput()) then
+            write(*,*) 'CINPUT error in PPRTD'
+          end if
+          c = record(1:1)
         endif
         if(ior.lt.0) then
           write(*,2002) totimem,totrmem,totimem+totrmem,maxuse
@@ -87,7 +96,7 @@
 
 !     Formats
 
-1000  format(a)
+!1000  format(a)
 2000  format(5x,'D i c t i o n a r y    o f   A r r a y s'//
      & 10x,' Entry  Array   Array  Array    Array            Pointer'/
      & 10x,'Number  Names  Number  Precn   Length          Value',

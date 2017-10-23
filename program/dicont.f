@@ -30,7 +30,7 @@
       include  'iofile.h'
 
       character ch*1
-      logical   errck, pinput
+      logical   errck, pinput, cinput
       integer   numnp,ndf,lflag
 
       integer   id(ndf,*)
@@ -88,9 +88,13 @@
         if(ior.lt.0) then
           write(*,2006) ds0,r
           write(*,2007)
-          read (*,1000) ch
+!         read (*,1000) ch
+          if(.not.cinput()) then
+            write(*,*) 'CINPUT error in DICONT'
+          end if
+          ch = record(1:1)
         else
-          read (ior,1000,end=900) ch
+          read (ior,1000,end=900) record
           irecrd(isf) = irecrd(isf) + 1
           ch          = record(1:1)
         endif
@@ -109,7 +113,11 @@
         if(ior.lt.0) then
           write(*,2009) nodis,nddis,alfa0
           write(*,2008)
-          read (*,1000) ch
+!         read (*,1000) ch
+          if(.not.cinput()) then
+            write(*,*) 'CINPUT error in DICONT'
+          end if
+          ch = record(1:1)
         else
           read (ior,1000,end=900) record
           irecrd(isf) = irecrd(isf) + 1

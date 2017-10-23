@@ -20,10 +20,11 @@
 
       implicit  none
 
+      include  'comfil.h'
       include  'iodata.h'
       include  'pathn.h'
 
-      logical   lexst
+      logical   lexst,cinput
       character name*4,filel*44,line*80,y*1
       integer   nn, iposl, ipos, i,j,mod
 
@@ -74,9 +75,14 @@
           endif
           if(mod(j,20).eq.0) then
             write(*,2004)
- 61         read(*,1000,err=62,end=63) y
+!61         read(*,1000,err=62,end=63) y
+ 61         if(.not.cinput()) then
+              goto 63
+            end if
+            y = record(1:1)
             goto  64
- 62         call  errclr ('PMAN  ')
+!62         call  errclr ('PMAN  ')
+            call  errclr ('PMAN  ')
             goto  61
  63         call  endclr ('PMAN  ',y)
  64         if(y.ne.'y') go to 200

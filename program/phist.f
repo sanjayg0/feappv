@@ -24,11 +24,12 @@
       implicit  none
 
       include  'chdata.h'
+      include  'comfil.h'
       include  'idata1.h'
       include  'iodata.h'
       include  'prflag.h'
 
-      logical   errck, vinput
+      logical   errck, vinput, cinput
       character wd(*)*4,clab2*4,lct(*)*15,y*1
       integer   ll,is,n,i
       integer   jct(*)
@@ -70,7 +71,11 @@
       elseif (clab2.eq.'edit') then
         errck = vinput(lzs(nl1),80,vjs,3)
         write(*,2002) nl1,wd(js(nl1)),ljs(nl1),(vjs(i),i=1,3)
-        read(*,1001) y
+!        read(*,1001) y
+        if(.not.cinput()) then
+          write(*,*) 'CINPUT error in PHIST'
+        end if
+        y = record(1:1)
         if(y.eq.'y' .or. y.eq.'Y') then
           if(nl1.gt.0.and.nl1.le.nn) then
             nl2 = max(nl1,min(nn,nl2))
@@ -111,7 +116,7 @@
 
 1000  format(i5,1x,a15,a50)
 
-1001  format(a1)
+!1001  format(a1)
 
 2000  format(' No. Macro Option',11x,'value-1     value-2     value-3')
 

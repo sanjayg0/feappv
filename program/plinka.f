@@ -26,7 +26,7 @@
       include  'linka.h'
       include  'print.h'
 
-      logical   pcomp,lsave,pinput,lopen
+      logical   pcomp,lsave,pinput,lopen,cinput
       integer   i,n
       character fnamr*128,fext*4,yyy*256,vtype*4,name*(*)
       real*8    td(1)
@@ -52,7 +52,10 @@
         read(ior,1000,err=901,end=902) record
         irecrd(isf) = irecrd(isf) + 1
       else
-        read(  *,1000) record
+!        read(  *,1000) record
+        if(.not.cinput()) then
+          write(*,*) 'Error in CINPUT in PLINKA'
+        end if
       endif
       yyy = record
       do n = 1,256

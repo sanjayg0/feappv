@@ -22,6 +22,7 @@
       implicit  none
 
       include  'cdata.h'
+      include  'comfil.h'
       include  'fdata.h'
       include  'iodata.h'
       include  'iofile.h'
@@ -33,7 +34,7 @@
       include  'tdata.h'
       include  'comblk.h'
 
-      logical   lflg,pcomp
+      logical   lflg,pcomp,cinput
       character ctc*(*),ct*4,fname*15,y*1
       integer   nneq
 
@@ -107,9 +108,14 @@
         if(lflg) then
           if(ior.lt.0) then
             write(*,2002) fname
-10          read (*,1000,err=11,end=12) y
+!10         read (*,1000,err=11,end=12) y
+10          if(.not.cinput()) then
+              goto 12
+            end if
+            y = record(1:1)
             goto  13
-11          call  errclr ('WRITER')
+!11         call  errclr ('WRITER')
+            call  errclr ('WRITER')
             goto  10
 12          call  endclr ('WRITER',y)
 13          if(y.ne.'y' .or. y.ne.'Y') return
@@ -150,7 +156,7 @@
 
 !     Formats
 
-1000  format(a1)
+!1000  format(a1)
 
 2001  format('   Output file for write operations is named ',a)
 

@@ -20,9 +20,10 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
+      include  'comfil.h'
       include  'iofile.h'
 
-      logical   exst
+      logical   exst,cinput
       character mac*(*),name*(*),y*1
       integer   iopl,ios
 
@@ -32,9 +33,14 @@
       if(exst) then
         if(iopl.eq.1) then
           write(*,2000) mac
-10        read (*,1000,err=11,end=12) y
+!10        read (*,1000,err=11,end=12) y
+10        if(.not.cinput()) then
+            goto 12
+          end if
+          y = record(1:1)
           goto  13
-11        call  errclr ('OPNFIL')
+!11        call  errclr ('OPNFIL')
+          call  errclr ('OPNFIL')
           goto  10
 12        call  endclr ('OPNFIL',y)
 13        if(y.ne.'y'.and.y.ne.'Y') then
@@ -57,7 +63,11 @@
         elseif(iopl.eq. 3) then
           write(*,2003) name
           if(ior.lt.0) then
-            read(*,1000) name
+!            read(*,1000) name
+            if(.not.cinput()) then
+              write(*,*) 'Error on cinput OPNFIL'
+            end if
+            name = record
             go to 1
           else
             write(iow,3000)
@@ -73,7 +83,7 @@
 
 !     Format
 
-1000  format(a)
+!1000  format(a)
 
 2000  format('  A procedure named ',a,' exist.'/
      &       '  OK to continue? (y or n) >',$)

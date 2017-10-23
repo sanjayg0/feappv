@@ -27,9 +27,10 @@
       implicit  none
 
       include  'chdata.h'
+      include  'comfil.h'
       include  'idata1.h'
 
-      logical   pcomp,errck,vinput
+      logical   pcomp,errck,vinput,cinput
       integer   nwd,nlp,nnx,ll,i,is,n,nc
       character clab1*4,lct(*)*15,wd(nwd)*4,y*1
 
@@ -67,8 +68,13 @@
           lct(ll) = ljs(n)
           lzz(ll) = lzs(n)
           errck   = vinput(lzz(ll),80,ct(1,ll),3)
-103       write(*,2002) wd(jct(ll)),lct(ll),(ct(i,ll),i=1,3)
-          read(*,1000,err=103,end=900) y
+!103       write(*,2002) wd(jct(ll)),lct(ll),(ct(i,ll),i=1,3)
+          write(*,2002) wd(jct(ll)),lct(ll),(ct(i,ll),i=1,3)
+!          read(*,1000,err=103,end=900) y
+          if(.not.cinput( )) then
+            goto 900
+          end if
+          y = record(1:1)
 104       if(y.ne.' ' .and. y.ne.'y' .and. y.ne.'Y') is = 1
           return
 
@@ -84,7 +90,7 @@
 
 !     Formats
 
-1000  format(a1)
+!1000  format(a1)
 
 2000  format(/' *ERROR* No previous instruction of this type.')
 

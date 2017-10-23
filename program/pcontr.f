@@ -61,7 +61,7 @@
       include  'vdata.h'
       include  'comblk.h'
 
-      logical   errs,setvar,palloc,tinput,pcomp,evint,lp_in
+      logical   errs,setvar,palloc,tinput,pcomp,evint,lp_in,cinput
       logical   cprt,oprt,oprth,mulprob,newprob,usetfl(12)
       character titl*80,dnam*15, fext*4
       character uset(12)*4, vtype*4, usub*15, tx(8)*15
@@ -208,7 +208,11 @@
 
         if(pcomp(dnam,'y',1)) then
           write(*,2010)
-          read (*,1000,err=900,end=910) yyy
+!         read (*,1000,err=900,end=910) yyy
+          if(.not.cinput()) then
+            goto 910
+          end if
+          yyy = record
           cprt = .true.
 
 !       Read command from current file and turn off intx flag

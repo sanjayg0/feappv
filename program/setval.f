@@ -18,11 +18,12 @@
       implicit  none
 
       include  'codat.h'
+      include  'comfil.h'
       include  'conval.h'
       include  'errchk.h'
       include  'iofile.h'
 
-      logical   errco, pcomp
+      logical   errco, pcomp, cinput
       character xt*75,xs*75,xi*(*)
       integer   i, nex, num
       real*8    val, v(25)
@@ -65,9 +66,14 @@
 
 150   if(ior.lt.0) then
         write(*,2001) xi(1:num)
-151     read (*,1000,err=152,end=153) xt
+!151    read (*,1000,err=152,end=153) xt
+151     if(.not.cinput()) then
+          goto 153
+        end if
+        xt = record(1:75) 
         goto  154
-152     call  errclr ('SETVAL')
+!152    call  errclr ('SETVAL')
+        call  errclr ('SETVAL')
         goto  151
 153     call  endclr ('SETVAL',xt)
 154     write(iow,2002) xt
@@ -85,7 +91,7 @@
 
 !     Formats
 
- 1000 format(75a1)
+!1000 format(75a1)
 
  2001 format(2x,a1,' = ',74a1/'   >',$)
 

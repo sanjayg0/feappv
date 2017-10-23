@@ -8,6 +8,9 @@
 
 !     Data input device: Returns true on error
 !-----[--.----+----.----+----.-----------------------------------------]
+!     Modification log                                Date (dd/mm/year)
+!       1.  Changed the read(* to cinput()                  23/10/2017
+!-----[--.----+----.----+----.-----------------------------------------]
 !      Purpose: Input routine for real data.: returns true on error
 
 !      Inputs:
@@ -65,7 +68,10 @@
         irecrd(isf) = irecrd(isf) + 1
         iskip       = 1
       else
-        read (  *,1000,err=901,end=902) record
+!        read (  *,1000,err=901,end=902) record
+        if(.not.cinput()) then
+          goto 902
+        endif
         iskip       = 3
       endif
 

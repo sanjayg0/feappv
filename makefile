@@ -11,7 +11,6 @@ feappv: archive
 archive:   
 	(cd program; make archive)
 	(cd elements; make archive)
-	(cd elements/solid1d; make archive)
 	(cd plot; make archive)
 	(cd unix; make archive)
 	(cd user; make archive)

@@ -1413,7 +1413,8 @@ struct {
 
 int cinput_nox()
 {
-        int stlen;
+        int stlen,j;
+        for(j=0;j<256;j++) comrec_.record[j] = ' ';  /* Clear the record */
         if ( NULL != fgets(comrec_.record,256,stdin) ) {
            stlen = strlen(comrec_.record);
            comrec_.record[stlen]   = ' ';

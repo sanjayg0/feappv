@@ -99,7 +99,6 @@
 
 !     User input of filenames
 
-      record = ' '
       write(*,2006)
 !      read (*,1000,err=901,end=902) filein
       if(.not.cinput()) then

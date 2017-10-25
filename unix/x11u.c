@@ -1418,7 +1418,7 @@ int cinput_nox()
         for(j=0;j<256;j++) comrec_.record[j] = ' ';  /* Clear the record */
 
         /* Loop to get line, trap errors */
-        while ( NULL != fgets(comrec_.record,256,stdin) ) {
+        while ( NULL = fgets(comrec_.record,256,stdin) ) {
           printf("\n *ERROR* EOF on input detected, please try again\n");
           clearerr(stdin);
         }

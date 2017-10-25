@@ -1414,17 +1414,19 @@ struct {
 int cinput_nox()
 {
         int stlen,j;
+
         for(j=0;j<256;j++) comrec_.record[j] = ' ';  /* Clear the record */
-        if ( NULL != fgets(comrec_.record,256,stdin) ) {
-           stlen = strlen(comrec_.record);
-           comrec_.record[stlen]   = ' ';
-           comrec_.record[stlen-1] = ' ';
-           return 1;
-        }
-        else {
-           return 0;
+
+        /* Loop to get line, trap errors */
+        while ( NULL != fgets(comrec_.record,256,stdin) ) {
+          printf("\n *ERROR* EOF on input detected, please try again\n");
+          clearerr(stdin);
         }
 
+        stlen = strlen(comrec_.record);
+        comrec_.record[stlen]   = ' '; /* zap /0 */
+        comrec_.record[stlen-1] = ' '; /* zap carraige return */
+        return 1;
 }
 /*
  * Select switch loop to look for X11 events and keyboard events

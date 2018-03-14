@@ -155,7 +155,6 @@
 
         point = npnp + numnp
         if(.not.fl(11)) then
-          call pzero (hr(np(60)), numel)
           istv = npstr - 1
           call pzero (hr(npnp), npstr*numnp)
           call pzero (hr(nper),     8*numnp)

@@ -673,11 +673,12 @@
 
 17    if(pcomp(lct(l),'elem',4)) then
         write(*,2010)
-        do nn = 1,50,20
-          do i = nn,min(nn+19,50)
+!        do nn = 1,50,20
+!          do i = nn,min(nn+19,50)
+          do i = 1,15
             call elmlib(hr,hr,hr,mr,hr,hr,hr,ndf,ndm,ndm,i,0)
           end do
-        end do
+!        end do
 
 !     Dictionary prints
 

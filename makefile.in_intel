@@ -31,24 +31,27 @@
 #------------------------------------------------------------------------
 # Which compilers to use (Set compiler names available on your computer)
 
-  FF = gfortran
-  CC = gcc
+# FF = gfortran
+# CC = gcc
 
-# FF = ifort                         # Intel compiler
-# CC = icc                           # Intel compiler
+  FF = ifort                         # Intel compiler
+  CC = icc                           # Intel compiler
 
 #------------------------------------------------------------------------
 # What optimization level to use
 
 # Intel: ifort/icc compilers
 
+  FFOPTFLAG = -g -O2 -Warn all
+  CCOPTFLAG = -g -O2 -Wall
+
 # FFOPTFLAG = -O2 -Warn all
 # CCOPTFLAG = -O2 -Wall
 
 # Gnu: gfortran/gcc compilers
 
-  FFOPTFLAG = -O3 -ftree-vectorize -Wall
-  CCOPTFLAG = -O3 -ftree-vectorize -Wall
+# FFOPTFLAG = -O3 -ftree-vectorize -Wall
+# CCOPTFLAG = -O3 -ftree-vectorize -Wall
 
 # FFOPTFLAG = -g -Wall
 # CCOPTFLAG = -g -Wall
@@ -88,7 +91,7 @@
 
 # gfortran
 
-  LDOPTIONS = -L/opt/local/lib -lX11 -lm
+# LDOPTIONS = -L/opt/local/lib -lX11 -lm
 # LDOPTIONS = -L/usr/X11R6/lib -lX11 -lm
 
 
@@ -99,5 +102,6 @@
 #------------------------------------------------------------------------
 # Archive name
 
-  ARFEAPPV = $(FEAPPVHOME4_1)/Feappv.a
+  ARFEAPPV = $(FEAPPVHOME4_1)/Feappv_i.a
+# ARFEAPPV = $(FEAPPVHOME4_1)/Feappv_g.a
 #------------------------------------------------------------------------

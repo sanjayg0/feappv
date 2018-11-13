@@ -1,6 +1,7 @@
 # N.B.  It is necessary to modify 'makefile.in' before using make.
 
-include $(FEAPPVHOME4_1)/makefile.in
+# include $(FEAPPVHOME4_1)/makefile.in
+include ./makefile.in
 
 CLEANDIRS = elements program user main plot unix
 

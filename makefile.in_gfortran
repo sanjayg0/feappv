@@ -25,8 +25,8 @@
 
 # Location of C-compiler include files (depends where compiler installed)
 
-# CINCLUDE = /usr/X11R6/include -I$(FEAPPVHOME4_1)/include
-  CINCLUDE = /opt/local/include -I$(FEAPPVHOME4_1)/include
+  CINCLUDE = /usr/X11R6/include -I$(FEAPPVHOME4_1)/include
+# CINCLUDE = /opt/local/include -I$(FEAPPVHOME4_1)/include
 
 #------------------------------------------------------------------------
 # Which compilers to use (Set compiler names available on your computer)
@@ -88,8 +88,8 @@
 
 # gfortran
 
-  LDOPTIONS = -L/opt/local/lib -lX11 -lm
-# LDOPTIONS = -L/usr/X11R6/lib -lX11 -lm
+# LDOPTIONS = -L/opt/local/lib -lX11 -lm
+  LDOPTIONS = -L/usr/X11R6/lib -lX11 -lm
 
 
 #------------------------------------------------------------------------

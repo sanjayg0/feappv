@@ -96,8 +96,8 @@
 !     Input record for element type selection
 
 301   if(ior.lt.0) write(*,2004)
-      il = min(ndf+2,15)
-      errck = tinput(tx(1),1,td,il)
+      il = min(ndf+2,14)
+      errck = tinput(tx(1),2,td,il)
       if(errck) go to 301
 
 !     Set material type for standard and user elements

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--+---------+---------+---------+---------+---------+---------+-]
@@ -27,9 +27,10 @@
       include  'psdat3.h'
 !     include  'x11f.h'
 
-      character yyy*6
-      integer   m,n,nchar
-      real*8    x1,y1
+      character (len=6) :: yyy
+
+      integer       :: m,n,nchar
+      real (kind=8) :: x1,y1
 
       save
 
@@ -57,11 +58,11 @@
         nchar = 6
       endif
 
-!     MicroSoft graphics
+!     Windows graphics
 
       dtext = 0.0d0
       x1    = jx1/22000.d0
       y1    = jy1/22000.d0
       if(screfl) call tplot(x1,y1,yyy,nchar,0)
 
-      end
+      end subroutine plabl

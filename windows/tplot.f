@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--+---------+---------+---------+---------+---------+---------+-]
@@ -26,10 +26,11 @@
       include  'pdatxt.h'
       include  'plflag.h'
 
-      integer   mm,nn
-      character tx(*)*1
-      integer   i, nctr, vgtxts
-      real*8    x1,y1
+      character (len=1) :: tx(*)
+
+      integer       :: mm,nn
+      integer       :: i, nctr, vgtxts
+      real (kind=8) :: x1,y1
 
       save
 
@@ -48,4 +49,4 @@
         call fptplt(xp,yp,tx,nn,nctr)
       endif
 
-      end
+      end subroutine tplot

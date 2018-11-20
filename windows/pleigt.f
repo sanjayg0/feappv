@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--+---------+---------+---------+---------+---------+---------+-]
@@ -18,8 +18,9 @@
       include  'evdata.h'
       include  'pdatxt.h'
 
-      character yy*20
-      real*8    eval,dd
+      character (len=20) :: yy
+
+      real (kind=8) :: eval,dd
 
       save
 
@@ -43,4 +44,4 @@
       call pppcol(1,1)
       call tplot(1.02d0 , 0.160d0, yy, 20, 1)
 
-      end
+      end subroutine pleigt

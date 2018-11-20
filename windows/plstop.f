@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -23,11 +23,12 @@
 
       implicit  none
 
+      include  'iofile.h'
       include  'pdatps.h'
       include  'plflag.h'
 
-      logical   eflag
-      integer   status,vclrwk,vclswk
+      logical       :: eflag
+      integer       :: vstatus,vclrwk,vclswk
 
       save
 
@@ -43,17 +44,25 @@
       if (hdcpy) call fpplcl()
 
       if(everon) then
-        status = vclrwk()
-        status = vclswk()
+        vstatus = vclrwk()
+        vstatus = vclswk()
       endif
 
 !     Clear last time history plot
 
       call ptimpl()
 
-      status = setexitqq(QWIN$EXITNOPERSIST)
+!     Close parallel arrays
 
+      call parstop()
+
+!     Close last input & output file
+
+      close(unit=ior, vstatus = 'keep')
+      close(unit=iow, vstatus = 'keep')
+
+      vstatus = setexitqq(QWIN$EXITNOPERSIST)
 
       stop
 
-      end
+      end subroutine plstop

@@ -3,14 +3,13 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
 !     Purpose:  User solver interface
 
 !     Inputs:
-
 !        flags(1) - Allocation and/or initialization phase
 !        flags(2) - Perform factorization for direct solutions
 !        flags(3) - Coefficient array unsymmetric
@@ -18,15 +17,12 @@
 !        b(*)     - Vector for solution
 
 !     Outputs:
-
 !        flags(5) - True if error occurs
 !        b(*)     - Vector of solution
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit none
 
-      logical  flags(*)
-      real*8   b(*)
+      logical       :: flags(*)
+      real (kind=8) :: b(*)
 
-
-      end
+      end subroutine usolve

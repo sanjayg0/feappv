@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -23,8 +23,8 @@
 
       implicit  none
 
-      real*8    dt,cc1,cc2,cc3,theta(3),gtan(3)
+      real (kind=8) :: dt,cc1,cc2,cc3,theta(3),gtan(3)
 
       save
 
-      end
+      end subroutine usetci

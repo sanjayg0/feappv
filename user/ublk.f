@@ -4,7 +4,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -42,10 +42,12 @@
       include  'iofile.h'
       include  'ublk1.h'  ! Contains ublkdat(3,50), ublknum
 
-      logical   prt
-      character ctype*15
-      integer   ntyp,nn,nr,ns,nt,ixl(*),ix(*),ni,ne,ndm,nen1,ma,isw
-      real*8    dr,ds,dt,xl(*),x(*)
+      character (len=15) :: ctype
+
+      logical       :: prt
+      integer       :: ntyp,nn,nr,ns,nt,ixl(*),ix(*),ni,ne
+      integer       :: ndm,nen1,ma,isw
+      real (kind=8) :: dr,ds,dt,xl(*),x(*)
 
       save
 
@@ -54,13 +56,10 @@
 
 2000  format(' *ERROR* No user block generator loaded')
 
-
 !     Set ni to last node in block
-
       ni = ni - 1
 
 !     Set ne to last element in block
-
       ne = ne - 1
 
-      end
+      end subroutine ublk

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -21,10 +21,10 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
-      logical   pcomp
-      character vtype*15
-      integer   n1,n3
-      real*8    vv(5),d(*),ud(*)
+      character (len=15) :: vtype
+      logical       :: pcomp
+      integer       :: n1,n3
+      real (kind=8) :: vv(5),d(*),ud(*)
 
 !     Set command name
 
@@ -37,4 +37,4 @@
 
       endif
 
-      end
+      end subroutine umati1

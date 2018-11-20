@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -22,8 +22,8 @@
 
       include  'umac1.h'
 
-      logical   prt,pcomp
-      character tx(*)*15
+      character (len=15) :: tx(*)
+      logical       :: prt,pcomp
 
 !     Set command
 
@@ -39,4 +39,4 @@
 
       endif
 
-      end
+      end subroutine umesh4

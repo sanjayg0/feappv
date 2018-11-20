@@ -1,9 +1,9 @@
 !$Id:$
-      logical function ualloc(num,name,length,precis)
+      logical function ualloc(num,vname,length,precis)
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -17,7 +17,7 @@
 !      Inputs:
 
 !         num        - Entry number for array (see below)
-!         name       - Name of array          (see below)
+!         vname      - Name of array          (see below)
 !         length     - Length of array defined: =0 for delete
 !         precis     - Precision of array: 1 = integers; 2 = reals
 
@@ -25,22 +25,20 @@
 
 !         up(num)    - Pointer to first word of array in blank common
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'allotd.h'
 
-      logical   usetmem
-      character name*(*)
-      integer   i, num, precis
-      integer   length
+      character     :: vname*(*)
+      logical       :: usetmem
+      integer       :: i, num, precis
+      integer       :: length
 
 !     Storage definitions for UALLOC variables
-
-      integer   list
+      integer    list
       parameter (list = 1)
 
-      character names(list)*5
+      character (len=5) :: names(list)
 
       save
 
@@ -56,6 +54,6 @@
 
 !     Do memory management operations
 
-      ualloc = usetmem(list,names,num,name,length,precis)
+      ualloc = usetmem(list,names,num,vname,length,precis)
 
-      end
+      end function ualloc

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -20,7 +20,7 @@
 
       include 'umac1.h'
 
-      logical  pcomp
+      logical      :: pcomp
 
       if (pcomp(uct,'man1',4)) then
 !         uct = 'name'
@@ -28,4 +28,4 @@
 
       end if
 
-      end
+      end subroutine umani1

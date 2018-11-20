@@ -1,0 +1,7 @@
+        !COMPILER-GENERATED INTERFACE MODULE: Fri May 25 07:34:21 2018
+        MODULE PNURB_IN__genmod
+          INTERFACE 
+            SUBROUTINE PNURB_IN
+            END SUBROUTINE PNURB_IN
+          END INTERFACE 
+        END MODULE PNURB_IN__genmod

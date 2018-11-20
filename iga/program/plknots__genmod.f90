@@ -1,0 +1,12 @@
+        !COMPILER-GENERATED INTERFACE MODULE: Fri May 25 07:34:17 2018
+        MODULE PLKNOTS__genmod
+          INTERFACE 
+            SUBROUTINE PLKNOTS(LKDIM,LKNOTS,II,NURNP,NDM)
+              INTEGER(KIND=4) :: NURNP
+              INTEGER(KIND=4) :: II
+              INTEGER(KIND=4) :: LKDIM(*)
+              REAL(KIND=8) :: LKNOTS(II,NURNP)
+              INTEGER(KIND=4) :: NDM
+            END SUBROUTINE PLKNOTS
+          END INTERFACE 
+        END MODULE PLKNOTS__genmod

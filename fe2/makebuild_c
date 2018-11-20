@@ -1,0 +1,33 @@
+include ../makefile.in
+
+SOURCES = $(wildcard $(FSOURCE)*.$(FEXT)) $(wildcard $(CSOURCE)*.$(CEXT))
+OBJSF   = $(SOURCES:.f=.o)
+OBJS    = $(OBJSF:.c=.o)
+FL      = built_objs
+
+.SILENT:
+
+feap:
+	@rm -f $(FL); \
+	$(MAKE) $(ARFEAPPV); \
+	MKRET=$$?; \
+	if [ -f $(FL) ]; then \
+	  $(AR) $(ARFEAPPV) `cat $(FL)`; \
+	  rm `cat $(FL)`; \
+	  echo "--->`pwd` objects now up-to-date<---"; \
+	fi; \
+	if [ $$MKRET -ne 0 ]; then false; fi;
+
+$(ARFEAPPV): $(ARFEAPPV)($(OBJS))
+
+clean: 
+	rm -f *.o
+	rm -f *.mod
+	rm -f *genmod.f90
+
+.f.a:
+	@if $(FFE2) -c -I$(FINCLUDE) $(FFOPTFLAG) $*.f -o $*.o; then echo $*.o >> $(FL); else false; fi;
+	@echo "Building $*.o"
+
+.c.a:
+	if $(CCE2) -c -I$(CINCLUDE) $(CCOPTFLAG) $*.c -o $*.o; then echo $*.o >> $(FL); else false; fi;

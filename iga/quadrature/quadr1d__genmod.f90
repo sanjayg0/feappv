@@ -1,0 +1,8 @@
+        !COMPILER-GENERATED INTERFACE MODULE: Fri May 25 07:34:22 2018
+        MODULE QUADR1D__genmod
+          INTERFACE 
+            SUBROUTINE QUADR1D(D)
+              REAL(KIND=8) :: D(*)
+            END SUBROUTINE QUADR1D
+          END INTERFACE 
+        END MODULE QUADR1D__genmod

@@ -1,0 +1,7 @@
+        !COMPILER-GENERATED INTERFACE MODULE: Fri May 25 07:34:21 2018
+        MODULE PNUMS__genmod
+          INTERFACE 
+            SUBROUTINE PNUMS
+            END SUBROUTINE PNUMS
+          END INTERFACE 
+        END MODULE PNUMS__genmod

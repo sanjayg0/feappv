@@ -1,0 +1,10 @@
+        !COMPILER-GENERATED INTERFACE MODULE: Fri May 25 07:34:06 2018
+        MODULE PKNOTDIV__genmod
+          INTERFACE 
+            SUBROUTINE PKNOTDIV(KNOTDIV,II,KLDIV)
+              INTEGER(KIND=4) :: KNOTDIV(4,*)
+              INTEGER(KIND=4) :: II
+              INTEGER(KIND=4) :: KLDIV(4)
+            END SUBROUTINE PKNOTDIV
+          END INTERFACE 
+        END MODULE PKNOTDIV__genmod

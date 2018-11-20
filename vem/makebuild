@@ -1,0 +1,4 @@
+
+vembuild:
+	(cd vem_source; cp *.f ../../build)
+	@@echo "--> Feappv VEM Build updated <--"

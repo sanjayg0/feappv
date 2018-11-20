@@ -1,0 +1,8 @@
+        !COMPILER-GENERATED INTERFACE MODULE: Fri May 25 07:34:17 2018
+        MODULE PLBLOCK__genmod
+          INTERFACE 
+            SUBROUTINE PLBLOCK(ISW)
+              INTEGER(KIND=4) :: ISW
+            END SUBROUTINE PLBLOCK
+          END INTERFACE 
+        END MODULE PLBLOCK__genmod

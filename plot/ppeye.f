@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -15,10 +15,9 @@
 !      Outputs:
 !         none       - Plot outputs to screen/file
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
-      real*8    v1,v2
+      real (kind=8) :: v1,v2
 
       save
 
@@ -32,4 +31,4 @@
       call dplot( v1 + 0.0077325d0, v2               , 2)
       call dplot( v1              , v2 + 0.0077325d0 , 2)
 
-      end
+      end subroutine ppeye

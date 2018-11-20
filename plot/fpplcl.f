@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -65,13 +65,13 @@
 
 2000  format(' --> Closing FEAP PostScript file: ',a )
 
-      end
+      end subroutine fpplcl
 
       subroutine feapbb(filer,llx,lly,urx,ury)
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 
 !-----[--+---------+---------+---------+---------+---------+---------+-]
 !      Purpose: Puts bounding box at beginning of file
@@ -85,10 +85,13 @@
 
       include  'iodata.h'
 
-      character llx*9,lly*9,urx*9,ury*9
-      character line*80, boundbox*50, filer*12
-      logical   eofile
-      integer   ii
+      character (len=80) :: line
+      character (len=50) :: boundbox
+      character (len=12) :: filer
+      character (len=9)  :: llx,lly,urx,ury
+
+      logical      :: eofile
+      integer      :: ii
 
       save
 
@@ -130,4 +133,4 @@
 200   close(lun,status='delete')
       close(ios)
 
-      end
+      end subroutine feapbb

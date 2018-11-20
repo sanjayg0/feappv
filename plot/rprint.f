@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -16,7 +16,6 @@
 !      Outputs:
 !         nfl       - Returns -nfl if all values are < 1.0d-08
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'cdata.h'
@@ -28,11 +27,11 @@
       include  'rpdata.h'
       include  'comblk.h'
 
-      logical   non0fl
-      integer   ndf,nfl, i,n
-      real*8    drv,rs
+      logical       :: non0fl
+      integer       :: ndf,nfl, i,n
+      real (kind=8) :: drv,rs
 
-      real*8    dr(ndf,*),pr(9)
+      real (kind=8) :: dr(ndf,*),pr(9)
 
       save
 
@@ -91,4 +90,4 @@
      &  22x,'10%   20%   30%   40%   50%   60%   70%   80%   90%'/
      &       '    Profile above is:',9f6.1)
 
-      end
+      end subroutine rprint

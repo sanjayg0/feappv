@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -19,12 +19,11 @@
 !      Outputs:
 !         ic(*)     - Contour number at node
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
-      integer   nel,nc, i,n
-      integer   ic(nel)
-      real*8    v(nel),vc(nc)
+      integer       :: nel,nc, i,n
+      integer       :: ic(nel)
+      real (kind=8) :: v(nel),vc(nc)
 
       save
 
@@ -39,4 +38,4 @@
         end do ! i
       end do ! n
 
-      end
+      end subroutine pltcor

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -17,12 +17,11 @@
 !      Outputs:
 !         none      - Plot outputs to screen/file
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
-      integer   ndm,m,n
-      real*8    ct,fac1,fac2,fac3
-      real*8    dd(3,3),xx(3,5),xi(ndm)
+      integer       :: ndm,m,n
+      real (kind=8) :: ct,fac1,fac2,fac3
+      real (kind=8) :: dd(3,3),xx(3,5),xi(ndm)
 
       save
 
@@ -67,4 +66,4 @@
 
       end do
 
-      end
+      end subroutine pltaxs

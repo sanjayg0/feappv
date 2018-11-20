@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -16,11 +16,10 @@
 !      Outputs:
 !         ip(*)    - Integer array with positions set
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
-      integer   n, numel
-      integer   ip(numel)
+      integer       :: n, numel
+      integer       :: ip(numel)
 
       save
 
@@ -28,4 +27,4 @@
         ip(n) = n
       end do
 
-      end
+      end subroutine psetip

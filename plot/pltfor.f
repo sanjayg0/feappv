@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -24,7 +24,6 @@
 !      Outputs:
 !         none      - Plot outputs to screen/file
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'iofile.h'
@@ -34,13 +33,13 @@
       include  'pointer.h'
       include  'comblk.h'
 
-      logical   vfl,zoom, fdis
+      logical       :: vfl,zoom, fdis
 
-      integer   ndm,ndf,numnp,n1,isgn, i,j,k,n
-      real*8    fm,x1,x2,x3,dx1,dx2,dx3,d,tm, cs,sn,ang
+      integer       :: ndm,ndf,numnp,n1,isgn, i,j,k,n
+      real (kind=8) :: fm,x1,x2,x3,dx1,dx2,dx3,d,tm, cs,sn,ang
 
-      integer   id(ndf,*),ip(*)
-      real*8    dd(3),xx(3,4),x(ndm,*),f(ndf,*),angl(*)
+      integer       :: id(ndf,*),ip(*)
+      real (kind=8) :: dd(3),xx(3,4),x(ndm,*),f(ndf,*),angl(*)
 
       save
 
@@ -76,7 +75,7 @@
 
       else
 
-        fm = isgn*sqrt(fm)*scale*40.d0
+        fm = isgn*sqrt(fm)*scalef*40.d0
         x3 = 0.0d0
         do n = 1,numnp
           if(ip(n).gt.0 .and. zoom(x(1,n),ndm)) then
@@ -150,4 +149,4 @@
 
 2000  format('  Zero values acting on mesh ')
 
-      end
+      end subroutine pltfor

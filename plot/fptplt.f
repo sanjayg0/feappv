@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -28,10 +28,12 @@
       include  'psdat5.h'
       include  'psdat6.h'
 
-      integer   nn, j,nctr
-      character tx(nn)*1, coord*10
-      integer   x,y
-      real*4    xp(*), yp(*)
+      character (len=10) :: coord
+      character (len=1)  :: tx(nn)
+
+      integer       :: nn, j,nctr
+      integer       :: x,y
+      real (kind=4) :: xp(*), yp(*)
 
       save
 
@@ -89,4 +91,4 @@
       xold = -9980
       yold = -9980
 
-      end
+      end subroutine fptplt

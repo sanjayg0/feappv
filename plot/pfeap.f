@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -18,17 +18,16 @@
 !      Outputs:
 !         none      - Plot output to screen/file
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'pdata2.h'
 
-      integer   i, ico1, ico2, is,color,border
-      real*8    xl,yl,dixl,siz,size,sizesm
+      integer       :: i, ico1, ico2, is,color,border
+      real (kind=8) :: xl,yl,dixl,siz,size,sizesm
 
-      integer   ifx(11),ify(11),iex(13),iey(13),iln(2)
-      integer   iax(12),iay(12),ipx(15),ipy(15),ixl(6)
-      integer   ivx(8) ,ivy(8)
+      integer       :: ifx(11),ify(11),iex(13),iey(13),iln(2)
+      integer       :: iax(12),iay(12),ipx(15),ipy(15),ixl(6)
+      integer       :: ivx(8) ,ivy(8)
 
       save
 
@@ -142,4 +141,4 @@
       ilno(1) = ico1
       ilno(2) = ico2
 
-      end
+      end subroutine pfeap

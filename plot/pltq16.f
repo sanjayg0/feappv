@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -20,7 +20,7 @@
       include  'pdata5.h'
       include  'pdata6.h'
 
-      integer   iel
+      integer       :: iel
 
       save
 
@@ -68,4 +68,4 @@
 
       endif
 
-      end
+      end subroutine pltq16

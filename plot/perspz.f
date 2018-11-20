@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -29,10 +29,10 @@
       include  'pointer.h'
       include  'comblk.h'
 
-      integer   i,ii, n,nen1,nen,ndm,numnp,numel,nne
-      integer   ix(nen1,numel), ip(numel), ic(numel)
-      real*8    t(3),x(ndm,numnp)
-      real*4    zmax,zn(numnp),ze(numel)
+      integer       :: i,ii, n,nen1,nen,ndm,numnp,numel,nne
+      integer       :: ix(nen1,numel), ip(numel), ic(numel)
+      real (kind=8) :: t(3),x(ndm,numnp)
+      real (kind=4) :: zmax,zn(numnp),ze(numel)
 
       save
 
@@ -73,4 +73,4 @@
 
       call merges ( -1, ze, 1, ip, nfac, ic )
 
-      end
+      end subroutine perspz

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -18,15 +18,14 @@
 !      Outputs:
 !         lclip     - Flag, true if element is within clip region
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'plclip.h'
 
-      integer   i, n, nen,ndm
+      integer       :: i, n, nen,ndm
 
-      integer   ix(nen)
-      real*8    x(ndm,*),x0(3)
+      integer       :: ix(nen)
+      real (kind=8) :: x(ndm,*),x0(3)
 
       save
 
@@ -53,4 +52,4 @@
         lclip = .false.
       endif
 
-      end
+      end function lclip

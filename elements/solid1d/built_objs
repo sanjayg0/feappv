@@ -1,0 +1,14 @@
+bbar1s.o
+interp1d.o
+mass1d.o
+quadr1d.o
+rays1d.o
+resid1d.o
+shpi1d.o
+slcn1d.o
+sld1d1.o
+sld1d2.o
+sld1d3.o
+solid1d.o
+stra1d.o
+strn1m.o

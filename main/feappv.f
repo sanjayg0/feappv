@@ -3,7 +3,7 @@
 !-----[--.----+----.----+----.-----------------------------------------]
 !      * * F E A P p v * * Finite Element Analysis Program
 !                          -      -       -        -
-!....  Copyright (c) 1984-2019: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !     Finite Element Analysis Program -- personal version -- (FEAPpv) for
@@ -65,7 +65,6 @@
       include      'iodata.h'
       include      'iofile.h'
       include      'prmptd.h'
-      include      'psize.h'
       include      'pathn.h'
       include      'setups.h'
       include      'vdata.h'
@@ -73,12 +72,13 @@
 
 !     Set version header for output to file and screen
 
-      versn(1) = '4.1 Revision i'
-      versn(2) = '21 April 2018'
+      versn(1) = '5.1 Beta 3'
+      versn(2) = '14 November 2018'
 
 !     Set precision for real variables:
 
       ipr = 2                  ! 32-bit integer arrays version
+!                              ! Pointers to arrays are 64 bit
 
 !     Set default logical unit numbers for files
 
@@ -115,31 +115,14 @@
 
       hlplev = 0      ! Basic
 
-!     Set increment for reducing array size
-
-      incred = 2      ! No reduction unless array is less by 'incred'
-
 !     Set solver flag: Program-solver = .true.; User-solver = .false.
 
       solver    = .true.
-
 !-----[--.----+----.----+----.-----------------------------------------]
 
 !     Initialize solution system
 
       call pstart()
-
-!     Check installation options
-
-      call pinstall()
-
-!     Open files: Must open unit ior (input) and iow (output)
-
-      call filnam()
-
-!     Initialize clock
-
-      call stime()
 
 !     Solve problem
 
@@ -151,4 +134,4 @@
 
 !     No additional calls to routines after PLSTOP
 
-      end
+      end program feappv

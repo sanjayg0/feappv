@@ -11,15 +11,25 @@
 #------------------------------------------------------------------------
 # Location of feappv include files
 
-  FINCLUDE = $(FEAPPVHOME5_1)/include
+  FINCLUDE = $(FEAPPVHOME5_1)/include 
 
 # Location of C-compiler include files (depends where compiler installed)
 
-  CINCLUDE = /usr/X11R6/include -I$(FEAPPVHOME5_1)/include
-# CINCLUDE = /opt/local/include -I$(FEAPPVHOME5_1)/include
+# CINCLUDE = /usr/X11R6/include -I$(FEAPPVHOME5_1)/include
+  CINCLUDE = /opt/local/include -I$(FEAPPVHOME5_1)/include
 
 #------------------------------------------------------------------------
 # Which compilers to use (Set compiler names available on your computer)
+
+# Parallel FE2 Build
+
+# FFE2 = /opt/local/bin/mpif90
+# CCE2 = /opt/local/bin/mpicc
+
+  FFE2 = $(PETSC_DIR)/$(PETSC_ARCH)/bin/mpif90
+  CCE2 = $(PETSC_DIR)/$(PETSC_ARCH)/bin/mpicc
+
+# Serial Build
 
   FF = gfortran
   CC = gcc
@@ -32,19 +42,19 @@
 
 # Intel: ifort/icc compilers
 
-# FFOPTFLAG = -O2 -Warn all
-# CCOPTFLAG = -O2 -Wall
+# FFOPTFLAG = -O2 -Warn all -g
+# CCOPTFLAG = -O2 -Wall -g
 
 # Gnu: gfortran/gcc compilers
 
-  FFOPTFLAG = -O3 -ftree-vectorize -Wall
-  CCOPTFLAG = -O3 -ftree-vectorize -Wall
+# FFOPTFLAG = -O3 -ftree-vectorize -Wall
+# CCOPTFLAG = -O3 -ftree-vectorize -Wall
 
 # FFOPTFLAG = -g -Wall
 # CCOPTFLAG = -g -Wall
 
-# FFOPTFLAG = -g -O3 -ftree-vectorize -Wall
-# CCOPTFLAG = -g -O3 -ftree-vectorize -Wall
+  FFOPTFLAG = -g -O3 -ftree-vectorize -Wall
+  CCOPTFLAG = -g -O3 -ftree-vectorize -Wall
 
 # FFOPTFLAG = -O2 -Wall
 # CCOPTFLAG = -O2 -Wall
@@ -54,7 +64,6 @@
 
   FSOURCE = 
   CSOURCE = 
-  F90SOURCE =
 
 #------------------------------------------------------------------------
 # Source Extender
@@ -75,12 +84,16 @@
 # Intel
 
 # LDOPTIONS = -L/opt/local/lib -mkl  -lX11 -lm
+  LDOPTIONS = -L/opt/local/lib -lX11 -lm
 
 # gfortran
 
 # LDOPTIONS = -L/opt/local/lib -lX11 -lm
-  LDOPTIONS = -L/usr/X11R6/lib -lX11 -lm
 
+# Loader options for FE2 build
+
+# LDOPTIONSFE2 = -L/opt/local/lib/openmpi $(LDOPTIONS)
+  LDOPTIONSFE2 = -L$(PETSC_DIR)/$(PETSC_ARCH)/lib/openmpi $(LDOPTIONS)
 
 #------------------------------------------------------------------------
 # What archiving to use
@@ -89,5 +102,21 @@
 #------------------------------------------------------------------------
 # Archive name
 
-  ARFEAPPV = $(FEAPPVHOME5_1)/Feappv.a
+# ARFEAPPV = $(FEAPPVHOME5_1)/Feappv.a
+  ARFEAPPV = $(FEAPPVHOME5_1)/Feappv_g.a
+#------------------------------------------------------------------------
+# Archive name FE2
+
+# ARFE2FEAPPV = $(FEAPPVHOME5_1)/libfeappvfe2.a
+  ARFE2FEAPPV = $(FEAPPVHOME5_1)/libfeappvfe2_g.a
+#------------------------------------------------------------------------
+# Archive name IgA
+
+# ARIFEAPPV = $(FEAPPVHOME5_1)/iga/libfeappviga.a
+  ARIFEAPPV = $(FEAPPVHOME5_1)/iga/libfeappviga_g.a
+#------------------------------------------------------------------------
+# Archive name VEM
+
+# ARVFEAPPV = $(FEAPPVHOME5_1)/vem/libfeappvvem.a
+  ARVFEAPPV = $(FEAPPVHOME5_1)/vem/libfeappvvem_g.a
 #------------------------------------------------------------------------

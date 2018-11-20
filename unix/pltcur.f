@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--+---------+---------+---------+---------+---------+---------+-]
@@ -11,4 +11,4 @@
 !     Routine to turn on screen cursor for text window
 !     N.B. Not needed for UNIX version
 
-      end
+      end subroutine pltcur

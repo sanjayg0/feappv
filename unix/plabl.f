@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--+---------+---------+---------+---------+---------+---------+-]
@@ -17,7 +17,6 @@
 !      Outputs:
 !         none      - Plot output to screen/file
 !-----[--+---------+---------+---------+---------+---------+---------+-]
-
       implicit  none
 
       include  'pdata2.h'
@@ -28,9 +27,10 @@
       include  'psdat3.h'
       include  'x11f.h'
 
-      character yyy*6
-      integer   j,jj,m,n,nchar
-      real*4    xp0(2)
+      character (len=6) :: yyy
+
+      integer       :: j,jj,m,n,nchar
+      real (kind=4) :: xp0(2)
 
       save
 
@@ -78,4 +78,4 @@
         call fptplt(xp0,yp,yyy,nchar,0)
       endif
 
-      end
+      end subroutine plabl

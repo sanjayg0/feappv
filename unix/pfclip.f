@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--+---------+---------+---------+---------+---------+---------+-]
@@ -34,14 +34,13 @@
 !      Outputs:
 !         none      - Outputs through common
 !-----[--+---------+---------+---------+---------+---------+---------+-]
-
       implicit  none
 
       include  'pdatap.h'
       include  'pdataq.h'
       include  'plclip.h'
 
-      integer   os,is,cs
+      integer       :: os,is,cs
 
       save
 
@@ -56,4 +55,4 @@
         go to 100
       end if
 
-      end
+      end subroutine pfclip

@@ -1,3 +1,3 @@
 
-      character       tx(8)*15
+      character       tx(9)*15
       common /meshtx/ tx

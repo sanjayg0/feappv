@@ -1,2 +1,0 @@
-
-      integer    point                                   ! int4

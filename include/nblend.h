@@ -1,6 +1,4 @@
 
-      integer         nursn,nursd,nurfc,nurbd,mxnlr
-      common /nblend/ nursn,nursd,nurfc,nurbd,mxnlr
+      integer         nursn,nursd,nurbd,nurdm,nurma,mxnlr
+      common /nblend/ nursn,nursd,nurbd,nurdm,nurma,mxnlr
 
-      integer         nurdm
-      common /nblend/ nurdm

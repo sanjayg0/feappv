@@ -1,4 +1,4 @@
-include $(FEAPPVHOME4_1)/makefile.in
+include $(FEAPPVHOME5_1)/makefile.in
 
 OBJECTS = feappv.o 
 

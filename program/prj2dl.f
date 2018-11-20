@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -31,18 +31,18 @@
 
       include  'iofile.h'
 
-      logical   polfl
-      integer   i,n,nits
-      integer   ndm,numnp
+      logical       :: polfl
+      integer       :: i,n,nits
+      integer       :: ndm,numnp
 
-      real*8    dx,dy, ff,df,xi,dxi
-      real*8    tolg,tol,tolxi,d,gap,gap0,angmin,th
+      real (kind=8) :: dx,dy, ff,df,xi,dxi
+      real (kind=8) :: tolg,tol,tolxi,d,gap,gap0,angmin,th
 
-      integer   ip(numnp)
+      integer       :: ip(numnp)
 
-      real*8    xin(*),x(ndm,*)
-      real*8    xx(2),xp(2),x0(2),xl(2,3),dxl(2),dxq(2)
-      real*8    xmin(2),xmax(2)
+      real (kind=8) :: xin(*),x(ndm,*)
+      real (kind=8) :: xx(2),xp(2),x0(2),xl(2,3),dxl(2),dxq(2)
+      real (kind=8) :: xmin(2),xmax(2)
 
       save
 
@@ -157,4 +157,4 @@
         endif
       end do ! n
 
-      end
+      end subroutine prj2dl

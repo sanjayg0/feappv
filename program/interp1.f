@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -24,8 +24,8 @@
 
       implicit  none
 
-      integer   i,i1, j, m,m1,m2, n1,n2,n3,nr,ns,ndm, side, is(*)
-      real*8    den, rn, xi, xid,xii,xij, xs(3,*), shp(*), x(ndm,*)
+      integer       :: i,i1, j, m,m1,m2, n1,n2,n3,nr,ns,ndm, side,is(*)
+      real (kind=8) :: den, rn,xi, xid,xii,xij, xs(3,*),shp(*),x(ndm,*)
 
       save
 
@@ -116,4 +116,4 @@
         end do ! i
       end do ! m
 
-      end
+      end subroutine interp1

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -22,9 +22,9 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
-      integer   nbuck
-      integer   ndm,nn,ni,i, nsize(4)
-      real*8    x(3),xmd(3),xmn(3)
+      integer       :: nbuck
+      integer       :: ndm,nn,ni,i, nsize(4)
+      real (kind=8) :: x(3),xmd(3),xmn(3)
 
       if(nsize(4).gt.1) then
         nn = nint((x(1) - xmn(1))/xmd(1))
@@ -38,4 +38,4 @@
         nbuck = 1
       endif
 
-      end
+      end function nbuck

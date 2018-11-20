@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -22,8 +22,8 @@
 
       implicit  none
 
-      integer   nt,n0,n1,i,j,l,nl
-      character y*(*)
+      character     :: y*(*)
+      integer       :: nt,n0,n1,i,j,l,nl
 
       save
 
@@ -56,4 +56,4 @@
         endif
       end do
 
-      end
+      end subroutine just

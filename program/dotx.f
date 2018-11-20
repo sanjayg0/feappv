@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -19,12 +19,12 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
-      integer   i,n
-      real*8    dotx, a(*),b(*)
+      integer       :: i,n
+      real (kind=8) :: dotx, a(*),b(*)
 
       dotx = 0.0d0
       do i = 1,n
         dotx = dotx + ( a(i) - b(i) )**2
       end do
 
-      end
+      end function dotx

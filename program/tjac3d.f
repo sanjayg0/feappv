@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -20,13 +20,12 @@
 !                     in natural coordinates.
 !         detj      - Jacobian determinant at point
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
-      integer   ndm, nel, i, j, k
-      real*8    detj, ss4
+      integer       :: ndm, nel, i, j, k
+      real (kind=8) :: detj, ss4
 
-      real*8    ss(3), xl(ndm,*), shp(3,11), xs(3,3)
+      real (kind=8) :: ss(3), xl(ndm,*), shp(3,11), xs(3,3)
 
       save
 
@@ -105,4 +104,4 @@
      &     + xs(1,2)*(xs(2,3)*xs(3,1) - xs(2,1)*xs(3,3))
      &     + xs(1,3)*(xs(2,1)*xs(3,2) - xs(2,2)*xs(3,1))
 
-      end
+      end subroutine tjac3d

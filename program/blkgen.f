@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -31,16 +31,21 @@
       include  'region.h'
       include  'comblk.h'
 
-      logical   prt,prth,pcomp,errck,pinput,tinput,palloc
-      logical   eltype, pblktyp
-      character xh*6,ctype*15,layer*15, etype*5, pelabl*5
-      integer   i,j,k,l,n,nm,nn,nr,ns,nt,nf,ng,ni,ntyp,nodinc
-      integer   ndm,nen1,ne,ma,mab, dlayer,nlay
-      real*8    dr,ds,dt
+      character (len=15) :: ctype,layer
+      character (len=6)  :: xh
+      character (len=5)  :: etype, pelabl
 
-      integer   ix(nen1,*)
-      integer   ixl(27)
-      real*8    x(ndm,*),xl(3,27),shp(3,9),tb(7),tc(4),td(15)
+      logical       :: prt,prth,pcomp,errck,pinput,tinput,palloc
+      logical       :: eltype, pblktyp
+      integer       :: i,j,k,l,n,nm,nn,nr,ns,nt,nf,ng,ni,ntyp,nodinc
+      integer       :: ndm,nen1,ne,ma,mab, dlayer,nlay
+      real (kind=8) :: dr,ds,dt
+
+      integer       :: ix(nen1,*)
+      integer       :: ixl(27)
+      real (kind=8) :: x(ndm,*),xl(3,27),shp(3,9),tb(7),tc(4),td(15)
+
+      integer       :: nel
 
       save
 
@@ -344,10 +349,11 @@
 !     User generations
 
       else
-        dt = 2.d0/nt
-        nf = ne
-        ng = ni
-        call ublk(td,nn,nr,ns,nt,xl,x,ixl,ix,dr,ds,dt,
+        dt   = 2.d0/nt
+        nf   = ne
+        ng   = ni
+        ntyp = ntyp - 30
+        call ublk(ntyp,nn,nr,ns,nt,xl,x,ixl,ix,dr,ds,dt,
      &            ng,nf,ndm,nen1,ma,ctype,prt, 2)
         if(nf.gt.numel.and.ne.gt.0) go to 401
         if(ng.gt.numnp) go to 400
@@ -388,9 +394,13 @@
           do i = n,j
             ma = ix(nen1,i)
             etype = pelabl(ix(nen+7,i))
-            write(iow,2004) i,ma,nreg,etype,(ix(k,i),k=1,nen)
+            nel = 0
+            do k = 1,nen
+              if(ix(k,i).gt.0) nel = k
+            end do ! k
+            write(iow,2004) i,ma,nreg,etype,(ix(k,i),k=1,nel)
             if(ior.lt.0) then
-              write(*,2004) i,ma,nreg,etype,(ix(k,i),k=1,nen)
+              write(*,2004) i,ma,nreg,etype,(ix(k,i),k=1,nel)
             endif
           end do ! i
         end do ! n
@@ -456,4 +466,4 @@
 
 5002  format(' Input: node, x-1, x-2, x-3'/3x,'>',$)
 
-      end
+      end subroutine blkgen

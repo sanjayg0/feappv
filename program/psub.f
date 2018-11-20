@@ -3,12 +3,12 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
       implicit  none
 
-      real*8    psub, val, xval
+      real (kind=8) :: psub, val, xval
 
       save
 
@@ -24,4 +24,4 @@
 
       psub = xval
 
-      end
+      end function psub

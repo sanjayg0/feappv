@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -18,16 +18,16 @@
 !      Outputs:
 !         Depends on commands specified
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit   none
 
       include   'iodata.h'
       include   'iofile.h'
 
-      logical    lp_in, lopen
-      character  txt*15, txl*15, lp_file*15, lp_fil0*15
-      integer    isw, lp_lun,lp_num, lp_ior(0:9),lp_cur(9),lp_max(9)
-      real*8     loopval
+      character (len=15) :: txt, txl, lp_file, lp_fil0
+
+      logical       :: lp_in, lopen
+      integer       :: isw,lp_lun,lp_num,lp_ior(0:9),lp_cur(9),lp_max(9)
+      real (kind=8) :: loopval
 
       save
 
@@ -116,4 +116,4 @@
 
 2000  format(/5x,'LOOP-NEXT error in PMESH: NEXT before LOOP.'/)
 
-      end
+      end subroutine ploops

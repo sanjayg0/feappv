@@ -4,7 +4,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -29,18 +29,17 @@
 !      Outputs:
 !         t(*)      - Nodal temperatures for block
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'cdata.h'
       include  'iofile.h'
 
-      logical   prt,prth,phd
-      integer   i,j,k,l,n, ll, mct, nr,ns,nt, ni,ndm,nodinc,nm
-      real*8    dr,ds,dt, xsj
+      logical       :: prt,prth,phd
+      integer       :: i,j,k,l,n, ll, mct, nr,ns,nt, ni,ndm,nodinc,nm
+      real (kind=8) :: dr,ds,dt, xsj
 
-      integer   ixl(9)
-      real*8    ss(3),xl(2,9),tl(*),t(*),shp2(3,9),shp3(4,8)
+      integer       :: ixl(9)
+      real (kind=8) :: ss(3),xl(2,9),tl(*),t(*),shp2(3,9),shp3(4,8)
 
       save
 
@@ -120,4 +119,4 @@
 
 3000  format(' *ERROR* Block node',i3,' is undefined')
 
-      end
+      end subroutine tblk

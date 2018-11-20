@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -22,11 +22,11 @@
       include  'cdata.h'
       include  'iofile.h'
 
-      logical   prt,prth, errck, pinput
-      integer   ndm,l,n,nn,nr,ns,nt,ni,nm,ng,nodinc
-      real*8    dr,ds,dt
-      integer   ixl(27)
-      real*8    t(*),tl(27),td(7)
+      logical       :: prt,prth, errck, pinput
+      integer       :: ndm,l,n,nn,nr,ns,nt,ni,nm,ng,nodinc
+      real (kind=8) :: dr,ds,dt
+      integer       :: ixl(27)
+      real (kind=8) :: t(*),tl(27),td(7)
 
       save
 
@@ -132,4 +132,4 @@
 3001  format(' *ERROR* Insufficient storage for temperatures'/
      1   10x,'final node =',i5,5x,'numnp =',i5)
 
-      end
+      end subroutine blktem

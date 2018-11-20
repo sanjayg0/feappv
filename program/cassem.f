@@ -4,7 +4,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -33,10 +33,10 @@
       include  'cdata.h'
       include  'constant.h'
 
-      logical   alfl,bycol,diagin,all
-      integer   nst, i,j,k,n
-      integer   inz,inza, jc(*),ir(*), ld(*)
-      real*8    ad(*), au(*), al(*), s(nst,nst)
+      logical       :: alfl,bycol,diagin,all
+      integer       :: nst, i,j,k,n
+      integer       :: inz,inza, jc(*),ir(*), ld(*)
+      real (kind=8) :: ad(*), au(*), al(*), s(nst,nst)
 
       save
 
@@ -144,4 +144,4 @@
 
       end do ! i
 
-      end
+      end subroutine cassem

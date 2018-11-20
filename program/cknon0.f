@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -18,8 +18,8 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
-      integer   n,nn
-      real*8    v(*)
+      integer       :: n,nn
+      real (kind=8) :: v(*)
 
       do n = 1,nn
         if(v(n).ne.0.0d0) then
@@ -32,4 +32,4 @@
 
       cknon0 = .false.
 
-      end
+      end function cknon0

@@ -3,12 +3,12 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
       implicit none
 
-      real*8 tand, x
+      real (kind=8) :: tand, x
 
       tand = tan(atan(1.d0)*x/45.d0)
 
-      end
+      end function tand

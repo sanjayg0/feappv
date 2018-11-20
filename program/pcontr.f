@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -36,6 +36,7 @@
       include  'edgdat.h'
       include  'elname.h'
       include  'errchk.h'
+      include  'hdatam.h'
       include  'hlpdat.h'
       include  'iodata.h'
       include  'iofile.h'
@@ -52,7 +53,6 @@
       include  'plflag.h'
       include  'prflag.h'
       include  'print.h'
-      include  'psize.h'
       include  'qudshp.h'
       include  'refng.h'
       include  'region.h'
@@ -61,13 +61,16 @@
       include  'vdata.h'
       include  'comblk.h'
 
-      logical   errs,setvar,palloc,tinput,pcomp,evint,lp_in,cinput
-      logical   cprt,oprt,oprth,mulprob,newprob,usetfl(12)
-      character titl*80,dnam*15, fext*4
-      character uset(12)*4, vtype*4, usub*15, tx(8)*15
-      integer   i, iorsv, j,jj, l1,l2,l3,l4
-      integer   usetno(12), itd(1)
-      real*8    td(12)
+      character (len=80) :: titl
+      character (len=15) :: dnam, usub, tx(8)
+      character (len=4)  :: fext, uset(12), vtype
+
+      logical       :: errs,setvar,palloc,tinput,pcomp,evint,lp_in
+      logical       :: cprt,oprt,oprth,mulprob,newprob,usetfl(12)
+      logical       :: cinput
+      integer       :: i, iorsv, j,jj, l1,l2,l3,l4
+      integer       :: usetno(12), itd(1)
+      real (kind=8) :: td(12)
 
       save
 
@@ -99,10 +102,12 @@
       incf    = .false.
       intr    = .false.
       intx    = .false.
+      keepfl  = .true.
       lp_in   = .true.
       newprob = .false.
       mulprob = .false.
       nocount = .true.
+      pltmfl  = .false.
       debug   = .false.
       lread   = .false.
       lsave   = .false.
@@ -218,7 +223,6 @@
 !       Read command from current file and turn off intx flag
 
         else
-          evint = .false.
           cprt  = .false.
           intr  = .false.
           intx  = .false.
@@ -252,6 +256,14 @@
       elseif(pcomp(titl(1:4),'coun',4)) then
         nocount = .true.
 
+!     Set keep/nokeep flags for output file retension
+
+      elseif(pcomp(titl(1:4),'keep',4)) then
+        keepfl = .true.
+
+      elseif(pcomp(titl(1:4),'noke',4)) then
+        keepfl = .false.
+
 !     User command sets
 
       elseif(pcomp(titl(1:4),uset(1),4)) then
@@ -279,6 +291,25 @@
         usetfl(5) = .true.
         fext  = 'u5a'
         go to 300
+
+!     User problem selection
+
+      elseif(pcomp(titl(1:5),'ufeap',5)      .or.
+     &       pcomp(titl(1:7),'fe2feap',7) ) then
+
+        if(titl(1:1).eq.'u') then
+          l3 = 1
+        else
+          l3 = 0
+        endif
+
+        newprob = .true.
+        do i = 1,20
+          l2 = 4*i + l3
+          l1 = l2 - 3
+          head(i) = titl(l1:l2)
+        end do ! i
+        call uprob(titl)
 
 !     Perform inputs from an include file
 
@@ -634,4 +665,4 @@
 3002  format(/' *ERROR* Can not do BATCH execution from this mode.'/
      &        '         Do INTERACTIVE or put in INCLUDE file.'/1x)
 
-      end
+      end subroutine pcontr

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -16,12 +16,12 @@
 !         val     - Value extracted from character string
 !         error   - Flag, true if error occurs
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
-      logical   error
-      character xs*15
-      real*8    val
+      character (len=15) :: xs*15
+
+      logical       :: error
+      real (kind=8) :: val
 
       save
 
@@ -33,4 +33,4 @@
 
 1000  format(f15.0)
 
-      end
+      end subroutine pinval

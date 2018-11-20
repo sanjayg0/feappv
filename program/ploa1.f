@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -16,13 +16,12 @@
 !      Outputs:
 !         rlnew    - Arc length load level for step
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'arclel.h'
       include  'arcler.h'
 
-      real*8    time,dt
+      real (kind=8) :: time,dt
 
       save
 
@@ -46,4 +45,4 @@
 
       endif
 
-      end
+      end subroutine ploa1

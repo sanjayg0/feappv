@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -18,7 +18,7 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
-      integer   n,nn, v(*)
+      integer      :: n,nn, v(*)
 
       save
 
@@ -33,4 +33,4 @@
 
       ckinon0 = .false.
 
-      end
+      end function ckinon0

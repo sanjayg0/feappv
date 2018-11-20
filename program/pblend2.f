@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -23,10 +23,10 @@
       include  'pointer.h'
       include  'comblk.h'
 
-      logical   setvar,palloc, flsd
-      integer   isd,i,i1,i2
+      logical       :: setvar,palloc, flsd
+      integer       :: isd,i,i1,i2
 
-      integer   iblend(*),iside(*), lblend(4)
+      integer       :: iblend(*),iside(*), lblend(4)
 
       save
 
@@ -50,7 +50,7 @@
         endif
       end do ! i
 
-      end
+      end subroutine pblend2a
 
       subroutine pblenda1(i,i1,i2,is,iside,isd,flsd)
 
@@ -70,9 +70,9 @@
 
       include  'cblend.h'
 
-      logical   flsd
-      integer   i,i1,i2,i3,i4, j,k, isd
-      integer   is(isd,*),iside(*)
+      logical       :: flsd
+      integer       :: i,i1,i2,i3,i4, j,k, isd
+      integer       :: is(isd,*),iside(*)
 
       save
 
@@ -98,7 +98,7 @@
       end do ! j
       flsd = .true.
 
-      end
+      end subroutine pblenda1
 
       subroutine pblenda2(i,i1,i2,is,iside,isd)
 
@@ -118,8 +118,8 @@
 
       include  'cblend.h'
 
-      integer   i,i1,i2,i3, isd
-      integer   is(isd,*),iside(*)
+      integer       :: i,i1,i2,i3, isd
+      integer       :: is(isd,*),iside(*)
 
       save
 
@@ -130,7 +130,7 @@
       is(3,numsd) = i2
       iside(i)    = numsd
 
-      end
+      end subroutine pblenda2
 
       subroutine pblend2b(n,xs,is,trb,iblend,ilr,x,ix,
      &                    iside,isd,ndm,nen1,prt,prth,eflag,nflag)
@@ -166,18 +166,20 @@
       include   'trdata.h'
       include   'comblk.h'
 
-      logical    prt,prth,eflag,nflag, setvar, palloc
-      character  ctype*15, etype*5, pelabl*5
-      integer    i,ii,in, j,jj, k, ma,m1,m2
-      integer    n,ne,nf,ni,nm,nn,nr,ns,nodinc,ntyp, styp, dlayer
-      real*8     trdeto
+      character (len=15) :: ctype
+      character (len=5)  :: etype, pelabl
 
-      integer    isd,ndm,nen1
-      integer    is(isd,*),iblend(*), ix(nen1,*), ilr(*)
+      logical       :: prt,prth,eflag,nflag, setvar, palloc
+      integer       :: i,ii,in, j,jj, k, ma,m1,m2
+      integer       :: n,ne,nf,ni,nm,nn,nr,ns,nodinc,ntyp, styp, dlayer
+      real (kind=8) ::  trdeto
 
-      real*8     xs(3,*),trb(3,4),x(ndm,*)
+      integer       :: isd,ndm,nen1
+      integer       :: is(isd,*),iblend(*), ix(nen1,*), ilr(*)
 
-      integer    nsn(4), iside(4)
+      real (kind=8) :: xs(3,*),trb(3,4),x(ndm,*)
+
+      integer       :: nsn(4), iside(4), nel
 
       save
 
@@ -355,9 +357,13 @@
             do i = nn,j
               ma = ix(nen1,i)
               etype = pelabl(ix(nen+7,i))
-              write(iow,2004) i,ma,nreg,etype,(ix(k,i),k=1,nen)
+              nel   = 0
+              do k = 1,nen
+                if(ix(k,i).gt.0) nel = k
+              end do ! k
+              write(iow,2004) i,ma,nreg,etype,(ix(k,i),k=1,nel)
               if(ior.lt.0) then
-                write(*,2004) i,ma,nreg,etype,(ix(k,i),k=1,nen)
+                write(*,2004) i,ma,nreg,etype,(ix(k,i),k=1,nel)
               endif
             end do ! i
           end do ! nn
@@ -374,6 +380,6 @@
 2003  format('   E l e m e n t   C o n n e c t i o n s'//
      &   '   Elmt Mat Reg  Type',7(i3,' node'):/(21x,7(i3,' node')))
 
-2004  format(i7,2i4,1x,a5,i8:/(21x,7i8))
+2004  format(i7,2i4,1x,a5,7i8:/(21x,7i8))
 
-      end
+      end subroutine pblend2b

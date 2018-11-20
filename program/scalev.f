@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -22,9 +22,9 @@
 
       implicit  none
 
-      integer   i,n,ndm,ndf,numnp
-      integer   pdf(*)
-      real*8    v(ndf,*),vmax
+      integer       :: i,n,ndm,ndf,numnp
+      integer       :: pdf(*)
+      real (kind=8) :: v(ndf,*),vmax
 
       save
 
@@ -49,7 +49,7 @@
           end do ! i
         end do ! n
       else
-        write(*,*) 'Zero length vector in SCALEV'
+        write(*,*) ' ** WARNING ** Zero length vector in SCALEV'
       endif
 
-      end
+      end subroutine scalev

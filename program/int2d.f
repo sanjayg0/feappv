@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -20,8 +20,8 @@
 
       include  'eldata.h'
 
-      integer   i,j,k,l,lint, lr(9),lz(9),lw(9)
-      real*8    g,h, third, sg(3,*),ss(5),ww(5)
+      integer       :: i,j,k,l,lint, lr(9),lz(9),lw(9)
+      real (kind=8) :: g,h, third, sg(3,*),ss(5),ww(5)
 
       data      lr/-1,1,1,-1,0,1,0,-1,0/,lz/-1,-1,1,1,-1,0,1,0,0/
       data      lw/4*25,4*40,64/
@@ -128,4 +128,4 @@
 
       endif
 
-      end
+      end subroutine int2d

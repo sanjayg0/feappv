@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -22,8 +22,8 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
-      integer   ns,ndm, side, i, j, ib, ie, in, io, i1, isr(2), is(*)
-      real*8    xs(3,*), shp(*), x(ndm,*), xsn(3,2)
+      integer       :: ns,ndm, side, i,j, ib,ie,in,io,i1, isr(2),is(*)
+      real (kind=8) :: xs(3,*), shp(*), x(ndm,*), xsn(3,2)
 
       save
 
@@ -59,4 +59,4 @@
 
       end do ! i
 
-      end
+      end subroutine segint1

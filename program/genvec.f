@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -32,13 +32,17 @@
       include  'pointer.h'
       include  'comblk.h'
 
-      logical   prt,prth,prtz,prv,prx,err,errck, pinput, pcomp
-      character cd*15, carg*(*)
-      integer   i,j,l,n, ii,il,is, lg,ng,ndm,xdm,mct, nmn,nmx
-      real*8    xli, x(xdm,*),xl(50),xs(50),td(16)
+      character (len=15) :: cd
+      character          :: carg*(*)
+
+      logical       :: prt,prth,prtz,prv,prx,err
+      logical       :: errck, pinput, pcomp, norec
+      integer       :: i,j,l,n, ii,il,is, lg,ng,ndm,xdm,mct, nmn,nmx
+      real (kind=8) :: xli, x(xdm,*),xl(50),xs(50),td(16)
 
       save
 
+      norec = .true.
       err = .false.
       cd  = carg
       prv = pcomp(cd,' coo',4)
@@ -84,6 +88,7 @@
         endif
       endif
       if(n.le.0.or.n.gt.numnp) go to 104
+      norec = .false.
 
 !     Duplicate node input on succeeding records
 
@@ -145,7 +150,15 @@
         err = .true.
       endif
       go to 100
-104   if(.not.prt) return
+
+!     Output data
+
+104   if(norec) then
+        write(  *,4001) cd(1:5)
+        write(iow,4001) cd(1:5)
+        return
+      endif
+      if(.not.prt) return
       do j = nmn,nmx
         if(prtz) go to 106
         do l = 1,ndm
@@ -189,4 +202,7 @@
 3002  format(' *ERROR* GENVEC: Attempt to input duplicate node',i5:,
      &       ', terminate input of nodes in ',a)
 
-      end
+4001  format(' *WARNING* GENVEC: No data found for a ->',a5,
+     &       ' <- data set.')
+
+      end subroutine genvec

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -34,11 +34,14 @@
       include  'tdata.h'
       include  'comblk.h'
 
-      logical   lflg,pcomp,cinput
-      character ctc*(*),ct*4,fname*15,y*1
-      integer   nneq
+      character (len=15) :: fname
+      character (len=4)  :: ct
+      character (len=1)  :: y
+      character          :: ctc*(*)
 
-      real*8    b(nneq)
+      logical       :: lflg,pcomp,cinput
+      integer       :: nneq
+      real (kind=8) :: b(nneq)
 
       save
 
@@ -170,4 +173,4 @@
 
 3002  format(' *ERROR* No write file is open.')
 
-      end
+      end subroutine writer

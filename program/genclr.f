@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -19,15 +19,15 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
-      integer   ndf,numnp, i,n, nty(numnp)
-      real*8    v(ndf,numnp)
+      integer       :: ndf,numnp, i,n, nty(numnp)
+      real (kind=8) :: v(ndf,numnp)
 
       do n = 1,numnp
         if(nty(n) .lt. 0) then
           do i = 1,ndf
             v(i,n) = 0.0d0
-          end do
+          end do ! i
         endif
-      end do
+      end do ! n
 
-      end
+      end subroutine genclr

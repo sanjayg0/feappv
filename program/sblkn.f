@@ -4,7 +4,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -56,13 +56,15 @@
       include  'iofile.h'
       include  'trdata.h'
 
-      logical   prt,prth, pcomp
-      character xh*6, ctype*15
-      integer   i,j,k,n, mct,me, nm, inc8
-      integer   nr,ns,nsn,ni,ndm,nodinc,ntyp
-      integer   ixl(*)
-      real*8    rr,sn,cn, drh,dsh,dr,ds, xsj
-      real*8    xl(3,*),x(ndm,*),shp(3,*),shp1(2,3),xx(3),ss(2),tt(2)
+      character (len=15) :: ctype
+      character (len=6)  :: xh
+      logical       :: prt,prth, pcomp
+      integer       :: i,j,k,n, mct,me, nm, inc8
+      integer       :: nr,ns,nsn,ni,ndm,nodinc,ntyp
+      integer       :: ixl(*)
+      real (kind=8) :: rr,sn,cn, drh,dsh,dr,ds, xsj
+      real (kind=8) :: xl(3,*),x(ndm,*),shp(3,*),shp1(2,3)
+      real (kind=8) :: xx(3),ss(2),tt(2)
 
       save
 
@@ -165,4 +167,4 @@
 
 2004  format(i10,5f13.4)
 
-      end
+      end subroutine sblkn

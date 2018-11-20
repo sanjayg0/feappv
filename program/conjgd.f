@@ -4,7 +4,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -42,14 +42,14 @@
       include  'iofile.h'
       include  'sdata.h'
 
-      logical   noconv
-      integer   neq,ni,nj,jmax
-      real*4    tt, etime, tary(2)
-      real*8    alp,bet,gam,rn,rn0,tol,tolr0,dot
+      logical       :: noconv
+      integer       :: neq,ni,nj,jmax
+      real (kind=4) :: tt, etime, tary(2)
+      real (kind=8) :: alp,bet,gam,rn,rn0,tol,tolr0,dot
 
-      integer   jc(*),ir(*)
-      real*8    ad(neq),ac(*),adr(neq),x(*)
-      real*8    r(*),z(*),p(*),b(*)
+      integer       :: jc(*),ir(*)
+      real (kind=8) :: ad(neq),ac(*),adr(neq),x(*)
+      real (kind=8) :: r(*),z(*),p(*),b(*)
 
       save
 
@@ -155,4 +155,5 @@
 
  2000 format('   CG: NJ =',i5,' Resid. =',1p,e10.3,
      &         ' Cpu. = ',1p,e10.3,' Sys. = ',1p,e10.3)
-      end
+
+      end subroutine conjgd

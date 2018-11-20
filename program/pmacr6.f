@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -22,10 +22,11 @@
       include   'codat.h'
       include   'print.h'
 
-      integer    j
-      logical    pcomp
-      character  lct*15
-      real*8     ct(3)
+      character (len=15) :: lct
+
+      integer       :: j
+      logical       :: pcomp
+      real (kind=8) :: ct(3)
 
       save
 
@@ -43,4 +44,4 @@
 
       endif
 
-      end
+      end subroutine pmacr6

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -26,13 +26,14 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
-      logical   noconv
-      integer   nr,ns,ndm, side, n, j
-      integer   is(*), isr(10)
-      real*8    xs(3,*), shp(*), x(ndm,*), rs(3,*), dx(3)
-      real*8    e(3,3), elen, ang
+      logical       :: noconv
+      integer       :: nr,ns,ndm, side, n, j
+      integer       :: is(*), isr(10)
+      real (kind=8) :: xs(3,*), shp(*), x(ndm,*), rs(3,*), dx(3)
+      real (kind=8) :: e(3,3), elen, ang
 
-      real*8    aa,bb,da,db, d11,d12,d21,d22, r1,r2, det, tol
+      real (kind=8) :: aa,bb,da,db, d11,d12,d21,d22, r1,r2, det, tol
+
       save
 
       data      tol  / 1.d-8 /
@@ -155,4 +156,4 @@
         end do ! n
       endif
 
-      end
+      end subroutine elpint1

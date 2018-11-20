@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -38,10 +38,11 @@
       include   'setups.h'
       include   'ublk1.h'
 
-      logical    pcomp
-      character  layer*15
-      integer    ntyp,ns,mab, n,j
-      real*8     td(5)
+      character (len=15) :: layer
+
+      logical       :: pcomp
+      integer       :: ntyp,ns,mab, n,j
+      real (kind=8) :: td(5)
 
 !     Line elements
 
@@ -174,4 +175,4 @@
      &       '    with ',i3,' nodes greater than ',i3,' specified',
      &       ' on control record')
 
-      end
+      end function pblktyp

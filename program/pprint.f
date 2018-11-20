@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -17,8 +17,8 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit   none
 
-      character  string*(*)
-      integer    l,le
+      character      :: string*(*)
+      integer        :: l,le
 
       le = len(string)
       do l = le,1,-1
@@ -30,4 +30,4 @@
 
 2000  format(a,a,$)
 
-      end
+      end subroutine pprint

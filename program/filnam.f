@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -17,43 +17,49 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
-      include  'codat.h'
       include  'chdata.h'
       include  'comfil.h'
       include  'iodata.h'
       include  'iofile.h'
-      include  'machnc.h'
-      include  'psize.h'
+      include  'prmptd.h'
+      include  'setups.h'
       include  'vdata.h'
 
-      logical   pcomp,lfil,linp,lout,lres,lsav,cinput
-      character wd(2)*6,y*1
-      character dinp*128,dout*128,dres*128
-      character pinp*128,pout*128,pres*128,psav*128,pplt*128,filein*128
-      integer   iorsav, ierr
-      integer   nargs, iinp, ioup, ires, isav, j
+      character (len=128) :: dinp,dout,dres,dplt
+      character (len=128) :: pinp,pout,pres,psav,pplt,filein
+      character (len=6) :: wd(2)
+      character (len=1) :: y
+
+      logical      :: pcomp,lfil,linp,lout,lres,lsav,lplt
+      logical      :: fruns,errck,cinput
+      integer      :: iorsav, nargs, iinp, ioup,ires,isav,iplt, i,j
 
       save
 
-      data      dinp,dout,dres/'NONE','NONE','NONE'/
-
+      data      dinp,dout,dres,dplt/'NONE','NONE','NONE','NONE'/
       data      wd/'New','Exists'/
 
 !     Save input unit number set command line arguments to 0
 
       iorsav = ior
+
 !     Add extenders or get filenames from command line
 
       findex = 1
       nargs  = 0
-      epmac  = epsilon(1.0d0)
       call filargs(nargs)
+      if(nargs.gt.0) then
+        fruns = .false.
+        go to 200
+      else
+        fruns = .true.
+      endif
 
 !     Look to see if any problem has been run
 
 101   inquire(file='feapname',exist=lfil)
       if(lfil) then
-        open(ios,file='feapname',status='unknown')
+        open(ios,file='feapname',status='old')
         read(ios,2010,err=900,end=900) pinp,pout,pres,psav,pplt
         close(ios)
         finp = pinp
@@ -62,7 +68,7 @@
         fsav = psav
         fplt = pplt
 
-!       Compute solution timings
+!       Continue solution for serial runs
 
         if(nargs.eq.0) then
           ior = -abs(ior)
@@ -76,18 +82,22 @@
         ior = -abs(ior)
         write(*,2000) versn
         pinp = dinp
+        finp = dinp
         pout = dout
+        fout = dout
         pres = dres
+        fres = dres
         psav = dres
-        pplt = dinp
+        fsav = dres
+        pplt = dplt
+        fplt = dplt
       endif
 
 !     Name file for input data
 
-100   ierr = 1
-      finp = pinp
+100   finp = pinp
 
-!      Use current filenames
+!     Use current filenames
 
 1     if(y.eq.'N' .or. y.eq.'n' .or. y.eq. ' ') then
         write(*,2011)
@@ -99,11 +109,8 @@
 
 !     User input of filenames
 
-      write(*,2006)
-!      read (*,1000,err=901,end=902) filein
-      if(.not.cinput()) then
-        goto 902
-      end if
+      call pprint('                   Enter Name -->')
+      errck  = cinput()
       filein = record(1:128)
 
 !     Check for stop
@@ -113,7 +120,7 @@
      &    pcomp(filein,'quit',4)) then
         call plstop(.false.)
 
-!     Set active input flename
+!     Set active input filename
 
       elseif (.not.pcomp(filein,' ',1)) then
         finp = ' '
@@ -128,7 +135,8 @@
 
 !     Check if input files exists
 
-10    inquire(file=finp,exist=linp)
+      inquire(file=finp,exist=linp)
+
       if(.not.linp) then
         write(*,3000) finp
         go to 1
@@ -137,15 +145,18 @@
 
 !     Set default files for a filname beginning with 'I' or 'i'
 
-      if(pcomp(pinp,'I',1)) then
-        pinp(findex:findex) = 'I'
-        pout                = pinp
+      if(pcomp(pinp(findex:findex),'I',1)) then
+        pinp(findex:findex) = 'I'    ! Force upper case into filename
+        pout      = pinp             ! Default output data  file
         pout(findex:findex) = 'O'
-        pres                = pinp
+        pres      = pinp             ! Default restart read file
         pres(findex:findex) = 'R'
-        psav                = pinp
+        psav      = pinp             ! Default restart save file
         psav(findex:findex) = 'R'
+        pplt      = pinp             ! Default plot file
+        pplt(findex:findex) = 'P'
       endif
+
 !     Set default filenames from previous executions
 
       fout = pout
@@ -161,53 +172,44 @@
 
 !     Name file for output data
 
-      ierr =  2
-      fout = pout
-2     write(*,2003) pout
-!     read (*,1000,err=901,end=902) filein
-      if(.not.cinput()) then
-        goto 902
-      end if
-      filein = record(1:128) 
+      write(*,2003) pout
+      call pprint('                   Enter Name -->')
+      errck  = cinput()
+      filein = record(1:128)
       if (.not.pcomp(filein,' ',1)) fout = filein
-20    pout = fout
+      pout = fout
 
 !     Name file for restart read data
 
-      ierr =  3
-      fres = pres
-3     write(*,2004) pres
-!     read (*,1000,err=901,end=902) filein
-      if(.not.cinput()) then
-        goto 902
-      end if
+      write(*,2004) pres
+      call pprint('                   Enter Name -->')
+      errck  = cinput()
       filein = record(1:128)
       if (.not.pcomp(filein,' ',1)) fres = filein
-30    pres = fres
+      pres = fres
 
 !     Name file for restart save data
 
-      ierr = 4
-      fsav = psav
-4     write(*,2005) psav
-!     read (*,1000,err=901,end=902) filein
-      if(.not.cinput()) then
-        goto 902
-      end if
+      write(*,2005) psav
+      call pprint('                   Enter Name -->')
+      errck  = cinput()
       filein = record(1:128)
       if (.not.pcomp(filein,' ',1)) fsav = filein
-40    psav = fsav
+      psav = fsav
 
-!     Set default plot window
+!     Name file for plot data
 
-      pplt      = pinp
-      pplt(1:1) = 'P'
-      fplt      = pplt
+      write(*,2006) pplt
+      call pprint('                   Enter Name -->')
+      errck  = cinput()
+      filein = record(1:128)
+      if (.not.pcomp(filein,' ',1)) fplt = filein
+      pplt = fplt
 
 !     Check file status and input if necessary
 
 200   inquire(file=finp,exist=linp)
-      if(.not.linp .and. nargs.gt.0) call plstop(.true.)
+      if(.not.linp.and.nargs.gt.0) call plstop(.true.)
       if(.not.linp) go to 100
       iinp = 2
       inquire(file=fout,exist=lout)
@@ -219,20 +221,20 @@
       inquire(file=fsav,exist=lsav)
       isav = 1
       if(lsav) isav = 2
+      inquire(file=fplt,exist=lplt)
+      iplt = 1
+      if(lplt) iplt = 2
       if(nargs.gt.0) go to 300
       write(*,2007) wd(iinp),finp,wd(ioup),fout,wd(ires),fres,
-     &              wd(isav),fsav
+     &              wd(isav),fsav,wd(iplt),fplt
 
 !     Start execution
 
-      if(.not.fileck) go to 300
-      write(*,2008)
-      ierr =  5
-!5    read(*,1000,err=901,end=901) y
-5     if(.not.cinput()) then
-        goto 901
-      end if
-      y = record(1:1) 
+      xxx = ' '
+      write(xxx,2008)
+      call pprint(xxx)
+      errck = cinput()
+      y     = record(1:1)
       if(y.eq.'S' .or. y.eq.'s') call plstop(.false.)
       if(y.ne.'Y' .and. y.ne.'y') go to 100
 
@@ -242,92 +244,73 @@
       rewind ios
       write(ios,2010) finp,fout,fres,fsav,fplt
       close(ios)
-      write(*,2009)
+      if(fruns) then
+        write(*,2009)
+        if(rank.eq.0 .and. ntasks.gt.1) then
+          write(*,2012) ntasks
+        endif
+      endif
+
+!     Set final findex
+      i = index(finp,' ')
+      if(i.eq.0) i = 128
+      do j = i,1,-1
+        if(pcomp(finp(j:j),char(47),1) .or.       ! char(47) = '/'
+     &     pcomp(finp(j:j),char(92),1)) go to 310 ! char(92) = '\'
+      end do ! j
+      j = 0
+310   findex = j + 1
 
 !     Reset ior unit number
 
       ior = iorsav
       return
 
-!     Error in form of feapname file
+!     Error in form of 'feapname' file
 
 900   lfil = .false.
       write(*,'(/a)') ' ERROR IN feapname FILE -- Read filenames'
       close(ios,status = 'delete')
       go to 101
 
-!     Error trap
-
-901   write(*,3001)
-      if(    ierr.eq.1) then
-        go to 1
-      elseif(ierr.eq.2) then
-        go to 2
-      elseif(ierr.eq.3) then
-        go to 3
-      elseif(ierr.eq.4) then
-        go to 4
-      elseif(ierr.eq.5) then
-        go to 5
-      else
-        call plstop(.true.)
-      endif
-
-!     EOF encountered
-
-902   call  endclr ('FILNAM',filein)
-      if(    ierr.eq.1) then
-        go to 10
-      elseif(ierr.eq.2) then
-        go to 20
-      elseif(ierr.eq.3) then
-        go to 30
-      elseif(ierr.eq.4) then
-        go to 40
-      elseif(ierr.eq.5) then
-        go to 5
-      else
-        call plstop(.true.)
-      endif
-
 !     Formats
-
-!1000  format(a)
 
 2000  format(//
      & '    F I N I T E   E L E M E N T   A N A L Y S I S',
      & '   P R O G R A M'
      &   /14x,'FEAPpv (P e r s o n a l   V e r s i o n)',
-     &  //13x,'(C) Regents of the University of California'
-     &   /23x,'All Rights Reserved.'/23x,'VERSION: ',a/26x,'DATE: ',a)
+     &  //11x,'FEAP (C) Regents of the University of California'
+     &   /25x,'All Rights Reserved.'/23x,'VERSION: ',a/26x,'DATE: ',a)
 
 2001  format(/8x,' I n p u t    F i l e n a m e s',
      & //8x,' Specify filenames:'/)
-2002  format(13x,'Input   Data (default: ',a32,') :',$)
-2003  format(13x,'Output  Data (default: ',a32,') :',$)
-2004  format(13x,'Restart Read (default: ',a32,') :',$)
-2005  format(13x,'Restart Save (default: ',a32,') :',$)
-2006  format(/22x,'Enter Name --> ',$)
+2002  format(11x,'Input   Data (default: ',a32,') :')
+2003  format(11x,'Output  Data (default: ',a32,') :')
+2004  format(11x,'Restart Read (default: ',a32,') :')
+2005  format(11x,'Restart Save (default: ',a32,') :')
+2006  format(11x,'Plot File    (default: ',a32,') :')
 
-2007  format(/8x,' Files are set as:     Status  Filename'//
-     &       13x,'Input   (read ) : ',a6,2x,a32/
-     &       13x,'Output  (write) : ',a6,2x,a32/
-     &       13x,'Restart (read ) : ',a6,2x,a32/
-     &       13x,'Restart (write) : ',a6,2x,a32//
-     &  8x,' Caution, existing write files will be overwritten.')
+2007  format(/8x,' Files are set as:   Status  Filename'//
+     &       11x,'Input   (read ) : ',a6,2x,a32/
+     &       11x,'Output  (write) : ',a6,2x,a32/
+     &       11x,'Restart (read ) : ',a6,2x,a32/
+     &       11x,'Restart (write) : ',a6,2x,a32/
+     &       11x,'Plots   (write) : ',a6,2x,a32//
+     &  8x,' Caution, existing write files will be overwritten.'/)
 
-2008  format(/8x,' Are filenames correct?',
-     &     '( y or n; r = redefine all; s = stop) :',$)
+2008  format( 8x,' Are filenames correct?',
+     &     '( y or n; r = redefine all; s = stop) :')
 
 2009  format(/8x,' R U N N I N G    F E A P p v    P R O B L E M',
-     &           '    N O W')
+     &       '    N O W')
 
-2010  format(a/a/a/a/a/1p,1e25.15)
+2010  format(a/a/a/a/a)
 
 2011  format(/8x,'Specify input data filename:'/)
 
+2012  format(/8x,' Parallel Solution: Total Number of Tasks =',i5)
+
 3000  format(/' *ERROR* FILNAM: Specified input file: ',a/
      &        '         does not exist. Reinput filename.'/)
-3001  format(/' *ERROR* FILNAM: Reinput data')
 
-      end
+      end subroutine filnam

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -22,14 +22,16 @@
       include  'region.h'
       include  'trdata.h'
 
-      logical   flag, prt,prth, errck, tinput, pcomp, pblktyp
-      logical   eltype
-      character ctype*15
+      character (len=15) :: ctype
 
-      integer   numbl,numb,ndm, i,j,nr,ns,nt,ni,ne,ma,mab,ntyp,nf,ng
-      integer   btyp,dlayer,nlay
-      integer   iblend(numb,*),ilr(mxilr,*)
-      real*8    tc(1),td(15),trb(3,4,*)
+      logical       :: flag, prt,prth, errck, tinput, pcomp, pblktyp
+      logical       :: eltype
+
+      integer       :: numbl,numb,ndm
+      integer       :: i,j,nr,ns,nt,ni,ne,ma,mab,ntyp,nf,ng
+      integer       :: btyp,dlayer,nlay
+      integer       :: iblend(numb,*),ilr(mxilr,*)
+      real (kind=8) :: tc(1),td(15),trb(3,4,*)
 
       save
 
@@ -281,4 +283,4 @@
 
 4000  format(' *ERROR* PBLEND: Type: ',a,' not available')
 
-      end
+      end subroutine pblend

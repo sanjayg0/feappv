@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -33,10 +33,13 @@
       include  'tdata.h'
       include  'comblk.h'
 
-      logical   lflg,setvar,palloc,pcomp
-      integer   nneq
-      character cc*4,ctc*(*),ct*4,fname*15
-      real*8    b(nneq)
+      character (len=15) :: fname
+      character (len=4)  :: cc,ct
+      character          :: ctc*(*)
+
+      logical       :: lflg,setvar,palloc,pcomp
+      integer       :: nneq
+      real (kind=8) :: b(nneq)
 
       save
 
@@ -178,4 +181,4 @@
 3005  format(' *ERROR* File ',a,' is open.  Close before new',
      1       ' file specified.')
 
-      end
+      end subroutine reader

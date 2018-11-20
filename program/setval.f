@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -23,10 +23,12 @@
       include  'errchk.h'
       include  'iofile.h'
 
-      logical   errco, pcomp, cinput
-      character xt*75,xs*75,xi*(*)
-      integer   i, nex, num
-      real*8    val, v(25)
+      character (len=75) :: xt,xs
+      character          :: xi*(*)
+
+      logical       :: errco, pcomp, cinput
+      integer       :: i, nex, num
+      real (kind=8) :: val, v(25)
 
       save
 
@@ -70,7 +72,7 @@
 151     if(.not.cinput()) then
           goto 153
         end if
-        xt = record(1:75) 
+        xt = record(1:75)
         goto  154
 !152    call  errclr ('SETVAL')
         call  errclr ('SETVAL')
@@ -97,4 +99,4 @@
 
  2002 format('  Correction:>',75a1)
 
-      end
+      end subroutine setval

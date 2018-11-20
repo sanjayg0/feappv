@@ -1,9 +1,9 @@
 !$Id:$
-      subroutine update(id,f,u,urate,du,fdyn,isw)
+      subroutine pupdate(id,f,u,urate,du,fdyn,isw)
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -40,9 +40,10 @@
       include  'pointer.h'
       include  'comblk.h'
 
-      logical   fdyn
-      integer   j, n, nneq2,isw, nod, id(*)
-      real*8    ub,vnorm,anorm, f(nneq,*),u(*),urate(nneq,*),du(*)
+      logical       :: fdyn
+      integer       :: j, n, nneq2,isw, nod, id(*)
+      real (kind=8) :: ub,vnorm,anorm
+      real (kind=8) :: f(nneq,*),u(*),urate(nneq,*),du(*)
 
       save
 
@@ -219,4 +220,4 @@
 2000  format('   N o r m s   f o r   D y n a m i c s'/
      1   10x,'Velocity:',e13.5,' Acceleration:',e13.5)
 
-      end
+      end subroutine pupdate

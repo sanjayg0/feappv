@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -46,12 +46,14 @@
       include  'tdata.h'
       include  'comblk.h'
 
-      logical   exst,sfl,fl9,setvar,palloc,cinput
-      integer   i,ndm,ndf,nneq,isw
-      integer   nnpo,nnlo,nnmo,ndmo,ndfo, nlen
-      character fresx*(*),yorn*1
+      character (len=1) :: yorn
+      character         :: fresx*(*)
 
-      real*8    u(*)
+      logical       :: exst,sfl,fl9,setvar,palloc,cinput
+      integer       :: i,ndm,ndf,nneq,isw
+      integer       :: nnpo,nnlo,nnmo,ndmo,ndfo, nlen
+
+      real (kind=8) :: u(*)
 
       save
 
@@ -266,4 +268,4 @@
 
 3004  format(11x,'New Restart File Name >',$)
 
-      end
+      end subroutine restrt

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -20,12 +20,12 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
-      integer   j,jj
-      real*8    d,u(*),s(*)
+      integer       :: j,jj
+      real (kind=8) :: d,u(*),s(*)
 
       do j = 1,jj
         s(j) = s(j) - u(j)*s(jj+1)
       end do
       s(jj) = s(jj)*d
 
-      end
+      end subroutine colbac

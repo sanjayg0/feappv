@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -21,16 +21,16 @@
       include  'pointer.h'
       include  'comblk.h'
 
-      logical   flag
-      integer   nie,ndm,nen,nen1,numnp,numel
+      logical       :: flag
+      integer       :: nie,ndm,nen,nen1,numnp,numel
 
-      integer   iel,iiel,iu,i,j,k,l,m,n, i1,i2,i3,i4
-      real*8    leng,xmin,xmax,tol
+      integer       :: iel,iiel,iu,i,j,k,l,m,n, i1,i2,i3,i4
+      real (kind=8) :: leng,xmin,xmax,tol
 
-      integer   ie(nie,*),ix(nen1,*),ip(*)
-      integer   iq(4,6), it(3,4), iplt(30)
-      real*8    dx1(3), dx2(3), dn(3)
-      real*8    x(ndm,*), norm(3,*)
+      integer       :: ie(nie,*),ix(nen1,*),ip(*)
+      integer       :: iq(4,6), it(3,4), iplt(30)
+      real (kind=8) :: dx1(3), dx2(3), dn(3)
+      real (kind=8) :: x(ndm,*), norm(3,*)
 
       save
 
@@ -239,4 +239,4 @@
         endif
       end do ! n
 
-      end
+      end subroutine pnorml

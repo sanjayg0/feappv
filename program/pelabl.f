@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2016: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -21,10 +21,9 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit    none
 
-      character        :: pelabl*5
-      integer (kind=4) :: nnty, l
+      character (len=5) :: pelabl, txlab
 
-      character        :: txlab*5
+      integer        :: nnty, l
 
       if(nnty.eq.-1) then
         txlab = ' Line'

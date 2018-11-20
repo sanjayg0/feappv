@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -29,10 +29,10 @@
       include  'iofile.h'
       include  'print.h'
 
-      logical   errck, pinput, done
-      integer   l, m, ilast, itime
+      logical       :: errck, pinput, done
+      integer       :: l, m, ilast, itime
 
-      real*8    prop2, t, tv(2,*), td(16)
+      real (kind=8) :: prop2, t, tv(2,*), td(16)
 
       save
 
@@ -113,4 +113,4 @@
 
 2004  format(i5,1p,2e14.5)
 
-      end
+      end function prop2

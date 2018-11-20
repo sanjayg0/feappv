@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -24,11 +24,11 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
-      integer   neq,ni,nj,jp0
-      real*8    s
+      integer       :: neq,ni,nj,jp0
+      real (kind=8) :: s
 
-      integer   jp(*),jc(*),ir(*)
-      real*8    ap(*),ac(*)
+      integer       :: jp(*),jc(*),ir(*)
+      real (kind=8) :: ap(*),ac(*)
 
 !     Loop over number of equations
 
@@ -42,4 +42,4 @@
 
       end do
 
-      end
+      end subroutine cashift

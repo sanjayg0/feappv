@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -22,9 +22,12 @@
       include  'iofile.h'
       include  'iosave.h'
 
-      logical   pcomp, lopen, lexist
-      character tx*(*), fnamr*21, fext*8
-      integer   isfile
+      character (len=21) :: fnamr
+      character (len=8)  :: fext
+      character          :: tx*(*)
+
+      logical       :: pcomp, lopen, lexist
+      integer       :: isfile
 
       save
 
@@ -55,4 +58,4 @@
         readfl = .true.
       endif
 
-      end
+      end function readfl

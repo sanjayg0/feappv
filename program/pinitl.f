@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -30,8 +30,9 @@
       include   'pointer.h'
       include   'comblk.h'
 
-      logical    err, pcomp, palloc,setvar
-      character  lct*15
+      character (len=15) :: lct
+
+      logical       :: err, pcomp, palloc,setvar
 
       err = .false.
 
@@ -63,4 +64,4 @@
 
 3000  format(/'  *ERROR* Bad initial conditions')
 
-      end
+      end subroutine pinitl

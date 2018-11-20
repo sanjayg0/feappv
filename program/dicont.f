@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -29,12 +29,13 @@
       include  'ioincl.h'
       include  'iofile.h'
 
-      character ch*1
-      logical   errck, pinput, cinput
-      integer   numnp,ndf,lflag
+      character (len=1) :: ch
 
-      integer   id(ndf,*)
-      real*8    td(3)
+      logical       :: errck, pinput, cinput
+      integer       :: numnp,ndf,lflag
+
+      integer       :: id(ndf,*)
+      real (kind=8) :: td(3)
 
       save
 
@@ -169,4 +170,4 @@
 
 3003  format('   Input: new arc-length, new load direction->',$)
 
-      end
+      end subroutine dicont

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -43,8 +43,10 @@
       include   'pointer.h'
       include   'comblk.h'
 
-      integer    i
-      real*8     dtsav
+      integer       :: i
+      real (kind=8) :: dtsav
+
+      save
 
 !     Store time history plot information for converged step
 
@@ -54,17 +56,13 @@
         ntstep = ntstep + 1
 
 !       Check for active output increment
-
-
         if(mod(ntstep-1,ntincr).eq.0) then
 
 !         Set history update flag to false (no updates)
-
           hflgu  = .false.
           h3flgu = .false.
 
 !         Set transient parameters for current
-
           if(fl(9)) call dsetci
           do i = 1,3
             ctan(i) = gtan(i)
@@ -75,55 +73,57 @@
               dtsav = dt
               dt    = dtold
               call pzero(hr(np(26)),nneq)
+              pltmfl = .true.
               call formfe(np(40),np(26),np(26),np(26),
-     &                   .false.,.true.,.true.,.false.,6,1,numel,1)
+     &                   .false.,.true.,.false.,6,1,numel,1)
+              pltmfl = .false.
               rfl = .true.
               dt  = dtsav
             end if
           end if
 
 !         Set file name for displacements
-
           if(ndplts.gt.0) then
             call pltmv(dpl,idpl,hr(np(40)),ndplts,1.d0)
             call ptmplt('dis', ttim, dpl,ndplts, ntstep)
           end if
 
 !         Set file name for velocities
-
           if(nvplts.gt.0) then
             call pltmv(dpl,ivpl,hr(np(42)),nvplts,1.d0)
             call ptmplt('vel', ttim, dpl,nvplts, ntstep)
           end if
 
 !         Set file name for accelerations
-
           if(naplts.gt.0) then
             call pltmv(dpl,iapl,hr(np(42)+nneq),naplts,1.d0)
             call ptmplt('acc', ttim, dpl,naplts, ntstep)
           end if
 
 !         Set file name for reactions
-
           if(nrplts.gt.0) then
             call pltmv(rpl,irpl,hr(np(26)),nrplts,-1.d0)
             call ptmplt('rea', ttim, rpl,nrplts, ntstep)
           end if
 
 !         Set file name for stresses
-
           if(nsplts.gt.0) then
             call ptmplt('str', ttim, spl,nsplts,ntstep)
           end if
 
 !         Set file name for user stresses
-
           if(nuplts.gt.0) then
             call ptmplt('use', ttim, upl,nuplts, ntstep)
+          end if
+
+!         Set file name for arclength
+          if(nlplts.gt.0) then
+            call pltmv(lpl,ilpl,hr(np(40)),nlplts,1.d0)
+            call ptmplt('arc', rlnew*prop, lpl,nlplts, ntstep)
           end if
 
         end if  ! End of increment check
 
       end if
 
-      end
+      end subroutine ptimpl

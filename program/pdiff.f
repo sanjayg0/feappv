@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -25,8 +25,8 @@
       include  'pointer.h'
       include  'comblk.h'
 
-      integer   i, n, ndm, numnp
-      real*8    pdiff,  xmx, xmn, x(ndm,numnp)
+      integer       :: i, n, ndm, numnp
+      real (kind=8) :: pdiff,  xmx, xmn, x(ndm,numnp)
 
       save
 
@@ -57,4 +57,4 @@
 
 3000  format(' *ERROR* PDIFF: Coodinates are unspecified')
 
-      end
+      end function pdiff

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -20,8 +20,8 @@
 
       include  'iofile.h'
 
-      integer   l
-      real*8    sw(2,*), t0,t1,t2
+      integer       :: l
+      real (kind=8) :: sw(2,*), t0,t1,t2
 
       save
 
@@ -105,4 +105,4 @@
 3000  format(/5x,'Error in INT1DL.',5x,'No',i3,2x,
      &          'Integration points allowed'/)
 
-      end
+      end subroutine int1dl

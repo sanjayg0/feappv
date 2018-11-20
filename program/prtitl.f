@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -15,13 +15,12 @@
 !      Outputs:
 !         None      - Outputs to file/screen
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'bdata.h'
       include  'iofile.h'
 
-      logical   prtf
+      logical       :: prtf
 
       save
 
@@ -34,4 +33,4 @@
 
 2000  format(/a1,19a4,a2/1x)
 
-      end
+      end subroutine prtitl

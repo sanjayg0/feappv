@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -28,9 +28,9 @@
       include   'trdata.h'
       include   'comblk.h'
 
-      logical    setvar, palloc
-      integer    isd,iside(*), is(isd,*),iblend(*)
-      integer    i, j, i1,i2,i3,i4
+      logical        :: setvar, palloc
+      integer        :: isd,iside(*), is(isd,*),iblend(*)
+      integer        :: i, j, i1,i2,i3,i4
 
       save
 
@@ -63,7 +63,7 @@
       i3     = 1
       call pblenda2(i3,i1,i2,mr(np(162)),iside,isd)
 
-      end
+      end subroutine pblend1a
 
       subroutine pblend1b(xs,is,trb,iblend,ilr,x,ix,
      &                    iside,isd,ndm,nen1,prt,prth,eflag,nflag)
@@ -102,7 +102,9 @@
       integer    i, j,jj, k, ma
       integer    ne,nf,ni,nm,nn,nr,ns,nodinc,ntyp, styp, dlayer
       integer    is(isd,*),iblend(*), ix(nen1,*), ilr(*)
-      real*8     xs(3,*),trb(3,4),x(ndm,*), trdeto
+      real (kind=8) ::  xs(3,*),trb(3,4),x(ndm,*), trdeto
+
+      integer    nel
 
       save
 
@@ -184,9 +186,13 @@
             do i = nn,j
               ma = ix(nen1,i)
               etype = pelabl(ix(nen+7,i))
-              write(iow,2001) i,ma,nreg,etype,(ix(k,i),k=1,nen)
+              nel   = 0
+              do k = 1,nen
+                if(ix(k,i).gt.0) nel = k
+              end do ! k
+              write(iow,2001) i,ma,nreg,etype,(ix(k,i),k=1,nel)
               if(ior.lt.0) then
-                write(*,2001) i,ma,nreg,etype,(ix(k,i),k=1,nen)
+                write(*,2001) i,ma,nreg,etype,(ix(k,i),k=1,nel)
               endif
             end do ! i
           end do ! nn
@@ -202,7 +208,7 @@
 
 3000  format(' *ERROR* PBLEND1: No side nodes found for side',i4)
 
-      end
+      end subroutine pblend1b
 
       subroutine pblend1x(nn,nr,ni,ndm, fxim,nty,x,nflag,prt,prth)
 
@@ -246,4 +252,4 @@
 
 2001  format(i8,1p,4e15.5)
 
-      end
+      end subroutine pblend1x

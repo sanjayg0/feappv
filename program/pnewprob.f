@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -63,12 +63,14 @@
       include   'vdata.h'
       include   'comblk.h'
 
-      character  fileck*128
-      logical    errs,oprt,setvar,palloc,tinput,vinput,pcomp
-      logical    contrfl,lopen
-      character  cdate*24, ctext*15
-      integer    isw,iii, i,j, l1,l2,l3,l4,l5,l6
-      real*8     td(12)
+      character (len=128) :: fileck
+      character (len=24)  :: cdate
+      character (len=15)  :: ctext
+
+      logical       :: errs,oprt,setvar,palloc,tinput,vinput,pcomp
+      logical       :: contrfl,lopen
+      integer       :: isw,iii, i,j, l1,l2,l3,l4,l5,l6
+      real (kind=8) :: td(12)
 
       save
 
@@ -105,6 +107,8 @@
       intr   = .false.
       intx   = .false.
       nurbfl = .false.
+      vemfl  = .false.
+      cdate  = '  '
       call fdate( cdate )
       ctext   = 'start'
       contrfl = .true.
@@ -116,7 +120,7 @@
         elseif(pcomp(ctext,'elem',4) .or. pcomp(ctext,'numel',5)) then
           numel = nint(td(2))
           contrfl = .false.
-        elseif(pcomp(ctext,'mate',4) .or. pcomp(ctext,'nummat',5)) then
+        elseif(pcomp(ctext,'mate',4) .or. pcomp(ctext,'numma',5)) then
           nummat = nint(td(2))
           contrfl = .false.
         elseif(pcomp(ctext,'dime',4) .or. pcomp(ctext,'ndm',3)) then
@@ -171,6 +175,10 @@
       numsn  = 0
       numsd  = 0
       numbd  = 0
+
+!     Number of NURBS materials
+
+      nurma  = 0
 
 !     Contact array initialization
 
@@ -484,6 +492,21 @@
         mr(np(190)+i      ) = 0
       end do ! i
 
+!     Mark all elements as unused
+
+      do i = 1,numel
+        mr(np(33)+nen1*i-1) = -99
+      end do ! i
+
+!     Set element assembly array
+
+      sa(1) = 0
+      do j = 2,nen
+        sa(j) = sa(j-1) + ndf
+      end do ! j
+      la = ndf*nen   ! Location of element equations in element array
+      ga = la + nad  ! Location of global  equations in element array
+
 !     Open file to store material data
 
       inquire(unit=iwd,name=fileck, opened=errs)
@@ -518,8 +541,7 @@
      &            numnp,numel,nummat,errs)
       setvar = palloc(111,'TEMP1',0, 1)
       if(errs) then
-        call pdelfl()
-        return
+        call plstop(.true.)
       endif
 
 !     Compute boundary nodes (before ties)
@@ -534,22 +556,17 @@
 
 !     Input/output formats
 
-2000  format(1x,19a4,a3//4x,
-     & 'F I N I T E   E L E M E N T   A N A L Y S I S   P R O G R A M'
-     &     /14x,'FEAPpv (P e r s o n a l   V e r s i o n)',
-     &    //13x,'(C) Regents of the University of California'
-     &     /23x,'All Rights Reserved.'
-     &     //5x,'Solution date: ',a//14x,'VERSION: ',a/14x,'DATE: ',a/
-     &      /5x,'Input Data Filename: ',a/
-     &      /5x,'Number of Nodal Points  - - - - - - :',i9
-     &      /5x,'Number of Elements  - - - - - - - - :',i9/
-     &      /5x,'Spatial Dimension of Mesh - - - - - :',i9
-     &      /5x,'Degrees-of-Freedom/Node (Maximum) - :',i9
-     &      /5x,'Equations/Element       (Maximum) - :',i9
-     &      /5x,'Number Element Nodes    (Maximum) - :',i9/
-     &      /5x,'Number of Material Sets - - - - - - :',i9
-     &      /5x,'Number Parameters/Set   (Program) - :',i9
-     &      /5x,'Number Parameters/Set   (Users  ) - :',i9)
+2000  format(1x,19a4,a3//5x,'Solution date: ',a//14x,a/14x,a/
+     &                /5x,'Input Data Filename: ',a/
+     &                /5x,'Number of Nodal Points  - - - - - - :',i9
+     &                /5x,'Number of Elements  - - - - - - - - :',i9/
+     &                /5x,'Spatial Dimension of Mesh - - - - - :',i9
+     &                /5x,'Degrees-of-Freedom/Node (Maximum) - :',i9
+     &                /5x,'Equations/Element       (Maximum) - :',i9
+     &                /5x,'Number Element Nodes    (Maximum) - :',i9/
+     &                /5x,'Number of Material Sets - - - - - - :',i9
+     &                /5x,'Number Parameters/Set   (Program) - :',i9
+     &                /5x,'Number Parameters/Set   (Users  ) - :',i9)
 
 2017  format(/'  Problem definitions are specified by include files.'
      &      //'  Output for each problem is written to separate files.'
@@ -563,4 +580,4 @@
 
 3003  format(/' *ERROR* PCONTR: File name error')
 
-      end
+      end subroutine pnewprob

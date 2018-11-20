@@ -4,7 +4,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -36,15 +36,15 @@
       include  'pointer.h'
       include  'comblk.h'
 
-      logical   nflag,prt,prth
-      integer   i,j,k, nr,ns,ni,ntyp, nn, ndm, ninc
+      logical       :: nflag,prt,prth
+      integer       :: i,j,k, nr,ns,ni,ntyp, nn, ndm, ninc
 
-      real*8    n1i,n2i, n1j,n2j, rnr,rns
+      real (kind=8) :: n1i,n2i, n1j,n2j, rnr,rns
 
-      integer   nty(*)
-      real*8    fxim(ndm,0:nr), fxip(ndm,0:nr)
-      real*8    fetm(ndm,0:ns), fetp(ndm,0:ns)
-      real*8    x(ndm,*)
+      integer       :: nty(*)
+      real (kind=8) :: fxim(ndm,0:nr), fxip(ndm,0:nr)
+      real (kind=8) :: fetm(ndm,0:ns), fetp(ndm,0:ns)
+      real (kind=8) :: x(ndm,*)
 
       save
 
@@ -102,4 +102,4 @@
 
 2001  format(i8,1p,4e15.5)
 
-      end
+      end subroutine pblendx

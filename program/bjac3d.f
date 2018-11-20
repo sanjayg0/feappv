@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -22,11 +22,11 @@
 
       implicit  none
 
-      integer   ndm, i, j, k
-      real*8    detj, xii, eti, zti
+      integer       :: ndm, i, j, k
+      real (kind=8) :: detj, xii, eti, zti
 
-      real*8    rst(3), xl(ndm,*), shp(4,8), xs(3,3)
-      real*8    xi(8), eta(8), zta(8)
+      real (kind=8) :: rst(3), xl(ndm,*), shp(4,8), xs(3,3)
+      real (kind=8) :: xi(8), eta(8), zta(8)
 
       data xi /-0.5d0, 0.5d0, 0.5d0,-0.5d0,-0.5d0, 0.5d0, 0.5d0,-0.5d0/
       data eta/-0.5d0,-0.5d0, 0.5d0, 0.5d0,-0.5d0,-0.5d0, 0.5d0, 0.5d0/
@@ -61,4 +61,4 @@
      &     + xs(1,2)*(xs(2,3)*xs(3,1) - xs(2,1)*xs(3,3))
      &     + xs(1,3)*(xs(2,1)*xs(3,2) - xs(2,2)*xs(3,1))
 
-      end
+      end subroutine bjac3d

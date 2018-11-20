@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -32,9 +32,9 @@
       include  'eldata.h'
       include  'iofile.h'
 
-      integer   i,j,k,jel,isw
-      integer   ix(*)
-      real*8    p(*),s(*),d(*),u(*),x(*),t(*)
+      integer       :: i,j,k,jel,isw
+      integer       :: ix(*)
+      real (kind=8) :: p(*),s(*),d(*),u(*),x(*),t(*)
 
       save
 
@@ -193,12 +193,12 @@
 
 !     Error
 
-400   if(ior.gt.0) write(iow,4000) n,jel
-      if(ior.lt.0) write(  *,4000) n,jel
+400   if(ior.gt.0) write(iow,4000) n_el,jel
+      if(ior.lt.0) write(  *,4000) n_el,jel
       call plstop(.true.)
 
 !     Format
 
 4000  format('  *ERROR* Element:',i6,', type number',i3,' input')
 
-      end
+      end subroutine elmlib

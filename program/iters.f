@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -31,13 +31,12 @@
       include  'iofile.h'
       include  'ndata.h'
       include  'pointer.h'
-      include  'psize.h'
       include  'sdata.h'
       include  'ssolve.h'
 
-      logical   setvar,palloc
-      integer   isw,len,kp,bkmax, iptc
-      real*4    tary(2), etime , tt
+      logical       :: setvar,palloc
+      integer       :: isw,len,kp,bkmax, iptc
+      real (kind=4) :: tary(2), etime , tt
 
       save
 
@@ -203,4 +202,4 @@
 
 2000  format(10x,'Compressed Storage =',i9,20x,'t=',0p,2f9.2)
 
-      end
+      end subroutine iters

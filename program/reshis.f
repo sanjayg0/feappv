@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -27,7 +27,7 @@
       include  'pointer.h'
       include  'comblk.h'
 
-      integer   nen1,numel,n1,n2, n,nh, ix(nen1,numel)
+      integer       :: nen1,numel,n1,n2, n,nh, ix(nen1,numel)
 
       save
 
@@ -43,4 +43,4 @@
         endif
       end do ! n
 
-      end
+      end subroutine reshis

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -20,12 +20,12 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
-      integer   j,jh
-      real*8    daval,au(jh)
+      integer       :: j,jh
+      real (kind=8) :: daval,au(jh)
 
       daval = 0.0d0
       do j = 1,jh
         daval = daval + abs(au(j))
       end do
 
-      end
+      end subroutine datest

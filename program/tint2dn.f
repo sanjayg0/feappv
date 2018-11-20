@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -20,8 +20,8 @@
 
       include  'iofile.h'
 
-      integer   i,j,l, lint
-      real*8    el(4,*), gg
+      integer       :: i,j,l, lint
+      real (kind=8) :: el(4,*), gg
 
       save
 
@@ -111,4 +111,4 @@
 
 2000  format(' *ERROR* TINT2DN: Wrong quadrature, nel =',i3)
 
-      end
+      end subroutine tint2dn

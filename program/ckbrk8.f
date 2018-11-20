@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -30,12 +30,12 @@
       include  'pointer.h'
       include  'comblk.h'
 
-      integer   ndm, nel, i, l, n, ineg
-      real*8    detj
+      integer       :: ndm, nel, i, l, n, ineg
+      real (kind=8) :: detj
 
-      integer   ix(*)
-      integer   ic(16)
-      real*8    rst(3,8), xl(ndm,*), shp(*)
+      integer       :: ix(*)
+      integer       :: ic(16)
+      real (kind=8) :: rst(3,8), xl(ndm,*), shp(*)
 
       save
 
@@ -45,7 +45,6 @@
      &               1.d0, 1.d0, 1.d0,  -1.d0, 1.d0, 1.d0/
 
 !     Check element for input errors
-
       ineg = 0
       do l = 1,nel
         if(ix(l).gt.0) then
@@ -93,4 +92,4 @@
 2001  format(' >Element',i4,' has negative jacobian at nodes:'/
      &      ('                Local =',i3,' Global =',i4))
 
-      end
+      end subroutine ckbrk8

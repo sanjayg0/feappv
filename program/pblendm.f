@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -36,9 +36,9 @@
       include  'region.h'
       include  'comblk.h'
 
-      logical   prt,prth,eflag,nflag, setvar,palloc
-      integer   n,n1,isd,blend,ndm,nen1
-      integer   iside(4),tblend(21)
+      logical       :: prt,prth,eflag,nflag, setvar,palloc
+      integer       :: n,n1,isd,blend,ndm,nen1
+      integer       :: iside(4),tblend(21)
 
       save
 
@@ -96,4 +96,4 @@
 
       end do ! n
 
-      end
+      end subroutine pblendm

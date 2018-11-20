@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -20,12 +20,9 @@
 !         n3          - Increment to node from n1
 !         prth        - Output title/header data if true
 
-
-
 !      Outputs:
 !         None        - Outputs to file/screen
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'iofile.h'
@@ -33,9 +30,9 @@
       include  'strnum.h'
       include  'xtout.h'
 
-      logical   cknon0,vnon0,prth
-      integer   ndm,numnp,n1,n2,n3, i, n, ista, count, nxt1
-      real*8    x(ndm,*),dp(numnp,*),ds(numnp,*)
+      logical       :: cknon0,vnon0,prth
+      integer       :: ndm,numnp,n1,n2,n3, i, n, ista, n_count, nxt1
+      real (kind=8) :: x(ndm,*),dp(numnp,*),ds(numnp,*)
 
       save
 
@@ -47,7 +44,7 @@
       end do
 
       if(ista.gt.0) then
-        count = 0
+        n_count = 0
         nxt1  = max(1,nxt)
         do n = n1,n2,n3
           if( nxt.eq.0 .or. abs(x(nxt1,n)-xt).le.xtol ) then
@@ -56,14 +53,14 @@
               if(ds(n,i).ne.0.0d0) vnon0 = .true.
             end do
             if(vnon0) then
-              count = count - 1
-              if(count.le.0) then
+              n_count = n_count - 1
+              if(n_count.le.0) then
                 call prtitl(prth)
                 write(iow,2000) (i,i=1,3),(i,i=1,ista)
                 if(ior.lt.0.and.pfr) then
                   write(*,2000) (i,i=1,3),(i,i=1,ista)
                 endif
-                count = 50
+                n_count = 50
               endif
               write(iow,2001) n,(dp(n,i),i=1,7),(ds(n,i),i=1,ista)
               if(ior.lt.0.and.pfr) then
@@ -85,4 +82,4 @@
 
 2001  format(/i7,1p,4e12.4/7x,1p,3e12.4/(7x,1p,6e12.4))
 
-      end
+      end subroutine prtstr

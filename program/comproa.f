@@ -4,7 +4,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -36,10 +36,10 @@
       include  'pointer.h'
       include  'comblk.h'
 
-      logical   bycol, wdiag, all
-      integer   i, j, ne, nep, neq, nn
-      integer   numnp, nen, nen1, ndf, kp, kpo, kpf
-      integer   ix(nen1,*), id(ndf,*), ic(*), ir(*), ielc(*)
+      logical      :: bycol, wdiag, all
+      integer      :: i, j, ne, nep, neq, nn
+      integer      :: numnp, nen, nen1, ndf, kp, kpo, kpf
+      integer      :: ix(nen1,*), id(ndf,*), ic(*), ir(*), ielc(*)
 
       save
 
@@ -94,4 +94,4 @@
         nep = ne + 1
       end do ! i
 
-      end
+      end subroutine comproa

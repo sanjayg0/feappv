@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -20,8 +20,8 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
-      integer   j,jh
-      real*8    dured, dot, al(jh),au(jh),ad(jh)
+      integer       :: j,jh
+      real (kind=8) :: dured, dot, al(jh),au(jh),ad(jh)
 
 !     Scale upper U vector by reciprocal diagonals D
 
@@ -39,4 +39,4 @@
         al(j) = al(j)*ad(j)
       end do
 
-      end
+      end function dured

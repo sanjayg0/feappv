@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -20,9 +20,9 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
-      integer   nen,nrot,ii,n
-      integer   ix(nen)
-      real*8    angl(nen),angg(*)
+      integer       :: nen,nrot,ii,n
+      integer       :: ix(nen)
+      real (kind=8) :: angl(nen),angg(*)
 
       save
 
@@ -40,4 +40,4 @@
          endif
       end do
 
-      end
+      end subroutine pangl

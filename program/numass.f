@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -21,8 +21,8 @@
 
       include  'iofile.h'
 
-      integer   n,nn,neq,mq
-      real*8    b(*)
+      integer       :: n,nn,neq,mq
+      real (kind=8) :: b(*)
 
       nn = 0
       do n = 1,neq
@@ -43,4 +43,4 @@
 2000  format(' Subspace reduced to',i4,' by number of nonzero',
      &       ' diagonal mass terms')
 
-      end
+      end subroutine numass

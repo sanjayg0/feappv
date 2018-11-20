@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -26,12 +26,14 @@
 
       include  'conval.h'
 
-      character x(*)*1,yy*75
-      logical   pcomp,error
-      integer   i,ii,j,jj,k,kk,nn,nex
-      real*8    padd,psub,val,v(*)
-      real*8    sind, cosd, tand, acosd, asind, atand
-      external  sind, cosd, tand, acosd, asind, atand
+      character (len=75) :: yy
+      character (len=1)  :: x(*)
+      logical       :: pcomp,error
+      integer       :: i,ii,j,jj,k,kk,nn,nex
+      real (kind=8) :: padd,psub,val,v(*)
+      real (kind=8) :: sind, cosd, tand, acosd, asind, atand
+
+      external      :: sind, cosd, tand, acosd, asind, atand
 
       save
 
@@ -185,4 +187,4 @@
 
       call evalex(yy,v,val,k,error)
 
-      end
+      end subroutine pfuncs

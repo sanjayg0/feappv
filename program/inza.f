@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -23,7 +23,7 @@
 
       include  'iofile.h'
 
-      integer   n1,n2, i,k,n, ir(*)
+      integer      :: n1,n2, i,k,n, ir(*)
 
       save
 
@@ -49,4 +49,4 @@
      &        5x,'     Col. top =',i8,' Col. Bot =',i8/
      &        5x,'     Column entries'/ (5x,8i8))
 
-      end
+      end function inza

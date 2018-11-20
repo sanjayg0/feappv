@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -18,19 +18,19 @@
 !     Output:
 !       is(*,*) - List of side nodes/face sides
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'iofile.h'
 
-      logical   prt,prth, pcomp
-      integer   isw,nside
-      integer   is(nside,*)
+      character (len=15) :: vtype
 
-      logical   setvar,tinput
-      character vtype*15
-      integer   i,n,side
-      real*8    td(16)
+      logical       :: prt,prth, pcomp
+      integer       :: isw,nside
+      integer       :: is(nside,*)
+
+      logical       :: setvar,tinput
+      integer       :: i,n,side
+      real (kind=8) :: td(16)
 
       save
 
@@ -102,4 +102,4 @@
 
 2002  format(5x,i4,1x,a4,1x,9i5:/(15x,9i5))
 
-      end
+      end subroutine psides

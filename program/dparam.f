@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -36,12 +36,13 @@
       include  'ddata.h'
       include  'dyndat.h'
 
-      logical   pcomp
-      character lct*4
-      integer   i
+      character (len=4) ::lct
 
-      integer   ntot(2)
-      real*8    ct(3)
+      logical       :: pcomp
+      integer       :: i
+
+      integer       :: ntot(2)
+      real (kind=8) :: ct(3)
 
       save
 
@@ -205,4 +206,4 @@
 
 3000  format(/' *ERROR* ',a,' Not an implemented method'/1x)
 
-      end
+      end subroutine dparam

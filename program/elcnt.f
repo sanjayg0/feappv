@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -29,10 +29,10 @@
       include  'pointer.h'
       include  'sdata.h'
 
-      logical   flag
-      integer   i,j,k,n
-      integer   numnp, numel, nen, neix
-      integer   ix(neix, *), ic(*), nty
+      logical       :: flag
+      integer       :: i,j,k,n
+      integer       :: numnp, numel, nen, neix
+      integer       :: ix(neix, *), ic(*), nty
 
       save
 
@@ -51,7 +51,7 @@
         end do
       end do
 
-      end
+      end subroutine elcnt
 
       subroutine sumcnt(ic,nneq,kp)
 
@@ -67,7 +67,8 @@
 !          kc     - Length of pointer array
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit   none
-      integer    i,kp,nneq,ic(*)
+
+      integer       :: i,kp,nneq,ic(*)
 
 !     Set up pointers.
 
@@ -76,4 +77,4 @@
       end do
       kp = ic(nneq)
 
-      end
+      end subroutine sumcnt

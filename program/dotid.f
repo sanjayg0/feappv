@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -20,13 +20,13 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
-      integer   i,nn
-      integer   id(*)
-      real*8    dotid, a(*),b(*)
+      integer       :: i,nn
+      integer       :: id(*)
+      real (kind=8) :: dotid, a(*),b(*)
 
       dotid = 0.d0
       do i = 1,nn
         if(id(i).gt.0) dotid = dotid + a(i)*b(id(i))
       end do
 
-      end
+      end function dotid

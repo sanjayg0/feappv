@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -19,8 +19,10 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
-      character yyy*80,v*15,vv*15
-      logical   pcomp
+      character (len=80) :: yyy
+      character (len=15) :: v,vv
+
+      logical       :: pcomp
 
       save
 
@@ -28,4 +30,4 @@
       if(pcomp(yyy(46:59),v,14)) yyy(46:60) = vv
       if(pcomp(yyy(61:74),v,14)) yyy(61:75) = vv
 
-      end
+      end subroutine setpcd

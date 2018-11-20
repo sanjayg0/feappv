@@ -1,9 +1,9 @@
 !$Id:$
-      subroutine iprint(ia,ii,jj,mm,name)
+      subroutine iprint(ia,ii,jj,mm,namea)
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -14,7 +14,7 @@
 !         ii       - Number of rows to output
 !         jj       - Number of columns to output
 !         mm       - Dimension of array
-!         name     - Name of array to appear with outputs
+!         namea    - Name of array to appear with outputs
 
 !      Outputs:
 !         none
@@ -23,13 +23,15 @@
 
       include  'iofile.h'
 
-      character name*(*), aname*30
-      integer   ii,jj,mm,nn, ja,jb,j,n,i,icol,irow
-      integer   ia(mm,*)
+      character (len=30) :: aname
+      character          :: namea*(*)
+
+      integer   :: ii,jj,mm,nn, ja,jb,j,n,i,icol,irow
+      integer   :: ia(mm,*)
 
 !     Print an ii x jj array whose dimension is mm for first subscript
 
-      aname = name
+      aname = namea
       icol  = 6
       nn    = (jj+icol-1)/icol
       jb    = 0
@@ -74,4 +76,4 @@
 
  2001 format(1i8,1i13,5i10)
 
-      end
+      end subroutine iprint

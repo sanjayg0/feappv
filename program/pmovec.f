@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -16,12 +16,11 @@
 !      Outputs:
 !         b(*)    - Uncompressed move of a (zero undefined values)
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
-      integer   n,nn,j
-      real*8    a(nn),b(nn)
-      integer   id(*)
+      integer       :: n,nn,j
+      integer       :: id(*)
+      real (kind=8) :: a(nn),b(nn)
 
       save
 
@@ -36,4 +35,4 @@
         endif
       end do
 
-      end
+      end subroutine pmovec

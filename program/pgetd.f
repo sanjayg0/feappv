@@ -1,16 +1,16 @@
 !$Id:$
-      subroutine pgetd( name, point, lengt, prec , flag )
+      subroutine pgetd( aname, point, lengt, prec , flag )
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
 !      Purpose: Retrieve an array from dictionary
 
 !      Inputs:
-!         name     - Name of array to retrieve
+!         aname    - Name of array to retrieve
 
 !      Outputs:
 !         point    - Pointer to array
@@ -28,15 +28,17 @@
 
       include   'p_point.h'
 
-      character  name*(*),dname*5
-      logical    pcomp,flag
-      integer    lengt, prec, i
+      character (len=5) :: dname
+      character         :: aname*(*)
+
+      logical       :: pcomp,flag
+      integer       :: lengt, prec, i
 
       save
 
 !     Search dictionary for name
 
-      dname = name
+      dname = aname
 
       do i = 1,ndict
 
@@ -68,4 +70,4 @@
 2000  format(' *WARNING* Check for ',a5,
      &       ': Array not allocated for this problem.')
 
-      end
+      end subroutine pgetd

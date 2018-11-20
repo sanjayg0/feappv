@@ -4,7 +4,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -38,32 +38,55 @@
       include  'pointer.h'
       include  'comblk.h'
 
-      logical   errs
-      integer   i,ii,j,ma,mg,n,nen,nen1,nie,ndf,numnp,numel,nummat
+      logical       :: errs, warn, undfl
+      integer       :: i,ii,j,ma,mg,n,nen,nen1,nie,ndf
+      integer       :: numnp,numel,nummat
 
-      integer   ip(ndf,*),  id(ndf,*), ie(nie,*), iedof(ndf,nen,*)
-      integer   ix(nen1,*), nty(*)
+      integer       :: ip(ndf,*), id(ndf,*),ie(nie,*),iedof(ndf,nen,*)
+      integer       :: ix(nen1,*), nty(*)
+      integer       :: defel, nus
 
       save
 
 !     Perform mesh checks to ensure nodes/elements input
 
-      errs = .false.
+      defel =  0
+      errs  = .false.
+      warn  = .false.
+      undfl = .true.
       do n = 1,numel
-        if (ix(nen1,n).le.0 .or. ix(nen1,n).gt.nummat) then
-          write(iow,2000) n
-          if(ior.lt.0) write(*,2000) n
+        ma = ix(nen1,n)
+        if(ma.eq.-99) then
+          if(undfl) then
+            undfl = .false.
+            nus   =  n
+          endif
+          warn  = .true.
+          defel = defel + 1
+        elseif (ma.le.0 .or. ma.gt.nummat) then
+
+          write(iow,2000) ma,n
+          write(  *,2000) ma,n
+          errs = .true.
+        elseif(ie(nie-1,ma).eq.0) then
+          write(iow,2000) ma,n
+          write(  *,2000) ma,n
           errs = .true.
         else
+          if(.not.undfl) then
+            undfl = .true.
+            write(iow,2006) nus,n-1
+            write(*,2006) nus,n-1
+          endif
           do i = 1,nen
             ii = ix(i,n)
             if(ii.gt.numnp .or. ii.lt.0) then
               write(iow,2001) ii,n
-              if(ior.lt.0) write(*,2001) ii,n
+              write(  *,2001) ii,n
               errs = .true.
             elseif(ii.ne.0 .and. nty(ii).lt.0) then
               write(iow,2002) ii,n
-              if(ior.lt.0) write(*,2002) ii,n
+              write(  *,2002) ii,n
               errs = .true.
             endif
           end do
@@ -150,12 +173,12 @@
             call mshcksn(mr(np(162)),mr(np(164)),numsd,numsn,numbd,errs)
           else
             write(iow,2003)
-            if(ior.lt.0) write(*,2003)
+            write(  *,2003)
             errs = .true.
           endif
         else
           write(iow,2004)
-          if(ior.lt.0) write(*,2004)
+          write(  *,2004)
           errs = .true.
         endif
       endif
@@ -182,21 +205,43 @@
 
       call phsize(hr(np(43)),hr(np(44)),mr(np(33)))
 
+!     Warn on missing element solutions
+
+      if(numel.le.defel) then
+        write(iow,2008)
+        write(*,2008)
+        errs = .true.
+      elseif(warn) then
+        write(iow,2007)
+        write(*,2007)
+      endif
+
 !     Formats
 
-2000  format(10x,' *ERROR* Data for element ',i6,' not input')
+2000  format(5x,'*ERROR* MESHCK: Data for material set',i5,' on',
+     &          ' element ',i10,' not input')
 
-2001  format(10x,' *ERROR* Data for node ',i6,' on element',i6,
-     &           ' greater than maximum or negative')
-2002  format(10x,' *ERROR* Data for node ',i6,' on element',i6,
-     &           ' not input')
+2001  format(5x,'*ERROR* MESHCK: Data for node ',i10,' on element'
+     &               ,i10,' greater than maximum or negative')
 
-2003  format(10x,' *ERROR* Blending functions used but no SIDEs',
-     &           ' exist')
+2002  format(5x,'*ERROR* MESHCK: Data for node ',i10,' on element'
+     &           ,i10,' not input')
 
-2004  format(10x,' *ERROR* Blending functions used but no SNODes',
-     &           ' exist')
-      end
+2003  format(5x,'*ERROR* MESHCK: Blending functions used but no',
+     &           ' SIDEs exist')
+
+2004  format(5x,'*ERROR* MESHCK: Blending functions used but no',
+     &           ' SNODes exist')
+
+2006  format(5x,'*WARNING* MESHCK: Elements',i10,' to',i10,
+     &          ' have not been input')
+
+2007  format(5x,'*WARNING* MESHCK: Missing elements exist: Solution is'
+     &      /5x,'          based on elements currently defined')
+
+2008  format(5x,'*ERROR* MESHCK: No elements in mesh, problem stopped')
+
+      end subroutine meshck
 
       subroutine mshcksn(is,iblend,numsd,numsn,numbd,errs)
 
@@ -245,4 +290,4 @@
 2001  format(' *ERROR* BLENd',i5,' has value greater than maximum SNODE'
      &      ,' (',i5,') at entry',i5/)
 
-      end
+      end subroutine mshcksn

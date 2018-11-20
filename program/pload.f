@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -18,22 +18,23 @@
 !         f1(*)    - Total nodal load for t_n+1
 !         dr(*)    - Total reaction/residual
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'ddata.h'
+      include  'elpers.h'
       include  'fdata.h'
       include  'p_int.h'
       include  'prld1.h'
       include  'sdata.h'
+      include  'setups.h'
 
       include  'pointer.h'
       include  'comblk.h'
 
-      logical   flg
-      integer   j,n, ipro
-      integer   id(*)
-      real*8    prop,thn, f1(nneq,*),dr(*)
+      logical       :: flg
+      integer       :: j,n, ipro
+      integer       :: id(*)
+      real (kind=8) :: prop,thn, f1(nneq,*),dr(*)
 
 !     Set force vectors for t_n+1
 
@@ -92,4 +93,25 @@
         endif
       end do ! n
 
-      end
+!     Set gradu and bar values for periodic case
+
+      if(rank.eq.0) then
+        if(prpropu.le.0) then
+          gradu(:,:) = gradu0(:,:)*prop
+        else
+          gradu(:,:) = gradu0(:,:)*prldv(prpropu)
+        endif
+        if(prpropt.le.0) then
+          gradt(: )  = gradt0(:)  *prop
+        else
+          gradt(: )  = gradt0(:)  *prldv(prpropt)
+        endif
+
+!       Set boundary displacements for periodic boundary cases
+
+        if(perflg) then   ! Indicates mesh command 'peri'odic used
+          call pperdis(mr(np(31)),hr(np(43)),f1)
+        endif
+      endif
+
+      end subroutine pload

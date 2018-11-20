@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -23,9 +23,11 @@
       include  'comfil.h'
       include  'iofile.h'
 
-      logical   exst,cinput
-      character mac*(*),name*(*),y*1
-      integer   iopl,ios
+      character (len=1) :: y
+      character         :: mac*(*),name*(*)
+
+      logical       :: exst,cinput
+      integer       :: iopl,ios
 
       save
 
@@ -96,4 +98,4 @@
 
 3000  format('  *ERROR* Fatal error - incorrect file?')
 
-      end
+      end subroutine opnfil

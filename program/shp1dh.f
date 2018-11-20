@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -20,11 +20,10 @@
 !       shpt(4,2)   - theta-shape function/derivatives
 !                     1 = N_t,x; 2 = N_t,xx 3 = N_t,xxx, 4 = t_w
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit    none
 
-      real*8      length, xi,        xi2,        xi3
-      real*8      sg(2),  shpw(4,2), shpt(4,2)
+      real (kind=8) ::   length, xi,        xi2,        xi3
+      real (kind=8) ::   sg(2),  shpw(4,2), shpt(4,2)
 
 !     Powers of point
 
@@ -64,4 +63,4 @@
       shpt(4,1)  = 0.125d0*length*(  1.d0 - xi - xi2 + xi3)
       shpt(4,2)  = 0.125d0*length*(- 1.d0 - xi + xi2 + xi3)
 
-      end
+      end subroutine shp1dh

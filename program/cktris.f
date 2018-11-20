@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -27,12 +27,12 @@
       include  'pointer.h'
       include  'comblk.h'
 
-      integer   ndm, ineg, i,l
-      real*8    xsj
+      integer       :: ndm, ineg, i,l
+      real (kind=8) :: xsj
 
-      integer   ic(2,7)
-      integer   ix(*)
-      real*8    shp(*),xl(ndm,*),el(3,7)
+      integer       :: ic(2,7)
+      integer       :: ix(*)
+      real (kind=8) :: shp(*),xl(ndm,*),el(3,7)
 
       save
 
@@ -54,13 +54,13 @@
       end do
 
       if(ineg.gt.0) then
-        write(iow,2000) n,(ic(1,i),ic(2,i),i=1,ineg)
+        write(iow,2000) n_el,(ic(1,i),ic(2,i),i=1,ineg)
         if(ior.lt.0) then
-          write(*,2000) n,(ic(1,i),ic(2,i),i=1,ineg)
+          write(*,2000) n_el,(ic(1,i),ic(2,i),i=1,ineg)
         endif
       else
         do l = 1,nel
-          call  trishp(el(1,l),xl,ndm,nel-4,xsj,shp)
+          call  shptri(el(1,l),xl,ndm,nel,xsj,shp, .true.)
           if(xsj.le.0.0d0) then
             ineg       = ineg + 1
             ic(1,ineg) = l
@@ -69,16 +69,16 @@
         end do
 
         if(ineg.gt.0) then
-          write(iow,2001) n,(ic(1,i),ic(2,i),i=1,ineg)
+          write(iow,2001) n_el,(ic(1,i),ic(2,i),i=1,ineg)
           if(ior.lt.0) then
-            write(*,2001) n,(ic(1,i),ic(2,i),i=1,ineg)
+            write(*,2001) n_el,(ic(1,i),ic(2,i),i=1,ineg)
           endif
         endif
 
 !       Try to fix element by reversing order of nodes on 'ix'
 
         if(ineg.eq.nel) then
-          if(ior.lt.0) write(*,2002) n
+          if(ior.lt.0) write(*,2002) n_el
           l     = ix(2)
           ix(2) = ix(3)
           ix(3) = l
@@ -100,4 +100,5 @@
      &      ('                    Local =',i3,' Global =',i4))
 
 2002  format(' >Element',i8,' Reverse numbers to fix negative jacobian')
-      end
+
+      end subroutine cktris

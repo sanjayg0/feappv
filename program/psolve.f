@@ -1,15 +1,16 @@
 !$Id:$
-      subroutine psolve(fp,factor,solve,cfr, prnt)
+      subroutine psolve(b,fp,factor,solve,cfr, prnt)
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--+---------+---------+---------+---------+---------+---------+-]
 !     Purpose: Driver for equation solvers
 
 !     Inputs:
+!        b(*)   - Right hand side
 !        fp(*)  - Pointers for array locations
 !        factor - Factor matrix if true
 !        solve  - Solve equations if true
@@ -37,10 +38,10 @@
       include   'pointer.h'
       include   'comblk.h'
 
-      logical    factor,solve,cfr,prnt, setvar,palloc,flags(5)
-      integer    naur,njpr, i
-      real*4     etime, tt,tary(2)
-      real*8     rn, rsdi
+      logical       :: factor,solve,cfr,prnt, setvar,palloc,flags(5)
+      integer       :: naur,njpr, i
+      real (kind=4) :: etime, tt,tary(2)
+      real (kind=8) :: rn, rsdi, b(*)
 
       if(solver) then
 
@@ -51,7 +52,7 @@
             tt    = etime(tary)
             tdiff = tary(1)
 
-            call datri(hr(fp(3)),hr(fp(2)),hr(fp(1)),mr(fp(5)),neqs,neq)
+            call datri(hr(fp(3)),hr(fp(2)),hr(fp(1)),mr(fp(4)),neqs,neq)
 
             tt    = etime(tary)
             tdiff = tary(1) - tdiff  ! save for timing solutions
@@ -75,9 +76,9 @@
             aengy = 0.0d0
             do i = 0,neq-1
               if(hr(fp(1)+i) .ne. 0.0d0) then
-                rsdi        = hr(fp(4)+i)
-                hr(fp(4)+i) = hr(fp(4)+i)/hr(fp(1)+i)
-                aengy       = aengy + rsdi*hr(fp(4)+i)
+                rsdi   = b(i+1)
+                b(i+1) = b(i+1)/hr(fp(1)+i)
+                aengy  = aengy + rsdi*b(i+1)
               endif
             end do ! i
 
@@ -85,8 +86,8 @@
 
           elseif(ittyp.le.-1) then
 
-            call dasol (hr(fp(3)),hr(fp(2)),hr(fp(1)),hr(fp(4)),
-     &                  mr(fp(5)),neqs,neq,aengy)
+            call dasol (hr(fp(3)),hr(fp(2)),hr(fp(1)),b,
+     &                  mr(fp(4)),neqs,neq,aengy)
 
 !         Conjugate gradient solver
 
@@ -105,7 +106,7 @@
 
             if(prnt .and. ior.lt.0) write(*,*) 'START CG: SOLVER'
 
-            call conjgd(hr(fp(1)),hr(fp(2)),hr(fp(6)),hr(fp(4)),
+            call conjgd(hr(fp(1)),hr(fp(2)),hr(fp(6)),b,
      &                  mr(np(93)),mr(np(94)),hr(fp(7)),hr(fp(8)),
      &                  hr(fp(9)),hr(fp(10)),neq,neq,tol,rn,rn0)
 
@@ -139,4 +140,4 @@
 2001  format('   End Triangular Decomposition',28x,'t=',0p,2f9.2)
 2002  format('   End Conjugate Gradient Solution',25x,'t=',0p,2f9.2)
 
-      end
+      end subroutine psolve

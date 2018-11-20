@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -26,17 +26,16 @@
 !       x(ndm,ip) - Coordinates of points
 
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'cdata.h'
       include  'pointer.h'
       include  'comblk.h'
 
-      integer   k,n, nr,ns,side,ndm, styp
+      integer       :: k,n, nr,ns,side,ndm, styp
 
-      integer   is(*)
-      real*8    xs(3,*), shp(*), rt(3,*), x(ndm,*), xx(3), tr(3,4)
+      integer       :: is(*)
+      real (kind=8) :: xs(3,*),shp(*),rt(3,*),x(ndm,*),xx(3),tr(3,4)
 
       save
 
@@ -77,4 +76,4 @@
         end do ! k
       end do ! n
 
-      end
+      end subroutine pside1

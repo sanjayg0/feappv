@@ -3,16 +3,16 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
       implicit  none
 
       include  'iofile.h'
 
-      logical   prt,prth, setvar,pinput
-      integer   ndm, i,n,node
-      real*8    xs(3,*), td(6)
+      logical       :: prt,prth, setvar,pinput
+      integer       :: ndm, i,n,node
+      real (kind=8) :: xs(3,*), td(6)
 
       save
 
@@ -59,4 +59,4 @@
 
 2001  format(i10,1p,3e15.5)
 
-      end
+      end subroutine pnodes

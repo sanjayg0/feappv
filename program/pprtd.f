@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -27,9 +27,11 @@
 
       include  'pointer.h'
 
-      character c*1, ptype(2)*8
-      logical   skip,cinput
-      integer   i, j, ity, lines
+      character (len=8) :: ptype(2)
+      character (len=1) :: c
+
+      logical       :: skip,cinput
+      integer       :: i, j, ity, lines
 
       save
 
@@ -109,4 +111,4 @@
      &       20x,'Total used     = ',1i9/
      &       20x,'Total allowed  = ',1i9)
 
-      end
+      end subroutine pprtd

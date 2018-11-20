@@ -1,19 +1,20 @@
 !$Id:$
-      subroutine pmacio (jct,lct,ct,wd,ed,nwd,nlp,ll,prth)
+      subroutine pmacio (jct,lct,ct,wd,ed,nwd,nlp,nif,ll,prth)
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
-!      Purpose: Macro instruction input subprogram
+!      Purpose: Command language input subprogram
 
 !      Inputs:
 !         wd(*)     - List of command languate names
 !         ed(*)     - Manual level indicators for commands
 !         nwd       - Number of commands in wd
 !         nlp       - Location of 'loop' command
+!         nif       - Location of 'if' command
 !         prth      - Flag, print title/header if true
 
 !      Scratch:
@@ -32,14 +33,19 @@
       include  'iofile.h'
       include  'prflag.h'
 
-      logical   pcomp,flg,errck,tinput,vinput,pflg,prth
-      integer   nwd,nlp,nnx,ll,llo,l,i,lc,lo,j,k,is
+      character (len=15) :: lct(*),clab(2),vv(3)
+      character (len=4)  :: wd(nwd)
 
-      character lct(*)*15,wd(nwd)*4,clab(2)*15,vv(3)*15
-      integer   jct(*),ed(nwd)
-      real*8    ct(3,*), sv(1), td(4)
+      logical       :: pcomp,flg,errck,tinput,vinput,pflg,prth
+      integer       :: nwd,nlp,nnx,ll,llo,l,i,lc,lo,j,k,is
+      integer       :: nif,nel,nei, ncmds
+
+      integer       :: jct(*),ed(nwd)
+      real (kind=8) :: ct(3,*), sv(1), td(4)
 
       save
+
+      data      ncmds / 200 /
 
 !     Initiate read of command statements
 
@@ -50,22 +56,24 @@
 
 !     Read command records
 
-      ll = 1
-      nn = nnn
-      nnx = nlp + 1
-      jct(1) = nlp
+      ll      = 1
+      nn      = nnn
+      nnx     = nlp + 1
+      nel     = nif + 1
+      nei     = nif + 2
+      jct(1)  = nlp
       ct(1,1) = 1.0
       ct(2,1) = 0.0
-      flg = .true.
+      flg     = .true.
 100   if(ior.lt.0 .and. flg .and. pfr) then
         write(*,2002)
         write(*,2003)
       endif
-      if(nn.gt.199) nn = 0
-      if(ll.gt.195.and.ior.lt.0) write(*,3001)
+      if(nn.gt.ncmds-1) nn = 0
+      if(ll.gt.ncmds-5.and.ior.lt.0) write(*,3001) ncmds,ncmds
       ll = ll + 1
-      if(ll.gt.200) then
-        write (*,3002)
+      if(ll.gt.ncmds) then
+        write (*,3002) ncmds
         ll = -1
         return
       endif
@@ -129,7 +137,7 @@
 
       endif
 
-!     End: Quit (q) or Exit (e)
+!     End: Quit (q), Exit (e) or Stop (s)
 
       if(ior.lt.0) then
 
@@ -145,6 +153,15 @@
             go to 210
           else
             go to 100
+          endif
+        elseif(pcomp(clab(1),'stop',4)
+     &     .or.pcomp(clab(1),'s   ',4)) then
+          if(ior.lt.0) then
+            call pprint('   Stop execution? (y or n) :')
+            errck = tinput(clab,1,sv,0)
+            if(pcomp(clab(1),'y',1)) then
+              call plstop(.false.)
+            endif
           endif
         endif
       elseif(pcomp(clab(1),'end ',4)) then
@@ -253,7 +270,71 @@
           lzz(l)  = zzz
 
         endif
-      end do
+      end do ! l
+!     Check if/endif pairs
+
+      j = 0
+      do l = 1,ll
+        if(jct(l).eq.nif) j = j + 1
+        if(jct(l).eq.nei) j = j - 1
+        if(j.lt.0) then
+          if(ior.gt.0) then
+            go to 403
+          else
+            ll  = ll - 2
+            flg = .false.
+            write(*,4003)
+            go to 100
+          endif
+        endif
+      end do ! l
+      if(j.ne.0) then
+        if(ior.gt.0) then
+          go to 404
+        else
+          ll = ll - 1
+          flg = .false.
+          go to 100
+        endif
+      endif
+
+!     Set if/else/endif markers
+
+      flg = .true.
+      do l = 1,ll-1
+        if(jct(l).eq.nif .or.jct(l).eq.nel) then
+
+!         Locate the matching endif command
+
+          j  = 1
+          k  = 0
+          do i = l+1,ll
+            if(jct(i).eq.nel .and. k.eq.0) then
+              k = i
+            endif
+            if(jct(i).eq.nif) j = j + 1
+            if(j.gt.9) go to 401
+            if(jct(i).eq.nei) j = j - 1
+            if(j.eq.0) go to 205
+          end do ! i
+          go to 404
+
+!         Store endif information in 'lzz'
+
+205       errck   = vinput(lzz(l),80,ct(1,l),3)
+          if(k.eq.0) then
+            ct(2,l) = i - 1
+          else
+            ct(2,l) = k - 1
+          endif
+          ct(3,l) = i - 1
+          write(zzz,2005) (ct(k,l),k=1,3)
+          lzz(l)  = zzz
+
+        endif
+      end do ! l
+
+!     Exit
 
 210   return
 
@@ -268,37 +349,50 @@
       call plstop(.true.)
 
 402   write(iow,4002)
+      if(ior.lt.0) write(*,4002)
+      call plstop(.true.)
+
+403   write(iow,4003)
+      if(ior.lt.0) write(*,4003)
+      call plstop(.true.)
+
+404   write(iow,4004)
+      if(ior.lt.0) write(*,4004)
       call plstop(.true.)
 
 !     Formats
 
-2000  format(7x,a4,1x,a14,1x,1p,3e12.4)
+2000  format(7x,a9,1x,a9,1x,1p,3e12.4)
 
-2001  format('  M a c r o   I n s t r u c t i o n s'//
-     & '  Macro Statement',12x,'Variable 1  Variable 2  Variable 3')
+2001  format(5x,'Solution Commands',7x,'Variable 1  Variable 2  ',
+     &      'Variable 3')
 
-2002  format(' Input a macro instruction: Enter "help" for list of ',
+2002  format(' Input a solution command: Enter "help" for list of ',
      & 'commands.')
 2003  format(' Enter "exit" to end with restart save, "quit" to ',
      & 'end without restart save.')
 
-2004  format('   List',i3,'  Macro',i3,'> ',$)
+2004  format('   List',i3,'  Command',i3,'> ',$)
 
 2005  format(1p,3e15.7)
 
 2006  format('   Exit with restart file save (y or n) :',$)
 
-3001  format(' *WARNING* Maximum number of macro statements = 200'
+3001  format(' *WARNING* Maximum number of command statements =',i4
      &     ,/'    Use history edit to reduce or program will stop'
-     &     ,' when 200 is reached')
+     &     ,' when',i4,' is reached')
 
-3002  format(' *ERROR* Maximum number of macro instructions',
-     &       '                  is limited to 200')
+3002  format(' *ERROR* PMACIO: Maximum number of command instructions',
+     &       '                  is limited to',i4)
 
-4000  format(' *ERROR* Unbalanced loop/next commands')
+4000  format(' *ERROR* PMACIO: Unbalanced loop/next commands')
 
-4001  format(' *ERROR* Loops nested deeper than 8')
+4001  format(' *ERROR* PMACIO: Loops nested deeper than 8')
 
-4002  format(' *ERROR* "loop" must precede "next" instruction')
+4002  format(' *ERROR* PMACIO: "loop" must precede "next" instruction')
 
-      end
+4003  format(' *ERROR* PMACIO: "if" must precede "endi"f instruction')
+
+4004  format(' *ERROR* PMACIO: Unbalanced if/endif commands')
+
+      end subroutine pmacio

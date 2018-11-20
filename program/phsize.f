@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -25,12 +25,12 @@
       include   'iofile.h' ! iow
       include   'qudshp.h' ! hsize(:)
 
-      integer (kind=4) :: ix(nen1,numel)
-      real    (kind=8) :: x(ndm,*), xl(ndm,*)
+      integer       :: ix(nen1,numel)
+      real (kind=8) :: x(ndm,*), xl(ndm,*)
 
 !     Local variables
 
-      integer (kind=4) :: i,n, nel
+      integer       :: i,n, nel
 
       save
 

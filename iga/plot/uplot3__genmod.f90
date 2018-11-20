@@ -1,8 +1,0 @@
-        !COMPILER-GENERATED INTERFACE MODULE: Fri May 25 07:34:15 2018
-        MODULE UPLOT3__genmod
-          INTERFACE 
-            SUBROUTINE UPLOT3(CTL)
-              REAL(KIND=8) :: CTL(3)
-            END SUBROUTINE UPLOT3
-          END INTERFACE 
-        END MODULE UPLOT3__genmod

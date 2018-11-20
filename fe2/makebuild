@@ -1,6 +1,0 @@
-
-feapfe2copy:   
-	(cp  makebuild_c ../build/makefile)
-	(cp  *.f ../build)
-	(cp  *.h ../build)
-	@@echo "--> Feappv FE2 Build updated <--"

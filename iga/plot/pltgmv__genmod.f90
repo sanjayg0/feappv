@@ -1,8 +1,0 @@
-        !COMPILER-GENERATED INTERFACE MODULE: Fri May 25 07:34:13 2018
-        MODULE PLTGMV__genmod
-          INTERFACE 
-            SUBROUTINE PLTGMV(JSW)
-              INTEGER(KIND=4) :: JSW
-            END SUBROUTINE PLTGMV
-          END INTERFACE 
-        END MODULE PLTGMV__genmod

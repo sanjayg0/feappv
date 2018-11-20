@@ -1,8 +1,0 @@
-        !COMPILER-GENERATED INTERFACE MODULE: Fri May 25 07:34:19 2018
-        MODULE PNEWPROB__genmod
-          INTERFACE 
-            SUBROUTINE PNEWPROB(ISW)
-              INTEGER(KIND=4) :: ISW
-            END SUBROUTINE PNEWPROB
-          END INTERFACE 
-        END MODULE PNEWPROB__genmod

@@ -1,8 +1,0 @@
-        !COMPILER-GENERATED INTERFACE MODULE: Fri May 25 07:34:16 2018
-        MODULE PDBLK_OUT__genmod
-          INTERFACE 
-            SUBROUTINE PDBLK_OUT(NDISP)
-              REAL(KIND=8) :: NDISP(9)
-            END SUBROUTINE PDBLK_OUT
-          END INTERFACE 
-        END MODULE PDBLK_OUT__genmod

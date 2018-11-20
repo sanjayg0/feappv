@@ -1,9 +1,0 @@
-        !COMPILER-GENERATED INTERFACE MODULE: Fri May 25 07:34:07 2018
-        MODULE CKNOTV__genmod
-          INTERFACE 
-            SUBROUTINE CKNOTV(KNOTS,LKNOT)
-              REAL(KIND=8) :: KNOTS(*)
-              INTEGER(KIND=4) :: LKNOT(4)
-            END SUBROUTINE CKNOTV
-          END INTERFACE 
-        END MODULE CKNOTV__genmod

@@ -1,8 +1,0 @@
-        !COMPILER-GENERATED INTERFACE MODULE: Fri May 25 07:34:16 2018
-        MODULE PDBLOCK__genmod
-          INTERFACE 
-            SUBROUTINE PDBLOCK(ISW)
-              INTEGER(KIND=4) :: ISW
-            END SUBROUTINE PDBLOCK
-          END INTERFACE 
-        END MODULE PDBLOCK__genmod

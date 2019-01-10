@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2018: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
       implicit   none
@@ -56,12 +56,12 @@
 !         Unsymmetric part allocation
 
           if(cfr) then
-c           if(np(5).gt.0) then
-c             call pgetd('UTANG',point,kp,ip,setvar)
-c             len = kp*ipr
-c           else
-c             len = 0
-c           endif
+!           if(np(5).gt.0) then
+!             call pgetd('UTANG',point,kp,ip,setvar)
+!             len = kp*ipr
+!           else
+!             len = 0
+!           endif
             kp = max(1,(mr(np(21)+neq-1)))
             setvar = palloc(5,'UTAN1',kp,2)
             if(.not.setvar) then

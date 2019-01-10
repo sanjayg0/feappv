@@ -1,0 +1,6 @@
+*.a
+*__genmod*
+built_objs
+filein
+*.dSYM/
+*.o

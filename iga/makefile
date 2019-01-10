@@ -11,6 +11,7 @@ ifeappv: iarchive
 	@@echo "--> FEAPpv executable made <--"
 
 iarchive:   
+	@echo $(FINCLUDE)
 	(cd elements; make iarchive)
 	(cd interpolation; make iarchive)
 	(cd piegl; make iarchive)

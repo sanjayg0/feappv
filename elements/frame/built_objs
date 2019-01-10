@@ -1,0 +1,4 @@
+frame2d.o
+frame3d.o
+pointnd.o
+trussnd.o

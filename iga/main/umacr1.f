@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2018: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -74,7 +74,7 @@
 
 !       Write header and title information
         write(ios,2000) head,ndm,ndf
-        
+
 !       Add parameter and material data
         inquire(file=fmtl,exist=exst,opened=isopen)
         if(exst) then

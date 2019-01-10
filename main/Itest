@@ -1,0 +1,29 @@
+feap
+0 0 0 2 2 4
+
+mate
+ solid
+   elastic isot 100 .1
+
+block
+ cart 10 10
+ 1 0 0
+ 2 1 0
+ 3 1 1
+ 4 0 1
+
+eboun
+ 1 0 1 0
+
+cboun
+ node 0 0  1 1
+
+csur
+ line
+   1  1 0   5
+   2  1 1   5
+
+end
+
+inte
+stop

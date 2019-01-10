@@ -1,6 +1,5 @@
 fld3d1.o
 iner3d.o
-interp3d.o
 kine3df.o
 mass3d.o
 pushv3f.o

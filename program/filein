@@ -60,7 +60,6 @@ evalex.f
 filargs.f
 filnam.f
 formfe.f
-formhh.f
 front.f
 gamma1.f
 geig.f
@@ -88,7 +87,6 @@ just.f
 meshck.f
 mkface.f
 modify.f
-mpi_start_feap.f
 mprint.f
 nbuck.f
 nodel.f
@@ -106,7 +104,6 @@ paddv.f
 palloc.f
 pangl.f
 parexp.f
-parstop.f
 passble.f
 pblend.f
 pblend1.f
@@ -126,7 +123,6 @@ pcontr.f
 pcprop.f
 pdegree.f
 pdelfl.f
-pdetf.f
 pdiff.f
 pedges.f
 pedgin.f
@@ -139,7 +135,6 @@ pelmin.f
 pelnum.f
 peltyp.f
 pendprob.f
-periodbc.f
 pesurf.f
 pexpd.f
 pextnd.f
@@ -148,7 +143,6 @@ pform.f
 pfuncs.f
 pgetd.f
 phelp.f
-phillmandel.f
 phist.f
 phsize.f
 piacel.f
@@ -178,7 +172,6 @@ pmacr5.f
 pmacr6.f
 pmacr7.f
 pmacr8.f
-pmacr9.f
 pman.f
 pmatin.f
 pmesh.f
@@ -191,10 +184,7 @@ pnumbl.f
 pnums.f
 polar.f
 poutie.f
-pperdis.f
 pprint.f
-pprojp.f
-pprojpp.f
 pprtd.f
 presol.f
 prj2dl.f
@@ -210,8 +200,6 @@ prtitl.f
 prtrea.f
 prtstr.f
 pseqn.f
-psets.f
-psetvol.f
 pside1.f
 psides.f
 psolve.f
@@ -219,7 +207,6 @@ pstr2d.f
 pstr3d.f
 pstrip.f
 psub.f
-ptang.f
 ptiend.f
 ptimpl.f
 ptmplt.f
@@ -262,7 +249,6 @@ stime.f
 store.f
 subsp.f
 tand.f
-tau2sig.f
 tblk.f
 tetshp.f
 tiefor.f
@@ -272,6 +258,7 @@ tint2d.f
 tint2dn.f
 tint3d.f
 tjac3d.f
+trishp.f
 umaclib.f
 umshlib.f
 upang.f

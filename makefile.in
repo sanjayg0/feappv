@@ -31,19 +31,19 @@
 
 # Serial Build
 
-#  FF = gfortran
-#  CC = gcc
+  FF = gfortran
+  CC = gcc
 
- FF = ifort                         # Intel compiler
- CC = icc                           # Intel compiler
+# FF = ifort                         # Intel compiler
+# CC = icc                           # Intel compiler
 
 #------------------------------------------------------------------------
 # What optimization level to use
 
 # Intel: ifort/icc compilers
 
- FFOPTFLAG = -O2 -Warn all -g
- CCOPTFLAG = -O2 -Wall -g
+# FFOPTFLAG = -O2 -Warn all -g
+# CCOPTFLAG = -O2 -Wall -g
 
 # Gnu: gfortran/gcc compilers
 
@@ -53,8 +53,8 @@
 # FFOPTFLAG = -g -Wall
 # CCOPTFLAG = -g -Wall
 
-#  FFOPTFLAG = -g -O3 -ftree-vectorize -Wall
-#  CCOPTFLAG = -g -O3 -ftree-vectorize -Wall
+  FFOPTFLAG = -g -O3 -ftree-vectorize -Wall
+  CCOPTFLAG = -g -O3 -ftree-vectorize -Wall
 
 # FFOPTFLAG = -O2 -Wall
 # CCOPTFLAG = -O2 -Wall

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2019: Regents of the University of California
+!....  Copyright (c) 1984-2018: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -43,7 +43,7 @@
         do i = 1, nargs
 
           call get_command_argument(i,argv)
-
+            
           nchars = len_trim(argv)
 
           if (argv(1:1) .eq. '-') then

@@ -3,6 +3,9 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
+!      * Changed the dimension of vt and xt according to 
+!        http://feap.berkeley.edu/forum/index.php?topic=2124
+!        Feb 19, 2019
 !....  Copyright (c) 1984-2017: Regents of the University of California
 !                               All rights reserved
 
@@ -15,7 +18,7 @@
       logical    cont
       integer    i1,i2, i, nc,ilq(*),ilt(3)
       real*8     xl(3,*),vl(*),vc(nc)
-      real*8     xt(3,3),vt(3)
+      real*8     xt(3,4),vt(4)
 
       save
 

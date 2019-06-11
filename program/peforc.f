@@ -1,9 +1,9 @@
 !$Id:$
-      subroutine peforc(x,f,ndm,ndf,numnp,vtype,prt,prth,name)
+      subroutine peforc(x,f,ndm,ndf,numnp,vtype,prt,prth,fname)
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -17,7 +17,7 @@
 !         numnp      - Number of nodes in mesh
 !         prt        - Output generated results if true
 !         prth       - Output title/header data if true
-!         name       - File name for inputs
+!         fname      - File name for inputs
 
 !      Outputs:
 !         f(ndf,*)   - Nodal force or displacement values
@@ -29,11 +29,14 @@
       include  'pointer.h'
       include  'comblk.h'
 
-      logical   prt,prth, errck, tinput, vinput, pcomp, gapfl
-      character name*5, text*15, vtype*4
-      integer   ndm,ndf,numnp,i,j,n
-      real*8    pdiff, x0,dx, gap
-      real*8    x(ndm,numnp),f(ndf,numnp),td(16)
+      character (len=15) :: text
+      character (len=5)  :: fname
+      character (len=4)  :: vtype
+
+      logical       :: prt,prth, errck, tinput, vinput, pcomp, gapfl
+      integer       :: ndm,ndf,numnp,i,j,n
+      real (kind=8) :: pdiff, x0,dx, gap
+      real (kind=8) :: x(ndm,numnp),f(ndf,numnp),td(16)
 
       save
 
@@ -84,8 +87,8 @@
       go to 100
 
 4     call prtitl(prth)
-      if(prt) write(iow,2000) (i,name,i=1,ndf)
-      if(prt.and.ior.lt.0) write(*,2000) (i,name,i=1,ndf)
+      if(prt) write(iow,2000) (i,fname,i=1,ndf)
+      if(prt.and.ior.lt.0) write(*,2000) (i,fname,i=1,ndf)
       do n = 1,numnp
         do i = 1,ndf
           if(f(i,n).ne.0.0d0) go to 400
@@ -107,4 +110,4 @@
 
 3001  format(' Input: ndir,x(ndir),(fl(i),i=1,',i2,')','   >',$)
 
-      end
+      end subroutine peforc

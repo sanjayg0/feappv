@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -28,12 +28,12 @@
       include  'p_point.h'
       include  'sdata.h'
 
-      logical   cknon0, ckinon0
-      character array*(*)
-      logical   pcomp, norange
-      integer   ckmstrt, lengt, i, ilor,iupr,ict(3), ipa, irp(2,2)
-      integer   nn,nterm,narry, nsz
-      real*8    ct(3)
+      character     :: array*(*)
+      logical       :: cknon0, ckinon0
+      logical       :: pcomp, norange
+      integer       :: ckmstrt, lengt, i,ilor,iupr,ict(3), ipa,irp(2,2)
+      integer       :: nn,nterm,narry, nsz
+      real (kind=8) :: ct(3)
 
       save
 
@@ -336,15 +336,16 @@
 2000  format(' --> Part',i3,' of array ',a,' is zero')
 2001  format(' --> Terms in array ',a,' are zero')
 
-      end
+      end subroutine outary
 
       integer function ckmstrt(v,nn)
 
 !     Purpose: Find last non-zero entry in array
 
       implicit   none
-      integer    nn,n
-      real*8     v(nn)
+
+      integer       :: nn,n
+      real (kind=8) :: v(nn)
 
 !     Find non-zero entry
 
@@ -357,4 +358,4 @@
 
       ckmstrt = 0
 
-      end
+      end function ckmstrt

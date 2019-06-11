@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -18,15 +18,14 @@
 !      Outputs:
 !         Depends on value of j
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'print.h'
 
-      integer   j
+      character (len=15) :: lct
 
-      character lct*15
-      real*8    ctl(3)
+      integer       :: j
+      real (kind=8) :: ctl(3)
 
       save
 
@@ -35,4 +34,4 @@
 
       call umaclib(j,lct,ctl)
 
-      end
+      end subroutine pmacr4

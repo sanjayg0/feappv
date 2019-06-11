@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--+---------+---------+---------+---------+---------+---------+-]
@@ -22,9 +22,9 @@
       include  'plflag.h'
       include  'psdat5.h'
 
-      character cvar*4
-      integer   iln(2)
-      real*8    wid
+      character (len=4) :: cvar
+      integer       :: iln(2)
+      real (kind=8) :: wid
 
       save
 
@@ -112,4 +112,4 @@
          iln(1) = mod(iln(1)+1, 8)
       endif
 
-      end
+      end subroutine plline

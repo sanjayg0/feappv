@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -17,9 +17,9 @@
 !      Outputs:
 !         Depends on commands specified
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
+      include  'bdata.h'
       include  'cblend.h'
       include  'cblktr.h'
       include  'cdata.h'
@@ -47,26 +47,29 @@
       include  'prld1.h'
       include  'region.h'
       include  'sdata.h'
+      include  'setups.h'
       include  'trdata.h'
       include  'umac1.h'
       include  'comblk.h'
 
-      logical   setvar,palloc, lp_in
-      logical   prt,error,pcomp,lmesh,errck,pinput,tinput
-      logical   prth, umesh, readfl, savefl, flgco,vinput
+      character (len=8) :: c2,fext
+      character (len=4) :: wd(59),cc,usub
 
-      integer   i,j, ii,jj, iii, isd, ibn, side, face
-      integer   ll,llo,list, numesh, nblend, nmat,nord,nnty
+      logical       :: setvar,palloc, lp_in
+      logical       :: prt,error,pcomp,lmesh,errck,pinput,tinput
+      logical       :: prth, umesh, readfl, savefl, flgco,vinput
 
-      character wd(58)*4,cc*4,c2*8,fext*8,usub*4
-      integer   ed(58)
-      real*8    td(16)
+      integer       :: i,j, ii,jj, iii, isd, ibn, n, side, face
+      integer       :: ll,llo,list, numesh, nblend, nmat,nord,nnty
+
+      integer       :: ed(59)
+      real (kind=8) :: td(16)
 
       save
 
 !     Length of command data lists
 
-      data  list    /58/, numesh /12/
+      data  list    /59/, numesh /12/
 
 !     List of command names
 
@@ -75,7 +78,7 @@
      2        'cang','cbou','cdis','cfor','cpro','csur','regi','rese',
      3        'bloc','btem','pola','shif','blen','snod','side','tran',
      4        'para','prin','nopr','pars','nopa','debu','glob','titl',
-     5        'loop','next','*nod','*ele','manu','end',
+     5        'loop','next','*nod','*ele','peri','manu','end',
      u        'mes1','mes2','mes3','mes4','mes5','mes6','mes7','mes8',
      u        'mes9','me10','me11','me12'/
 
@@ -84,7 +87,7 @@
      2            0,     0,     0,     0,     2,     0,     0,     1,
      3            0,     1,     0,     0,     0,     0,     0,     1,
      4            0,     0,     0,     2,     2,     2,     0,     2,
-     5            0,     0,     0,     0,     4,     0,
+     5            0,     0,     0,     0,     1,     4,     0,
      u            5,     5,     5,     5,     5,     5,     5,     5,
      u            5,     5,     5,     5 /
 
@@ -209,12 +212,12 @@
 !             o  r  u  g  s  o  e  l  i  e  o  d  a  r  i  p  r  p  b
 !             r  o  r  i  e  c  m  a  f  n  d  e  n  a  n  r  s  a  u
 
-     &       39,40,41,42,43,44,45,46,
+     &       39,40,41,42,43,44,45,46,47,
 
-!             g  t  l  n  *  *  m  e
-!             l  i  o  e  n  e  a  n
-!             o  t  0  x  o  l  n  d
-!             b  l  p  t  d  e  u
+!             g  t  l  n  *  *  p  m  e
+!             l  i  o  e  n  e  e  a  n
+!             o  t  0  x  o  l  r  n  d
+!             b  l  p  t  d  e  i  u
 
 !     User Commands: Changed by subroutines umesh'n'
 
@@ -243,8 +246,9 @@
         elseif(pcomp(tx(j),'orde',4)) then
           errck = vinput(tx(j+1),15,td,1)
           nord  = nint(td(1))
-        else
-          exit
+        elseif(pcomp(tx(j),'mate',4)) then
+          errck = vinput(tx(j+1),15,td,1)
+          nmat  = nint(td(1))
         endif
       end do ! j
       call pelmin(tx(2),mr(np(34)),mr(np(33)),nen1,
@@ -677,15 +681,31 @@
       endif
       go to 100
 
+!     [peri]odic hill  Hill-Mandel form
+!     [peri]odic off   Turn off periodic b.c.
+
+45    if(pcomp(tx(2),'hill',4)) then
+        write(iow,2009) head,'Hill-Mandel'
+        perflg = .true.
+      call periodbc(prt)
+      elseif(pcomp(tx(2),'off',3)) then
+        perflg = .false.
+        write(iow,2010)
+      else
+        write(iow,2009) head,'ERROR'
+        call plstop(.true.)
+      endif
+      go to 100
+
 !     [manu],hlplev - set Manual help options level
 
-45    read(yyy,1001,err=110,end=900) cc,hlplev
+46    read(yyy,1001,err=110,end=900) cc,hlplev
       hlplev = max(-1,min(3,hlplev))
       go to 100
 
 !     [end] of mesh data inputs
 
-46    if(lsave) then
+47    if(lsave) then
         write(iow,3006)
         if(ior.lt.0) then
           write(iow,3006)
@@ -730,6 +750,9 @@
      &       '   x0 =',1p,e12.4:,'  y0 =',1p,e12.4:,'  z0 =',1p,e12.4)
 2007  format(' -> Number to be added to all nodal   inputs =',i8)
 2008  format(' -> Number to be added to all element inputs =',i8)
+2009  format(/1x,19a4,a3/
+     &       /5x,'Periodic boundary condition type: ',a)
+2010  format(/5x,'Periodic boundary condition off')
 
 3000  format(' *ERROR*  Illegal blend number: numbl=',i5:,a)
 3001  format(' *ERROR*  Cannot regenerate SIDEs')
@@ -739,4 +762,4 @@
      &      ,' use BLOCk in solution mode.')
 3006  format(' *ERROR* No SAVE,END statement for input data.')
 
-      end
+      end subroutine pmesh

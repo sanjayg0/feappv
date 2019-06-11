@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -29,9 +29,9 @@
       include   'allotn.h'
       include   'pointer.h'
 
-      logical    ualloc
-      character  name*(*)
-      integer    i, num,length,precis
+      logical        :: ualloc
+      character      :: name*(*)
+      integer        :: i, num,length,precis
 
       save
 
@@ -746,4 +746,4 @@
 
       palloc = ualloc(num-llist,name,length,precis)
 
-      end
+      end function palloc

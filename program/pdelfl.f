@@ -4,7 +4,7 @@
 !      * * F E A P * * A Finite Element Analysis Program
 !                        -      -       -        -
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -23,9 +23,11 @@
       include  'cornum.h'
       include  'iodata.h'
 
-      character fname*128,fext*4,ftyp(5)*4
-      logical   exst,isopen
-      integer   i,m,mmx
+      character (len=128) :: fname
+      character (len=4)   :: fext,ftyp(5)
+
+      logical       :: exst,isopen
+      integer       :: i,m,mmx
 
       data      ftyp /'sl0','bn0','an0','fr0','ds0'/
 
@@ -69,4 +71,4 @@
         endif
       end do ! m
 
-      end
+      end subroutine pdelfl

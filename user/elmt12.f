@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
       implicit  none
@@ -11,9 +11,9 @@
       include 'eldata.h'
       include 'umac1.h'                    ! utx(1)
 
-      integer (kind=4) :: ndf , ndm , nst , isw
-      integer (kind=4) :: ix(*)
-      real    (kind=8) :: d(*), ul(*), xl(*), tl(*), s(*), p(*)
+      integer       :: ndf , ndm , nst , isw
+      integer       :: ix(*)
+      real (kind=8) :: d(*), ul(*), xl(*), tl(*), s(*), p(*)
 
       if(isw.lt.0) then
 !       utx(1) = 'Name_U_Want'  ! 15 character naming option
@@ -24,4 +24,5 @@
       endif
 
 2000  format('    Elmt 12: *WARNING* Dummy subroutine called')
-      end
+
+      end subroutine elmt12

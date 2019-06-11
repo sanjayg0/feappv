@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -15,16 +15,13 @@
 !      Outputs:
 !         v(*)   - Array with zero values
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
-      integer   n,nn
-      real*8    v(nn)
+      integer       :: nn
+      real (kind=8) :: v(nn)
 
       save
 
-      do n = 1,nn
-        v(n) = 0.0d0
-      end do
+      v(1:nn) = 0.0d0
 
-      end
+      end subroutine pzero

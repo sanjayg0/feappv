@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -17,13 +17,13 @@
 !         d(*)   - Values of data input
 !         pinput - Flag, returns true if error occurs during input
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
-      character tl*15
-      logical   tinput
-      integer   nn
-      real*8    d(nn)
+      character (len=15) :: tl
+
+      logical       :: tinput
+      integer       :: nn
+      real (kind=8) :: d(nn)
 
       save
 
@@ -31,4 +31,4 @@
 
       pinput = tinput(tl,0,d,nn)
 
-      end
+      end function pinput

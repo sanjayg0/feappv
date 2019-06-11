@@ -1,10 +1,10 @@
 !$Id:$
       subroutine pcboun(td,x,id,ntyp,ndm,ndf,numnp,numprt,gap0,
-     &                  vtype,prt,prth)
+     &                  vtype,prt,prth,aname)
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -24,6 +24,7 @@
 !         vtype     - Replacement type: 'add' = accumulate; else reset.
 !         prt       - Output generated results if true
 !         prth      - Output title/header data if true
+!         aname     - Header type (-B.C.)
 
 !      Outputs:
 !         id(ndf,*) - Generated boundary restraint codes
@@ -33,24 +34,28 @@
 
       include  'iofile.h'
 
-      character vtype*4
-      logical   prt,prth,clflg, pcomp
-      integer   ndm,ndf,numnp,numprt, i,n,nbc
-      real*8    gmn, tmn, gap0
+      character (len=6) :: pname
+      character (len=4) :: vtype
+      character         :: aname*(*)
 
-      integer   id(ndf,numnp),ntyp(*)
-      real*8    xmn(3),xmx(3), x(ndm,numnp),td(*)
+      logical       :: prt,prth,clflg, pcomp
+      integer       :: ndm,ndf,numnp,numprt, i,n,nbc, nipt
+      real (kind=8) :: gmn, tmn, gap0
 
-      real*8    dotx
+      integer       :: id(ndf,numnp),ntyp(*)
+      real (kind=8) :: xmn(3),xmx(3), x(ndm,numnp),td(*)
+
+      real (kind=8) :: dotx
 
       save
 
 !     Find closest node to input coordinates
 
+      pname = aname
       if(prt .and. numprt.le.0) then
         call prtitl(prth)
-        write(iow,2000) (i,i=1,ndf)
-        if(ior.lt.0) write(*,2000) (i,i=1,ndf)
+        write(iow,2000) (i,pname,i=1,ndf)
+        if(ior.lt.0) write(*,2000) (i,pname,i=1,ndf)
         numprt = 50
       endif
 
@@ -93,10 +98,12 @@
 !     Set b.c. restraint codes
 
       if(clflg) then
+        nipt = 0
         do nbc = 1,numnp
           if(ntyp(nbc).ge.0) then
             tmn = dotx(td(1),x(1,nbc),ndm)
             if(tmn.le.gmn) then
+              nipt = nipt + 1
               if(pcomp(vtype,'add',3)) then
                 do n = 1,ndf
                   id(n,nbc) = max(abs(id(n,nbc)),abs(nint(td(ndm+n))))
@@ -119,13 +126,20 @@
             endif ! tmn < gmn
           endif ! ntyp(n) > 0
         end do ! nbc
+
+        if(nipt.eq.0) then ! No data found
+          write(  *,3000) pname
+          write(iow,3000) pname
+        endif
       endif ! clflg = .true.
 
 !     Format
 
 2000  format('  C o o r d i n a t e    N o d a l    V a l u e s'/
-     &       /(4x,'node',9(i3,'-b.c.',:)))
+     &       /(4x,'Node',9(i3,a6,:))/(8x,9(i3,a6,:)))
 
 2001  format(10i8)
 
-      end
+3000  format(' --> WARNING: No nodes found for ',a,' data type')
+
+      end subroutine pcboun

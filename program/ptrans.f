@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -24,14 +24,13 @@
 !         p(*)      - Element vector
 !         s(*,*)    - Element matrix
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
-      integer   nel,ndf,nst,isw, i1,ij1,ij2, i, j
-      real*8    cs,sn,tm
+      integer       :: nel,ndf,nst,isw, i1,ij1,ij2, i, j
+      real (kind=8) :: cs,sn,tm
 
-      integer   ia(2)
-      real*8    angl(*),ul(nst,4),p(ndf,*),s(nst,nst)
+      integer       :: ia(2)
+      real (kind=8) :: angl(*),ul(nst,4),p(ndf,*),s(nst,nst)
 
       save
 
@@ -94,4 +93,4 @@
         end do
       endif
 
-      end
+      end subroutine ptrans

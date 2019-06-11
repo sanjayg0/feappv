@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -29,9 +29,9 @@
       include  'iofile.h'
       include  'sdata.h'
 
-      logical   prt
-      integer   iop, mm,nad
-      integer   jp(*),idl(*),id(*),ix(*)
+      logical       :: prt
+      integer       :: iop, mm,nad
+      integer       :: jp(*),idl(*),id(*),ix(*)
 
       save
 
@@ -68,4 +68,4 @@
      & 10x,'Average col. height   =',i10,3x,'Number elements  =',i8/
      & 10x,'Number profile terms  =',i10,3x,'Number materials =',i8/)
 
-      end
+      end subroutine profil

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -24,8 +24,11 @@
       include  'iofile.h'
       include  'iosave.h'
 
-      logical   pcomp, lopen, lexist
-      character tx*(*), fnams*21, fext*8
+      character (len=21) :: fnams
+      character (len=8)  :: fext
+      character          :: tx*(*)
+
+      logical       :: pcomp, lopen, lexist
 
       save
 
@@ -53,4 +56,4 @@
 
 3000  format(5x,' *ERROR* - Nested SAVE commands not allowed.')
 
-      end
+      end function savefl

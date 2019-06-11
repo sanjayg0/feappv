@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -20,9 +20,9 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
-      character lct*(*)
-      integer   i
-      real*8    ct(3)
+      character     :: lct*(*)
+      integer       :: i
+      real (kind=8) :: ct(3)
 
       save
 
@@ -52,4 +52,4 @@
         call umacr12(lct,ct)
       endif
 
-      end
+      end subroutine umaclib

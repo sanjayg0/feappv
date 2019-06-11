@@ -3,7 +3,7 @@
 
 !     * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -20,9 +20,9 @@
 
       include  'plpost.h'
 
-      integer   i,l
+      integer      :: i,l
 
-      character string*(*)
+      character    :: string*(*)
 
       save
 
@@ -38,4 +38,4 @@
         buffer(nxtchr) = string(i:i)
       end do
 
-      end
+      end subroutine fppsin

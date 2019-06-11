@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -22,10 +22,10 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
-      logical   prt
-      integer   nv,nvs,ir, i, j
+      logical       :: prt
+      integer       :: nv,nvs,ir, i, j
 
-      real*8    g(*),h(*),d(*),p(nv,*),t(*)
+      real (kind=8) :: g(*),h(*),d(*),p(nv,*),t(*)
 
       save
 
@@ -72,4 +72,4 @@
         end do
       end do
 
-      end
+      end subroutine geig

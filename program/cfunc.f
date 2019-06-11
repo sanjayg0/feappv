@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -21,10 +21,10 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
-      integer   k,l,ndm
+      integer       :: k,l,ndm
 
-      integer   ixl(*)
-      real*8    shp(3,*),xl(3,*),x(*)
+      integer       :: ixl(*)
+      real (kind=8) :: shp(3,*),xl(3,*),x(*)
 
       do l = 1,ndm
         x(l) = 0.0d0
@@ -38,4 +38,4 @@
         end if
       end do
 
-      end
+      end subroutine cfunc

@@ -1,9 +1,9 @@
 !$Id:$
-      subroutine plinka(fext,name)
+      subroutine plinka(fext,fname)
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -15,7 +15,6 @@
 !      Outputs:
 !         none      - Data saved to disk
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'comfil.h'
@@ -26,13 +25,18 @@
       include  'linka.h'
       include  'print.h'
 
-      logical   pcomp,lsave,pinput,lopen,cinput
-      integer   i,n
-      character fnamr*128,fext*4,yyy*256,vtype*4,name*(*)
-      real*8    td(1)
+      character (len=256) :: yyy
+      character (len=128) :: fnamr
+      character (len=4)   :: fext,vtype
+      character           :: fname*(*)
+
+      logical       :: pcomp,lsave,pinput,lopen,cinput, norec
+      integer       :: i,n
+      real (kind=8) :: td(1)
 
       save
 
+      norec = .true.
       fnamr =  fsav
       call addext(fnamr,fext,18,4)
       inquire(unit=iop,opened=lopen)
@@ -42,9 +46,13 @@
       endif
       call opnfil(fext,fnamr,-1,iop,lsave)
 
+!     Avoid warning for 'umani' commands
+
+      if(fext(1:1).eq.'u' .and. fext(3:3).eq.'a') norec = .false.
+
 !     Save values of current parameters
 
-      vtype = name
+      vtype = fname
       write(iop,1002) vtype,fincld(isf),irecrd(isf),prt,prth
       write(iop,1001) vvv
       iclink = 0
@@ -66,7 +74,10 @@
       end do
       n = 256
   20  do i = n,1,-1
-        if(yyy(i:i).ne.' ') go to 30
+        if(yyy(i:i).ne.' ') then
+          norec = .false.
+          go to 30
+        endif
       end do ! i
       i = 1
   30  write(iop,1000) yyy(1:i)
@@ -75,7 +86,13 @@
         iclink = iclink + 1
         go to 10
       else
+        write(iop,'(a)') ' ' ! Extra blank line for ndf > 13
         close(iop)
+        if(norec) then
+          write(  *,4001) fext(1:4)
+          write(iow,4001) fext(1:4)
+        endif
+
       endif
       return
 
@@ -99,4 +116,7 @@
 1001  format (1p,4e20.12)
 1002  format (a4,2x,a12,i8,2l5)
 
-      end
+4001  format(' *WARNING* PLINKA: No data found for a -> ',a4,
+     &       ' <- data set.')
+
+      end subroutine plinka

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -27,8 +27,8 @@
       include  'pointer.h'
       include  'comblk.h'
 
-      logical   setvar,palloc
-      integer   ityp(6), ndft(6), n,nn
+      logical       :: setvar,palloc
+      integer       :: ityp(6), ndft(6), n,nn
 
       save
 
@@ -102,4 +102,4 @@
       setvar = palloc(112,'TEMP2',0,2)
       setvar = palloc(111,'TEMP1',0,1)
 
-      end
+      end subroutine ploadc

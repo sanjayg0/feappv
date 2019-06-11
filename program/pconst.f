@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -22,8 +22,8 @@
       include  'ioincl.h'
       include  'iodata.h'
 
-      logical   prt, redo, pconset, lopn, cinput
-      integer   i
+      logical       :: prt, redo, pconset, lopn, cinput
+      integer       :: i
 
       save
 
@@ -79,7 +79,7 @@
  3000 format(' Use "list" to give current values - <CR> to exit'/
      &       ' Input: letter=expression (no blanks)'/'  -->',$)
 
-      end
+      end subroutine pconst
 
       logical function pconset(prt)
 
@@ -106,7 +106,7 @@
       logical   pcomp, prt, rflag, wflag
       character eql*1,x*256,y*256
       integer   i,j,n, ial,izl,iau,izu,id,iq, i0,i9
-      real*8    val
+      real (kind=8) :: val
 
       save
 
@@ -283,4 +283,4 @@
  3000 format(/'  *ERROR* PCONST: Parameter input error: More than',
      &        ' one equal in expression'/2x,a/1x)
 
-      end
+      end function pconset

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -34,11 +34,11 @@
       include  'pointer.h'
       include  'comblk.h'
 
-      logical   lclip,addfac
-      integer   nen,numel,nface,nie, i,j,m,n, iel,iiel, ien,nel,pstyp
-      integer   ufac
-      integer   ix(nen1,numel), ia(*), ie(nie,*), iq(4,6), it(3,4)
-      integer   it2(3,16)
+      logical       :: lclip,addfac
+      integer       :: nen,numel,nface,nie, i,j,m,n, iel,iiel, ien,nel
+      integer       :: ufac,pstyp
+      integer       :: ix(nen1,numel),ia(*),ie(nie,*),iq(4,6),it(3,4)
+      integer       :: it2(3,16)
 
       save
 
@@ -228,4 +228,4 @@
         end if ! pty
       end do ! n
 
-      end
+      end subroutine plfacn

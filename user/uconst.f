@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -24,10 +24,12 @@
       include  'iofile.h'
       include  'umac1.h'
 
-      logical   pcomp
-      character vtype*15, matnm(10)*4
-      integer   n1,n3,umat
-      real*8    vv(5), d(*), ud(*)
+      character (len=15) :: vtype
+      character (len=4)  :: matnm(10)
+
+      logical       :: pcomp
+      integer       :: n1,n3,umat
+      real (kind=8) :: vv(5), d(*), ud(*)
 
 !     Default names for materials: DO NOT CHANGE
 
@@ -93,4 +95,5 @@
 !     Format
 
 3000  format(' **ERROR** User material error: Type: ',a,' not defined')
-      end
+
+      end subroutine uconst

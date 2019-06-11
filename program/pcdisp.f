@@ -4,7 +4,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -32,14 +32,10 @@
 
       include  'iofile.h'
 
-      logical   prt,prth,clflg
-      integer   ndm,ndf,numnp,numprt, i,n,nbc
-      real*8    gmn, tmn, gap0
-
-      integer   ntyp(*)
-      real*8    xmn(3),xmx(3), x(ndm,numnp),f(ndf,numnp), td(*)
-
-      real*8    dotx
+      logical       :: prt,prth,clflg
+      integer       :: ndm,ndf,numnp,numprt, i,n,nbc, nipt, ntyp(*)
+      real (kind=8) :: xmn(3),xmx(3), x(ndm,numnp),f(ndf,numnp), td(*)
+      real (kind=8) :: gmn, tmn, gap0, dotx
 
       save
 
@@ -91,10 +87,12 @@
 !     Set displacement value
 
       if(clflg) then
+        nipt = 0
         do nbc = 1,numnp
           if(ntyp(nbc).ge.0) then
             tmn = dotx(td(1),x(1,nbc),ndm)
             if(tmn.le.gmn) then
+              nipt = nipt + 1
               do n = 1,ndf
                 f(n,nbc) = td(ndm+n)
               end do
@@ -111,6 +109,12 @@
             endif ! tmn < gmn
           endif ! ntyp(n) > 0
         end do ! nbc
+
+        if(nipt.eq.0) then ! No data found
+          write(  *,3000)
+          write(iow,3000)
+        endif
+
       endif ! clflg = .true.
 
 !     Formats
@@ -120,4 +124,6 @@
 
 2001  format(i8,1p,6e12.4:/(8x,1p,6e12.4))
 
-      end
+3000  format(' --> WARNING: No nodes found for DISPL data type')
+
+      end subroutine pcdisp

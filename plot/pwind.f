@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -21,12 +21,11 @@
 !         dr(ndf,*) - Set to contain maximum range for each direction
 !                     in node 1 and numnp positions
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
-      integer   ndm,ndf,numnp, i,n
+      integer       :: ndm,ndf,numnp, i,n
 
-      real*8    x(ndm,numnp),dr(ndf,numnp),xx(3,2)
+      real (kind=8) :: x(ndm,numnp),dr(ndf,numnp),xx(3,2)
 
       save
 
@@ -47,4 +46,4 @@
         dr(i,numnp) = xx(i,2)
       end do
 
-      end
+      end subroutine pwind

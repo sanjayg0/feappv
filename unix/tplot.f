@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--+---------+---------+---------+---------+---------+---------+-]
@@ -18,7 +18,6 @@
 !      Outputs:
 !         none      - Text placed in plot region on screen/file
 !-----[--+---------+---------+---------+---------+---------+---------+-]
-
       implicit  none
 
       include  'pdata2.h'
@@ -29,10 +28,11 @@
       include  'plflag.h'
       include  'x11f.h'
 
-      integer   mm,nn
-      character tx(*)*1
-      integer   i, j, jj, nctr
-      real*8    x1,y1
+      character (len=1) :: tx(*)
+
+      integer       :: mm,nn
+      integer       :: i, j, jj, nctr
+      real (kind=8) :: x1,y1
 
       save
 
@@ -65,4 +65,4 @@
         call fptplt(xp,yp,tx,nn,nctr)
       endif
 
-      end
+      end subroutine tplot

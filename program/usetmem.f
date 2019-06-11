@@ -4,7 +4,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -30,9 +30,9 @@
       include  'allotn.h'
       include  'pointer.h'
 
-      character names(*)*(*),name*(*)
-      logical   setmem
-      integer   ulist,num,length,precis,i,tlist
+      character     :: names(*)*(*),name*(*)
+      logical       :: setmem
+      integer       :: ulist,num,length,precis,i,tlist
 
       save
 
@@ -54,4 +54,4 @@
 
       endif
 
-      end
+      end function usetmem

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -22,9 +22,9 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
-      integer   nen,nen1,nf,n, j
-      integer   il(4),ix(nen1)
-      integer   ixf(7)
+      integer       :: nen,nen1,nf,n, j
+      integer       :: il(4),ix(nen1)
+      integer       :: ixf(7)
 
       save
 
@@ -41,4 +41,4 @@
       ixf(7) = ix(nen1)
       nf = nf + 1
 
-      end
+      end subroutine pfacex

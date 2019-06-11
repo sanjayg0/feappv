@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -19,13 +19,12 @@
 !         shp(2,4)  - Shape functions and derivatives w/r natural coords.
 !         detj      - Determinant of jacobian determinant
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
-      integer   ndm, i, j, k
-      real*8    detj, xii, eti
+      integer       :: ndm, i, j, k
+      real (kind=8) :: detj, xii, eti
 
-      real*8    rst(2), xl(ndm,*), shp(3,4), xs(2,2), xi(4), eta(4)
+      real (kind=8) :: rst(2), xl(ndm,*), shp(3,4),xs(2,2),xi(4),eta(4)
 
       data      xi /-0.5d0, 0.5d0, 0.5d0,-0.5d0/
       data      eta/-0.5d0,-0.5d0, 0.5d0, 0.5d0/
@@ -55,4 +54,4 @@
 
       detj = xs(1,1)*xs(2,2) - xs(1,2)*xs(2,1)
 
-      end
+      end subroutine bjac2d

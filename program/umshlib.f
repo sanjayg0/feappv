@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -20,9 +20,9 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
-      logical   prt
-      character tx(*)*15
-      integer   i
+      character (len=15) :: tx(*)
+      logical      ::  prt
+      integer      :: i
 
       save
 
@@ -52,4 +52,4 @@
         call umesh12(tx,prt)
       endif
 
-      end
+      end subroutine umshlib

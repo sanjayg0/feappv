@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -16,13 +16,12 @@
 !         lint    - Total number of points
 !         el(4,*) - Area coordinate points and weights for quadrature
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'iofile.h'
 
-      integer   l, lint
-      real*8    el(4,*), r0,r1,r2, ww, eta
+      integer       :: l, lint
+      real (kind=8) :: el(4,*), r0,r1,r2, ww, eta
 
       save
 
@@ -297,4 +296,4 @@
 
 2000  format(' *ERROR* TINT2D: Wrong quadrature, l =',i3)
 
-      end
+      end subroutine tint2d

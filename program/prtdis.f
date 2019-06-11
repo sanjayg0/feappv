@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -34,12 +34,15 @@
       include  'pointer.h'
       include  'comblk.h'
 
-      logical   prth,tot
-      character nd*4,cd*6,di(4)*6,fmt1*30,fmt2*30
-      integer   ndm,ndf,n1,n2,n3,ii, i,n, count, nxt1
-      real*8    ttim,prop
+      character (len=30) :: fmt1,fmt2
+      character (len=6)  :: cd,di(4)
+      character (len=4)  :: nd
 
-      real*8    x(ndm,*),b(ndf,*)
+      logical       :: prth,tot
+      integer       :: ndm,ndf,n1,n2,n3,ii, i,n, n_count, nxt1
+      real (kind=8) :: ttim,prop
+
+      real (kind=8) :: x(ndm,*),b(ndf,*)
 
       save
 
@@ -54,13 +57,13 @@
         write(fmt2(8:8),'(i1)') ndm
       endif
 
-      count = 0
+      n_count = 0
       nxt1  = max(1,nxt)
       do n = n1,n2,n3
         if( (mr(np(190)-1+n).ge.0) .and. ( nxt.eq.0  .or.
      &     ( abs(x(nxt1,n)-xt).le.xtol ) ) ) then
-          count = count - 1
-          if(count.le.0) then
+          n_count = n_count - 1
+          if(n_count.le.0) then
             call prtitl(prth)
             if(ii.le.3) then
               write(iow,2000) ttim,prop
@@ -84,7 +87,7 @@
                 write(*,fmt1) nd,(i,cd,i=1,ndm),(i,di(ii),i=1,ndf)
               endif
             endif
-            count = 48
+            n_count = 48
           endif
           if(tot) then
             write(iow,2003) n,(x(i,n),i=1,ndm),(b(i,n),i=1,ndf)
@@ -112,4 +115,4 @@
 
 2003  format(i7,1p,6e12.4/(7x,1p,6e12.4))
 
-      end
+      end subroutine prtdis

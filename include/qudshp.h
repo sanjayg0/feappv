@@ -1,6 +1,6 @@
 
-      logical          quad, ttfl, nurbfl
-      common /qudshpa/ quad, ttfl, nurbfl
+      logical          quad, ttfl, nurbfl, vemfl
+      common /qudshpa/ quad, ttfl, nurbfl, vemfl
 
       real*8           jac
       integer                    lint, npm, nvn
@@ -27,3 +27,5 @@
       real*8           hsize   ,hksize   ,xx0   ,dist_min
       common /qudhsiz/ hsize(2),hksize(2),xx0(3),dist_min
 
+      integer          sa     , ga, la, lint1, lint2, lint3
+      common /qudshpi/ sa(125), ga, la, lint1, lint2, lint3

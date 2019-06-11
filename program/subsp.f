@@ -4,7 +4,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -43,15 +43,15 @@
       include  'gltran.h'
       include  'iofile.h'
 
-      logical   conv,prt,soltyp
-      integer   i,j,k,n
-      integer   nf,nv,neq,imas,its, itlim, it,itt, num,nmas
-      real*4    etime, tary(2)
-      real*8    shift,tol, dm,dr
+      logical       :: conv,prt,soltyp
+      integer       :: i,j,k,n
+      integer       :: nf,nv,neq,imas,its, itlim, it,itt, num,nmas
+      real (kind=4) :: etime, tary(2)
+      real (kind=8) :: shift,tol, dm,dr
 
-      integer   pdf(1)
-      real*8    a(*),b(*),v(neq,*),t(neq)
-      real*8    g(*),h(*),d(*),dp(*),dtol(*),p(nv,*),dpp(4)
+      integer       :: pdf(1)
+      real (kind=8) :: a(*),b(*),v(neq,*),t(neq)
+      real (kind=8) :: g(*),h(*),d(*),dp(*),dtol(*),p(nv,*),dpp(4)
 
       save
 
@@ -270,4 +270,4 @@
 
 2008  format(5x,1p,4d17.8)
 
-      end
+      end subroutine subsp

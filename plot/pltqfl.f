@@ -3,19 +3,18 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
 !      Purpose: Fill quadrilaterals with contour values
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit   none
 
-      logical    cont
-      integer    i1,i2, i, nc,ilq(*),ilt(3)
-      real*8     xl(3,*),vl(*),vc(nc)
-      real*8     xt(3,3),vt(3)
+      logical       :: cont
+      integer       :: i1,i2, i, nc,ilq(*),ilt(3)
+      real (kind=8) :: xl(3,*),vl(*),vc(nc)
+      real (kind=8) :: xt(3,4),vt(4)
 
       save
 
@@ -42,4 +41,4 @@
 
       end do ! i1
 
-      end
+      end subroutine pltqfl

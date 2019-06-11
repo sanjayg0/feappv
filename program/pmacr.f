@@ -3,13 +3,13 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
-!      Purpose: Macro instruction subprogram.  Controls problem
-!               solution and output algorithms by order of
-!               specifying macro commands in array wd.
+!      Purpose: Command language instruction subprogram.
+!               Controls problem solution and output algorithms by
+!               order of specifying macro commands in array wd.
 
 !      Inputs:
 !         initf     - Flag, Initialize solution data if true
@@ -17,7 +17,6 @@
 !      Outputs:
 !         none      - Routine may be called several times
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'arclel.h'
@@ -28,6 +27,7 @@
       include  'cdat1.h'
       include  'chdata.h'
       include  'comfil.h'
+      include  'comnds.h'
       include  'compas.h'
       include  'counts.h'
       include  'ddata.h'
@@ -75,16 +75,21 @@
       include  'pointer.h'
       include  'comblk.h'
 
-      logical   initf, errck,vinput,pcomp,setvar,palloc
-      character fint*128
-      integer   nlp, i, j, k, ll,last
-      integer   nwd1,nwd2,nwd3,nwd4,nwd5,nwd6,nwd7,nwd8,nwdp
-      integer   nw1,nw2,nw3,nw4,nw5,nw6,nw7,nw8,nwp
+      integer        :: ncomd
+      parameter        (ncomd = 72)
 
-      character wd(64)*4,lct(200)*15
-      integer   ed(64),  jct(200)
-      real*4    tary(2), etime , tt
-      real*8    ct(3,200), td(4)
+      character (len=128) :: fint
+      character (len=15)  :: lct(200)
+      character (len=4)   :: wd(ncomd)
+
+      logical       :: initf, errck,vinput,pcomp,setvar,palloc
+      integer       :: nlp,nif, i, j, k, ll,last
+      integer       :: nwd1,nwd2,nwd3,nwd4,nwd5,nwd6,nwd7,nwd8,nwd9,nwdp
+      integer       :: nw1,nw2,nw3,nw4,nw5,nw6,nw7,nw8,nw9,nwp
+
+      integer       :: ed(ncomd),  jct(200)
+      real (kind=4) :: tary(2), etime , tt
+      real (kind=8) :: td(4)
 
       save
 
@@ -93,42 +98,46 @@
 !           subprogram contains macro command statements.
 
       data wd/'stre','utan','tang','form','mass','reac','chec','damp',
-     1        'augm','geom','dire','iter',
+     1        'augm','geom','dire','iter','hill',
 
      2        'tol ','dt  ','loop','next','prop','data','time','prin',
-     2        'nopr','tran','init','iden','newf','back','debu',
+     2        'nopr','tran','init','iden','newf','back','debu','if  ',
+     2        'else','endi',
 
      3        'disp','solv','mesh','plot','subs','writ','read','rest',
      3        'velo','acce','bfgs','arcl','save','eige','epri','eigv',
-     3        'show','tplo','dsol',
+     3        'show','tplo','dsol','opti',
 
      4        'mac1','mac2','mac3','mac4','mac5','mac6','mac7','mac8',
      4        'mac9','ma10','ma11','ma12',
 
-     5        'outm',
+     5        'outm','comm',
 
      6        'para',
 
      7        'grap',
 
-     8        'extr','inse',
+     8        'elev','inse',
+
+     9        'fe2 ','rve ',
 
      p        'manu' /
 
       data ed/    0,     0,     0,     0,     0,     0,     0,     1,
-     1            1,     1,     3,     3,
+     1            1,     1,     3,     3,     1,
 
      2            0,     0,     0,     0,     0,     1,     0,     0,
-     2            0,     0,     0,     1,     1,     1,     0,
+     2            0,     0,     0,     1,     1,     1,     0,     3,
+     2            3,     3,
 
      3            0,     0,     0,     0,     0,     1,     1,     1,
      3            0,     0,     1,     1,     1,     0,     0,     1,
-     3            0,     1,     0,
+     3            0,     1,     0,     0,
 
      4            5,     5,     5,     5,     5,     5,     5,     5,
      4            5,     5,     5,     5,
 
-     5            5,
+     5            5,     0,
 
      5            5,
 
@@ -136,10 +145,12 @@
 
      5            5,     5,
 
+     5            5,     5,
+
      p            4 /
 
-      data nwd1,nwd2,nwd3,nwd4,nwd5,nwd6,nwd7,nwd8,nwdp
-     &    /  12,  15,  19,  12,   1,   1,   1,   2,   1 /
+      data nwd1,nwd2,nwd3,nwd4,nwd5,nwd6,nwd7,nwd8,nwd9,nwdp
+     &    /  13,  18,  20,  12,   2,   1,   1,   2,   2,   1 /
 
       if(initf) then
 
@@ -174,6 +185,7 @@
         rlnew  =  0.0d0
         timold = -1.0d0
         kflag  =  0
+        nastep =  0
         noi    =  0
         nreg   = -1
 
@@ -188,15 +200,16 @@
           ctan(i) = 0.0d0
           gtan(i) = 0.0d0
         end do
-        ctan(1) = 1.0d0
-        gtan(1) = 1.0d0
-        dynflg = .false.
-        gflag  = .true.
-        modfl  = .true.
-        ndebug = 0
-        numint = 5
-        rayla0 = 0.d0
-        rayla1 = 0.d0
+        ctan(1)    = 1.0d0
+        gtan(1)    = 1.0d0
+        dynflg     = .false.
+        floop(1:2) = .false.
+        gflag      = .true.
+        modfl      = .true.
+        ndebug     = 0
+        numint     = 5
+        rayla0     = 0.d0
+        rayla1     = 0.d0
 
 !       Save room for history variable storage
 
@@ -248,6 +261,7 @@
 
         ittyp  = -1   ! default is incore profile solver
         li     = 0
+        lvcn   = -1
         maxbl  = 0
         md     = 0
         npld   = 0
@@ -278,7 +292,7 @@
 !       Initialize history database items
 
         call formfe(np(40),np(26),np(26),np(26),
-     &             .false.,.false.,.false.,.false.,14,1,numel,1)
+     &             .false.,.false.,.false.,14,1,numel,1)
 
 !       Set umacro names for default values
 
@@ -296,6 +310,7 @@
 !     Set pointers to macro subprograms
 
       nlp    = nwd1 + 3
+      nif    = nwd1 + 16
       nw1    = nwd1
       nw2    = nwd2 + nw1
       nw3    = nwd3 + nw2
@@ -304,12 +319,13 @@
       nw6    = nwd6 + nw5
       nw7    = nwd7 + nw6
       nw8    = nwd8 + nw7
-      nwp    = nwdp + nw8
+      nw9    = nwd9 + nw8
+      nwp    = nwdp + nw9
 
 !     Input the macro commands
 
 
-100   call pmacio (jct,lct,ct,wd,ed,nwp,nlp,ll,prth)
+100   call pmacio (jct,lct,ct,wd,ed,nwp,nlp,nif,ll,prth)
       if(ll.le.0) go to 300
 
 !     Execute macro instruction program
@@ -362,13 +378,15 @@
         uct = wd(j)
         call pmacr4(ct(1,l),lct(l),j-nw3)
       elseif(j.le.nw5) then
-        call pmacr5(lct(l),ct(1,l),j-nw4)
+        call pmacr5(lct(l),j-nw4)
       elseif(j.le.nw6) then
         call pmacr6(lct(l),ct(1,l),j-nw5)
       elseif(j.le.nw7) then
-        call pmacr7(lct(l),ct(1,l),j-nw6)
+        call pmacr7(j-nw6)
       elseif(j.le.nw8) then
         call pmacr8(lct(l),ct(1,l),j-nw7)
+      elseif(j.le.nw9) then
+        call pmacr9(lct(l),ct(1,l),j-nw8)
       elseif(j.eq.nwp) then
         hlplev = max(-1,min(3,int(ct(1,l))))
       endif
@@ -393,9 +411,9 @@
 
 !     Formats
 
-2000  format(' *End of Macro Execution*',34x,'t=',2f9.2)
-2001  format(' *Macro ',i3,' * ',a4,1x,a15,
+2000  format(' *End of Solution Execution*',31x,'t=',2f9.2)
+2001  format(' *Command ',i3,' * ',a4,1x,a15,
      &   'v:',3g11.3/59x,'t=',2f9.2)
 2002  format(/'           Saved  Restart  File: ',a)
 
-      end
+      end subroutine pmacr

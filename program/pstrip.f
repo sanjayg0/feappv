@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -22,9 +22,10 @@
 
       include  'iofile.h'
 
-      logical   cksep
-      character xxx*256,yyy*256
-      integer   i,n,nn
+      character (len=256) :: xxx,yyy
+
+      logical       :: cksep
+      integer       :: i,n,nn
 
       save
 
@@ -80,4 +81,4 @@
         endif
       end do
 
-      end
+      end subroutine pstrip

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -18,7 +18,7 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
-      integer   i
+      integer       :: i
 
       save
 
@@ -48,4 +48,4 @@
         call umani12
       endif
 
-      end
+      end subroutine usetlib

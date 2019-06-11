@@ -1,17 +1,15 @@
 !$Id:$
-      subroutine pmacr7 (lct,ct,j)
+      subroutine pmacr7 (j)
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
 !     Purpose: Command language instruction subprogram: Part 7.
 
 !     Inputs:
-!        lct      - Command option for current command
-!        ct(3)    - Command parameters for current command
 !        j        - Number of command to execute
 
 !     Outputs:
@@ -19,9 +17,7 @@
 !-----[--+---------+---------+---------+---------+---------+---------+-]
       implicit   none
 
-      integer    j
-      character  lct*15
-      real*8     ct(3)
+      integer       :: j
 
       save
 
@@ -38,4 +34,4 @@
 2000  format('  *ERROR*',a,'command only available in Parallel FEAP',
      &       ' version')
 
-      end
+      end subroutine pmacr7

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -31,32 +31,28 @@
       include  'pointer.h'
       include  'comblk.h'
 
-      logical   lclip,addfac, setval,palloc
-      integer   nen,numel,nie, i,j,j1,m,n, nf, iel,iiel,ien,nel,pstyp
-      integer   ufac
-      integer   ix(nen1,numel), ia(*), ixf(7,*), ie(nie,*)
-      integer   iq(4,7), it(3,4), it2(3,16), iline(6), ii(4)
+      logical       :: lclip,addfac, setval,palloc
+      integer       :: nen,numel,nie, i,j,j1,m,n, nf, iel,iiel,ien,nel
+      integer       :: ufac,pstyp
+      integer       :: ix(nen1,numel), ia(*), ixf(7,*), ie(nie,*)
+      integer       :: iq(4,7), it(3,4), it2(3,16), iline(6), ii(4)
 
       save
 
 !     8-node brick faces
-
       data iq/3,2,1,4, 1,2,6,5, 2,3,7,6, 3,4,8,7, 4,1,5,8, 5,6,7,8,
      &        1,2,3,4/
 
 !     4-node tet faces
-
       data it/1,2,4, 2,3,4, 3,1,4, 1,3,2/
 
 !     10-node tet faces
-
       data it2 / 1, 5, 8,  5, 2, 9,  5, 9, 8,  8, 9, 4,
      &           2, 6, 9,  6, 3,10,  6,10, 9,  9,10, 4,
      &           3, 7,10,  7, 1, 8,  7, 8,10, 10, 8, 4,
      &           1, 7, 5,  7, 3, 6,  7, 6, 5,  5, 6, 2 /
 
 !     Compute location of boundary faces
-
       nf = 1
       do n = 1,numel
         if(ix(nen1-1,n).ge.0 .and. ia(n).ge.0) then
@@ -71,7 +67,6 @@
             end do ! j
 
 !           Get plot type
-
             call plftyp(pstyp,nel,iel)
 
             if(iel.gt.0) then
@@ -81,7 +76,6 @@
             endif
 
 !           6-node triangle
-
             if(iiel.eq.7) then
               ien = 3
             else
@@ -89,19 +83,15 @@
             endif
 
 !           No face if inord < 0
-
             if     (iiel.lt.0) then
 
 !           1-d elements
-
             elseif(pstyp .eq. 1) then
 
 !             Set space for line elements
-
               if( iiel.gt.0 .and. iiel.le.3 ) then
 
 !               Do a line element
-
                 if( lclip(ix(1,n),2,hr(npxx),ndm) ) then
                   iline(1) = ix(1,n)
                   iline(2) = ix(2,n)
@@ -116,15 +106,12 @@
               endif ! iiel > 0
 
 !           2-d elements
-
             elseif(pstyp .eq. 2) then
 
 !             Set space for top and bottom surface faces
-
               if( lclip(ix(1,n),min(4,ien),hr(npxx),ndm) ) then
 
 !               Do a 2-d surface with both faces considered
-
                 ii(1)  = 1
                 do i = 2,min(4,ien)
                   if(ix(iq(i,1),n).gt.0) then
@@ -167,11 +154,9 @@
               end if
 
 !           3-d elements
-
             elseif (pstyp .eq. 3) then
 
 !             Set for linear tetrahedral element faces
-
               if (iiel .eq. 9) then
 
                 if( lclip(ix(1,n),4,hr(npxx),ndm) ) then
@@ -185,7 +170,6 @@
                     end do ! j
 
 !                   Face is to be plotted if visible
-
                     if(addfac) then
                       ii(1)  = 1
                       do i = 2,3
@@ -209,7 +193,6 @@
                 end if
 
 !             Set for quadratic tetrahedral element faces
-
               elseif (iiel .eq. 15) then
 
                 if( lclip(ix(1,n),10,hr(npxx),ndm) ) then
@@ -223,7 +206,6 @@
                     end do ! j
 
 !                   Face is to be plotted if visible
-
                     if(addfac) then
                       ii(1)  = 1
                       do i = 2,3
@@ -247,7 +229,6 @@
                 end if
 
 !             Set for 64-node brick element faces
-
               elseif (iiel .eq. 46 .and. .not.nurbfl) then
 
                 if( lclip(ix(1,n),nen,hr(npxx),ndm) ) then
@@ -262,7 +243,6 @@
                     end do ! j
 
 !                   Face is to be plotted if visible
-
                     if(addfac) then
                       do j = 1,4
                         iline(j) = ix(ipu(j,m),n)
@@ -277,7 +257,6 @@
                 end if
 
 !             Set for brick element faces
-
               elseif (iiel .gt. 10 ) then
 
                 if( lclip(ix(1,n),8,hr(npxx),ndm) ) then
@@ -291,7 +270,6 @@
                     end do ! j
 
 !                   Face is to be plotted if visible
-
                     if(addfac) then
                       ii(1)  = 1
                       do i = 2,4
@@ -319,7 +297,6 @@
             endif ! pstyp > 0
 
 !         User element test
-
           elseif(pstyp.lt.0) then
 
             if( lclip(ix(1,n),nen,hr(npxx),ndm) ) then
@@ -334,7 +311,6 @@
                 end do ! j
 
 !               Face is to be plotted if visible
-
                 if(addfac) then
                   do j = 1,4
                     iline(j) = ix(ipu(j,m),n)
@@ -353,7 +329,6 @@
       end do ! n
 
 !     Sort faces
-
       nf = nf - 1
       if(nf.gt.1) then
         setval = palloc(118,'TEMP8',7*nf,1)
@@ -362,7 +337,6 @@
       endif
 
 !     Search for matching faces and delete
-
       i  = 1
       ii(1) = ixf(1,i)
       do j = 2,nf
@@ -401,4 +375,4 @@
         endif
       end do ! j
 
-      end
+      end subroutine plfacx

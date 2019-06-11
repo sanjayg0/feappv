@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -18,7 +18,7 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
-      integer   n,nn, iv(*)
+      integer      :: n,nn, iv(*)
 
       ckno0i = .false.
       do n = 1,nn
@@ -28,4 +28,4 @@
          endif
       end do
 
-      end
+      end function ckno0i

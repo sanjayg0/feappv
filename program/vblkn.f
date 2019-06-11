@@ -4,7 +4,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -36,11 +36,12 @@
       include  'iofile.h'
       include  'trdata.h'
 
-      logical   prt,prth,phd, pcomp
-      character xh*6, ctype*15
-      integer   ni,ndm,nr,ns,nt,i,j,k,l,m,n,mct, ixl(*)
-      real*8    dr,ds,dt, rr, sn2,cn2,sn3,cn3
-      real*8    ss(3),xl(3,*),x(ndm,*),xx(3)
+      character (len=15) :: ctype
+      character (len=6)  :: xh
+      logical       :: prt,prth,phd, pcomp
+      integer       :: ni,ndm,nr,ns,nt,i,j,k,l,m,n,mct, ixl(*)
+      real (kind=8) :: dr,ds,dt, rr, sn2,cn2,sn3,cn3
+      real (kind=8) :: ss(3),xl(3,*),x(ndm,*),xx(3)
 
       save
 
@@ -132,16 +133,16 @@
 
 3000  format(' *ERROR* Block node',i3,' is undefined')
 
-      end
+      end subroutine vblkn
 
       subroutine bcor3d(ixl,xl)
 
       implicit   none
 
-      integer    ixl(27), imid(12),amid(12),bmid(12)
-      real*8     xl(3,27)
+      integer       :: ixl(27), imid(12),amid(12),bmid(12)
+      real (kind=8) :: xl(3,27)
 
-      integer    i,j
+      integer       :: i,j
 
       data       imid/9,10,11,12, 13,14,15,16, 18,19,20,21/
       data       amid/1, 2, 3, 4,  1, 2, 3, 4,  5, 6, 7, 8/
@@ -224,7 +225,7 @@
         ixl(27) = 27
       endif
 
-      end
+      end subroutine bcor3d
 
       subroutine xbcor3d(ss,xl, x)
 
@@ -241,9 +242,9 @@
 
       implicit  none
 
-      integer   j,l, ix(27),iy(27),iz(27)
-      real*8    ss(3),xl(3,27),x(3)
-      real*8    lshp(3,3),shp
+      integer       :: j,l, ix(27),iy(27),iz(27)
+      real (kind=8) :: ss(3),xl(3,27),x(3)
+      real (kind=8) :: lshp(3,3),shp
 
       data      ix/1,3,3,1, 1,3,3,1, 1,3,3,1, 2,3,2,1,2, 2,3,2,1,2,
      &             2,3,2,1,2/
@@ -272,4 +273,4 @@
         end do
       end do
 
-      end
+      end subroutine xbcor3d

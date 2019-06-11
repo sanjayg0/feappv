@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--+---------+---------+---------+---------+---------+---------+-]
@@ -17,14 +17,14 @@
 !      Outputs:
 !         none      - Plot outputs to screen/file
 !-----[--+---------+---------+---------+---------+---------+---------+-]
-
       implicit  none
 
       include  'pdatxt.h'
 
-      character str(*)*1
-      integer   il
-      real*8    x,y
+      character (len=1) :: str(*)
+
+      integer       :: il
+      real (kind=8) :: x,y
 
       save
 
@@ -34,4 +34,4 @@
 
       call tplot(x,y,str,il,0)
 
-      end
+      end subroutine pltext

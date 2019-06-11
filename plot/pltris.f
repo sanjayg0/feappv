@@ -4,7 +4,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -48,12 +48,12 @@
       include  'pdatri.h'
       include  'plflag.h'
 
-      logical   tvc(9,9),cont,vflg,center
-      integer   ic,nc,n,ns,ndm,ndf,nen,nen1,nlabi,icolor,iutot
-      integer   nsi,i,j,ii,ivc,jvc,nn,nnn, ilc(4)
-      integer   ix(nen1,*)
-      real*8    s,dx1,x1,y1,z1,vv,vl,vu
-      real*8    x(ndm,*),xl(3,29),v(29),vc(12),vt(4),xt(3,4)
+      logical       :: tvc(9,9),cont,vflg,center
+      integer       :: ic,nc,n,ns,ndm,ndf,nen,nen1,nlabi,icolor,iutot
+      integer       :: nsi,i,j,ii,ivc,jvc,nn,nnn, ilc(4)
+      integer       :: ix(nen1,*)
+      real (kind=8) :: s,dx1,x1,y1,z1,vv,vl,vu
+      real (kind=8) :: x(ndm,*),xl(3,29),v(29),vc(12),vt(4),xt(3,4)
 
       save
 
@@ -195,4 +195,4 @@
         call plotl(xl(1,1),xl(2,1),z1,2)
       endif
 
-      end
+      end subroutine pltris

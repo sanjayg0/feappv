@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
       implicit   none
@@ -19,16 +19,13 @@
       include   'ndata.h'
       include   'pathn.h'
       include   'prflag.h'
-      include   'psize.h'
       include   'setups.h'
-
-      include   'p_point.h'
 
       include   'pointer.h'
       include   'comblk.h'
 
-      logical    cfr, error, palloc, setvar, flags(5)
-      integer    ip,kp,len
+      logical    :: cfr, error, palloc, setvar, flags(5)
+      integer    :: kp
 
 !     Active equations case
 
@@ -36,17 +33,10 @@
 !     Program initialization
       if(solver) then
         error    = .false.
-        floop(2) = .true.
 
 !       Symmetric part allocation
 
         if(.not.compfl) then
-          if(np(1).gt.0) then
-            call pgetd('TANGS',point,kp,ip,setvar)
-            len = kp*ipr
-          else
-            len = 0
-          endif
           kp = (mr(np(21)+neq-1)+neq)
           setvar = palloc(1,'TANG1',kp,2)
           if(.not.setvar) then
@@ -66,12 +56,12 @@
 !         Unsymmetric part allocation
 
           if(cfr) then
-            if(np(5).gt.0) then
-              call pgetd('UTANG',point,kp,ip,setvar)
-              len = kp*ipr
-            else
-              len = 0
-            endif
+!           if(np(5).gt.0) then
+!             call pgetd('UTANG',point,kp,ip,setvar)
+!             len = kp*ipr
+!           else
+!             len = 0
+!           endif
             kp = max(1,(mr(np(21)+neq-1)))
             setvar = palloc(5,'UTAN1',kp,2)
             if(.not.setvar) then
@@ -118,4 +108,4 @@
 3007  format(' *WARNING* Insufficient Storage for ',a,' Profile:'/
      &      '            Array size =',i10)
 
-      end
+      end subroutine presol

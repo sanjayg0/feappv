@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -25,11 +25,11 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit none
 
-      integer   neq,ni,nj,nj0,njd
-      real*8    vni
+      integer       :: neq,ni,nj,nj0,njd
+      real (kind=8) :: vni
 
-      integer   jc(*),ir(*)
-      real*8    ad(*),ac(*),p(*),v(*)
+      integer       :: jc(*),ir(*)
+      real (kind=8) :: ad(*),ac(*),p(*),v(*)
 
 !     Diagonal part
 
@@ -62,4 +62,4 @@
 
       end do
 
-      end
+      end subroutine caprod

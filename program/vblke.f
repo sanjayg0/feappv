@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -33,10 +33,10 @@
       include  'iofile.h'
       include  'trdata.h'
 
-      integer   ni,nf,ne,nen1,mat,ma,ntyp
-      integer   nr,ns,nt,nrs,i,j,k,l,m,n,dlayer
+      integer       :: ni,nf,ne,nen1,mat,ma,ntyp
+      integer       :: nr,ns,nt,nrs,i,j,k,l,m,n,dlayer
 
-      integer   ix(nen1,*),iq(8),it(4),ilr(*),nd(8),itc(4,6)
+      integer       :: ix(nen1,*),iq(8),it(4),ilr(*),nd(8),itc(4,6)
 
       save
 
@@ -122,4 +122,4 @@
         end do ! j
       end do ! k
 
-      end
+      end subroutine vblke

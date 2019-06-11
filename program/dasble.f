@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -34,11 +34,11 @@
       include  'pointer.h'
       include  'comblk.h'
 
-      logical   afl, alfl, bfl
-      integer   i, ii, j, jj, je, ns, neqs
+      logical       :: afl, alfl, bfl
+      integer       :: i, ii, j, jj, je, ns, neqs
 
-      integer   ld(ns),jp(*)
-      real*8    al(*),au(*),ad(*),b(*),s(ns,ns),p(ns)
+      integer       :: ld(ns),jp(*)
+      real (kind=8) :: al(*),au(*),ad(*),b(*),s(ns,ns),p(ns)
 
       save
 
@@ -122,4 +122,4 @@
         call uasble(s,p,ld,ns,afl,bfl,b)
       endif
 
-      end
+      end subroutine dasble

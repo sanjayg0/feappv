@@ -4,7 +4,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -33,15 +33,18 @@
       include  'iofile.h'
       include  'region.h'
 
-      logical   prt,prth,error,errck,fprt,genfl
-      logical   pcomp,pinput,vinput
-      character tx*15,mtype*69, etype*5, pelabl*5
-      integer   i,j,k,l,n,nen1,nnty,nmat,nord
-      integer   ii,il,is,ilx,lg,lk,llx,ma,ng
+      character (len=69) :: mtype
+      character (len=15) :: tx
+      character (len=5)  :: etype, pelabl
 
-      integer   ixg(16)
-      integer   idl(*),ix(nen1,*)
-      real*8    td(16)
+      logical       :: prt,prth,error,errck,fprt,genfl, norec
+      logical       :: pcomp,pinput,vinput
+      integer       :: i,j,k,l,n,nen1,nnty,nmat,nord
+      integer       :: ii,il,is,ilx,lg,lk,llx,ma,ng
+
+      integer       :: ixg(16)
+      integer       :: idl(*),ix(nen1,*), nel
+      real (kind=8) :: td(16)
 
       save
 
@@ -69,6 +72,7 @@
 
 !     Perform input of data for element connections
 
+      norec = .true.
       ilx = 0
       l   = 0
       ma  = 0
@@ -90,6 +94,10 @@
 
             l  = nint(td(1))
             if(l .le. 0) then
+              if(norec) then
+                write(  *,4001)
+                write(iow,4001)
+              endif
               return
             else
               l   = l + starel
@@ -108,6 +116,7 @@
 
 !           Input additional records
 
+            norec = .false.
             do ii = 14,nen,16
               il = min(nen+1-ii,16)
 202           errck = pinput(td,il)
@@ -200,7 +209,11 @@
               endif
               ix(k,l) = idl(k)
             end do
-            ix(nen1,l)   = lk
+            if(nmat.eq.0) then
+              ix(nen1,l) = lk
+            else
+              ix(nen1,l) = nmat
+            endif
             ix(nen1-1,l) = nreg
             ix(nen+7 ,l) = nnty
             ix(nen+8 ,l) = nord
@@ -219,11 +232,15 @@
             endif
             ma = ma + 1
             etype = pelabl(ix(nen+7,n))
+            nel   = 0
+            do k = 1,nen
+              if(ix(k,i).gt.0) nel = k
+            end do ! k
             write(iow,2002) n,ix(nen1,n),ix(nen1-1,n),etype,
-     &                      (ix(k,n),k=1,nen)
+     &                      (ix(k,n),k=1,nel)
             if(ior.lt.0) then
               write(*,2002) n,ix(nen1,n),ix(nen1-1,n),etype,
-     &                      (ix(k,n),k=1,nen)
+     &                      (ix(k,n),k=1,nel)
             endif
           endif
         end do
@@ -242,4 +259,7 @@
 
 3002  format(' *ERROR* Element',i5,' has illegal nodes')
 
-      end
+4001  format(' *WARNING* PELMIN: No data found for an -> ELEM',
+     &       ' <- data set.')
+
+      end subroutine pelmin

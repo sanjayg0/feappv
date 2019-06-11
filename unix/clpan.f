@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--+---------+---------+---------+---------+---------+---------+-]
@@ -25,7 +25,7 @@
       include  'psdat3.h'
       include  'x11f.h'
 
-      integer   ii
+      integer       :: ii
 
       save
 
@@ -51,4 +51,4 @@
 
       ipan = 0
 
-      end
+      end subroutine clpan

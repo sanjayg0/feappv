@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !     Data input device: Returns true on error
@@ -30,12 +30,14 @@
       include  'ioincl.h'
       include  'iofile.h'
       include  'iosave.h'
+      include  'setups.h'
 
-      logical   cinput
-      logical   vinput, pcomp, cksep, first
-      integer   i,j,mc,mm,mt,nn,lrec, iskip
-      character txl*15,tx(*)*15,tl(16)*15
-      real*8    d(*)
+      character  (len=15) :: txl,tx(*),tl(16)
+
+      logical       :: cinput
+      logical       :: vinput, pcomp, cksep, first
+      integer       :: i,j,mc,mm,mt,nn,lrec, iskip
+      real (kind=8) :: d(*)
 
       save
 
@@ -50,6 +52,9 @@
           return
         else
           write(iow,2000) mt+nn
+          if(rank.eq.0) then
+            write(*,2000) mt+nn
+          endif
           call plstop(.true.)
         endif
       else
@@ -199,4 +204,4 @@
 2000  format(' *ERROR* TINPUT: Too many items requested, limit = 16:',
      &       ' Requested',i8)
 
-      end
+      end function tinput

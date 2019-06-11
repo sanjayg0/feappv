@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--+---------+---------+---------+---------+---------+---------+-]
@@ -13,13 +13,12 @@
 
 !      Outputs: To plot window
 !-----[--+---------+---------+---------+---------+---------+---------+-]
-
       implicit  none
 
       include  'tdata.h'
       include  'pdatxt.h'
 
-      character yy*15
+      character (len=15) :: yy
 
       save
 
@@ -32,4 +31,4 @@
       write(yy, '(6hTime =,1p,1e9.2)' ) ttim
       call tplot(1.13d0 , 0.135d0, yy, 15, 1)
 
-      end
+      end subroutine pltime

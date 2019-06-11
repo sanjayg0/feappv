@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -24,12 +24,12 @@
 
       implicit  none
 
-      integer   nrk,nrc,nrm,nrt,isw
-      real*8    ct(3)
+      integer       :: nrk,nrc,nrm,nrt,isw
+      real (kind=8) :: ct(3)
 
       if(isw.eq.0) then
         nrt = 0
       else
       endif
 
-      end
+      end subroutine uparam

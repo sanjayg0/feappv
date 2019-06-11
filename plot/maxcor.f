@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -18,7 +18,6 @@
 !      Outputs:
 !         none      - Output through common /pdata0/
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'pdata0.h'
@@ -26,8 +25,8 @@
       include  'pointer.h'
       include  'comblk.h'
 
-      integer   ndm, numnp, i,ii,n
-      real*8    x(ndm,*)
+      integer       :: ndm, numnp, i,ii,n
+      real (kind=8) :: x(ndm,*)
 
       save
 
@@ -47,4 +46,4 @@
         end do
       end do
 
-      end
+      end subroutine maxcor

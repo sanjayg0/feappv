@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--+---------+---------+---------+---------+---------+---------+-]
@@ -29,10 +29,10 @@
       include  'plflag.h'
       include  'x11f.h'
 
-      integer   ipen,ipin
-      real*4    x11, y11, xtem, ytem
-!     real*4    xx1(4),yy1(4)
-      real*8    x, y
+      integer       :: ipen,ipin
+      real (kind=4) :: x11, y11, xtem, ytem
+!     real (kind=4) :: xx1(4),yy1(4)
+      real (kind=8) :: x, y
 
       save
 
@@ -115,4 +115,4 @@
 
       endif
 
-      end
+      end subroutine dplot

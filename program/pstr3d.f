@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -16,13 +16,12 @@
 !         bpr(*) - Principal stresses in order: bb-1, bb-2, angle
 !                  (degrees): bb-xx to bb-1
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
-      integer   i
-      real*8    pi23, tol, thrd, al, b1, b2, b3, c1, c2,c3
+      integer       :: i
+      real (kind=8) :: pi23, tol, thrd, al, b1, b2, b3, c1, c2,c3
 
-      real*8    bd(6),bb(6),bpr(3)
+      real (kind=8) :: bd(6),bb(6),bpr(3)
 
       save
 
@@ -75,4 +74,4 @@
 
       endif
 
-      end
+      end subroutine pstr3d

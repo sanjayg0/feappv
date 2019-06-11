@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -16,11 +16,10 @@
 !      Outputs:
 !         b(*)      - Moved array
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
-      integer   n,nn
-      real*8    a(nn),b(nn)
+      integer       :: n,nn
+      real (kind=8) :: a(nn),b(nn)
 
       save
 
@@ -30,4 +29,4 @@
         b(n) = a(n)
       end do
 
-      end
+      end subroutine pmove

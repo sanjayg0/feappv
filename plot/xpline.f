@@ -4,7 +4,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -42,13 +42,13 @@
       include  'pointer.h'
       include  'comblk.h'
 
-      logical   ifl,iend,isw
-      integer   numnp,numel,ndm,nen1,nen,nie, jplt(30)
-      integer   i, j, k, ii, jj, ij, iju, n, n1, n2, ni, nn
-      real*8    ct, x3
+      logical       :: ifl,iend,isw
+      integer       :: numnp,numel,ndm,nen1,nen,nie, pstyp,nel
+      integer       :: i, j, k, ii, jj, ij, iju, n, n1, n2, ni, nn
+      real (kind=8) :: ct, x3
 
-      integer   ie(nie,*),ix(nen1,*),ic(*),ip(*),id(*)
-      real*8    x(ndm,*)
+      integer       :: ie(nie,*),ix(nen1,*),ic(*),ip(*),id(*),jplt(30)
+      real (kind=8) :: x(ndm,*)
 
       save
 
@@ -64,16 +64,28 @@
         n  = ip(nn)
         if(n.gt.0) then
           if(ix(nen1-1,n).ge.0) then
-            ii = ix(nen1,n)
+            ii    = ix(nen1,n)
+            pstyp = ie(1,ii)
 
 !           Plot material number: maplt (0 = all); ii > 0 active material
 
             jj = maplt
-            if(jj.eq.0 .or. ii.eq.jj) then
-              if(ii.eq.jj .and. ct.lt.0.0d0) then
-                call pppcol(jj,1)
+            if(pstyp.ne.0 .and. (jj.eq.0 .or. ii.eq.jj)) then
+              if(ii.eq.jj .and. ct.lt.0.0d0) call pppcol(jj,1)
+              do i = nen,1,-1
+                if(ix(i,n).gt.0) then
+                  nel = i
+                  exit
+                endif
+              end do ! i
+              if(ix(nen+7,n).eq.-22) then
+                call vem_compp(ix(nen+8,n), jplt, nel, iju)
+              elseif(ix(nen+7,n).eq.-23) then
+                write(*,*) ' ERROR: VEM 3D not implemented'
+              else
+                call plftyp(pstyp,nel,ie(nie-1,ii))
+                call pltord(ix(1,n),ie(nie-1,ii), iju,jplt)
               endif
-              call pltord(ix(1,n),ie(nie-1,ii), iju,jplt)
 
 !             Look up element nodes
 
@@ -148,4 +160,4 @@
 
 104   continue
 
-      end
+      end subroutine xpline

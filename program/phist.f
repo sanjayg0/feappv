@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -29,11 +29,14 @@
       include  'iodata.h'
       include  'prflag.h'
 
-      logical   errck, vinput, cinput
-      character wd(*)*4,clab2*4,lct(*)*15,y*1
-      integer   ll,is,n,i
-      integer   jct(*)
-      real*8    ct(3,*), vjs(3)
+      character (len=15) :: lct(*)
+      character (len=4)  :: wd(*),clab2
+      character (len=1)  :: y
+
+      logical       :: errck, vinput, cinput
+      integer       :: ll,is,n,i
+      integer       :: jct(*)
+      real (kind=8) :: ct(3,*), vjs(3)
 
       save
 
@@ -141,4 +144,4 @@
      &    16x,'hist,read       - read current list on disk'/
      &    34x,'(file = feap.his)'/1x)
 
-      end
+      end subroutine phist

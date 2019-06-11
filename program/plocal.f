@@ -1,10 +1,10 @@
 !$Id:$
-      subroutine plocal(ld,eq,id,ix,ie,iedof,xl,ul,tl,ub, x,f,u,ud,
+      subroutine plocal(ld,eq,id,ix,iedof,xl,ul,tl,ub, x,f,u,ud,
      &                  t,un,dun, nrot, dfl, jsw)
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -13,7 +13,6 @@
 !      Inputs:
 !        eq(*)    - Global equation numbers
 !        id(*)    - Boundary restraints
-!        ie(*)    - Element descriptor parameters
 !        iedof(*) - Element descriptor parameters
 !        x(*)     - Global nodal coordinates
 !        f(*)     - Global nodal forces/displacements
@@ -54,12 +53,12 @@
       include   'pointer.h'
       include   'comblk.h'
 
-      logical    dfl
-      integer    nrot, jsw, i,j,k, iid,ild
-      integer    ld(nst),eq(ndf,*),id(ndf,*),ix(*),ie(*),iedof(ndf,*)
-      real*8     un(*),dun(*), ang
-      real*8     xl(ndm,*),ul(ndf,nen,*),tl(*), ub(*), ubl(20)
-      real*8     x(ndm,*),f(ndf,*),u(ndf,*),ud(*),t(*)
+      logical       :: dfl
+      integer       :: nrot, jsw, i,j,k, iid,ild
+      integer       :: ld(nst),eq(ndf,*),id(ndf,*),ix(*),iedof(ndf,*)
+      real (kind=8) :: un(*),dun(*), ang
+      real (kind=8) :: xl(ndm,*),ul(ndf,nen,*),tl(*), ub(*), ubl(20)
+      real (kind=8) :: x(ndm,*),f(ndf,*),u(ndf,*),ud(*),t(*)
 
       save
 
@@ -198,4 +197,4 @@
         endif
       end do ! i
 
-      end
+      end subroutine plocal

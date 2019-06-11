@@ -4,7 +4,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -28,9 +28,9 @@
 
       include  'iofile.h'
 
-      logical   addeq, bycol, wdiag, all
-      integer   ndf,nen,kpo,kp,neq, i,l,m, kk,neqj
-      integer   id(ndf,*),ix(*),ir(*)
+      logical      :: addeq, bycol, wdiag, all
+      integer      :: ndf,nen,kpo,kp,neq, i,l,m, kk,neqj
+      integer      :: id(ndf,*),ix(*),ir(*)
 
       save
 
@@ -78,4 +78,4 @@
         endif
       end do ! l
 
-      end
+      end subroutine comelm

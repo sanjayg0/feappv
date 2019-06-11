@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -23,8 +23,8 @@
 
       include  'iofile.h'
 
-      integer   nneq,i,j, id(*)
-      real*8    tau,vknorm,venorm,xsi, vk(*),ve(*), dot
+      integer       :: nneq,i,j, id(*)
+      real (kind=8) :: tau,vknorm,venorm,xsi, vk(*),ve(*), dot
 
       save
 
@@ -45,4 +45,4 @@
      &         3x,'Norm eigenvector    = ',g12.5,/,
      &         3x,'Scaling factor      = ',g12.5,/)
 
-      end
+      end subroutine paddv

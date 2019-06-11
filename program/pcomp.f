@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -18,11 +18,10 @@
 !      Outputs:
 !         pcomp  - Flag, true if a = b
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
-      integer   n, inc, i, ia,ib
-      character a*(*),b*(*)
+      integer       :: n, inc, i, ia,ib
+      character     :: a*(*),b*(*)
 
       save
 
@@ -48,4 +47,4 @@
 
       pcomp = .true.
 
-      end
+      end function pcomp

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -21,9 +21,10 @@
 
       implicit  none
 
-      logical   error
-      integer   i,j,n,nc
-      character x(75)*1,xs(75)*1
+      character (len=1) :: x(75),xs(75)
+
+      logical       :: error
+      integer       :: i,j,n,nc
 
       save
 
@@ -80,4 +81,4 @@
 
  2001 format('   No.',i3,'>',a1,' = ',74a1)
 
-      end
+      end subroutine pcheck

@@ -1,9 +1,9 @@
 !$Id:$
-      subroutine pltmv(pl,ipl,u,nplts,save)
+      subroutine pltmv(pl,ipl,u,nplts,snsave)
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -14,24 +14,23 @@
 !         ipl(*) - Location of information in u array
 !         u(*)   - Array of values
 !         nplts  - Number of items to extract
-!         save   - Sign of quantity to save
+!         snsave - Sign of quantity to save
 
 !      Outputs:
 !         pl(*)  - Array of time history information
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
-      real*8    save
+      real (kind=8) :: snsave
 
-      integer   nplts,j,n, ipl(2,nplts)
-      real*8    pl(nplts),u(*)
+      integer       :: nplts,j,n, ipl(2,nplts)
+      real (kind=8) :: pl(nplts),u(*)
 
       do n = 1,nplts
         j = ipl(1,n)
         if(j.gt.0) then
-          pl(n) = u(j)*save
+          pl(n) = u(j)*snsave
         end if
       end do
 
-      end
+      end subroutine pltmv

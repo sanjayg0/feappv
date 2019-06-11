@@ -4,7 +4,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -37,6 +37,7 @@
       include  'cdata.h'
       include  'comfil.h'
       include  'fdata.h'
+      include  'hdatam.h'
       include  'iofile.h'
       include  'pbody.h'
       include  'pdata1.h'
@@ -49,17 +50,18 @@
       include  'psdat1.h'
       include  'rpdata.h'
 
-      character y*1
-      logical   tvc(9,9),vflg,errck,cont,cinput
-      logical   pinput,label,labl
-      integer   nie,ndm,ndf,nen1,ic,mc,lc,mmc,icolor
-      integer   i,n,ma,maold,nc,nnc,nerr,nlabi, iplt(30)
-      integer   iu,iutot,ns,ii,ne
-      real*8    dx1,vmx,vmn
+      character (len=1) :: y
 
-      integer   ie(nie,*),ix(nen1,*),ip(*)
-      real*8    xl(3,29),x(ndm,*),dt(*),st(numnp,*),vv(nen,*)
-      real*8    v(29),vc(12),vlu(2)
+      logical       :: tvc(9,9),vflg,errck,cont,cinput
+      logical       :: pinput,label,labl
+      integer       :: nie,ndm,ndf,nen1,ic,mc,lc,mmc,icolor
+      integer       :: i,n,ma,maold,nc,nnc,nerr,nlabi, iplt(30)
+      integer       :: iu,iutot,ns,ii,ne
+      real (kind=8) :: dx1,vmx,vmn
+
+      integer       :: ie(nie,*),ix(nen1,*),ip(*)
+      real (kind=8) :: xl(3,29),x(ndm,*),dt(*),st(numnp,*),vv(nen,*)
+      real (kind=8) :: v(29),vc(12),vlu(2)
 
       save
 
@@ -72,7 +74,7 @@
 1     if(mc.gt.0) then
         nc    = max(1,min(mc,12))
         nlabi = 0
-        dx1   = .024d0/scale
+        dx1   = .024d0/scalef
         vflg  = ipb.eq.0
         nerr=0
 11      if(ior.lt.0) write(*,2001) nc
@@ -83,7 +85,7 @@
           nerr  = nerr+1
           if(nerr.gt.5) then
             if(ior.lt.0) return
-            call plstop
+            call plstop(.true.)
           endif
           if(errck) go to 11
         else
@@ -202,8 +204,11 @@
 
 !       Compute value in element
 
+        ne     = n
+        pltmfl = .true.
         call formfe(np(40),np(40),np(40),np(40),
-     &             .false.,.false.,.false.,.false.,8,n,n,1)
+     &             .false.,.false.,.false.,8,ne,ne,1)
+        pltmfl = .false.
 
 !       Do projection
 
@@ -338,4 +343,4 @@
 2007  format(' ** WARNING ** Initial label reset to fit screen')
 2008  format(' Input Min/Max (Default:',1p,e9.2,'/',1p,e9.2,'): >',$)
 2009  format(3x,'>',$)
-      end
+      end subroutine pltelc

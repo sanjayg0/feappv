@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -20,11 +20,11 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
-      integer   n,nn
-      real*8    xj, au(*),b(*)
+      integer       :: n,nn
+      real (kind=8) :: xj, au(*),b(*)
 
       do n = 1,nn
         b(n) = b(n) - au(n)*xj
       end do
 
-      end
+      end subroutine colred

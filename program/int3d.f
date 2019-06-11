@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -18,8 +18,8 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
-      integer   i,ll,lint, ig(4),jg(4)
-      real*8    g, s(4,*)
+      integer       :: i,ll,lint, ig(4),jg(4)
+      real (kind=8) :: g, s(4,*)
 
       data      ig/-1,1,1,-1/,jg/-1,-1,1,1/
 
@@ -83,4 +83,4 @@
         s(2,4) =  g
       endif
 
-      end
+      end subroutine int3d

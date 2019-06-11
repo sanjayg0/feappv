@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -28,14 +28,16 @@
       include  'iofile.h'
       include  'ioincl.h'
 
-      logical   prt,lsave,errck, pinput, oprt,prth
-      character fnamr*128,fext*4, vtype*4
-      integer   ndm, ndf, numnp, neq, iosfil
-      integer   i, ii, i1,i2, j, j1,j2
-      integer   m1,m2, n1,n2, nmax
+      character (len=128) :: fnamr
+      character (len=4)   :: fext, vtype
 
-      integer   id(ndf,*),idl(6),jdl(12)
-      real*8    td(16),x(ndm,*)
+      logical       :: prt,lsave,errck, pinput, oprt,prth
+      integer       :: ndm, ndf, numnp, neq, iosfil
+      integer       :: i, ii, i1,i2, j, j1,j2
+      integer       :: m1,m2, n1,n2, nmax
+
+      integer       :: id(ndf,*),idl(6),jdl(12)
+      real (kind=8) :: td(16),x(ndm,*)
 
       save
 
@@ -151,6 +153,14 @@
                     end do
                   end do
                   if(errck) neq = neq - 1
+
+!               Both are restrained dof's -- do not link
+
+                elseif(id(j,m1).lt.0 .and. id(j,m2).lt.0) then
+
+                  write(iow,3006) m1,m2,j
+                  write(*,3006) m1,m2,j
+
                 else
 
 !                 Error
@@ -227,4 +237,8 @@
 3004  format(5x,'*WARNING* Nodes',i8,' and',i8,
      &          ' already linked for DOF =',i4)
 
-      end
+3006  format(5x,'*WARNING* PLINK: Attempt to link restrained DOF:',
+     &          ' --> Not linked'/
+     &       5x,'        Nodes are',i8,' and',i8,'  DOF =',i4)
+
+      end subroutine plink

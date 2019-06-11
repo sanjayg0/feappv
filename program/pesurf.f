@@ -4,7 +4,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -41,7 +41,6 @@
 !         f(ndf,*)    - Nodal force and boundary values
 !         ang(*)      - Angles for sloping boundary nodes
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'comfil.h'
@@ -55,23 +54,27 @@
       include  'pointer.h'
       include  'comblk.h'
 
-      character ptype*15,fnam*128,fext*4, wd(12)*4, vtype*4
-      logical   prt,prth,errck,pinput,tinput,pcomp,lsave, polfl, wdflg
-      logical   setmem,palloc, oprt,oprth
-      integer   wdlist,fnorm,ddof
-      integer   ndf,ndm,nen,nen1,numnp,numel,isw
-      integer   i,i1,i2,i3,j,m,n,nn,iosave,ntyp,ntot,numprt,l,lint
-      real*8    cn,sn, y1,y2, tol0,tol,tolxi
-      real*8    ff,df,xi, d,gap0,alpha
-      real*8    ximin,ximax,xia,xib,xic,fa,fb,fxa,fxb,fya,fyb, pa,pb,pc
-      real*8    xc,yc, x1,x2, xy, xi1,xi2, zeta, zeta1,zeta2
+      character (len=128) :: fnam
+      character (len=15)  :: ptype
+      character (len=4)   :: fext, wd(12), vtype
+
+      logical       :: prt,prth,errck,pinput,tinput,pcomp,lsave, polfl
+      logical       :: setmem,palloc, oprt,oprth, wdflg
+      integer       :: wdlist,fnorm,ddof
+      integer       :: ndf,ndm,nen,nen1,numnp,numel,nipt,isw
+      integer       :: i,i1,i2,i3,j,m,n,nn
+      integer       :: iosave,ntyp,ntot,numprt,l,lint
+      real (kind=8) :: cn,sn, y1,y2, tol0,tol,tolxi
+      real (kind=8) :: ff,df,xi, d,gap0,alpha, pa,pb,pc
+      real (kind=8) :: ximin,ximax,xia,xib,xic,fa,fb,fxa,fxb,fya,fyb
+      real (kind=8) :: xc,yc, x1,x2, xy, xi1,xi2, zeta, zeta1,zeta2
 
       integer   id(ndf,numnp,*),ix(nen1,*),ip(*),ep(numel,*)
       integer   nend(2,2)
-      real*8    xin(*),x(ndm,*),f(ndf,numnp,*),ang(*)
-      real*8    xe(2,3),xl(2,3),dxl(2), xp(2),x0(3),pl(30)
-      real*8    shp(2,3),sg(3),wg(3), fl(2,3), td(5)
-      real*8    xld(2),xqd(2)
+      real (kind=8) :: xin(*),x(ndm,*),f(ndf,numnp,*),ang(*)
+      real (kind=8) :: xe(2,3),xl(2,3),dxl(2), xp(2),x0(3),pl(30)
+      real (kind=8) :: shp(2,3),sg(2,3), fl(2,3), td(5)
+      real (kind=8) :: xld(2),xqd(2)
 
       save
 
@@ -198,7 +201,7 @@
      &                  vtype,prt,prth)
           elseif(isw.eq.2) then
             call pcboun(pl,x,id(1,1,2),mr(point),ndm,ndf,numnp,numprt,
-     &                  gap0,vtype,prt,prth)
+     &                  gap0,vtype,prt,prth,'-B.C.')
           elseif(isw.eq.3) then
             call paboun(pl,x,ang,mr(point),ndm,numnp,numprt,
      &                  prt,prth)
@@ -669,16 +672,16 @@
                   else
 
                     lint = 3
-                    call int1d(lint,sg,wg)
+                    call int1d(lint,sg)
                     do l = 1,lint
-                      call shap1d(sg(l),2,shp)
+                      call shap1d(sg(1,l),2,shp)
                       dxl(1) = shp(1,1)*x(1,i1) + shp(1,2)*x(1,i2)
                       dxl(2) = shp(1,1)*x(2,i1) + shp(1,2)*x(2,i2)
                       xc     = shp(2,1)*x(1,i1) + shp(2,2)*x(1,i2)
                       yc     = shp(2,1)*x(2,i1) + shp(2,2)*x(2,i2)
-                      ff = (pa*0.5d0*sg(l)*(sg(l)-1.d0)
-     &                   +  pc*(1.d0-sg(l)*sg(l))
-     &                   +  pb*0.5d0*sg(l)*(sg(l)+1.d0))*wg(l)
+                      ff = (pa*0.5d0*sg(1,l)*(sg(1,l)-1.d0)
+     &                   +  pc*(1.d0-sg(1,l)*sg(1,l))
+     &                   +  pb*0.5d0*sg(1,l)*(sg(1,l)+1.d0))*sg(2,l)
                       x1        = xc - x(1,i1)
                       y1        = yc - x(2,i1)
                       x2        = x1*x1
@@ -741,19 +744,21 @@
                 df  = 0.5d0*(xi2 - xi1)
 
                 lint = 3
-                call int1d(lint,sg,wg)
+                call int1d(lint,sg)
                 do l = 1,lint
 
 !                 Coordinates for facet and interpolation surface
 
-                  xi   = 0.5d0*((1.d0 - sg(l))*xi1 + (1.d0 + sg(l))*xi2)
-                  zeta = 0.5d0*((1.d0 - xi)*zeta1  + (1.d0 + xi)*zeta2)
+                  xi   = 0.5d0*((1.d0 - sg(1,l))*xi1
+     &                        + (1.d0 + sg(1,l))*xi2)
+                  zeta = 0.5d0*((1.d0 - xi)*zeta1
+     &                        + (1.d0 + xi)*zeta2)
 
 !                 Magnitude of loading
 
                   ff    = (pl(1)*0.5d0*zeta*(zeta-1.d0)
      &                  +  pl(2)*0.5d0*zeta*(zeta+1.d0)
-     &                  +  pl(3)*(1.d0-zeta*zeta))*wg(l)*df
+     &                  +  pl(3)*(1.d0-zeta*zeta))*sg(2,l)*df
 
 !                 Shape functions for facet
 
@@ -846,8 +851,10 @@
               if(ior.lt.0) write(*,2031)
             end if
 
+            nipt = 0
             do n = 1,numnp
               if(ip(n).gt.0) then
+                nipt   = nipt + 1
                 xia    = xin(n)
                 f(ddof,n,2) = pl(1)*0.5d0*xia*(xia-1.d0)
      &                      + pl(3)*(1.d0-xia*xia)
@@ -860,7 +867,12 @@
                 endif
 
               endif
-            enddo
+            end do ! n
+
+            if(nipt.eq.0) then ! No data found
+              write(  *,3004) 'CDISpl'
+              write(iow,3004) 'CDISpl'
+            endif
 
 !         Set boundary conditions for nodes on surface
 
@@ -1046,13 +1058,14 @@
 2042  format(/'       N o d a l    B o u n d a r y    D i s p l.'//
      &       '    Node',6(i6,'-Displ':)/(10x,6(i6,'-Displ':)))
 
-3000  format(' *ERROR* Surface loading file',a,' does not exist')
+3000  format(' *ERROR* PESURF:Surface loading file',a,' does not exist')
 
-3001  format(' *ERROR* CSURF Segment node too large, node =',i5)
+3001  format(' *ERROR* PESURF: Segment node too large, node =',i5)
 
-3002  format(' *ERROR* CSURF Segment for element',i8,
+3002  format(' *ERROR* PESURF: Segment for element',i8,
      &       ' has bad projection values for nodes',i8,' and',i8)
 
-3003  format(' *ERROR* in surface condition inputs')
+3003  format(' *ERROR* PESURF: In surface condition inputs')
 
-      end
+3004  format(' --> WARNING: No nodes found for ',a,' data type')
+      end subroutine pesurf

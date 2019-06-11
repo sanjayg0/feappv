@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -57,7 +57,7 @@
         end do
       end do
 
-      end
+      end subroutine mkface
 
       subroutine pblend3x(x1,nr1,ns1, x2,nr2,ns2, x3,nr3,ns3,
      &                    x4,nr4,ns4, x5,nr5,ns5, x6,nr6,ns6,
@@ -120,7 +120,7 @@
         t = t + dt
       end do ! nt
 
-      end
+      end subroutine pblend3x
 
       subroutine xiso3d(xi1,xi2,xi3,xl,xx)
 
@@ -161,7 +161,7 @@
         end do
       end do
 
-      end
+      end subroutine xiso3d
 
       subroutine mkside(n,iface,is,isd)
 
@@ -244,7 +244,7 @@
 2000  format(' *ERROR* Face:',i2,' No match between sides',i2,
      &       ' and',i2)
 
-      end
+      end subroutine mkside
 
       subroutine psregn(ix,nen,nen1,ne,nf,nreg,prt,prth)
 
@@ -252,10 +252,11 @@
 
       include   'iofile.h'
 
-      logical    prt,prth
-      character  etype*5, pelabl*5
-      integer    nen,nen1,ne,nf,nreg, i,in,j,ma
-      integer    ix(nen1,*)
+      character (len=5) :: etype, pelabl
+
+      logical        :: prt,prth
+      integer        :: nen,nen1,ne,nf,nreg, i,in,j,ma
+      integer        :: ix(nen1,*)
 
       save
 
@@ -291,4 +292,4 @@
 
 2004  format(i7,2i4,1x,a5,7i8:/(21x,7i8))
 
-      end
+      end subroutine psregn

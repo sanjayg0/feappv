@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -18,14 +18,13 @@
 !      Outputs:
 !         f(ndf,*)   - Forces after tie accounted for
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'iofile.h'
 
-      integer   ndf, numnp, i, j, k
-      integer   id(ndf,*),ip(numnp)
-      real*8    f(ndf,*)
+      integer       :: ndf, numnp, i, j, k
+      integer       :: id(ndf,*),ip(numnp)
+      real (kind=8) :: f(ndf,*)
 
       save
 
@@ -56,4 +55,4 @@
         endif
       end do
 
-      end
+      end subroutine tiefor

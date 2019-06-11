@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -16,7 +16,6 @@
 !      Outputs:
 !         none
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'comfil.h'
@@ -25,8 +24,12 @@
       include  'iofile.h'
       include  'iosave.h'
 
-      logical   errc,lopen,pcomp
-      character fname*(*),dnam*15, fnamr*21, fext*8
+      character (len=21) :: fnamr
+      character (len=15) :: dnam
+      character (len=8)  :: fext
+      character          :: fname*(*)
+
+      logical       :: errc,lopen,pcomp
 
       save
 
@@ -71,4 +74,4 @@
         irecrd(isf) = 0
       endif
 
-      end
+      end subroutine pincld

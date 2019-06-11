@@ -4,7 +4,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -42,19 +42,19 @@
       include  'pointer.h'
       include  'comblk.h'
 
-      logical   fflg
-      integer   ndm,nen,nen1,numnp,numel,nr,nt
-      integer   i,j,k,l,ii,ji,ki,jf,kf
-      integer   i1,j1,k1,k2,ni,nn,nm,n1,n2,r1,r2,list,nbuck
+      logical       :: fflg
+      integer       :: ndm,nen,nen1,numnp,numel,nr,nt
+      integer       :: i,j,k,l,ii,ji,ki,jf,kf
+      integer       :: i1,j1,k1,k2,ni,nn,nm,n1,n2,r1,r2,list,nbuck
 
-      real*8    xt, snx,sny,snz
+      real (kind=8) :: xt, snx,sny,snz
 
-      integer   ix(nen1,*),ip(numnp),ir(numnp)
-      integer   ibuck(numnp),ib(numnp),nsize(4)
-      integer   ibox(0:1000),jbox(1000),lbuck(8)
+      integer       :: ix(nen1,*),ip(numnp),ir(numnp)
+      integer       :: ibuck(numnp),ib(numnp),nsize(4)
+      integer       :: ibox(0:1000),jbox(1000),lbuck(8)
 
-      real*8    xmd(3), xmx(3), xmn(3), xtol(3)
-      real*8    x(ndm,numnp),tol(3),td(*)
+      real (kind=8) :: xmd(3), xmx(3), xmn(3), xtol(3)
+      real (kind=8) :: x(ndm,numnp),tol(3),td(*)
 
       save
 
@@ -287,4 +287,4 @@
 
 2000  format(/6x,'Gap Tolerance =',1p,1e12.4/1x)
 
-      end
+      end subroutine tienod

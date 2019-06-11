@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--+---------+---------+---------+---------+---------+---------+-]
@@ -15,7 +15,6 @@
 !      Outputs:
 !         none      - Set output data through commons
 !-----[--+---------+---------+---------+---------+---------+---------+-]
-
       implicit  none
 
       include  'pdata2.h'
@@ -24,8 +23,9 @@
       include  'psdat5.h'
       include  'x11f.h'
 
-      character cvar*4
-      integer   iln(2)
+      character (len=4) :: cvar
+
+      integer       :: iln(2)
 
       save
 
@@ -119,4 +119,4 @@
       yy(1) = min(5,max(0,iln(2)))
       if(screfl) call gdx11( 13, xx(1), yy(1) )
 
-      end
+      end subroutine plline

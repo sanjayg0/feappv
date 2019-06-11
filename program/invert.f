@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -20,8 +20,8 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
-      integer   i,j,n,ndm,nmax
-      real*8    d, a(ndm,*)
+      integer       :: i,j,n,ndm,nmax
+      real (kind=8) :: d, a(ndm,*)
 
       do n = 1,nmax
         if(a(n,n).ne.0.0d0) then
@@ -44,4 +44,4 @@
         endif
       end do
 
-      end
+      end subroutine invert

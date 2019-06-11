@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -29,11 +29,15 @@
       include  'pdata2.h'
       include  'pdatxt.h'
 
-      character ci*2,strs(7)*13,slab(7)*4,yy*17
-      integer   ic,iv,nc,mc, i,ivi
-      real*4    xph,yph
-      real*8    xdv,ycor,xhead,ycoi
-      real*8    vc(*),yfr(4)
+      character (len=17) :: yy
+      character (len=13) :: strs(7)
+      character (len=4)  :: slab(7)
+      character (len=2)  :: ci
+
+      integer       :: ic,iv,nc,mc, i,ivi
+      real (kind=4) :: xph,yph
+      real (kind=8) :: xdv,ycor,xhead,ycoi
+      real (kind=8) :: vc(*),yfr(4)
 
       save
 
@@ -85,4 +89,4 @@
 
       end do
 
-      end
+      end subroutine pltctx

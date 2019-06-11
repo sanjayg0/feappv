@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -18,7 +18,6 @@
 !      Outputs:
 !         Depends on command number j
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include   'allotd.h'
@@ -58,7 +57,6 @@
       include   'prflag.h'
       include   'prlod.h'
       include   'prstrs.h'
-      include   'psize.h'
       include   'rdata.h'
       include   'rdat0.h'
       include   'rdat1.h'
@@ -69,18 +67,19 @@
       include   'xtout.h'
       include   'comblk.h'
 
-      logical   fa,tr,cfr,pcomp,f8o,exst,tfl,setvar,palloc
-      logical   nomass,factor,compsv
-      character cmtyp*4
-      integer   iops,mops,i,j, neqms, k1,k2,k3,k4
-      real*8    tops,ur,rel0,reln,step
+      character (len=15) :: lct(*)
+      character (len=4)  :: cmtyp
 
-      character lct(*)*15
-      real*8    ct(3,*)
-      real*4    tary(2), etime , tt
+      logical       :: fa,tr,cfr,pcomp,f8o,exst,tfl,setvar,palloc
+      logical       :: nomass,factor,compsv
+      integer       :: iops,mops,i,j, neqms, k1,k2,k3,k4
+      real (kind=8) :: tops,ur,rel0,reln,step, aengysv
 
-      logical   cknon0
-      real*8    dot
+      real (kind=8) :: ct(3,*)
+      real (kind=4) :: tary(2), etime , tt
+
+      logical       :: cknon0
+      real (kind=8) :: dot
 
       save
 
@@ -101,7 +100,7 @@
 
 !     Transfer to correct process
 
-      go to (1,2,2,4,5,6,7,8,9,10,11,12), j
+      go to (1,2,2,4,5,6,7,8,9,10,11,12,13), j
 
 !     Print stress values
 
@@ -155,13 +154,15 @@
 
         point = npnp + numnp
         if(.not.fl(11)) then
-          call pzero(hr(np(207)),numel)
           istv = npstr - 1
+          call pzero (hr(np(207)),numel)
           call pzero (hr(npnp), npstr*numnp)
           call pzero (hr(nper),     8*numnp)
 
-          call formfe(np(40),np(26),np(26),np(26),fa,fa,fa,fa,8,
+          pltmfl = .true.
+          call formfe(np(40),np(26),np(26),np(26),fa,fa,fa,8,
      &                1,numel,1)
+          pltmfl = .false.
           call pltstr(hr(npnp),hr(nper+numnp),hr(point),numnp,ndm)
         endif
 
@@ -183,7 +184,7 @@
           k2 = max(1,min(numel,k2))
           if(k2-k1.ne.0) k3 = isign(k3,k2-k1)
         endif
-        call formfe(np(40),np(26),np(26),np(26),fa,fa,fa,fa,4,k1,k2,k3)
+        call formfe(np(40),np(26),np(26),np(26),fa,fa,fa,4,k1,k2,k3)
       endif
 
       return
@@ -271,7 +272,7 @@
 
         hflgu  = f8o
         h3flgu = f8o
-        call formfe(np(40),np(26),na,nal,tr,f8o,fa,fa,3,1,numel,1)
+        call formfe(np(40),np(26),na,nal,tr,f8o,fa,3,1,numel,1)
         ndflg = .false.
 
 !       Output residual norm
@@ -301,18 +302,17 @@
         fp(1)  = na
         fp(2)  = nau
         fp(3)  = nal
-        fp(4)  = np(26)
-        fp(5)  = np(21)
+        fp(4)  = np(21)
         factor = ct(1,l).ge.0.0d0
 
-        call psolve(fp,factor,f8o,cfr, prnt)
+        call psolve(hr(np(26)),fp,factor,f8o,cfr, prnt)
         if(factor) then
 
 !         Timing for factorization
 
           if(tdiff .gt.0.0d0 .and. prnt .and. pfr
      &                       .and. ittyp.eq.-1) then
-            call datric(iops,mops,mr(fp(5)),neq)
+            call datric(iops,mops,mr(fp(4)),neq)
             tops  = (dble(mops) + dble(iops)*1.d-6)/tdiff
             if(cfr) tops = 2.d0*tops
             if(ior.lt.0) then
@@ -384,8 +384,8 @@
 
 !         Update solution
 
-          call update(mr(np(31)),hr(np(30)),hr(np(40)),hr(np(42)),
-     &                hr(np(26)),fl(9),2)
+          call pupdate(mr(np(31)),hr(np(30)),hr(np(40)),hr(np(42)),
+     &                 hr(np(26)),fl(9),2)
 
         endif
 
@@ -396,8 +396,24 @@
         if(prnt .and. ior.lt.0) write(*,3006)
         call ploa1( ttim,dt)
         call pload( mr(np(31)),hr(np(30)),hr(np(26)),prop*rlnew,fa)
-        call update(mr(np(31)),hr(np(30)),hr(np(40)),hr(np(42)),
-     &              hr(np(26)),fl(9),2)
+        call pupdate(mr(np(31)),hr(np(30)),hr(np(40)),hr(np(42)),
+     &               hr(np(26)),fl(9),2)
+
+!       Update stresses
+
+        hflgu  = .true.
+        h3flgu = .true.
+        rnmax  = 1.d0
+        niter  = niter  + 1
+        call formfe(np(40),np(26),na,nal,fa,fa,fa,6,1,numel,1)
+
+!       Convergence set
+
+        if(lv.gt.1) then
+          ct(1,lve(lv)) = ct(1,lvs(lv))
+          l             = lve(lv) - 1
+          floop(1)      = .false.
+        endif
 
       endif
       return
@@ -417,7 +433,7 @@
 
 !     Compute current residual
 
-      call formfe(np(40),np(26),np(26),np(26),fa,tr,fa,fa,6,1,numel,1)
+      call formfe(np(40),np(26),np(26),np(26),fa,tr,fa,6,1,numel,1)
 
       rnorm = sqrt(dot(hr(np(26)),hr(np(26)),neq))
 
@@ -470,7 +486,7 @@
             setvar = palloc(112,'TEMP2',neq, 2)
             fp(8)   = np(112)
             imtyp = 1
-            call formfe(np(40),fp(8),fp(8),fp(8),fa,tr,fa,fa,5,
+            call formfe(np(40),fp(8),fp(8),fp(8),fa,tr,fa,5,
      &                  1,numel,1)
           endif
 
@@ -512,8 +528,14 @@
           neqms = neq
           call piacel(hr(nl),hr(np(26)),hr(np(26)),neqms)
 
-          call update(mr(np(31)),hr(np(30)),hr(np(40)),hr(np(42)),
-     &                hr(np(26)),fl(9),2)
+          call pupdate(mr(np(31)),hr(np(30)),hr(np(40)),hr(np(42)),
+     &                 hr(np(26)),fl(9),2)
+          fl(8) = .false.
+          if(abs(reln).le.sqrt(tol)*rnmax .and. lv.gt.1) then
+            ct(1,lve(lv)) = ct(1,lvs(lv))
+            l             = lve(lv) - 1
+            floop(1)      = .false.
+          endif
 
 !       Write error
 
@@ -524,7 +546,14 @@
           cmtyp  = 'lump'
           go to 51
         endif
+!     Convergence check on residual
 
+      elseif(pcomp(lct(l),'conv',4) .and. reln .lt. sqrt(tol)) then
+        if(lv.gt.1) then
+          ct(1,lve(lv)) = ct(1,lvs(lv))
+          l             = lve(lv) - 1
+          floop(1)      = .false.
+        endif
       endif
 
       return
@@ -581,7 +610,7 @@
       cadamp = .false.
       camass = .true.
       idenf  = .false.
-      call formfe(np(40),nl,nm,nm,fl(1),fl(2),fa,fa,5,1,numel,1)
+      call formfe(np(40),nl,nm,nm,fl(1),fl(2),fa,5,1,numel,1)
       compfl =  compsv
 
 !     Check that mass matrix has non-zero diagonal entries
@@ -661,7 +690,9 @@
           call ploa1(ttim,dt)
           call pload(mr(np(31)),hr(np(30)),hr(np(26)),prop*rlnew,fa)
         endif
-        call formfe(np(40),np(26),np(26),np(26),fa,tr,fa,tr,6,1,numel,1)
+        pltmfl = .true.
+        call formfe(np(40),np(26),np(26),np(26),fa,tr,tr,6,1,numel,1)
+        pltmfl = .false.
       endif
 
 !     Selected nodal outputs
@@ -698,7 +729,7 @@
       else
         k1 = 2
       endif
-      call formfe(np(40),np(26),np(26),np(26),fa,fa,fa,fa,k1,1,numel,1)
+      call formfe(np(40),np(26),np(26),np(26),fa,fa,fa,k1,1,numel,1)
       return
 
 ! --- [damp] form consistent damping matrix (isw=9)
@@ -707,7 +738,7 @@
       nc = np(17)
       k1 = neq + mr(np(21)+neq-1)
       call pzero (hr(nc),k1)
-      call formfe (np(40),nc,nc,nc,tr,fa,fa,fa,9,1,numel,1)
+      call formfe (np(40),nc,nc,nc,tr,fa,fa,9,1,numel,1)
       return
 
 ! --- [augm,,value] perform nested update for augmented lagrangian
@@ -734,7 +765,7 @@
 
       hflgu  = .true.
       h3flgu = .true.
-      call formfe(np(40),np(26),np(26),np(26),fa,fa,fa,fa,10,
+      call formfe(np(40),np(26),np(26),np(26),fa,fa,fa,10,
      &            1,numel,1)
 
 !     Continue with current time step
@@ -795,6 +826,17 @@
       call iters(k1,1)
       return
 
+!     [hill]-mandel computations
+!     [hill tang]  - Compute tangent and stress
+!     [hill stre]  - Compute stress only
+
+!     Compute Hill-Mandel projection of stress and moduli
+
+13    aengysv = aengy   ! Save current energy of solution
+      call phillmandel(lct(l),ct)
+      aengy   = aengysv
+      return
+
 !     Formats
 
 2000  format('   Shift to tangent matrix = ',1p,e12.5)
@@ -828,4 +870,4 @@
 3008  format(' *ERROR* No non-zero terms in mass matrix:',
      &       ' Check density value for materials')
 
-      end
+      end subroutine pmacr1

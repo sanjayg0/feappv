@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -28,15 +28,16 @@
 
       include  'iofile.h'
 
-      character vtype*4
-      logical   prt,prth, clflg, pcomp
-      integer   ndm,ndf,numnp,numprt, n,nbc
-      real*8    xmn, tmn
+      character (len=4) :: vtype
 
-      integer   ntyp(*)
-      real*8    x(ndm,numnp),td(*),f(ndf,numnp)
+      logical       :: prt,prth, clflg, pcomp
+      integer       :: ndm,ndf,numnp,numprt, n,nbc
+      real (kind=8) :: xmn, tmn
 
-      real*8    dotx
+      integer       :: ntyp(*)
+      real (kind=8) :: x(ndm,numnp),td(*),f(ndf,numnp)
+
+      real (kind=8) :: dotx
 
       save
 
@@ -97,4 +98,4 @@
 
 2001  format(i7,1p,6e12.4/(7x,1p,6e12.4))
 
-      end
+      end subroutine pfboun

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -28,9 +28,9 @@
       include  'pointer.h'
       include  'comblk.h'
 
-      logical   prt
-      integer   ndf,ndm,numnp,nad,neq,n,nn, i, j
-      integer   id(ndf,numnp)
+      logical       :: prt
+      integer       :: ndf,ndm,numnp,nad,neq,n,nn, i, j
+      integer       :: id(ndf,numnp)
 
       save
 
@@ -58,4 +58,4 @@
         call plink(id,hr(np(43)),ndm,ndf,numnp,neq,prt)
       endif
 
-      end
+      end subroutine seteq

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -28,14 +28,17 @@
       include  'dstars.h'
       include  'iofile.h'
 
-      logical   prt,prth,err,errck, pinput, oflg
-      character cd*12, cname*(*), carg*(*)
-      integer   i,j,l,n,nn,lg,ng,nd,nix,num,mct,type
-      integer   ix(nix,*),ixl(14)
-      real*8    td(16)
+      character (len=12) :: cd
+      character          :: cname*(*), carg*(*)
+
+      logical       :: prt,prth,err,errck, pinput, oflg, norec
+      integer       :: i,j,l,n,nn,lg,ng,nd,nix,num,mct,type
+      integer       :: ix(nix,*),ixl(14)
+      real (kind=8) :: td(16)
 
       save
 
+      norec = .true.
       err = .false.
       cd  = carg
       mct = 0
@@ -65,6 +68,8 @@
         if(ior.lt.0) write(*,3001) n,cname
       endif
       if(n.le.0.or.n.gt.num) go to 104
+      norec = .false.
+
       ng  = nint(td(2))
       do i = 1,nd
         ixl(i)  = nint(td(i+2))
@@ -85,7 +90,14 @@
       endif
       go to 100
 
-104   if(.not.prt) return
+!     Output data sets
+
+104   if(norec) then
+        write(  *,4001) cd(1:5)
+        write(iow,4001) cd(1:5)
+        return
+      endif
+      if(.not.prt) return
 
       do j = 1,num
 
@@ -141,4 +153,7 @@
 3001  format(' *ERROR* GENINT: Attempt to input item',i5,', terminate',
      & ' input in ',a)
 
-      end
+4001  format(' *WARNING* GENINT: No data found for a ->',a5,
+     &       ' <- data set.')
+
+      end subroutine genint

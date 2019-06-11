@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -21,7 +21,7 @@
       include  'iofile.h'
       include  'ioincl.h'
 
-      character subnam*(*)
+      character    :: subnam*(*)
 
       if (ior.gt.0)  then
          write(iow,2000) subnam,fincld(isf),irecrd(isf),record
@@ -37,4 +37,4 @@
      &         '  If this record is correct error may result from'/
      &         '  missing blank record before new command type.')
 
-      end
+      end subroutine errclr

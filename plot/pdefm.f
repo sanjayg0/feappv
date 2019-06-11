@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -22,7 +22,6 @@
 !      Outputs:
 !         dr(ndf,*) - Deformed coordinates
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'pointer.h'
@@ -30,10 +29,10 @@
 
       include  'pdata4.h'
 
-      logical   flag
-      integer   ndm,ndf,numnp, i,n
-      real*8    c, cn,sn
-      real*8    x(ndm,*),b(ndf,*),angl(*),uu(3), vv(15), dr(3,*)
+      logical       :: flag
+      integer       :: ndm,ndf,numnp, i,n
+      real (kind=8) :: c, cn,sn
+      real (kind=8) :: x(ndm,*),b(ndf,*),angl(*),uu(3), vv(15), dr(3,*)
 
       save
 
@@ -65,4 +64,4 @@
         endif
       end do ! n
 
-      end
+      end subroutine pdefm

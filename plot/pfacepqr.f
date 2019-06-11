@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -20,9 +20,9 @@
 
       include   'ublk1.h'
 
-      integer    np, nfac
-      integer    iu(4,*)
-      integer    ne(3),ns(3), i,j, ii
+      integer        :: np, nfac
+      integer        :: iu(4,*)
+      integer        :: ne(3),ns(3), i,j, ii
 
       do i = 1,3
         ne(i) = np
@@ -108,4 +108,4 @@
         end do ! i
       end do ! j
 
-      end
+      end subroutine pfacepqr

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -33,7 +33,7 @@
       include   'sdata.h'
       include   'tdata.h'
 
-      logical    errs
+      logical        :: errs
 
       save
 
@@ -60,4 +60,4 @@
         endif
       endif
 
-      end
+      end subroutine pendprob

@@ -1,10 +1,10 @@
 !$Id:$
       logical function setmem(list,mlist,rlist,
-     &                        num,name,length,precis)
+     &                        num,mname,length,precis)
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -17,7 +17,7 @@
 !         mlist(2,*) - Location entries for defined arrays
 !         rlist(*)   - Admissible names for arrays
 !         num        - Entry number for array (see below)
-!         name       - Name of array          (see below)
+!         mname      - Name of array          (see below)
 !         length     - Length of array defined: =0 for delete
 !         precis     - Precision of array: 1 = integers; ipr = reals
 !                      N.B. if ipr = 1, all arrays padded by one word
@@ -33,7 +33,6 @@
       include  'cdata.h'
       include  'iodata.h'
       include  'iofile.h'
-      include  'psize.h'
       include  'errchk.h'
       include  'pointer.h'
       include  'comblk.h'
@@ -41,10 +40,12 @@
 
       include  'p_point.h'
 
-      logical   pcomp
-      integer   list,num,length,precis,ip,ipa, n,i, iot, lensav
-      integer   dicloc, mlist(2,list), irp(2,2)
-      character name*(*),dname*5, rlist(list)*5
+      character (len=5) :: dname, rlist(list)
+      character         :: mname*(*)
+
+      logical       :: pcomp
+      integer       :: list,num,length,precis,ip,ipa, n,i, iot, lensav
+      integer       :: dicloc, mlist(2,list), irp(2,2)
 
       save
 
@@ -54,7 +55,7 @@
 
       mmax = 0
 
-      dname  = name
+      dname  = mname
       n      = max(1,min(num,list))
 
 !     Check match of number with name of array
@@ -123,9 +124,9 @@
 !         Sufficient memory does not exist - Write ERROR message and STOP
 
           else
-            write(iow,2000) name,length
+            write(iow,2000) mname,length
             if(ior.lt.0) then
-              write(*,2000) name,length
+              write(*,2000) mname,length
             endif
             if(eralloc) then
               setmem = .false.
@@ -223,9 +224,9 @@
 !         Cannot expand array, not enough space available
 
           if(adr(n).eq.0) then
-            write(iow,2000) name,length
+            write(iow,2000) mname,length
             if(ior.lt.0) then
-              write(*,2000) name,length
+              write(*,2000) mname,length
             endif
             if(eralloc) then
               setmem = .false.
@@ -264,4 +265,4 @@
 3001  format(' *ERROR* No allocation for user array number',i4,
      &       ' named: ',a)
 
-      end
+      end function setmem

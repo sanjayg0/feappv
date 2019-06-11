@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -21,8 +21,8 @@
 !     include  'eldata.h'
       include  'iofile.h'
 
-      integer   i,l,lint, x2(9),y2(9),w2(9), x3(16),y3(16),w3(16)
-      real*8    g,h, sg(3,*)
+      integer       :: i,l,lint, x2(9),y2(9),w2(9), x3(16),y3(16),w3(16)
+      real (kind=8) :: g,h, sg(3,*)
 
       save
 
@@ -83,4 +83,4 @@
 
 2000  format(' *ERROR* INT2DN: Illegal element type =',i16)
 
-      end
+      end subroutine int2dn

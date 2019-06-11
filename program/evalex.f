@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -23,10 +23,13 @@
       include  'corfil.h'
       include  'iofile.h'
 
-      logical   error
-      character xs*(*),x*256,y*1,op(25)*1
-      integer   i,j,k,ns,num
-      real*8    val, v(*)
+      character (len=256) :: x
+      character (len=1)   :: y,op(25)
+      character           :: xs*(*)
+
+      logical       :: error
+      integer       :: i,j,k,ns,num
+      real (kind=8) :: val, v(*)
 
       save
 
@@ -132,4 +135,4 @@
 
 3000  format(' *ERROR* Dividing by zero in expression for: ',a)
 
-      end
+      end subroutine evalex

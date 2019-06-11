@@ -4,7 +4,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -30,9 +30,9 @@
       include  'hdatam.h'
       include  'iofile.h'
 
-      logical   flag,prt,setvar,palloc
-      integer   i,n,nh0,nhf,nie,nen,nen1,numel,nummat,ma
-      integer   ie(nie,*),ix(nen1,*)
+      logical       :: flag,prt,setvar,palloc
+      integer       :: i,n,nh0,nhf,nie,nen,nen1,numel,nummat,ma
+      integer       :: ie(nie,*),ix(nen1,*)
 
       save
 
@@ -122,4 +122,4 @@
 
 2001  format(5i15)
 
-      end
+      end subroutine sethis

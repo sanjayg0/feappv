@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--+---------+---------+---------+---------+---------+---------+-]
@@ -23,13 +23,12 @@
 !     Outputs:
 !       b(*)      - RHS (assembled)
 !-----[--+---------+---------+---------+---------+---------+---------+-]
-
       implicit  none
 
-      integer   ns
-      logical   afl,bfl
+      integer       :: ns
+      logical       :: afl,bfl
 
-      integer   ld(ns)
-      real*8    s(ns,ns),p(ns), b(*)
+      integer       :: ld(ns)
+      real (kind=8) :: s(ns,ns),p(ns), b(*)
 
-      end
+      end subroutine uasble

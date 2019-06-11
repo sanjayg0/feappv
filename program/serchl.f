@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -31,13 +31,13 @@
 
       include  'p_iterat.h'
 
-      integer   j, neq,linmax
-      real*8    g, gtol,stol,step, sa,sb, ga,gb
+      integer       :: j, neq,linmax
+      real (kind=8) :: g, gtol,stol,step, sa,sb, ga,gb
 
       integer   id(*)
-      real*8    d(*),t(*)
+      real (kind=8) :: d(*),t(*)
 
-      real*8    gamma1
+      real (kind=8) :: gamma1
 
       save
 
@@ -112,4 +112,4 @@
 3001  format(' -> Iteration',i3,' Step Size =',1p,e12.5,' Energy =',
      &       1p,e12.5,' sa=',f6.3,' sb=',f6.3)
 
-      end
+      end subroutine serchl

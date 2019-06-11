@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -19,14 +19,13 @@
 !      Outputs:
 !         none      - Plot outputs to screen/file
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
-      integer   ns,nc,icol,icx,icn,i,j,k
-      real*8    s,vci
+      integer       :: ns,nc,icol,icx,icn,i,j,k
+      real (kind=8) :: s,vci
 
-      integer   ilc(9)
-      real*8    xl(3,*),v(*),vc(*) ,xp(9),yp(9),zp(9)
+      integer       :: ilc(9)
+      real (kind=8) :: xl(3,*),v(*),vc(*) ,xp(9),yp(9),zp(9)
 
       save
 
@@ -105,4 +104,4 @@
         call pppcol(0,0)
       end do
 
-      end
+      end subroutine pltlfl

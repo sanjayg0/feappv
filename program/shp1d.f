@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -23,12 +23,11 @@
 !                   shp(2,1 to nel): shape functions
 !       xjac      : jacobian at s
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
-      integer   ndm,nel,i
-      real*8    s,xjac
-      real*8    xl(ndm,nel),shp(2,nel)
+      integer       :: ndm,nel,i
+      real (kind=8) :: s,xjac
+      real (kind=8) :: xl(ndm,nel),shp(2,nel)
 
       save
 
@@ -75,4 +74,4 @@
         shp(1,1:3) = shp(1,1:3)/xjac
       endif
 
-      end
+      end subroutine shp1d

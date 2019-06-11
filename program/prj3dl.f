@@ -4,7 +4,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -49,17 +49,19 @@
       include  'pdata6.h'
       include  'iofile.h'
 
-      integer   nef,nen,nen1,ndm,ndf,numnp,numel,fnorm,ddof,isw, projpt
-      integer   ibn(numnp), ix(nen1,numel), id(ndf,numnp), ie(nie,*)
-      real*8    pl(*),x(ndm,numnp),x0(ndm),f(ndf,numnp,*),ang(*)
+      integer       :: nef,nen,nen1,ndm,ndf,numnp,numel
+      integer       :: fnorm,ddof,isw, projpt
+      integer       :: ibn(numnp),ix(nen1,numel),id(ndf,numnp),ie(nie,*)
+      real (kind=8) :: pl(*),x(ndm,numnp),x0(ndm),f(ndf,numnp,*),ang(*)
 
-      logical   polfl, errc, pinput, prt, prth
-      integer   i,j,k,l,n, i1,i2, iel,iiel,ifac,lint
-      integer   ic(9), iq(4,7), it(3,4), il(4,7)
-      real*8    gap0,gap,tol,tolgap,load,xsj(3),dir,den,th
-      real*8    td(5),xmin(3),xmax(3),xp(3,9),v1(3),v2(3),xi(3),xx(3)
-      real*8    nn(3),normal(3),pr(4),pp(9),shp(9),shps(4),xl(3,4)
-      real*8    sg(3,4),tg(4,4),fl(3,4),xc(3),vv(2), angl,sn,cn
+      logical       :: polfl, errc, pinput, prt, prth
+      integer       :: i,j,k,l,n, i1,i2, iel,iiel,ifac,lint
+      integer       :: ic(9), iq(4,7), it(3,4), il(4,7)
+      real (kind=8) :: gap0,gap,tol,tolgap,load,xsj(3),dir,den,th
+      real (kind=8) :: td(5),xmin(3),xmax(3)
+      real (kind=8) :: xp(3,9),v1(3),v2(3),xi(3),xx(3),xl(3,4)
+      real (kind=8) :: nn(3),normal(3),pr(4),pp(9),shp(9),shps(4)
+      real (kind=8) :: sg(3,4),tg(4,4),fl(3,4),xc(3),vv(2), angl,sn,cn
 
       save
 
@@ -570,7 +572,7 @@
 
 3000  format(/'  *ERROR* ',a)
 
-      end
+      end subroutine prj3dl
 
       function projpt(x,xp,xi,gap,normal,shp)
 
@@ -582,10 +584,10 @@
 
       logical   noconv
       integer   i,n,iters
-      real*8    gap,detr, tol, a11,a12,a22
-      real*8    r(2), t1(3),t2(3), dt11(3),dt12(3),dt22(3)
-      real*8    dx(3),xi(2),dxi(2),shp(9),d1shp(2,9),d2shp(3,9)
-      real*8    normal(3),x(3),xp(3,9)
+      real (kind=8) :: gap,detr, tol, a11,a12,a22
+      real (kind=8) :: r(2), t1(3),t2(3), dt11(3),dt12(3),dt22(3)
+      real (kind=8) :: dx(3),xi(2),dxi(2),shp(9),d1shp(2,9),d2shp(3,9)
+      real (kind=8) :: normal(3),x(3),xp(3,9)
 
       data      tol /1.d-6/
 
@@ -665,7 +667,7 @@
 
 3000  format(/'  *ERROR* ',a)
 
-      end
+      end function projpt
 
       subroutine pshp9(xi,shp,d1shp,d2shp)
 
@@ -679,10 +681,10 @@
 
       implicit  none
 
-      real*8    xi(2), shp(9),d1shp(2,9),d2shp(3,9)
+      real (kind=8) :: xi(2), shp(9),d1shp(2,9),d2shp(3,9)
 
-      real*8    sh1m,sh2m,sh1p,sh2p,sh1c,sh2c
-      real*8    dn1m,dn2m,dn1p,dn2p,dn1c,dn2c, ddn1,ddn2,ddnc
+      real (kind=8) :: sh1m,sh2m,sh1p,sh2p,sh1c,sh2c
+      real (kind=8) :: dn1m,dn2m,dn1p,dn2p,dn1c,dn2c, ddn1,ddn2,ddnc
 
       save
 
@@ -772,15 +774,15 @@
       d2shp(3,8) = sh1m*ddnc
       d2shp(3,9) = sh1c*ddnc
 
-      end
+      end subroutine pshp9
 
       subroutine shp3p(sg,xl,shps,xsj,nef)
 
       implicit  none
 
       integer   j,nef
-      real*8    sg(3),xl(3,4),shps(4),xsj(3)
-      real*8    x1(3),x2(3),xm(3)
+      real (kind=8) :: sg(3),xl(3,4),shps(4),xsj(3)
+      real (kind=8) :: x1(3),x2(3),xm(3)
 
       save
 
@@ -812,4 +814,4 @@
       xsj(2)  = x1(3)*x2(1) - x1(1)*x2(3)
       xsj(3)  = x1(1)*x2(2) - x1(2)*x2(1)
 
-      end
+      end subroutine shp3p

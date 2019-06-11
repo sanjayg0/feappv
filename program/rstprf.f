@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -30,10 +30,9 @@
       include  'pointer.h'
       include  'comblk.h'
 
-      integer   ndf,nen1,nen,neq,numel
-      integer   i,j,ii, ma, mm, n,nad
-
-      integer   jp(*),idl(*),id(ndf,*),ix(nen1,*)
+      integer       :: ndf,nen1,nen,neq,numel
+      integer       :: i,j,ii, ma, mm, n,nad
+      integer       :: jp(*),idl(*),id(ndf,*),ix(nen1,*)
 
 !     Zero pointer array
 
@@ -77,4 +76,4 @@
         end if
       end do
 
-      end
+      end subroutine rstprf

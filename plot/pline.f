@@ -4,7 +4,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -27,16 +27,15 @@
 !      Outputs:
 !         none      - Plot output to screen/file
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'pointer.h'
       include  'comblk.h'
 
-      logical   isw, setvar,palloc
-      integer   numnp,numel,ndm,nen1,nen,nie
-      integer   ie(*),ix(*),id(*),ip(*)
-      real*8    x(*),ct(*)
+      logical       :: isw, setvar,palloc
+      integer       :: numnp,numel,ndm,nen1,nen,nie
+      integer       :: ie(*),ix(*),id(*),ip(*)
+      real (kind=8) :: x(*),ct(*)
 
       save
 
@@ -55,4 +54,4 @@
 
       setvar = palloc(112,'TEMP2',0,1)
 
-      end
+      end subroutine pline

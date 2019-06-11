@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -20,8 +20,8 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
-      integer   ipos, iposl, iposx, ifnam,ifext
-      character fnam*(*),fext*(*)
+      character    :: fnam*(*),fext*(*)
+      integer      :: ipos, iposl, iposx, ifnam,ifext
 
       iposl = ipos(fnam,ifnam) + 1
       iposx = ipos(fext,ifext)
@@ -29,4 +29,4 @@
       fnam(iposl:ifnam)         = '. '
       fnam(iposl+1:iposl+iposx) = fext(1:iposx)
 
-      end
+      end subroutine addext

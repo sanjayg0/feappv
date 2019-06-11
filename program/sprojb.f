@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -28,7 +28,7 @@
       include  'comblk.h'
 
       integer   neq,nv,imas, i,j,k
-      real*8    b(*),v(neq,*),t(*),h(*), dot
+      real (kind=8) :: b(*),v(neq,*),t(*),h(*), dot
 
       save
 

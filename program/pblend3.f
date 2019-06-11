@@ -4,7 +4,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -37,16 +37,16 @@
       include  'trdata.h'
       include  'comblk.h'
 
-      logical   prt,prth,eflag,nflag, setvar, palloc
-      integer   i,ii,in, j, n,ne,ni,nf,ntyp
-      integer   isd,ndm,nr,ns,nt,nen1,ma,dlayer
-      real*8    trdeto
+      logical       :: prt,prth,eflag,nflag, setvar, palloc
+      integer       :: i,ii,in, j, n,ne,ni,nf,ntyp
+      integer       :: isd,ndm,nr,ns,nt,nen1,ma,dlayer
+      real (kind=8) :: trdeto
 
-      integer   ilr(*)
-      integer   iblend(*)
-      integer   lblend(20,6),mblend(20),iside(4)
+      integer       :: ilr(*)
+      integer       :: iblend(*)
+      integer       :: lblend(20,6),mblend(20),iside(4)
 
-      real*8    t3(3,4),tb(3,4)
+      real (kind=8) :: t3(3,4),tb(3,4)
 
       save
 
@@ -168,4 +168,4 @@
 
 2002  format(i8,1p,4e15.5)
 
-      end
+      end subroutine pblend3

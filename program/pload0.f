@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -27,8 +27,8 @@
       include  'sdata.h'
       include  'comblk.h'
 
-      integer   n,nn, ipro
-      real*8    p, f(nn,*),f0(nn,*),u(nn)
+      integer       :: n,nn, ipro
+      real (kind=8) :: p, f(nn,*),f0(nn,*),u(nn)
 
 !     Set nodal forces and displacements for NEWF command
 
@@ -53,4 +53,4 @@
         f(n,2)  = 0.0d0
       end do
 
-      end
+      end subroutine pload0

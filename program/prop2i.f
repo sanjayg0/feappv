@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -25,10 +25,11 @@
       include  'iofile.h'
       include  'print.h'
 
-      character fnamr*128
-      logical   errck, pinput, done
-      integer   l, m, ilast, lunit
-      real*8    prop2i, td(16)
+      character (len=128) :: fnamr
+
+      logical       :: errck, pinput, done
+      integer       :: l, m, ilast, lunit
+      real (kind=8) :: prop2i, td(16)
 
       save
 
@@ -89,4 +90,4 @@
 
 2004  format(i5,1p,2e14.5)
 
-      end
+      end function prop2i

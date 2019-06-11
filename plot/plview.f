@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -17,13 +17,12 @@
 !      Outputs:
 !         none      - Plot outputs to screen/file
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
-      integer   i
-      real*8    qmax, absmax, rnorm, xx, yy
+      integer       :: i
+      real (kind=8) :: qmax, absmax, rnorm, xx, yy
 
-      real*8    q(3,3),vmin(3),vmax(3), bmax(3), view(3)
+      real (kind=8) :: q(3,3),vmin(3),vmax(3), bmax(3), view(3)
 
       save
 
@@ -106,4 +105,4 @@
 
       call ppeye( view(1) + 1.201275d0 , view (3) + 0.8825000d0 )
 
-      end
+      end subroutine plview

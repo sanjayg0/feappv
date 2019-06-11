@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -19,8 +19,8 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
-      integer   i
-      real*8    ct(3)
+      integer       :: i
+      real (kind=8) :: ct(3)
 
       save
 
@@ -36,4 +36,4 @@
         call uplot5(ct)
       endif
 
-      end
+      end subroutine upltlib

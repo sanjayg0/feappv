@@ -1,11 +1,11 @@
 !$Id:$
       subroutine pform(ul,xl,tl,ld,p,s,ie,d,id,x,ix,f,t,jp,
-     &  u,ud,b,a,al,ndd,nie,ndf,ndm,nen1,nst,aufl,bfl,dfl,
-     &  isw,nn1,nn2,nn3)
+     &                 u,ud,b,a,al,ndd,nie,ndf,ndm,nen1,nst,
+     &                 afl,bfl,dfl,isw,nn1,nn2,nn3)
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -28,7 +28,7 @@
 !         ndm         - Spatial dimension of mesh
 !         nen1        - Dimension for ix array
 !         nst         - Dimension for element array
-!         aufl        - Flag, assemble coefficient array if true
+!         afl         - Flag, assemble matrix array if true
 !         bfl         - Flag, assemble vector if true
 !         dfl         - Flag, assemble reactions if true
 !         isw         - Switch to control quantity computed
@@ -82,16 +82,16 @@
       include  'tdatb.h'
       include  'comblk.h'
 
-      logical   aufl,bfl,dfl,efl, mdfl
-      integer   isw, jsw, ksw
-      integer   i, jj, nn1, nn2, nn3, nst, nl1, nneq
-      integer   numnp2, ndf, ndm, nrot, ndd, nie, nen1
-      real*8    un(20), dun(20), temp, prope
+      logical       :: afl,bfl,dfl,efl, mdfl
+      integer       :: isw, jsw, ksw
+      integer       :: i, jj, n, nn1, nn2, nn3, nst, nl1, nneq, nov
+      integer       :: numnp2, ndf, ndm, nrot, ndd, nie, nen1
+      real (kind=8) :: un(20), dun(20), temp, prope
 
-      integer   ld(*), ie(nie,*), id(ndf,*), ix(nen1,*), jp(*)
-      real*8    xl(ndm,*), p(nst,*), s(nst,*), d(ndd,*), ul(nst,*)
-      real*8    x(ndm,*) ,f(ndf,numnp),u(ndf,*),ud(*),t(*),tl(*)
-      real*8    b(*), a(*), al(*)
+      integer       :: ld(*), ie(nie,*), id(ndf,*), ix(nen1,*), jp(*)
+      real (kind=8) :: xl(ndm,*), p(nst,*),s(nst,*), d(ndd,*),ul(nst,*)
+      real (kind=8) :: x(ndm,*) ,f(ndf,numnp),u(ndf,*),ud(*),t(*),tl(*)
+      real (kind=8) :: b(*), a(*), al(*)
 
       save
 
@@ -144,6 +144,8 @@
 
       do n = nn1,nn2,nn3
 
+        n_el = n
+
 !       Check for active regions
 
         if((nreg.lt.0 .and. ix(nen1-1,n).ge.0)
@@ -151,6 +153,7 @@
 
 !        Set up local arrays
 
+         nov = 0        ! Prevent accumualtion of projection weight
          do ma = 1, nummat
 
           if(ie(nie-2,ma).eq.ix(nen1,n)) then
@@ -185,9 +188,8 @@
 !           Set local arrays for element
 
             fp(1) = ndf*nen*(ma-1) + np(240)        ! iedof
-            call plocal(ld,id,mr(np(31)+nneq),ix(1,n),ie(1,ma),
-     &                  mr(fp(1)),xl,ul,tl,p(1,3),x,f,u,ud,t,
-     &                  un,dun, nrot, dfl, jsw)
+            call plocal(ld,id,mr(np(31)+nneq),ix(1,n),mr(fp(1)),xl,ul,
+     &                  tl,p(1,3),x,f,u,ud,t,un,dun, nrot, dfl, jsw)
 
 !           Form element array - rotate parameters if necessary
 
@@ -296,7 +298,7 @@
 
 !             Get current element tangent matrix
 
-              if (.not.aufl) then
+              if (.not.afl) then
                 dm = prop
                 call elmlib(d(1,ma),ul,xl,ix(1,n),tl,s,p,
      &                      ndf,ndm,nst,iel,ksw)
@@ -329,11 +331,9 @@
 
 !           Add to total array
 
-            if(aufl.or.bfl) then
-              call dasble(s,p,ld,jp,nst,neqs,aufl,bfl,
-     &                    b,al,a(neq+1),a)
-            endif
-
+            pstyp = ie(1,ma)
+            call passble(s,p,ld,ix(1,n), jp,a,al,b,
+     &                   afl,bfl, nst,nov, jsw)
           end if
 
          end do ! ma
@@ -342,4 +342,4 @@
 
       end do ! n
 
-      end
+      end subroutine pform

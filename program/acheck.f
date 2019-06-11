@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -21,9 +21,9 @@
 
       implicit  none
 
-      logical   cksep
-      integer   n0,nl,nlc, i,k,ii,il
-      character x*(*),y*(*)
+      character    :: x*(*),y*(*)
+      logical      :: cksep
+      integer      :: n0,nl,nlc, i,k,ii,il
 
       save
 
@@ -56,4 +56,4 @@
 
 210   call just(y,k,n0)
 
-      end
+      end subroutine acheck

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -17,9 +17,10 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
-      integer   cvtc2i
-      character cdev(12)*1
-      integer   i,n,nz
+      character (len=1) :: cdev(12)
+
+      integer       :: cvtc2i
+      integer       :: i,n,nz
 
       nz= ichar('0')
       n = 0
@@ -30,4 +31,4 @@
 
 200   cvtc2i = n
 
-      end
+      end function cvtc2i

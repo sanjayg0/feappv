@@ -3,12 +3,12 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
       implicit  none
 
-      real*8    padd, val, xval
+      real (kind=8) :: padd, val, xval
 
       save
 
@@ -24,4 +24,4 @@
 
       padd = xval
 
-      end
+      end function padd

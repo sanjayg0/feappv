@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--+---------+---------+---------+---------+---------+---------+-]
@@ -22,7 +22,7 @@
       include  'plflag.h'
       include  'x11f.h'
 
-      integer   i
+      integer       :: i
 
       save
 
@@ -49,4 +49,4 @@
      &       '  Y Pixels in cm.     ',f10.5/
      &       '  No. Forground colors',f10.5/)
 
-      end
+      end subroutine plstrt

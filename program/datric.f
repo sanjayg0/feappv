@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -21,9 +21,9 @@
 
       include  'iofile.h'
 
-      integer   i, id, ih, is, iops, mops, j, jd, jh, neq
-      integer   jp(*)
-      real*4    etime, tt(2), tar
+      integer       :: i, id, ih, is, iops, mops, j, jd, jh, neq
+      integer       :: jp(*)
+      real (kind=4) :: etime, tt(2), tar
 
       save
 
@@ -58,7 +58,7 @@
 
 !       if(iops.gt.1000000) then
         do while(iops.gt.1000000)
-          iops = iops - 1000000
+          iops = iops  - 1000000
           mops = mops + 1
         end do ! while
 !       endif
@@ -75,4 +75,4 @@
 2000  format('   Number of operations =',i8,' plus ',i8,' Mega-ops'/
      &       '  Time: CPU = ',f12.2,' , System = ',f12.2)
 
-      end
+      end subroutine datric

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -24,16 +24,15 @@
 !                     shp(3,i) = N_i
 !         xsj       - Jacobian determinant at point
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
-      logical   flg
-      integer   ndm
-      real*8    s,t, xsj,xsj1, sh,th,sp,tp,sm,tm
-      real*8    xo,xs,xt, yo,ys,yt
-      real*8    xsm,xsp,xtm,xtp, ysm,ysp,ytm,ytp
+      logical       :: flg
+      integer       :: ndm
+      real (kind=8) :: s,t, xsj,xsj1, sh,th,sp,tp,sm,tm
+      real (kind=8) :: xo,xs,xt, yo,ys,yt
+      real (kind=8) :: xsm,xsp,xtm,xtp, ysm,ysp,ytm,ytp
 
-      real*8    xl(ndm,4),shp(3,4)
+      real (kind=8) :: xl(ndm,4),shp(3,4)
 
       save
 
@@ -103,4 +102,4 @@
         shp(2,4) =   xtp+xsm
       endif
 
-      end
+      end subroutine shapef

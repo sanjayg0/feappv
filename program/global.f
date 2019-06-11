@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -23,10 +23,11 @@
       include  'sdata.h'
       include  'refng.h'
 
-      logical   pcomp, tinput, errck
-      character vtype(2)*15
-      integer   i
-      real*8    td(14)
+      character (len=15) :: vtype(2)
+
+      logical       :: pcomp, tinput, errck
+      integer       :: i
+      real (kind=8) :: td(14)
 
       save
 
@@ -245,4 +246,4 @@
 4001  format(10x,'*ERROR* Temperature degree-of-freedom input as ',
      &            i3/1x)
 
-      end
+      end subroutine global

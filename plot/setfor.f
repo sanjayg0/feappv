@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -25,10 +25,10 @@
       include  'prld1.h'
       include  'comblk.h'
 
-      integer   n,nn
-      integer   nty
-      real*8    prop
-      real*8    f(*),f0(*),dr(*)
+      integer       :: n,nn
+      integer       :: nty
+      real (kind=8) :: prop
+      real (kind=8) :: f(*),f0(*),dr(*)
 
       save
 
@@ -44,4 +44,4 @@
         endif
       end do
 
-      end
+      end subroutine setfor

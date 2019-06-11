@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -17,9 +17,9 @@
 !      Outputs:
 !         Depends on command number j
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
+      include  'arclei.h'
       include  'arclel.h'
       include  'arcler.h'
       include  'augdat.h'
@@ -44,33 +44,37 @@
       include  'rdata.h'
       include  'rdat0.h'
       include  'sdata.h'
+      include  'setups.h'
       include  'tdata.h'
       include  'tdato.h'
       include  'umac1.h'
       include  'comblk.h'
 
-      logical   pcomp,err, errck, tinput,setvar,palloc
-      integer   i,j,n, k1
-      real*8    dtnew
+      character (len=80) :: expr
+      character (len=15) :: lct(*),lctl(2)
 
-      character lct(*)*15,lctl(2)*15
-      integer   npl(2)
-      real*8    ct(3,*),ctl(25)
+      logical       :: pcomp,err, errck, tinput,setvar,palloc, lexpr
+      integer       :: i,j,n, k1
+      real (kind=8) :: dtnew
 
-      real*8    propld
+      integer       :: npl(2)
+      real (kind=8) :: ct(3,*),ctl(25)
+
+      real (kind=8) :: propld, v1
 
       save
 
 !     Transfer to correct process
 
-      go to (1,2,3,4,5,6,7,8,8,10,11,12,13,14,15), j
+      select case (j)
 
 !     Set solution tolerance
 !     [tol,,value]       - set relative convergence tolerance to tol
 !     [tol,ener,value]   - set absolute convergence tolerance to enzer
 !     [tol,emax,value]   - set comparison value for convergence to emax
 
-1     if(pcomp(lct(l),'ener',4)) then
+      case (1)
+      if(pcomp(lct(l),'ener',4)) then
 
 !       Set energy assumed zero value
 
@@ -103,42 +107,73 @@
 !     Set time increment
 !     [dt,,value]
 
-2     dtold = dt
+      case (2)
+      dtold = dt
       dt    = ct(1,l)
       return
 
 !     Set loop start indicators
 !     [loop,,number]
 
-3     lv = lv + 1
-      lvs(lv) = l
-      lve(lv) = nint(ct(2,l))
+      case (3)
+      lv            = lv + 1
+      lvs(lv)       = l
+      lve(lv)       = nint(ct(2,l))
       ct(1,lve(lv)) = 1.d0
       ct(3,lve(lv)) = 1.d0
-      floop(1)      = .true.
-      floop(2)      = .false.
-      return
+      if(lv.gt.1) then
+        floop(2)      = .false.
+      endif
+
+!     Check for infinite looping
+
+      if(pcomp(lct(l),'infi',4)) then
+        if(lv.le.2) then
+          if(ct(1,l).le.0.0d0) then
+            ct(1,l) = 1.0
+          endif
+        else
+          write(iow,4003) lv-1
+          if(rank.eq.0) then
+            write(*,4003) lv-1
+          endif
+          call plstop(.true.)
+        endif
+      endif
+
 
 !     Loop terminator control
 !     [next]
 
-4     n       = nint(ct(2,l))
+      case (4)
+      n       = nint(ct(2,l))
       ct(1,l) = ct(1,l) + 1.0d0
       ct(3,l) = ct(3,l) + 1.0d0
 
+!     Check for infinite looping
+
+      if(pcomp(lct(n),'infi',4)) then
+        ct(1,l) = 1.0d0          ! Reset iteration counter
+        ct(3,l) = 1.0d0          ! Reset iteration counter
+      endif
+
 !     Loop checks
 
-      if(ct(1,l).le.ct(1,n)) then
+      if(nint(ct(1,l)) .le. nint(ct(1,n))) then
         l  = n                         ! increment loop
       else
 
 !       No tangent convergence warning
 
-        if(lv.gt.1 .and. floop(1) .and. floop(2) .and.
-     &    (nint(ct(3,l)).gt.nint(ct(1,n))) .and. niter.gt.1) then
+        if(floop(1) .and. floop(2) .and.
+     &     lv.eq.lvcn .and. niter.gt.1) then
           write(iow,2014) ttim
           if(ior.lt.0) write(*,2014) ttim
+          floop(1) = .false.
+          lvcn     = -1
         end if
+
+!       Exit loop
 
         floop(2) = .false.
         lv       = lv - 1              ! terminate loop
@@ -151,11 +186,13 @@
 !     [prop,,num1,num2] - input proportional loads num1 to num2
 !     [prop,off]   - disable proportional loading, set time to 0.
 
-5     if(pcomp(lct(l),'off',3)) then
-        npld = 0
-        prop = 1.0d0
-        ttim = ct(1,l)
-        dt   = ct(2,l)
+      case (5)
+      if(pcomp(lct(l),'off',3)) then
+        npld   = 0
+        prop   = 1.0d0
+        nastep = 0
+        ttim   = ct(1,l)
+        dt     = ct(2,l)
         write(iow,2001)
         if(ior.lt.0 .and. prnt) write(*,2001)
       else
@@ -183,6 +220,7 @@
 !     [data,tol] : Set 'tol' as data (change during execution)
 !     [data,dt]  : Set 'dt'  as data (change during execution)
 
+      case (6)
 6     if(ior.lt.0 .and. prnt) write(*,3000) lct(l)
       errck = tinput(lctl,2,ctl,3)
       if(errck) go to 6
@@ -206,7 +244,8 @@
 
 !     [time],,<tmax> : Increment time , quit after time > tmax
 
-7     if(pcomp(lct(l),'set ',4)) then
+      case (7)
+      if(pcomp(lct(l),'set ',4)) then
         ttim = ct(1,l)
         return
       end if
@@ -223,7 +262,7 @@
       hflgu  = .true.
       h3flgu = .true.
       call formfe(np(40),np(26),np(26),np(26),
-     &           .false.,.false.,.false.,.false.,12,1,numel,1)
+     &           .false.,.false.,.false.,12,1,numel,1)
 
       if(ct(1,l).gt.0.0d0 .and. ttim.ge.ct(1,l)) then
         ct(1,lve(lv)) = ct(1,lvs(lv))
@@ -262,8 +301,8 @@
 
       if(fl(9)) then
         call dsetci
-        call update(mr(np(31)),hr(np(30)),hr(np(40)),hr(np(42)),
-     &              hr(np(26)),fl(9),1)
+        call pupdate(mr(np(31)),hr(np(30)),hr(np(40)),hr(np(42)),
+     &               hr(np(26)),fl(9),1)
       end if
 
       fl( 8) = .false.
@@ -280,11 +319,12 @@
 
 !     Set iteration counter to indicate begining of time step
 
+      nstep  = nstep + 1
+      nastep = nastep + 1
       titer  = titer + niter
       niter  = 0
       taugm  = taugm + naugm
       naugm  = 0
-      nstep  = nstep + 1
       iaugm  = 0
       dtold  = dt
 
@@ -301,7 +341,8 @@
 !     [prin,tang/utan]      - Print tangent stiffness array diagonals
 !     [prin,resi]           - Print residual array (diagonal)
 
-8     if    (pcomp(lct(l),'data',4)) then
+      case (8,9)
+      if    (pcomp(lct(l),'data',4)) then
         prt  = j.eq.8
       elseif(pcomp(lct(l),'comm',4)) then
         prnt = j.eq.8
@@ -329,7 +370,8 @@
 !     [beta,xxxx,beta,gamma,alpha]: see dparam for 'xxxx' options
 !     [tran,xxxx,beta,gamma,alpha]: see dparam for 'xxxx' options
 
-10    fl(9) = .true.
+      case (10)
+      fl(9) = .true.
       call dparam(ct(1,l),lct(l))
       setvar = palloc( 42,'VEL  ',nneq*nrt ,2)
       return
@@ -338,13 +380,15 @@
 !     [init,disp] - set initial displacements
 !     [init,rate] - set initial rates
 
-11    call pinitl(lct(l),err)
+      case (11)
+      call pinitl(lct(l),err)
       return
 
 !     Define an identity vector for stiffness eigen computation
 !     [iden,,n1,n2]  - set dof n1 to n2 to unity
 
-12    setvar = palloc(13,'LMAS1',neq,2)
+      case (12)
+      setvar = palloc(13,'LMAS1',neq,2)
       nl    = np(13)
       imtyp = 1
       idenf = .true.
@@ -365,7 +409,8 @@
 !     [newf]
 !     [newf,zero]
 
-13    if(pcomp(lct(l),'zero',4)) then
+      case (13)
+      if(pcomp(lct(l),'zero',4)) then
         do n = 0,nneq-1
           hr(np(28)+i+2*nneq) = 0.0d0  ! f0(n,1) = fixed forces
           hr(np(28)+i+3*nneq) = 0.0d0  ! f0(n,2) = fixed displacements
@@ -382,14 +427,15 @@
 !     Backup a time step
 !     [back,,dt] - back-up to beginning of time step reset dt.
 
-14    dtnew = max(0.0d0,ct(1,l))
+      case (14)
+      dtnew = max(0.0d0,ct(1,l))
       call autbac(dtnew)
-      return
 
 !     Debug flag on/off
 !     [debug,on,level] or [debug,off] or [debug,,level]
 
-15    if(pcomp(lct(l),'    ',4)) debug = .true.
+      case (15)
+      if(pcomp(lct(l),'    ',4)) debug = .true.
       if(pcomp(lct(l),  'on',2)) debug = .true.
       if(pcomp(lct(l), 'off',3)) debug = .false.
       ndebug = nint(ct(1,l))
@@ -400,7 +446,35 @@
         if(ior.lt.0) write(  *,2004)
         if(ior.gt.0) write(iow,2004)
       end if
-      return
+!     [if,expression]   - begin if/then/else
+!     [else,expression] - begin if/then/else
+
+      case (16, 17)
+
+      if(j.eq.16) then
+        li      = li + 1
+        lie(li) = int(ct(3,l))
+        lexpr   = .false.
+      endif
+      if(lexpr) then
+        l = lie(li)
+      else
+        expr = lct(l)
+        call evalex(expr,ctl,v1,80,errck)
+        if(v1.lt.0.0d0) then
+          l     = int(ct(2,l))
+        else
+          lexpr = .true.
+        endif
+      endif
+
+!     [endif] - endif if/then/else
+
+      case (18)
+
+      li = li - 1
+
+      end select
 
 !     formats
 
@@ -426,11 +500,14 @@
 2014  format(/'   *WARNING* Check for NO CONVERGENCE at time =',
      &            1p,1e15.5/)
 
-3000  format(' Input ',a4,' Macro >',$)
+3000  format(' Input ',a4,' Command >',$)
 
 4001  format(/' *ERROR* Command label mismatch on data command')
 
 4002  format(/' *ERROR* Variable proportional loading not allowed with',
      &        ' ARCLength.')
 
-      end
+4003  format(/' *ERROR* LOOP: Infinite loop allowed in first loop only'/
+     &        '         Current level = ',i4)
+
+      end subroutine pmacr2

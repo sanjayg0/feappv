@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -25,17 +25,17 @@
       include  'pointer.h'
       include  'comblk.h'
 
-      logical   errv
-      integer   ndm, ntyp(1)
-      real*8    xm, ym, xx, yx, zm, zx, xc,yc, ddx,ddy
+      logical       :: errv
+      integer       :: ndm, ntyp(1)
+      real (kind=8) :: xm, ym, xx, yx, zm, zx, xc,yc, ddx,ddy
 
-      real*8    xl(*),xg(3)
+      real (kind=8) :: xl(*),xg(3)
 
       save
 
       data      ntyp / 1 /
-!     Compute test for point in window
 
+!     Compute test for point in window
       if (fact .eq. 0.0d0) fact = 1.0d0
       xc = 0.5d0*(xmax(1) + xmin(1))
       yc = 0.5d0*(xmax(2) + xmin(2))
@@ -44,8 +44,8 @@
       xm = xl(1)
       ym = xl(2)
       if(kpers.ne.1) then
-        xm = xm - (0.5d0 - s0(1))/(scale*2.d0)
-        ym = ym - (0.5d0 - s0(2))/(scale*2.d0)
+        xm = xm - (0.5d0 - s0(1))/(scalef*2.d0)
+        ym = ym - (0.5d0 - s0(2))/(scalef*2.d0)
       endif
       xx = xm
       yx = ym
@@ -71,4 +71,4 @@
       zoom = ( (xm.ge.xc-ddx) .and. (xx.le.xc+ddx)
      &   .and. (ym.ge.yc-ddy) .and. (yx.le.yc+ddy) )
 
-      end
+      end function zoom

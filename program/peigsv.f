@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--+---------+---------+---------+---------+---------+---------+-]
@@ -17,8 +17,6 @@
 !     Outputs:
 !              Eigen-pairs on file: "filename"
 !-----[--+---------+---------+---------+---------+---------+---------+-]
-
-
       implicit none
 
       include  'cdata.h'
@@ -27,9 +25,10 @@
       include  'iofile.h'
       include  'pointer.h'
 
-      character lct*15
-      logical   exst,palloc
-      integer   neqold,isw,i
+      character (len=15) :: lct
+
+      logical       :: exst,palloc
+      integer       :: neqold,isw,i
 
 !     Write a file
 
@@ -93,4 +92,4 @@
 
 3001  format(' *ERROR* File:',a,' does not exist, respecify')
 
-      end
+      end subroutine peigsv

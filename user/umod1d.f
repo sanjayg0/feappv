@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -27,25 +27,22 @@
 !          dd      -  Current material tangent modulus
 
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
-      integer   umat,nh,ii,istrt,isw
-      real*8    td, eps,sig,dd
+      integer       :: umat,nh,ii,istrt,isw
+      real (kind=8) :: td, eps,sig,dd
 
-      real*8    d(*),ud(*),hn(nh),h1(nh)
+      real (kind=8) :: d(*),ud(*),hn(nh),h1(nh)
 
       save
 
 !     Material Model 1
-
       if(umat.eq.1) then
 
 !       Dummy elastic model:  sig = E*eps
-
         dd  = d(1)
         sig = d(1)*eps
 
       endif
 
-      end
+      end subroutine umod1d

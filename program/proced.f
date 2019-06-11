@@ -1,9 +1,9 @@
 !$Id:$
-      subroutine proced (name,vv,wd,nwd,ll,jct,lct,ct,lzc,flg,iopl)
+      subroutine proced (pname,vv,wd,nwd,ll,jct,lct,ct,lzc,flg,iopl)
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -11,7 +11,7 @@
 !               solution
 
 !      Inputs:
-!         name      - Procedure name (1-8 characters)
+!         pname     - Procedure name (1-8 characters)
 !         vv        - Character form of procedure parameters
 !         wd(*)     - List of possible commands
 !         nwd       - Number of possible commands in wd
@@ -32,29 +32,32 @@
       include  'iodata.h'
       include  'iofile.h'
 
-      logical   pcomp,flg,errck,tinput,vinput
-      integer   nwd,ll,iopl, i,j,n
+      character (len=80) :: tx, lzc(*)
+      character (len=18) :: fnam
+      character (len=15) :: v(3),lct(*), vv(3)
+      character (len=12) :: mac,pname
+      character (len=4)  :: wd(nwd)
 
-      character mac*12,name*12,v(3)*15,wd(nwd)*4,lct(*)*15
-      character tx*80
-      character fnam*18, lzc(*)*80, vv(3)*15
-      integer   jct(*)
-      real*8    ct(3,*),va(3),vp(3)
+      logical       :: pcomp,flg,errck,tinput,vinput
+      integer       :: nwd,ll,iopl, i,j,n
+
+      integer       :: jct(*)
+      real (kind=8) :: ct(3,*),va(3),vp(3)
 
       save
 
 !     Set file name to store procedure
 
-      mac = name
+      mac = pname
       do i = 1,8
-        if(name(i:i).eq.' ') go to 100
+        if(pname(i:i).eq.' ') go to 100
       end do
       i = 9
-100   name(i:i+3) = '.pcd'
+100   pname(i:i+3) = '.pcd'
 
 !     Move name to fnam to open file
 
-      fnam = name
+      fnam = pname
 
 !     Check if file exists and open file
 
@@ -194,4 +197,4 @@
 3004  format(' *ERROR* "loop" instruction has no matching "next"'
      &      ,' instruction')
 
-      end
+      end subroutine proced

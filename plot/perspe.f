@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -27,9 +27,9 @@
       include  'pdatps.h'
       include  'sdata.h'
 
-      logical   flag, hdcpyo, errck, pinput
-      integer   iused,ifrfl, i, j
-      real*8    t(3,3), tgold(3), v(3), vnorm
+      logical       :: flag, hdcpyo, errck, pinput
+      integer       :: iused,ifrfl, i, j
+      real (kind=8) :: t(3,3), tgold(3), v(3), vnorm
 
       save
 
@@ -210,4 +210,4 @@
 
  3000 format(' *ERROR* Improper view specified')
 
-      end
+      end subroutine perspe

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -21,14 +21,13 @@
 !                    shp(2,i) = dN_i/dxi_2
 !                    shp(3,i) = N_i
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
-      integer   i, j, k, l, nel
-      real*8    s, t, s2, t2
+      integer       :: i, j, k, l, nel
+      real (kind=8) :: s, t, s2, t2
 
-      integer   ix(nel)
-      real*8    shp(3,nel)
+      integer       :: ix(nel)
+      real (kind=8) :: shp(3,nel)
 
       save
 
@@ -96,4 +95,4 @@
         k = l
       end do
 
-      end
+      end subroutine shap2

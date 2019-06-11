@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -18,7 +18,6 @@
 !      Outputs:
 !         dr(*)    - Array of element eigenvalues and vectors
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'cdata.h'
@@ -26,10 +25,9 @@
       include  'pointer.h'
       include  'comblk.h'
 
-
-      logical   vflg
-      integer   nst, i, j, j1, n1,n2,n3
-      real*8    s(nst,nst), dr(*)
+      logical       :: vflg
+      integer       :: nst, i, j, j1, n1,n2,n3
+      real (kind=8) :: s(nst,nst), dr(*)
 
       save
 
@@ -70,4 +68,4 @@
         call mprint (dr(n2), nst, nst,nst,'Eigenvect.')
       endif
 
-      end
+      end subroutine peige

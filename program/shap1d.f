@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -20,13 +20,11 @@
 !                     (natural derivatives only)
 !         shp(2,i)  - Shape function                   : N_i
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
-      integer   nel
-      real*8    xi, xi2
-
-      real*8    shp(2,nel)
+      integer       :: nel
+      real (kind=8) :: xi, xi2
+      real (kind=8) :: shp(2,nel)
 
       save
 
@@ -56,4 +54,4 @@
 
       endif
 
-      end
+      end subroutine shap1d

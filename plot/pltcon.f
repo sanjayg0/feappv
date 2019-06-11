@@ -4,7 +4,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -49,16 +49,17 @@
       include  'psdat1.h'
       include  'rpdata.h'
 
-      character y*1
-      logical   errck,cont,pinput,label,labl,cinput
-      integer   nie, ndm, ndf, nen1, nen0, ic, mc, lc, mmc
-      integer   i, j, n, ma, nc, nnc, nerr, numf,numfac
-      integer   iuf, iutot, ns, ii, ne,nel, pstyp
-      real*8    vmx, vmn
+      character (len=1) :: y
 
-      integer   ie(nie,*),ix(nen1,*),ip(*), iplt(50), icl(30)
-      integer   ilq(4),iq9(4,4),iq16(4,9),it6(3,4)
-      real*8    xl(3,29),xq(3,4),x(ndm,*),u(*),v(29),vc(12),vq(4)
+      logical       :: errck,cont,pinput,label,labl,cinput
+      integer       :: nie, ndm, ndf, nen1, nen0, ic, mc, lc, mmc
+      integer       :: i, j, n, ma, nc, nnc, nerr, numf,numfac
+      integer       :: iel, iuf, iutot, ns, ii, ko, ne,nel, pstyp
+      real (kind=8) :: vmx, vmn
+
+      integer       :: ie(nie,*),ix(nen1,*),ip(*), iplt(50), icl(30)
+      integer       :: ilq(4),iq9(4,4),iq16(4,9),it6(3,4)
+      real (kind=8) :: xl(3,29),xq(3,4),x(ndm,*),u(*),v(29),vc(12),vq(4)
 
       save
 
@@ -78,7 +79,7 @@
 1     if(mc.gt.0) then
         nc    = max(1,min(mc,12))
         nlabi = 0
-        dx1   = .024d0/scale
+        dx1   = .024d0/scalef
         vflg  = ipb.eq.0
         nerr  = 0
 11      if(ior.lt.0) write(*,2001) nc
@@ -89,7 +90,7 @@
           nerr  = nerr+1
           if(nerr.gt.5) then
             if(ior.lt.0) return
-            call plstop
+            call plstop(.true.)
           endif
           if(errck) go to 11
         else
@@ -232,7 +233,7 @@
           pstyp = ie(1,ma)
           if(pstyp.gt.0 .and. ix(nen1-1,n).ge.0 .and.
      &      (maplt.eq.0 .or. ma.eq.maplt)) then
-            ma = ie(nie-1,ma) ! iel
+            iel = ie(nie-1,ma) ! iel
 
 !           Determine maximum number of nodes on element
 
@@ -249,13 +250,23 @@
 
 !           Get plot order for each element
 
-            call plftyp(pstyp,nel,ma)
+            if(ix(nen+7,n).eq.-22) then
+              pstyp = 2
+            else
+              call plftyp(pstyp,nel,iel)
+            endif
 
 !           Perspective or standard feap elements
 
             if(kpers.eq.1 .or. pstyp.gt.0) then
 
-              call pltord(ix(1,n),ma, iuf,iplt)
+!             VEM 2-d elements
+              if(ix(nen+7,n).eq.-22) then
+                call vem_compp(ix(nen+8,n), iplt, nel, iuf)
+!             Standard FEAP elements
+              else
+                call pltord(ix(1,n),iel, iuf,iplt)
+              endif
 
 !             Set values of vlu(1) and vlu(2)
 
@@ -298,9 +309,16 @@
 
               if(iutot.gt.3 .and. pstyp.ge.2) then
 
+!               VEM 2-d elements
+
+                if(ix(nen+7,n).eq.-22) then
+
+                  ko = ix(nen+8,n)
+                  call vem_plcon(ko, nc,nel, xl, iplt,icl, v,vc, cont)
+
 !               Linear Triangle
 
-                if(nel.eq.3) then
+                elseif(nel.eq.3) then
                   if(cont) then
                     call pltecn(xl,v,vc,nc)
                   else
@@ -527,4 +545,4 @@
 2008  format(' Input Min/Max (Default:',1p,e9.2,'/',1p,e9.2,'): >',$)
 2009  format(3x,'>',$)
 
-      end
+      end subroutine pltcon

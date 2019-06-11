@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -15,18 +15,18 @@
 !      Outputs:
 !         none       - Output stored in blank common arrays
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'comblk.h'
       include  'cdata.h'
+      include  'hdatam.h'
       include  'pdata3.h'
       include  'pointer.h'
       include  'sdata.h'
       include  'strnum.h'
 
-      logical   trifl
-      integer   i,ii
+      logical       :: trifl
+      integer       :: i,ii
 
       save
 
@@ -46,8 +46,10 @@
       call pzero(hr(nper),     8*numnp)
       if(.not.trifl) call pzero(hr(np(207)),numel)
 
+      pltmfl = .true.
       call formfe(np(40),np(26),np(26),np(26),
-     &           .false.,.false.,.false.,.false.,8,1,numel,1)
+     &           .false.,.false.,.false.,8,1,numel,1)
+      pltmfl = .false.
 
       call pltstr(hr(npnp),hr(nper+numnp),hr(npnp+numnp),
      &            numnp,ndm)
@@ -56,4 +58,4 @@
         mr(np(33)+i) = abs(mr(np(33)+i))
       end do ! i
 
-      end
+      end subroutine pjstrs

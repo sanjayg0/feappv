@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -28,12 +28,12 @@
 
       include  'iofile.h'
 
-      integer   ndm, nel, i, l, n, ineg
-      real*8    detj
+      integer       :: ndm, nel, i, l, n, ineg
+      real (kind=8) :: detj
 
-      integer   ic(22)
-      integer   ix(*)
-      real*8    rst(3,11), xl(ndm,*), shp(*)
+      integer       :: ic(22)
+      integer       :: ix(*)
+      real (kind=8) :: rst(3,11), xl(ndm,*), shp(*)
 
       save
 
@@ -86,4 +86,4 @@
 2001  format(' >Element',i4,' has negative jacobian at nodes:'/
      &      ('                Local =',i3,' Global =',i4))
 
-      end
+      end subroutine cktets

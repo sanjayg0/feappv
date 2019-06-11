@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -34,9 +34,9 @@
       include  'prstrs.h'
       include  'comblk.h'
 
-      integer   numnp,ndm, i,ii
-      real*8    dh,press, third
-      real*8    dt(numnp),sp(numnp,*),st(numnp,*),sig(9)
+      integer       :: numnp,ndm, i,ii
+      real (kind=8) :: dh,press, third
+      real (kind=8) :: dt(numnp),sp(numnp,*),st(numnp,*),sig(9)
 
       save
 
@@ -107,4 +107,4 @@
 
       end do
 
-      end
+      end subroutine pltstr

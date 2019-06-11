@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2019: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -22,8 +22,8 @@
 
       include   'qudshp.h'
 
-      integer    ndm,nel, m,n,i
-      real*8     xl(ndm,nel), dh, dhmax
+      integer       :: ndm,nel, m,n,i
+      real (kind=8) :: xl(ndm,nel), dh, dhmax
 
       save
 
@@ -54,4 +54,4 @@
         end do ! m
       end do ! n
 
-      end
+      end subroutine hsizend

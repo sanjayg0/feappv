@@ -347,7 +347,7 @@
         dt = 2.d0/nt
         nf = ne
         ng = ni
-        call ublk(td,nn,nr,ns,nt,xl,x,ixl,ix,dr,ds,dt,
+        call ublk(nn,nr,ns,nt,xl,x,ixl,ix,dr,ds,dt,
      &            ng,nf,ndm,nen1,ma,ctype,prt, 2)
         if(nf.gt.numel.and.ne.gt.0) go to 401
         if(ng.gt.numnp) go to 400

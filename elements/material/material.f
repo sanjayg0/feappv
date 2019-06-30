@@ -59,7 +59,6 @@
      &             '3-Dimensional','Unspecified'   /
 
 !     PART 1: Set default values
-
       tdof   = gtdof
       etype  = 1
       dtype  = gdtype
@@ -74,7 +73,6 @@
       endif
 
 !     Number of stress/strain history terms/pt
-
       if(ndm.eq.3) then
         ntm = 6
       elseif(ndm.eq.2) then
@@ -107,21 +105,20 @@
       nseg = 0
 
 !     Default Mass: Consistent
-
       d( 7) = 1.d0
 
-!     Default angle in degrees
+!     Default augmenting on
+      d(185) = 1.d0
 
+!     Default angle in degrees
       rad  = atan(1.d0)/45.d0
       d(31)= d(31)/rad
 
 !     Solid type
-
       if(ietype.eq.1 .or. ietype.eq.6) then
         stype = g2type
 
 !     Truss/frame type
-
       elseif(ietype.eq.2 .or.ietype.eq.3) then
         if(ietype.eq.2) oned   = .true.
         stype = 5
@@ -140,7 +137,6 @@
         end if
 
 !     Plate/shell type
-
       elseif(ietype.eq.4) then
         stype = 4
         ii    = 3
@@ -152,7 +148,6 @@
       endif
 
 !     Rayleigh damping set
-
       if(ietype.ne.6) then
         d(77) = gray(1)
         d(78) = gray(2)
@@ -164,20 +159,17 @@
       alp(1) = 0.d0
 
 !     PART 2: Poll for legal input records: Stop on blank record
-
       inputs = .true.
 
       do while(inputs)
 
 !       Input record
-
         errck = .true.
         do while(errck)
           errck = tinput(text,2,ev,9)
         end do ! while
 
 !       Plate/Shell Thickness
-
         if    (ietype.ne.2.and.ietype.ne.3
      &                    .and. pcomp(text(1),'thic',4)) then
           d(14) = ev(1)
@@ -189,8 +181,6 @@
           d(102) = ev(3)
 
 !       Mass density
-
-
         elseif(pcomp(text(1),'dens',4)) then
           d(4)  = ev(1)
           if(ev(2).eq.0.0d0) then
@@ -200,7 +190,6 @@
           endif
 
 !       Damping factor
-
         elseif(pcomp(text(1),'damp',4)) then
           if(pcomp(text(2),'rayl',4)) then
             d(77) = ev(1)
@@ -210,7 +199,6 @@
           endif
 
 !       Mass matrix type
-
         elseif(pcomp(text(1),'mass',4)) then
           if(pcomp(text(2),'lump',4)) then
             d(7) = 0.0d0
@@ -223,14 +211,12 @@
           endif
 
 !       Normal surface loading
-
         elseif((ietype.eq.4.or.ietype.eq.5)
      &                    .and. pcomp(text(1),'load',4)) then
 
           d(8)  = ev(1)
 
 !       Solid material body forces, b,  and heat source term Q
-
         elseif(pcomp(text(1),'body',4)) then
 
           if(pcomp(text(2),'heat',4)) then
@@ -242,14 +228,12 @@
           endif
 
 !       Orthotropic material principal direction angle
-
         elseif((ietype.eq.1.or.ietype.eq.4.or.ietype.eq.5)
      &                    .and. pcomp(text(1),'angl',4)) then
 
           d(31) = ev(1)
 
 !       Frame/Truss: Cross section properties
-
         elseif((ietype.eq.2.or.ietype.eq.3)
      &                    .and. pcomp(text(1),'cros',4)) then
 
@@ -270,7 +254,6 @@
           endif
 
 !       Frame: Reference node/vector set
-
         elseif(pcomp(text(1),'refe',4)) then
 
           if    (pcomp(text(2),'node',4)) then
@@ -297,7 +280,6 @@
           endif
 
 !       Frame: No Shear Option
-
         elseif(ietype.eq.3 .and. pcomp(text(1),'shea',4)) then
 
           if(pcomp(text(2),'off',3)) then
@@ -307,7 +289,6 @@
           endif
 
 !       Truss/Frame: Nonlinear flag
-
         elseif((ietype.eq.2.or.ietype.eq.3)
      &                    .and. pcomp(text(1),'nonl',4)) then
 
@@ -318,7 +299,6 @@
           endif
 
 !       Kinematics type: Small deformation
-
         elseif(pcomp(text(1),'smal',4)) then
 
           dtype = 1
@@ -328,7 +308,6 @@
           endif
 
 !       Kinematics type: Finite deformation
-
         elseif(pcomp(text(1),'fini',4)) then
 
           dtype = -1
@@ -338,25 +317,21 @@
           endif
 
 !       Element type: Displacement
-
         elseif(pcomp(text(1),'disp',4)) then
 
           etype = 1
 
 !       Element type: Mixed (B-Bar)
-
         elseif(pcomp(text(1),'mixe',4)) then
 
           etype = 2
 
 !       Element type: Enhanced Strain
-
         elseif(pcomp(text(1),'enha',4)) then
 
           etype = 3
 
 !       Interpolation type: Nurbs
-
         elseif(pcomp(text(1),'nurb',4)) then
 
           d(189) = 1.0d0
@@ -371,18 +346,15 @@
           end do ! i
 
 !       Interpolation type: VEM
-
         elseif(pcomp(text(1),'vem',3)) then
 
           d(189) = 8.0d0
           nh1    = nh1 + 1
 
 !       Initial data
-
         elseif(pcomp(text(1),'init',4)) then
 
 !         Constant initial stress state
-
           if( pcomp(text(2),'stre',4)) then
             d(160) = 1
             do i = 1,6
@@ -393,12 +365,10 @@
           endif
 
 !       Quadrature data
-
         elseif((ietype.eq.1.or.ietype.eq.5.or.ietype.eq.6)
      &              .and. pcomp(text(1),'quad',4)) then
 
 !         Limit quadrature for built-in elements
-
           if(eltype.gt.0) then
             ii = max(-1,min(3,nint(ev(1))))
             jj = max( 1,min(3,nint(ev(2))))
@@ -412,14 +382,12 @@
           d(6) = jj
 
 !       Temperature dof
-
         elseif(ietype.ne.6 .and.
      &     (pcomp(text(1),'temp',4) .or. pcomp(text(1),'volt',4))) then
 
           tdof = nint(ev(1))
 
 !       Input solution type
-
         elseif((ietype.eq.1 .or. ietype.eq.6)  .and.
      &                     pcomp(text(1),'plan',4)) then
           if( pcomp(text(2),'stre',4)) then
@@ -433,19 +401,25 @@
           stype = 3
 
 !       Penalty parameter
-
         elseif(pcomp(text(1),'pena',4)) then
 
           d(60) = ev(1)
 
-!       Thermal properties
+!       Augmentation switch
+        elseif(pcomp(text(1),'augm',4)) then
 
+          if(pcomp(text(2),'off',3)) then
+            d(185) = 0.0d0
+          else
+            d(185) = 1.0d0
+          endif
+
+!       Thermal properties
         elseif(ietype.ne.6 .and. pcomp(text(1),'ther',4)) then
 
           tflag = .true.
 
 !         Orthotropic inputs
-
           if(pcomp(text(2),'orth',4)) then
 
             alp(1) = ev(1)
@@ -454,7 +428,6 @@
             d(9)   = ev(4)
 
 !         Isotropic inputs
-
           else
 
             alp(1) = ev(1)
@@ -465,13 +438,11 @@
           endif
 
 !       Elastic properties
-
         elseif(ietype.ne.6 .and. pcomp(text(1),'elas',4)) then
 
           eflag  = .true.
 
 !         Transverse isotropy inputs
-
           if(pcomp(text(2),'tran',4)) then
 
             iflag = .false.
@@ -488,7 +459,6 @@
             g31  = ev(5)
 
 !         Orthotropic inputs
-
           elseif(pcomp(text(2),'orth',4)) then
 
             iflag = .false.
@@ -505,7 +475,6 @@
             g31  = ev(9)
 
 !         Finite Elastic Models
-
 !         Regular compressible Neo-Hookean
 
           elseif(ietype.eq.1 .and. pcomp(text(2),'neoh',4)) then
@@ -519,7 +488,6 @@
             nu12  = ev(2)
 
 !         Isotropic inputs
-
           else
 
             imat  = 2
@@ -544,7 +512,6 @@
 
           endif
 !       Solid Mechanics Representative Volume Material behavior
-
         elseif(ietype.ne.6 .and. (pcomp(text(1),'srve',4)   .or.
      &                            pcomp(text(1),'rve' ,3))) then
 
@@ -596,7 +563,6 @@
           endif
 
 !       Thermal Representative Volume Material behavior
-
         elseif(ietype.eq.6 .and. pcomp(text(1),'rve' ,3)) then
 
           if(ntasks.le.1) then
@@ -641,7 +607,6 @@
           endif
 
 !       Viscoelastic properties
-
         elseif(ietype.ne.6 .and. pcomp(text(1),'visc',4)) then
 
           viscfl = .true.
@@ -658,7 +623,6 @@
           endif
 
 !       Plasticity properties
-
         elseif(ietype.ne.6 .and. pcomp(text(1),'plas',4)) then
 
           plasfl = .true.
@@ -666,7 +630,6 @@
           d(40)  = 1.d0  ! Constitution is now Plastic
 
 !         Mises yield/loading function
-
           if(pcomp(text(2),'mise',4)) then
 
             d(41) = ev(1)
@@ -678,7 +641,6 @@
             d(46) = 1.d0  ! Mises flag
 
 !         Drucker-Prager yield/loading function
-
           elseif(pcomp(text(2),'druc',4)) then
 
             d(41) = ev(1)
@@ -687,7 +649,6 @@
             d(46) = 2.d0  ! Drucker-Prager flag
 
 !         Drucker-Prager yield/loading function
-
           elseif(pcomp(text(2),'lode',4)) then
 
             d(41) = ev(1)
@@ -696,14 +657,12 @@
             d(46) = 3.d0  ! Drucker-Prager flag
 
 !         Hardening parameters
-
           elseif(pcomp(text(2),'hard',4)) then
 
             d(44)  = ev(1)
             d(45)  = ev(2)
 
 !         Linear segment hardening parameters
-
           elseif(pcomp(text(2),'segm',4)) then
 
             nseg          = nseg + 1
@@ -719,13 +678,11 @@
           endif
 
 !       Angular velocity: rad/sec
-
         elseif(ietype.ne.6 .and. pcomp(text(1),'omeg',4)) then
 
           d(65) = ev(1)
 
 !       Fourier Heat Conduction properties
-
         elseif(pcomp(text(1),'four',4)) then
 
           hflag = .true.
@@ -733,7 +690,6 @@
           tmat  = 2
 
 !         Orthotropic inputs
-
           if(pcomp(text(2),'orth',4)) then
 
             d(61) = ev(1)
@@ -742,7 +698,6 @@
             d(64) = ev(4)
 
 !         Isotropic inputs
-
           else
 
             d(61) = ev(1)
@@ -753,7 +708,6 @@
           endif
 
 !         Thermal dof for mechanical solid and truss problems
-
           if(ietype.eq.1 .and. tdof.eq.0 .or. ietype.eq.2) then
 
             tdof = ndm + 1
@@ -761,7 +715,6 @@
           endif
 
 !       Ground motion acceleration factors/proportional load numbers
-
         elseif(ietype.ne.6 .and. pcomp(text(1),'grou',4)) then
 
           do i = 1,ndm
@@ -770,7 +723,6 @@
           end do
 
 !       Constitutive solution start value (0 = elastic)
-
         elseif(pcomp(text(1),'star',4)) then
 
           if(pcomp(text(2),'elas',4)) then
@@ -780,11 +732,9 @@
           endif
 
 !       User Material Model interface
-
         elseif(pcomp(text(1),'ucon',4)) then
 
 !         Default user constitutive equation number
-
           umat    = 1
           uprm    = ndd - nud
           n1      = 0
@@ -795,23 +745,19 @@
           d(uprm) = umat + 100
 
 !         Deactivate standard program models
-
           sflag  = .false.
           fflag  = .false.
           uflag  = .true.
 
 !         Increase number of history terms/quadrature point
-
           nh1    = nh1 + n1
           nh3    = nh3 + n3
           e1     = 1.0d0
 
 !       Check end of data
-
         elseif(pcomp(text(1),'    ',4)) then
 
 !         Transfer to sets and checks
-
           inputs = .false.
 
         endif
@@ -821,12 +767,9 @@
 !     PART 3: Set final parameters and output material state
 
 !     Set moduli
-
       if(ietype.ne.6) then
 
-
 !       Small deformation options
-
         if(sflag) then
           d(1)    = e1
           d(2)    = nu12
@@ -842,7 +785,6 @@
           dd(3,1) = -dd(1,1)*nu31
 
 !         1-Dimensional Models
-
           if(stype.eq.5) then
             dd(2,2) =  1.d0
             dd(3,3) =  1.d0
@@ -851,7 +793,6 @@
             dd(3,1) =  0.d0
 
 !         Plane Stress Models
-
           elseif(stype.eq.1 .or. stype .eq.4) then
 
             d(90)   =  dd(3,1)
@@ -868,11 +809,9 @@
           dd(1,3) = dd(3,1)
 
 !         Mechanical modulus properties
-
           call invert(dd,3,6)
 
 !         Save moduli
-
           d(21) = dd(1,1)
           d(22) = dd(2,2)
           d(23) = dd(3,3)
@@ -884,13 +823,11 @@
           d(29) = g31
 
 !         Thermal properties
-
           d(47) = dd(1,1)*alp(1) + dd(1,2)*alp(2) + dd(1,3)*alp(3)
           d(48) = dd(2,1)*alp(1) + dd(2,2)*alp(2) + dd(2,3)*alp(3)
           d(49) = dd(3,1)*alp(1) + dd(3,2)*alp(2) + dd(3,3)*alp(3)
 
 !         Set for plane stress problems
-
           if(stype.eq.1 .or. stype .eq.4) then
 
             d(23) = 0.0d0
@@ -901,14 +838,12 @@
           endif
 
 !         Output parameters for element
-
           if(plasfl) then
             jj   = ii
             d(6) = jj
           endif
 
 !         Output elastic properties
-
           if(eflag) then
             if(stype.eq.5 .or. iflag) then
               write(iow,2000) wd(stype),e1,nu12
@@ -948,7 +883,6 @@
           endif
 
 !         Output thermal expansions
-
           if(tflag) then
             write(iow,2002) alp,d(9),tdof
             if(ior.lt.0) then
@@ -957,7 +891,6 @@
           endif
 
 !         Output fourier heat conduction properties
-
           if(hflag) then
             write(iow,2020) wd(stype),(d(i),i=61,64)
             if(ior.lt.0) then
@@ -966,11 +899,9 @@
           endif
 
 !       Finite deformation options
-
         elseif(fflag)then
 
 !         Output Regular NeoHookean
-
           if(imat.eq.1) then
 
             bulk = e1/(1.d0 - nu12*2.d0)/3.d0
@@ -981,7 +912,6 @@
             write(iow,2010) ' ',e1,nu12,bulk,g12
 
 !           Compute Lame' parameters
-
             d(1)  = e1
             d(2)  = nu12
             d(3)  = alp(1)
@@ -990,7 +920,6 @@
             d(22) = g12
 
 !         St. Venant-Kirchhoff
-
           elseif(imat.eq.2) then
 
             if(iflag) then
@@ -1008,7 +937,6 @@
             endif
 
 !           Set material parameters
-
             d(1)    = e1
             d(2)    = nu12
             d(3)    = alp(1)
@@ -1032,11 +960,9 @@
             dd(1,3) =  dd(3,1)
 
 !           Mechanical modulus properties
-
             call invert(dd,3,6)
 
 !           Save moduli
-
             d(21) = dd(1,1)
             d(22) = dd(2,2)
             d(23) = dd(3,3)
@@ -1048,7 +974,6 @@
             d(29) = g31
 
 !           Thermal properties
-
             d(47) = dd(1,1)*alp(1) + dd(1,2)*alp(2) + dd(1,3)*alp(3)
             d(48) = dd(2,1)*alp(1) + dd(2,2)*alp(2) + dd(2,3)*alp(3)
             d(49) = dd(3,1)*alp(1) + dd(3,2)*alp(2) + dd(3,3)*alp(3)
@@ -1057,7 +982,6 @@
         endif
 
 !       Output shell/plate thickness
-
         if(stype.ne.5 .and. stype.ne.7) then
           write(iow,2018) d(14)
           if(nint(d(102)).gt.1) write(iow,2051) nint(d(102))
@@ -1076,14 +1000,12 @@
         endif
 
 !       Output density and body loading
-
         if(ior.lt.0) then
           write(*,2029) d(4),d(11),d(12),d(13)
         endif
         write(iow,2029) d(4),d(11),d(12),d(13)
 
 !       Output constant initial stresses
-
         if(nint(d(160)).eq.1) then
           if(ietype.eq.2 .or. ietype.eq.3) then
             j = 1
@@ -1105,7 +1027,6 @@
         endif
 
 !       Output angular velocity
-
         if(d(65).ne.0.0d0) then
           if(ior.lt.0) then
             write(*,2030) d(65)
@@ -1114,7 +1035,6 @@
         endif
 
 !       Output ground acceleration factors
-
         flg = .false.
         efl = .false.
         do i = 1,ndm
@@ -1137,7 +1057,6 @@
         endif
 
 !       Output section properties
-
         if(cflag) then
           if(ietype.eq.2) then
             j = 32
@@ -1160,11 +1079,9 @@
         endif
 
 !       Output plasticity parameters
-
         if(plasfl) then
 
 !         Small deformation plasticity (also for one-d problems)
-
           if(sflag .or. oned) then
 
             if(nint(d(40)).eq.1) then
@@ -1179,7 +1096,6 @@
           endif ! fflag/sflag
 
 !         One dimensional model history storage
-
           if(oned) then
             if(nseg.eq.0) then
               nh1 = nh1 + nn + 3   ! ep(1); epp; state each layer
@@ -1192,7 +1108,6 @@
             endif
 
 !         Multi dimensional model history storage
-
           else
             if(ndm.eq.3) then
               nh1 = nh1 + nhd*nn + 1
@@ -1213,7 +1128,6 @@
         endif ! plasfl
 
 !       Output visco-elastic properties
-
         if(viscfl) then
           write(iow,2004) (d(i),i=51,50+2*nvis)
           if(ior.lt.0) then
@@ -1236,7 +1150,6 @@
         endif ! viscfl
 
 !       Constitutive start (.ne.0 for nonclassical elastic)
-
         if(nint(d(84)).lt.0) then
           write(iow,2066) 'Elastic solution'
           if(ior.lt.0) then
@@ -1250,7 +1163,6 @@
         endif
 
 !       Kinematics type
-
         if(ietype.ne.6) then
           if(dtype.gt.0) then
             write(iow,2005)
@@ -1266,7 +1178,6 @@
         endif
 
 !       Element type
-
         if(ietype.eq.1) then
           if(etype.eq.1) then
             write(iow,2012)
@@ -1298,8 +1209,22 @@
           endif
         endif
 
-!     Thermal element only
+!       Output augmentation option
+        if(etype.gt.1) then
+          if(d(185).gt.0.0d0) then
+            write(iow,2084) 'On'
+            if(ior.lt.0) then
+              write(*,2084) 'On'
+            endif
+          else
+            write(iow,2084) 'Off'
+            if(ior.lt.0) then
+              write(*,2084) 'Off'
+            endif
+          endif
+        endif
 
+!     Thermal element only
       elseif(ietype.eq.6) then
 
         write(iow,2020) wd(stype),d(61),d(62),d(63),d(64),d(4)
@@ -1312,7 +1237,6 @@
       endif
 
 !     Output RVE type
-
       if(imat.eq.13 .or. tmat.eq.1) then
         write(iow,2091) ' Hill-Mandel ',wd(stype)
         if    (prtyp(1,ma).eq.1) then
@@ -1323,7 +1247,6 @@
       endif
 
 !     Interpolation type
-
       if(nint(d(189)).eq.1) then
         write(iow,2090) 'Global NURBS',(i,nint(d(189+i)),i=1,ndm)
         if(ior.lt.0) then
@@ -1332,7 +1255,6 @@
       endif
 
 !     Mass type
-
       if(d(4).gt.0.0d0) then
         if(d(7).eq.0.0d0) then
           write(iow,2007)
@@ -1359,7 +1281,6 @@
       endif
 
 !     Damping factor
-
       if(d(70).gt.0.0d0) then
         write(iow,2046) d(70)
         if(ior.lt.0) then
@@ -1368,7 +1289,6 @@
       endif
 
 !     Rayleigh Damping factors
-
       if(max(abs(d(77)),abs(d(78))).gt.0.0d0) then
         write(iow,2060) d(77),d(78)
         if(ior.lt.0) then
@@ -1385,7 +1305,6 @@
       endif
 
 !     Output penalty value
-
       if(d(60).ne.0.0d0) then
         write(iow,2022) d(60)
         if(ior.lt.0) then
@@ -1394,7 +1313,6 @@
       endif
 
 !     Multiply parameters by thickness
-
       if(ietype.eq.1) then
         d( 4) = d( 4)*d(14)
         d(11) = d(11)*d(14)
@@ -1410,7 +1328,6 @@
       endif
 
 !     Output reference coordinate/vector
-
       if    (sref.eq.1) then
 
         d(93) = sref
@@ -1425,9 +1342,7 @@
 
       endif
 
-
 !     Output reference coordinate/vector
-
       if    (lref.eq.1) then
 
         d(96) = lref
@@ -1455,7 +1370,6 @@
       endif
 
 !     Save types
-
       d(15)  = nh1 + naug
       d(16)  = stype
       d(17)  = etype
@@ -1480,11 +1394,12 @@
       endif
 
 !     Set history for saving element variables
-
       nh3  = ndv
 
-!     Check for warnings
+!     Set augmenting base value
+      d(185) = d(185)*d(21)
 
+!     Check for warnings
       if(d(4).eq.0.0d0) then
         write(iow,3000)
         if(ior.lt.0) then
@@ -1493,7 +1408,6 @@
       endif
 
 !     Check for errors
-
       if     (ietype.eq.1) then
         if(e1.eq.0.0d0) then
           write(iow,4001)
@@ -1539,7 +1453,6 @@
       endif
 
 !     Errors detected in input data
-
       if(erflag) call plstop(.true.)
 
 !     I/O Formats
@@ -1672,6 +1585,8 @@
 
 2066  format(/5x,'C o n s t i t u t i v e   S t a r t   S t a t e'//
      &       10x,a)
+
+2084  format( 10x,'Augmenting   : ',a)
 
 2090  format(10x,'Interpolation: ',a/(15x,'Quadrature ',i1,' = ',i5:))
 
@@ -3535,7 +3450,7 @@
       end subroutine fengy3
 
       subroutine modlfd(ii,d,f,df,detf,ta,hn,hn1,nh,istrt, dd,sig,bb,
-     &                  bbar, isw)
+     &                  xlamd, ha, bbar, isw)
 
 !-----[--.----+----.----+----.-----------------------------------------]
 !     Purpose: Driver for finite deformation constitutive models
@@ -3572,7 +3487,7 @@
 
       logical       :: bbar, plasfl
       integer       :: nh,istrt,isw, i,j,ii, imat, ntm, uprm,umat
-      real (kind=8) :: ta
+      real (kind=8) :: ta, xlamd, ha
 
       real (kind=8) :: d(*),  bb(6),  detf(*),f(3,3),df(3,3)
       real (kind=8) :: hn(*), hn1(*), dd(*), sig(*), aa(6,6,5)
@@ -3642,7 +3557,7 @@
 !       Compute elastic stress and tangents
 
         if    (imat.eq.1) then
-          call stnh3f(d,detf(1),bb, sig,aa,estore)
+          call stnh3f(d,detf(1),bb, sig,aa,xlamd,ha,estore)
         elseif(imat.eq.2) then
           call stvk(d,detf(1),f,df,sig,aa, estore)
         elseif(imat.eq.13) then ! RVE model from multi-scale analysis
@@ -3783,7 +3698,7 @@
 
       end subroutine pushr4
 
-      subroutine stnh3f(d,detf,bb, sig,aa,estore)
+      subroutine stnh3f(d,detf,bb, sig,aa,xlamd,ha,estore)
 
 !-----[--.----+----.----+----.-----------------------------------------]
 !     Finite Deformation Elasticity Neo-Hookean Model
@@ -3805,17 +3720,19 @@
       implicit  none
 
       integer       :: i
-      real (kind=8) :: detf, press,logj,uppj, mu, mu2, estore
+      real (kind=8) :: detf, press,logj,uppj, mu, mu2, estore, xlamd,ha
 
       real (kind=8) :: d(*),sig(6),aa(6,6),bb(6)
 
       save
 
 !     Compute pressure and its derivative
-
       logj  = log(abs(detf))
-      press = d(21)*logj/detf
+      press = d(21)*logj/detf + xlamd
       uppj  = d(21)/detf
+
+!     Augment function
+      ha    = detf - 1.0d0
 
 !     Set CAUCHY stresses and elastic tangent moduli
 

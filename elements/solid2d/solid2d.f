@@ -84,7 +84,7 @@
 
 !     Compute residuals and tangents for parts
 
-      if(isw.eq.1 .or. isw.eq.3 .or. isw.eq.4  .or.
+      if(isw.eq.1 .or. isw.eq.3 .or. isw.eq.4  .or. isw.eq.10 .or.
      &   isw.eq.6 .or. isw.eq.8 .or. isw.eq.14) then
 
 !       Displacement Model

@@ -52,7 +52,6 @@
           endif
         endif
       end do ! n
-      write(iow,2000) rmn,rmx
 
 !     Check range for contour outputs
 
@@ -84,7 +83,6 @@
           write(*,2000) rmn,rmx
         endif
       endif
-      write(iow,2000) rmn,rmx
 
 2000  format('    Minimum is ',1p,e10.2,' Maximum is ',1p,e10.2:/
      &  22x,'10%   20%   30%   40%   50%   60%   70%   80%   90%'/

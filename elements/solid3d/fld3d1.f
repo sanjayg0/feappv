@@ -26,7 +26,7 @@
       integer       :: ndf,ndm,nst,isw, i,ii,i1, j,jj,j1,  k
       integer       :: l,lint, nhv,nn,istrt
       real (kind=8) :: bdb, ta
-      real (kind=8) :: qfact
+      real (kind=8) :: qfact, xlamd, ha
       real (kind=8) :: d(*),ul(ndf,nen,*),xl(ndm,*),s(nst,*),r(ndf,*)
       real (kind=8) :: sg(4,9),sv(5,16),xsj(9),xx(3)
       real (kind=8) :: f(9,2,9),finv(3,3,9),df(3,3,9),detfi(2,9)
@@ -133,10 +133,11 @@
         nn  = 0
         do l = 1,lint
 
+          xlamd  = 0.0d0
           estore = 0.0d0
           call modlfd(l,d,f(1,1,l),df(1,1,l),detfi(1,l),ta,
      &                hr(nh1+nn),hr(nh2+nn),nhv,istrt,aa,sigv,be,
-     &                .false.,isw)
+     &                xlamd,ha,.false.,isw)
           weng(l) = estore
 
 !         Multiply tangent moduli and stresses by volume element.

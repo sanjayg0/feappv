@@ -19,6 +19,8 @@
       real (kind=8) :: d(*),shp(3,*),sig(*),dd(6,6),vl(ndf,*),xl(ndm,*)
       real (kind=8) :: eps(6)
 
+      save
+
       do j = 1,6
         eps(j) = 0.0d0
       end do

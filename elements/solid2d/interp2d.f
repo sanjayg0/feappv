@@ -29,6 +29,8 @@
       integer       :: l, ndm,nel, ix(*)
       real (kind=8) :: xl(ndm,*)
 
+      save
+
       if(quad) then         ! Quadrilateral element
         call shp2d(sg2(1,l),xl,shp2(1,1,l),jac(l),ndm,nel,ix,flag)
         jac(l) = jac(l)*sg2(3,l)

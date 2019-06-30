@@ -73,7 +73,7 @@
 !     Set version header for output to file and screen
 
       versn(1) = '5.1 Beta 3'
-      versn(2) = '14 November 2018'
+      versn(2) = '26 June 2019'
 
 !     Set precision for real variables:
 

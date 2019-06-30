@@ -1,5 +1,5 @@
 !$Id:$
-      subroutine bbar2m(sg,shp,dvol,xji,lint,nel,hh,theta,shpbar)
+      subroutine bbar2m(sg,shp,jac,detf,lint,nel,hh,theta,shpbar)
 
 !      * * F E A P * * A Finite Element Analysis Program
 
@@ -12,8 +12,8 @@
 !     Inputs:
 !        sg(3,*)       - Quadrature points and weights at gauss points
 !        shp(3,9,*)    - Shape functions and derivatives at gauss points
-!        vol(*)        - Volume elements at gauss points at t_n+1
-!        xji(2,*)      - Jacobian determinant at gauss points
+!        jac(*)        - Volume elements at gauss points at t_n+1
+!        detf(2,*)     - Jacobian determinant at gauss points
 !        lint          - Number of quadrature points
 !        nel           - Number of nodes on element (should be 8)
 
@@ -26,9 +26,9 @@
       implicit  none
 
       integer       :: lint,  nel,  i,  j,  l
-      real (kind=8) :: voln, h0, h1, h2
+      real (kind=8) :: dvol, h0, h1, h2
 
-      real (kind=8) :: sg(3,*),    shp(3,64,*), dvol(*), xji(2,*)
+      real (kind=8) :: sg(3,*),    shp(3,64,*), jac(*), detf(2,*)
       real (kind=8) :: theta(2,*), shpbar(2,9,*)
       real (kind=8) :: gg(3,2,9),  hh(3,3),ji(3,2),hj(3,2),hg(3,2,9)
       real (kind=8) :: phi(3)
@@ -51,16 +51,16 @@
 
 !         H-array and D-array
 
-          voln    = dvol(l) / xji(1,l)
-          hh(1,1) = hh(1,1) + voln
-          h1      = h1      + dvol(l)
-          h2      = h2      + voln*xji(2,l)
+          dvol    = jac(l) * detf(1,l)
+          hh(1,1) = hh(1,1) + jac(l)
+          h1      = h1      + jac(l) * detf(1,l)
+          h2      = h2      + jac(l) * detf(2,l)
 
 !         G-array
 
           do j = 1,nel
             do i = 1,2
-              shpbar(i,j,1) = shpbar(i,j,1) + shp(i,j,l) * dvol(l)
+              shpbar(i,j,1) = shpbar(i,j,1) + shp(i,j,l) * dvol
             end do
           end do
         end do
@@ -96,14 +96,10 @@
 
         do i = 1,3
           do j = 1,nel
-            gg(i,1,j) = 0.0d0
-            gg(i,2,j) = 0.0d0
+            gg(i,1:2,j) = 0.0d0
           end do ! j
-          hh(i,1) = 0.0d0
-          hh(i,2) = 0.0d0
-          hh(i,3) = 0.0d0
-          ji(i,1) = 0.0d0
-          ji(i,2) = 0.0d0
+          hh(i,1:3) = 0.0d0
+          ji(i,1:2) = 0.0d0
         end do ! i
 
 !       Quadrature loop
@@ -114,14 +110,14 @@
           phi(3) = sg(2,l)
           do j = 1,3
 
-            h1 = phi(j)*dvol(l)
-            h0 = h1/xji(1,l)
-            h2 = h1*xji(2,l)
+            h0 = phi(j)*jac(l)
+            h1 = h0*detf(1,l)
+            h2 = h0*detf(2,l)
 
 !           Ji-array
 
             ji(j,1) = ji(j,1) + h1
-            ji(j,2) = ji(j,2) + h1*xji(2,l)/xji(1,l)
+            ji(j,2) = ji(j,2) + h2
 
 !           H-array
 
@@ -132,8 +128,7 @@
 !           G-array
 
             do i = 1,nel
-              gg(j,1,i) = gg(j,1,i) + shp(1,i,l)*h1
-              gg(j,2,i) = gg(j,2,i) + shp(2,i,l)*h1
+              gg(j,1:2,i) = gg(j,1:2,i) + shp(1:2,i,l)*h1
             end do ! i
           end do ! j
 

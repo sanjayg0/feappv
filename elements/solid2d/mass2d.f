@@ -47,7 +47,7 @@
 !       Compute shape functions
 
         call interp2d( l, xl,ix, ndm,nel,.true.)
-        dv = jac(l)
+        dv = jac(l)*d(4)
 
         if(stype.eq.3) then
           xx = 0.0d0

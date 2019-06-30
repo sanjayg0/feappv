@@ -40,6 +40,8 @@
       real    (kind=8) ::  el(4), xl(ndm,*), shp(3,*), xs(3,2)
       real    (kind=8) ::  xsi(2,2), dx(3)
 
+      save
+
       if(nel.le.7) then
 
 !       3-node triangle

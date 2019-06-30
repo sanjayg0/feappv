@@ -25,6 +25,8 @@
       real (kind=8) ::   length, xi,        xi2,        xi3
       real (kind=8) ::   sg(2),  shpw(4,2), shpt(4,2)
 
+      save
+
 !     Powers of point
 
       xi  = sg(1)

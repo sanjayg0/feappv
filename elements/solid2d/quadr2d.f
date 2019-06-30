@@ -26,6 +26,8 @@
       integer       :: l
       real (kind=8) :: d(*)
 
+      save
+
 !     Compute Gauss quadrature points and weights for 2-d elements
 
       quad   = .false.

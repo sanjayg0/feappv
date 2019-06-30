@@ -46,7 +46,7 @@
       integer       :: i,i1, j,jj,j1, l, nn,nhv, istrt
 
       real (kind=8) :: bdb,bd3,dl,dc,di,dvol0,dvol,dmas0, jac0
-      real (kind=8) :: cfac,lfac,xx1,xx2, tempi, ta
+      real (kind=8) :: cfac,lfac,xx1,xx2, tempi, ta, xlamd,ha
 
       integer       :: ix(*)
       real (kind=8) :: d(*),ul(ndf,nen,*),xl(ndm,*),s(nst,*)
@@ -136,9 +136,10 @@
 
 !       Compute Cauchy stresses and spatial tangent tensor
 
+        xlamd = 0.0d0
         call modlfd(l,d,f(1,1,l),df(1,1,l),detf(1,l),ta,
      &             hr(nn+nh1),hr(nn+nh2),nhv,istrt,ds,sigl(1,l),bb,
-     &             .false.,isw)
+     &             xlamd,ha,.false.,isw)
         nn = nn + nhv
 
         if(isw.eq.13) then

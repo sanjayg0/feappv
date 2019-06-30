@@ -29,16 +29,16 @@
       integer       :: ndf,ndm,nst, isw
       integer       :: i,i1, j,jj,j1, l, nhi,nhv,nn, istrt
 
-      real (kind=8) :: augfp,  d1,     bdb,    epp
-      real (kind=8) :: third,  thlog,  ta,     qfact
+      real (kind=8) :: d1,     bdb,    epp
+      real (kind=8) :: third,  thlog,  ta,     qfact, xlamd, ha
       real (kind=8) :: dsigtr, dpress, mpress, dmass, dmshp, dtheta
 
       integer       :: ix(*)
       real (kind=8) :: d(*),       ul(ndf,nen,*),  xl(ndm,*),   s(nst,*)
-      real (kind=8) :: df(9,9),    fi(9,2,9)
+      real (kind=8) :: df(9,9),    fi(9,2,9),      finv(9,9)
       real (kind=8) :: xxm(3),     xu(2,9),        ru(2,9),     r(*)
       real (kind=8) :: bbd(2,7),   bei(6),         ad(7,7,5,9), dd(7,7)
-      real (kind=8) :: dvol(9),    dvl0(9),        xji(2,9)
+      real (kind=8) :: dvol(9),    detf(2,9)
       real (kind=8) :: sigm(9),    sigl(9,9),      bpra(3),shpbar(2,9,9)
       real (kind=8) :: acc(2),     theta(2,9),     hh(3,3)
       real (kind=8) :: press(9),   hsig(3)
@@ -52,29 +52,22 @@
 
       data    ta    / 0.0d0 /
 
-!     Augmented Lagrangian update for nested iteration
-
 !     No action for isw = 1
-
       if(isw.eq.1) then
 
-!     Augmented update
-
+!     Augmented Lagrangian update for nested iteration
       elseif(isw.eq.10) then
 
-        d1      = augfp*d(21)
+        d1      = augf*d(185)
         hr(nh2) = hr(nh2) + d1*hr(nh2+1)
 
 !     Compute tangent stiffness and residual force vector
-
       elseif(isw.eq.3 .or. isw.eq.4 .or. isw.eq. 6 .or.
      &       isw.eq.8 .or. isw.eq.14) then
 
-        augfp  = augf
         estore = 0.0d0
 
 !       Compute current geometry
-
         do j = 1,nel
           do i = 1,2
             xu(i,j) = xl(i,j) + ul(i,j,1)
@@ -84,46 +77,41 @@
         call quadr2d(d,.true.)
 
 !       Get shape functions and derivatives in geometry at time t_n+1
-
         do l = 1,lint
           call interp2d(l, xl,ix, ndm,nel, .false.)
-          dvol(l) = jac(l)
         end do ! l
 
 !       Set number of history terms / quadradure point
-
         nhv   = nint(d(15))
         istrt = nint(d(84))
 
 !       MECHANICAL ELEMENT
-
         if(isw.eq.3 .or. isw.eq.6 .or. isw.eq.14) then
 
 !         Compute f, df and det(fei) at conf t-n+1
-
-          call kine2m(shp2,ul,fi,df,ndf,nel,nen,xji,lint)
+          call kine2m(shp2,ul,fi,df,finv,ndf,nel,nen,detf,lint)
 
 !         Mixed model for volumetric response
-
-          call bbar2m(sg2,shp2,dvol,xji,lint,nel,hh,theta,shpbar)
+          call bbar2m(sg2,shp2,jac,detf,lint,nel,hh,theta,shpbar)
 
 !         Compute mixed model deformation gradient
-
-          call fbar2m(fi,xji,theta,lint)
+          call fbar2m(fi,detf,theta,lint)
 
 !         Compute Cauchy stresses and spatial tangent tensor at t-n+1
-
           nn = nhi
           do l = 1,lint
 
+            xlamd = hr(nh2)
             call modlfd(l,d,fi(1,1,l),df(1,l),theta(1,l),ta,
      &                  hr(nn+nh1),hr(nn+nh2),nhv,istrt,ad(1,1,1,l),
-     &                  sigl(1,l),bei,.true.,isw)
+     &                  sigl(1,l),bei,xlamd,ha,.true.,isw)
             nn = nn + nhv
           end do ! l
 
-!         Compute mixed pressure
+!         Set augmented funciton
+          hr(nh2+1) = ha
 
+!         Compute mixed pressure
           if(isw.eq.3 .or. isw.eq.6) then
 
             if(nel.eq.4) then
@@ -133,16 +121,13 @@
 
 !               Modify volume element and integrate pressure
 !               over reference volume
-
-                dvl0(l)  = dvol(l) / xji(1,l)
                 press(1) = press(1) + third*(sigl(1,l) + sigl(2,l)
-     &                              + sigl(3,l))*dvl0(l)
-                dvol(l)  = dvl0(l) * theta(1,l)
+     &                              + sigl(3,l))*jac(l)
+                dvol(l)  = jac(l) * theta(1,l)
 
               end do ! l
 
 !             Divide pressure by reference volume
-
               press(1) = press(1) * hh(1,1)
               do l = 2,lint
                 press(l) = press(1)
@@ -150,26 +135,21 @@
 
             elseif(nel.eq.9) then
 
-              sigm(1) = 0.0d0
-              sigm(2) = 0.0d0
-              sigm(3) = 0.0d0
+              sigm(1:3) = 0.0d0
               do l = 1,lint
 
 !               Modify volume element and integrate pressure
 !               over reference volume
-
-                dvl0(l)  = dvol(l) / xji(1,l)
                 mpress   = third*(sigl(1,l) + sigl(2,l)
-     &                          + sigl(3,l))*dvl0(l)
+     &                          + sigl(3,l))*jac(l)
                 sigm(1) = sigm(1) + mpress
                 sigm(2) = sigm(2) + mpress*sg2(1,l)
                 sigm(3) = sigm(3) + mpress*sg2(2,l)
-                dvol(l) = dvl0(l) * theta(1,l)
+                dvol(l) = jac(l) * theta(1,l)
 
               end do ! l
 
 !             Divide pressure by reference volume
-
               do i = 1,3
                 hsig(i) = hh(i,1)*sigm(1)
      &                  + hh(i,2)*sigm(2)
@@ -184,8 +164,7 @@
             do l = 1,lint
 
 !             Compute mixed stress and multiply by volume element
-
-              dsigtr  = press(l)*xji(1,l)/theta(1,l)
+              dsigtr  = press(l)*detf(1,l)/theta(1,l)
      &                - (sigl(1,l)+sigl(2,l)+sigl(3,l))*third
               sigm(1) =  sigl(1,l) + dsigtr
               sigm(2) =  sigl(2,l) + dsigtr
@@ -193,7 +172,6 @@
               sigm(4) =  sigl(4,l)
 
 !             Store time history plot data for element
-
               i = 6*(l-1)
               do j = 1,4
                 tt(j+i) = sigm(j)
@@ -201,9 +179,8 @@
               end do ! j
 
 !             Compute acceleration
-
               if(d(7).ge.0.0d0) then
-                dmass = d(4)*dvl0(l)
+                dmass = d(4)*jac(l)
               else
                 dmass = 0.0d0
               endif
@@ -217,7 +194,6 @@
               dmass = ctan(3)*dmass
 
 !             Compute residual
-
               do j = 1,nel
 
                 ru(1,j) = shp2(1,j,l)*sigm(1) + shp2(2,j,l)*sigm(4)
@@ -229,11 +205,9 @@
               end do ! j
 
 !             Compute mixed tangent stiffness matrix
-
               if(isw.eq.3) then
 
 !               Part 1: Geometric tangent matrix
-
                 if(gflag) then
                   i1 = 0
                   do i = 1,nel
@@ -252,14 +226,12 @@
 !               Part 2: Material tangent matrix
 
 !               Modify tangent moduli for stress factors
-
-                mpress = press(l)*xji(1,l)/theta(1,l)
+                mpress = press(l)*detf(1,l)/theta(1,l)
                 dpress = third*(sigl(1,l) + sigl(2,l) + sigl(3,l))
 
                 call dmatdx(ad(1,1,1,l),sigl(1,l),dpress,mpress)
 
 !               Multiply tangent moduli by volume element
-
                 d1 = dvol(l)*ctan(1)
                 do i = 1,7
                   do j = 1,7
@@ -268,12 +240,10 @@
                 end do ! i
 
 !               Compute row terms
-
                 i1 = 0
                 do i = 1,nel
 
 !                 Compute bmat-t * dd * dvol
-
                   do jj = 1,7
 
                     bbd(1,jj) =  shp2(1,i,l)*dd(1,jj)
@@ -288,16 +258,14 @@
                   dmshp = shp2(3,i,l)*dmass
 
                   j1 = 0
-                  do j = 1,i
+                  do j = 1,nel
 
 !                   Inertial tangent
-
                     do jj = 1,2
                       s(i1+jj,j1+jj) = s(i1+jj,j1+jj)+dmshp*shp2(3,j,l)
                     end do ! jj
 
 !                   Compute mechanics part of tangent stiffness
-
                     do jj = 1,2
                       s(i1+jj,j1+1) = s(i1+jj,j1+1)
      &                              + bbd(jj,1)*shp2(1,j,l)
@@ -316,17 +284,6 @@
                 end do ! i
               endif ! isw = 3
             end do ! l
-
-!           Compute lower part by symmetry
-
-            if(isw .eq. 3) then
-
-              do i = 1,nst
-                do j = 1,i
-                  s(j,i) = s(i,j)
-                end do ! j
-              end do ! i
-            endif
 
           endif ! isw = 3 or 6
 
@@ -347,11 +304,11 @@
 
 !         Compute f, df and det(fei) at conf t-n+1
 
-          call kine2m(shp2,ul,fi,df,ndf,nel,nen,xji,lint)
+          call kine2m(shp2,ul,fi,df,finv,ndf,nel,nen,detf,lint)
 
-          call bbar2m(sg2,shp2,dvol,xji,lint,nel,hh,theta,shpbar)
+          call bbar2m(sg2,shp2,dvol,detf,lint,nel,hh,theta,shpbar)
 
-          call fbar2m(fi,xji,theta,lint)
+          call fbar2m(fi,detf,theta,lint)
 
 !         Second loop over Gauss points
 
@@ -359,17 +316,15 @@
           do l = 1,lint
 
 !           Compute Cauchy stresses and spatial tangent tensor at t-n+1
-
+            xlamd = hr(nh2)
             call modlfd(l,d,fi(1,1,l),df(1,l),theta(1,l),ta,
      &                  hr(nn+nh1),hr(nn+nh2),nhv,istrt,ad,sigl(1,l),
-     &                  bei,.true.,isw)
+     &                  bei,xlamd,ha,.true.,isw)
 
 !           Compute principal stretches
-
             call pstr3d(bei, bpr)
 
 !           Average stresses and stretches for printing
-
             do i = 1,2
               bpra(i) = bpra(i) + 0.5d0*qfact*dlog(bpr(i))
               xxm(i)  = xxm(i)  + qfact *xu(i,l)
@@ -384,7 +339,6 @@
           end do ! l
 
 !         Output stresses
-
           if (isw .eq. 4) then
 
             call pstr2d(sigm,sigm(7))
@@ -397,7 +351,6 @@
             endif
 
 !           Compute potential damage variable
-
             thlog = log(abs(dtheta))
             write(iow,2002) n_el,ma,(sigm(i),i=1,9),bpra,xxm,thlog,epp
             if(ior.lt.0) then
@@ -406,7 +359,6 @@
           else
 
 !           Project stress values to nodes
-
             call slcn2d(sigl,r,s,r(nen+1),nel,9)
 
           endif

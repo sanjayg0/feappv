@@ -23,6 +23,8 @@
       integer       :: i,j,n,ndm,nmax
       real (kind=8) :: d, a(ndm,*)
 
+      save
+
       do n = 1,nmax
         if(a(n,n).ne.0.0d0) then
           d = 1.d0/a(n,n)

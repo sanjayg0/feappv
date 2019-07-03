@@ -4,6 +4,9 @@
 !      * * F E A P * * A Finite Element Analysis Program
 
 !....  Copyright (c) 1984-2019: Regents of the University of California
+!      * Changed the dimension of vt and xt according to 
+!        http://feap.berkeley.edu/forum/index.php?topic=2124
+!        Feb 19, 2019
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]

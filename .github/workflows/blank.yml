@@ -10,8 +10,9 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Run a one-line script
-      run: sudo apt-get install gfortran
-      run: export FEAPPVHOME4_1=`pwd`; make install
+      run: |
+        sudo apt-get install gfortran
+        export FEAPPVHOME4_1=`pwd`; make install
     - name: Run a multi-line script
       run: |
         echo Add other actions to build,

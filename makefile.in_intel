@@ -62,12 +62,12 @@
 #------------------------------------------------------------------------
 # Source Types (generally this is blank)
 
-  FSOURCE = 
-  CSOURCE = 
+  FSOURCE =
+  CSOURCE =
 
 #------------------------------------------------------------------------
 # Source Extender
-  FEXT = f 
+  FEXT = f
   CEXT = c
 
   F90EXT = f90
@@ -102,18 +102,21 @@
 #------------------------------------------------------------------------
 # Archive name
 
-  ARFEAPPV = $(FEAPPVHOME5_1)/Feappv.a
+  ARFEAPPV = $(FEAPPVHOME5_1)/Feappv_i.a
 # ARFEAPPV = $(FEAPPVHOME5_1)/Feappv_g.a
 #------------------------------------------------------------------------
 # Archive name FE2
 
-  ARFE2FEAPPV = $(FEAPPVHOME5_1)/libfeappvfe2.a
+  ARFE2FEAPPV = $(FEAPPVHOME5_1)/libfeappvfe2_i.a
+# ARFE2FEAPPV = $(FEAPPVHOME5_1)/libfeappvfe2_g.a
 #------------------------------------------------------------------------
 # Archive name IgA
 
-  ARIFEAPPV = $(FEAPPVHOME5_1)/iga/libfeappviga.a
+  ARIFEAPPV = $(FEAPPVHOME5_1)/iga/libfeappviga_i.a
+# ARIFEAPPV = $(FEAPPVHOME5_1)/iga/libfeappviga_g.a
 #------------------------------------------------------------------------
 # Archive name VEM
 
-  ARVFEAPPV = $(FEAPPVHOME5_1)/vem/libfeappvvem.a
+  ARVFEAPPV = $(FEAPPVHOME5_1)/vem/libfeappvvem_i.a
+# ARVFEAPPV = $(FEAPPVHOME5_1)/vem/libfeappvvem_g.a
 #------------------------------------------------------------------------

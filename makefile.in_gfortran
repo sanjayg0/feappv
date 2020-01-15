@@ -11,7 +11,7 @@
 #------------------------------------------------------------------------
 # Location of feappv include files
 
-  FINCLUDE = $(FEAPPVHOME5_1)/include 
+  FINCLUDE = $(FEAPPVHOME5_1)/include
 
 # Location of C-compiler include files (depends where compiler installed)
 
@@ -62,12 +62,12 @@
 #------------------------------------------------------------------------
 # Source Types (generally this is blank)
 
-  FSOURCE = 
-  CSOURCE = 
+  FSOURCE =
+  CSOURCE =
 
 #------------------------------------------------------------------------
 # Source Extender
-  FEXT = f 
+  FEXT = f
   CEXT = c
 
   F90EXT = f90

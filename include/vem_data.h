@@ -17,10 +17,9 @@
       real    (kind=8) ::  P0mat(10,65)    ! Function   projection
       common /vem_datar/   Dmat, Pdmat, Plmat, P0mat
 
-      real    (kind=8) ::  dvol(64)        ! GP volume contribution
       real    (kind=8) ::  xp(2,64)        ! GP Cartesian coordinates
       real    (kind=8) ::  xc(2)           ! Centroid coordinate 
-      common /vem_datar/   dvol, xp,xc
+      common /vem_datar/   xp,xc
 
       real    (kind=8) ::  mm(10,64)       ! Interpolation at GP
       real    (kind=8) ::  dd(10,10)       ! Projection matrices

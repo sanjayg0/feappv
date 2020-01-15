@@ -1,24 +1,24 @@
 !$Id:$
-      subroutine comelm(id,ix, ir, ndf,nen, kpo,kp,neq,
-     &                  bycol,wdiag,all)
+      subroutine comelm(eq,ix, ir, ndf,nen, kpo,kp,neq,
+     &                  bycol,wdiag,rc_all)
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2019: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
 !      Purpose:  Compute equation numbers from elements
 
 !      Inputs:
-!         id(ndf,*)  -  Active unknowns at each node.
+!         eq(ndf,*)  -  Active unknowns at each node.
 !         ix(nen1,*) - List of nodes connected to each element
 !         ndf        -  Number of unknowns at each node.
 !         nen        -  Maximum number of nodes on any element
 !         kpo        -  Initial row entry
 !         bycol      -  Storage by columns if true
 !         wdiag      -  Include diagonal if true
-!         all        -  All terms in row/col if true
+!         rc_all     -  All terms in row/col if true
 
 !      Outputs:
 !         ir(*)      -  Row number of each nonzero in stiffness matrix.
@@ -28,9 +28,9 @@
 
       include  'iofile.h'
 
-      logical      :: addeq, bycol, wdiag, all
+      logical      :: addeq, bycol, wdiag, rc_all
       integer      :: ndf,nen,kpo,kp,neq, i,l,m, kk,neqj
-      integer      :: id(ndf,*),ix(*),ir(*)
+      integer      :: eq(ndf,*),ix(*),ir(*)
 
       save
 
@@ -38,11 +38,11 @@
         kk = ix(l)
         if(kk.gt.0) then
           do m = 1, ndf
-              neqj = id(m,kk)
+              neqj = eq(m,kk)
 
 !             Check if equation to be added
 
-              if(all) then                           ! all terms
+              if(rc_all) then                        ! all terms
                 addeq   = neqj.gt.0
               elseif(bycol) then                     ! by columns
                 if(wdiag) then

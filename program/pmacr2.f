@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2019: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -473,6 +473,17 @@
       case (18)
 
       li = li - 1
+!     [echo] -- Echo commands to screen
+
+      case (19)
+
+      if(pcomp(lct(l),'off',3)) then
+        echo = .false.
+        write(*,*) ' -> ECHO off'
+      else
+        echo = .true.
+        write(*,*) ' -> ECHO on'
+      endif
 
       end select
 

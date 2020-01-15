@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2019: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -45,6 +45,7 @@
       include   'iofile.h'
       include   'ioincl.h'
       include   'iosave.h'
+      include   'lmdata.h'
       include   'mdata.h'
       include   'mxsiz.h'
       include   'nblend.h'
@@ -356,6 +357,7 @@
       efcfl = .false.
       eprfl = .false.
       espfl = .false.
+      lbcfl = .false.
       finflg= .false.
       surfl = .false.
       boufl = .false.
@@ -368,6 +370,7 @@
       tiefl = .true.
       tief  = .false.
       stifl = .false.
+      lagrfl= .false.
 
 !     Rotation parameters
 
@@ -401,9 +404,10 @@
       nepro  = 0
       ncurv  = 0
       nespi  = 0
+      nlbou  = 0
+      ndfl(:)= 0
 
 !     Zero global parameters
-
       if(    ndm.le.2) then
         g2type = 2           ! default plane strain
       elseif(ndm.eq.3) then
@@ -427,14 +431,12 @@
       augf   =  1.0d0        ! Augmenting factor multiplier
 
 !     Set pointers for allocation of mesh arrays
-
       nen1      = nen + 11
       nie       = 13 ! 1,2 defined; others are nie, nie-1, etc.
       nst       = max(nen*ndf + nad,1)
       nneq      = ndf*numnp
 
 !     Allocate size for arrays for mesh and solution vecors
-
       l1   = ndm*numnp
       l2   = max(ndf*numnp,1)
       l3   = max(nen+1,7*nst,21)
@@ -443,7 +445,6 @@
       l6   = max(1,numel)
 
 !     Allocate and zero arrays
-
       setvar = palloc( 26,'DR   ',l4          ,  2)
       setvar = palloc( 34,'LD   ',l3          ,  1)
       setvar = palloc( 35,'P    ',nst*3       ,  2)
@@ -471,12 +472,10 @@
       setvar = palloc( 89,'NREN ',numnp*2     ,  1)
 
 !     Set ID address pointers
-
       id31    = np(31)
       idpt(1) = np(31)
 
 !     Set pointers
-
       npid    = np(31)         ! ID
       npix    = np(33)         ! IX
       npuu    = np(40)         ! U
@@ -485,7 +484,6 @@
       npty    = np(190)        ! NDTYP
 
 !     Set initial numbering in renumber vector and mark nodes as unused.
-
       do i = 0,numnp-1
         mr(np( 89)+i      ) = i+1  ! Remap list
         mr(np( 89)+i+numnp) = i+1  ! Reverse list
@@ -493,13 +491,11 @@
       end do ! i
 
 !     Mark all elements as unused
-
       do i = 1,numel
         mr(np(33)+nen1*i-1) = -99
       end do ! i
 
 !     Set element assembly array
-
       sa(1) = 0
       do j = 2,nen
         sa(j) = sa(j-1) + ndf
@@ -508,33 +504,33 @@
       ga = la + nad  ! Location of global  equations in element array
 
 !     Open file to store material data
-
       inquire(unit=iwd,name=fileck, opened=errs)
 
 !     Input a mesh from binary file (if it exists)
-
       iii   =  0
 
 !     Input mesh data from file
-
       call pmesh(iii,prt,prth)
 
 !     Set edge boundary codes, forces, displacements, and angles
-
       if(eanfl.or.ebcfl.or.edifl.or.efcfl.or.eprfl) then
         call pedgin()
       endif
 
 !     Set cordinate angles, boundary codes, forces, displacements,
 !         proportional load types and surface loads
-
       if(boufl .or. surfl .or. angfl .or.
      &   disfl .or. cprfl .or. forfl) then
         call ploadc()
       endif
 
-!     Perform simple check on mesh to ensure basic data was input
+!     Set element multiplier boundary conditions
+      if(lbcfl) then
+        call plboun()
+        lbcfl = .false.
+      endif
 
+!     Perform simple check on mesh to ensure basic data was input
       setvar = palloc(111,'TEMP1',numnp*ndf, 1)
       call meshck(mr(np(111)),mr(np(32)),mr(np(240)),mr(np(31)+nneq),
      &            mr(np(190)),mr(np(33)),nie,nen,nen1,ndf,
@@ -545,7 +541,6 @@
       endif
 
 !     Compute boundary nodes (before ties)
-
       if(tiefl) then
         setvar = palloc( 78,'EXTND',numnp ,1)
         call pextnd()

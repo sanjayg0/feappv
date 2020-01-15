@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2019: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -33,6 +33,7 @@
       include  'cdata.h'
       include  'cdat1.h'
       include  'chdata.h'
+      include  'contrl.h'
       include  'eldata.h'
       include  'elname.h'
       include  'erotas.h'
@@ -173,7 +174,6 @@
       end do ! i
 
 !     Reset all zero inputs
-
       do i = 1,ndf
         idl(i) = i
       end do ! i
@@ -181,15 +181,14 @@
 303   ie(nie-1,ma) = iel
 
 !     Set flags for number of history and stress terms
-
       mct  = 0
-      nh1  = 0
+      nh1  = 0            ! History pointers
       nh2  = 0
       nh3  = 0
-      istv = 0
+      nlm  = 0            ! Element equations
+      istv = 0            ! Number element projections
 
 !     Output information
-
       if(prt) then
         if(iel.gt.0) then
           write(iow,2001) ma,tx(1),iel,etype,(j,idl(j),j=1,ndf)
@@ -207,7 +206,6 @@
       endif
 
 !     Obtain inputs from element routine
-
       do j = 1,nen+1
         do i = 1,ndf
           lie(i,j) = i
@@ -216,7 +214,6 @@
       rotyp = 0
 
 !     Set default plot type
-
       pstyp = ndm
       isw   = 1
       call elmlib(d(1,ma),ul,xl,lie,tl,s,p,ndf,ndm,nst,iel,isw)
@@ -231,7 +228,6 @@
       end do ! i
 
 !     Set assembly information
-
       if(doflg) then
         do i = 1,ndf
           do j = 1,nen
@@ -257,24 +253,29 @@
       endif
 
 !     Set plot information
-
       ie(1,ma) = pstyp
 
 !     Set number of history terms
-
       if(nh1.ne.0) then
         ie(nie,ma) = int(nh1)
       else
         ie(nie,ma) = mct
       endif
       ie(nie-5,ma) = int(nh3)
-      npstr        = max(npstr,istv)
+
+!     Element Lagrange multiplier number
+      if(nlm.gt.0) then
+        ie(nie-8,ma) = nlm
+        nad          = max(nad,nlm)
+      endif
 
 !     Set rotational update type
-
       if(rotyp.ne.0) then
         ie(nie-6,ma) = rotyp
       endif
+
+!     Set maximum number of element plot variables
+      npstr = max(npstr,istv)
 
 !     Formats
 

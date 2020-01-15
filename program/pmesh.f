@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2019: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -53,7 +53,7 @@
       include  'comblk.h'
 
       character (len=8) :: c2,fext
-      character (len=4) :: wd(59),cc,usub
+      character (len=4) :: wd(60),cc,usub
 
       logical       :: setvar,palloc, lp_in
       logical       :: prt,error,pcomp,lmesh,errck,pinput,tinput
@@ -62,14 +62,14 @@
       integer       :: i,j, ii,jj, iii, isd, ibn, n, side, face
       integer       :: ll,llo,list, numesh, nblend, nmat,nord,nnty
 
-      integer       :: ed(59)
+      integer       :: ed(60)
       real (kind=8) :: td(16)
 
       save
 
 !     Length of command data lists
 
-      data  list    /59/, numesh /12/
+      data  list    /60/, numesh /12/
 
 !     List of command names
 
@@ -78,7 +78,7 @@
      2        'cang','cbou','cdis','cfor','cpro','csur','regi','rese',
      3        'bloc','btem','pola','shif','blen','snod','side','tran',
      4        'para','prin','nopr','pars','nopa','debu','glob','titl',
-     5        'loop','next','*nod','*ele','peri','manu','end',
+     5        'loop','next','*nod','*ele','peri','manu','lbou','end',
      u        'mes1','mes2','mes3','mes4','mes5','mes6','mes7','mes8',
      u        'mes9','me10','me11','me12'/
 
@@ -87,7 +87,7 @@
      2            0,     0,     0,     0,     2,     0,     0,     1,
      3            0,     1,     0,     0,     0,     0,     0,     1,
      4            0,     0,     0,     2,     2,     2,     0,     2,
-     5            0,     0,     0,     0,     1,     4,     0,
+     5            0,     0,     0,     0,     1,     4,     4,     0,
      u            5,     5,     5,     5,     5,     5,     5,     5,
      u            5,     5,     5,     5 /
 
@@ -212,12 +212,12 @@
 !             o  r  u  g  s  o  e  l  i  e  o  d  a  r  i  p  r  p  b
 !             r  o  r  i  e  c  m  a  f  n  d  e  n  a  n  r  s  a  u
 
-     &       39,40,41,42,43,44,45,46,47,
+     &       39,40,41,42,43,44,45,46,47,48,
 
-!             g  t  l  n  *  *  p  m  e
-!             l  i  o  e  n  e  e  a  n
-!             o  t  0  x  o  l  r  n  d
-!             b  l  p  t  d  e  i  u
+!             g  t  l  n  *  *  p  m  l  e
+!             l  i  o  e  n  e  e  a  b  n
+!             o  t  0  x  o  l  r  n  o  d
+!             b  l  p  t  d  e  i  u  u
 
 !     User Commands: Changed by subroutines umesh'n'
 
@@ -698,14 +698,24 @@
       go to 100
 
 !     [manu],hlplev - set Manual help options level
-
 46    read(yyy,1001,err=110,end=900) cc,hlplev
       hlplev = max(-1,min(3,hlplev))
       go to 100
 
-!     [end] of mesh data inputs
+!     [lbou]nd <set,add>
+47    lbcfl = .true.
+      fext  = 'lb0'
+      nlbou = nlbou + 1
+      if(.not.pcomp(c2,'set',3)) then
+        c2 = 'add'                 ! default mode 'add' for edge force
+      endif
 
-47    if(lsave) then
+      if(ior.lt.0) write(*,*) ' LBOU: ne dof'
+      call plinka(fext,c2)
+      go to 100
+
+!     [end] of mesh data inputs
+48    if(lsave) then
         write(iow,3006)
         if(ior.lt.0) then
           write(iow,3006)

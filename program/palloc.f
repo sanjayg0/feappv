@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2019: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -39,13 +39,12 @@
 
       data   (nlist(i),i=1,list)/
 
+!     Solution arrays
      &         'TANG1', 'TANG2', 'TANG3', 'TANG4', 'UTAN1', 'UTAN2',
      &         'UTAN3', 'UTAN4', 'CMAS1', 'CMAS2', 'CMAS3', 'CMAS4',
 
      &         'LMAS1', 'LMAS2', 'LMAS3', 'LMAS4', 'DAMP1', 'DAMP2',
      &         'DAMP3', 'DAMP4', 'JP1  ', 'JP2  ', 'JP3  ', 'JP4  ',
-
-!     Solution arrays
 
 !              'TANG1',     !     1: Symm. tangent, partition 1
 !              'TANG2',     !     2: Symm. tangent, partition 2
@@ -78,7 +77,6 @@
 !              'JP4  ',     !    24: Profile pointer, partition 4
 
 !     Mesh arrays
-
      &         'D    ', 'DR   ', 'F    ', 'F0   ', 'FPRO ', 'FTN  ',
      &         'ID   ', 'IE   ', 'IX   ', 'LD   ', 'P    ', 'S    ',
      &         'SLODI', 'T    ', 'TL   ', 'U    ', 'UL   ', 'VEL  ',
@@ -119,14 +117,12 @@
 !              'ANGL ',     !    46: Nodal angles, element
 
 !     Sparse solution data
-
      &         'PNTER', 'INVPT',
 
 !              'PNTER',     !    47: Pointer array
 !              'INVPT',     !    48: Inverse pointer array
 
 !     History data
-
      &         'H    ', 'NH1  ', 'NH2  ', 'NH3  ',
 
 !              'H    ',     !    49: Element history parameters
@@ -135,11 +131,9 @@
 !              'NH3  ',     !    52: Element history data, time ind
 
 !     Plot data
-
      &         'CT   ', 'FCIX ', 'FCZM ', 'FIDP ', 'NDER ', 'NDNP ',
      &         'NPAX ', 'NDNS ', 'OUTL ', 'SYMM ', 'TECON', 'TEFAC',
      &         'TENRM', 'VISN ',
-
 
 !              'CT   ',     !    53: Plot deformed coordinate storage.
 !              'FCIX ',     !    54: Face nodal connection list.
@@ -157,13 +151,11 @@
 !              'VISN ',     !    66: Visible face list
 
 !     Other data
-
      &         'SPTAN', 'AUR  ', 'BFGD ', 'BFGO ', 'BFGS ', 'BFGT ',
      &         'BFGV ', 'BFGW ', 'EIGE ', 'EVAL ', 'EVEC ', 'EXTND',
      &         'IPOS ', 'JPR  ', 'MO   ', 'MR   ', 'MT   ', 'MU1  ',
      &         'MU2  ', 'NDAM ', 'NMAS ', 'NSTI ', 'NREN ', 'OINMC',
      &         'OINMO', 'OINB ', 'OINC ', 'OINO ',
-
 
 !              'SPTAN',     !    67: Sparse Tangent Array
 !              'AUR  ',     !    68: Preconditioner Array
@@ -203,11 +195,9 @@
 !              'OINO ',     !    94: Sparse entries/equation
 
 !     Rigid Body data
-
      &         'RCG  ', 'REQRB', 'REVO ', 'RINER', 'RIRB ', 'RIXT ',
      &         'RJNT ', 'RJNX ', 'RJTU ', 'RLAMB', 'RLIST', 'RLOAD',
      &         'RMASS', 'RUROT', 'REXMS', 'REXIN',
-
 
 !              'RCG  ',     !    95: Rigid body: center of mass
 !              'REQRB',     !    96: Rigid body: equation numbers
@@ -228,7 +218,6 @@
 !              'REXIN',     !   110: Rigid body: Explicit 6x6 inertias
 
 !     Temporay arrays
-
      &         'TEMP1', 'TEMP2', 'TEMP3', 'TEMP4', 'TEMP5', 'TEMP6',
      &         'TEMP7', 'TEMP8', 'TEMP9', 'TEMP0',
 
@@ -244,7 +233,6 @@
 !              'TEMP0',     !   120:  Temporary array
 
 !     Proportional loading table arrays (Type 2 prop. loads)
-
      &         'PROP0', 'PROP1', 'PROP2',
 
 !              'PROP0',     !   121:  Prop. load offset table
@@ -252,7 +240,6 @@
 !              'PROP2',     !   123:  Prop. load temporary use
 
 !     Multiple support base excitations
-
      &         'PROBS', 'NUBAS', 'MASBS', 'PHIBS',
 
 !              'PROBS',     !   124:  Base proportional factors
@@ -261,7 +248,6 @@
 !              'PHIBS',     !   127:  Static modes
 
 !     Follower nodal loads
-
      &         'APLOT', 'FOLLI', 'FOLLR',
 
 !              'APLOT',     !   128:  Tag active plot elements
@@ -269,9 +255,7 @@
 !              'FOLLR ',    !   130:  Follower force values
 
 !     Contact arrays
-
      &         'C0   ', 'CM   ', 'ICS  ', 'HIC  ', 'CH   ',
-
 
 !              'C0   ',     !   131:  Command control table      (ncc0)
 !              'CM   ',     !   132:  Material table              (ncm)
@@ -280,7 +264,6 @@
 !              'CH   ',     !   135:  History values      (ch1,ch2,ch3)
 
 !     Contact temporary arrays
-
      &         'CTEM1', 'CTEM2', 'CTEM3', 'CTEM4', 'CTEM5','CTEM6',
      &         'CTEM7', 'CTEM8', 'CTEM9', 'CTE10', 'CTE11','CTE12',
      &         'CTE13', 'CTE14', 'CTE15',
@@ -302,7 +285,6 @@
 !              'CTE15',     !   150:  Contact temporary
 
 !     User temporary arrays
-
      &         'USER1', 'USER2', 'USER3', 'USER4', 'USER5', 'USER6',
      &         'USER7', 'USER8', 'USER9', 'USER0',
 
@@ -318,7 +300,6 @@
 !              'USER0',     !   160:  Temporary array
 
 !     Blending arrays
-
      &         'BNODE', 'BSIDE', 'BTRAN', 'BLEND', 'BFACE', 'BNILR',
 
 !              'BNODE',     !   161:  Super nodes for blending functions
@@ -329,19 +310,16 @@
 !              'BNILR',     !   166:  Blending layer storage
 
 !     Rigid array
-
      &         'RLINK',
 
 !              'RLINK',     !   167:  Rigid body link definitions.
 
 !     Contact element connection array (total active)
-
      &         'IXC  ',
 
 !              'IXC  ',     !   168:  Contact connection array
 
 !     Control arrays for modal analyses
-
      &         'MCTRL', 'CCTRL', 'KCTRL',
 
 !              'MCTRL',     !   169:  Mass      control array
@@ -356,7 +334,6 @@
 !              'SVDX ',     !   175:  Singular valued decomp: X
 
 !     Modal/Rigid node number array
-
      &         'IMODF', 'AFD  ', 'AFL  ', 'AFU  ', 'BFORC',
 
 !              'IMODF',     |   176:  Modal equation numbers
@@ -366,7 +343,6 @@
 !              'BFORC',     |   180:  Modal force vector
 
 !     Additional rigid body and modal arrays
-
      &         'RBEN ','RBOU ','UMOD ',
 
 !              'RBEN',      |   181:  Rigid body number of element
@@ -374,7 +350,6 @@
 !              'UMOD',      |   183:  Modal displacement value
 
 !     Modal data
-
      &         'CTEMP', 'KTEMP', 'MTEMP', 'FSMOD', 'YYMOD', 'WBASE',
 
 !              'CTEMP',     !   184: Modal damping parameters
@@ -385,13 +360,11 @@
 !              'WBASE',     !   189: Modal base solution parameters
 
 !     Node type data
-
      &         'NDTYP',
 
 !              'NDTYP'      !   190: Node type tags
 
 !     Contact variables for surface descriptors
-
      &         'KNOTN', 'SURFP', 'INSEG', 'CNSEG', 'PNSEG', 'XISEG',
 
 !              'KNOTN',     !   191: Node - surface listing
@@ -402,14 +375,12 @@
 !              'XISEG',     !   196: Surface coordinates
 
 !     Stress projection arrays
-
      &         'NS1  ', 'NS2  ',
 
 !              'NS1  ',     !   197:                             (ns1)
 !              'NS2  ',     !   198:                             (ns2)
 
 !     Beam surface plot arrays
-
      &         'MXBEA', 'XBEAM', 'SBEAM', 'WBEAM',
 
 !              'MXBEA',     !   199: Mesh for surface mesh of beams
@@ -418,20 +389,17 @@
 !              'WBEAM',     !   202: Weights for surface mesh
 
 !     Consistent damping arrays
-
      &         'OINDC', 'OINDO',
 
 !              'OINDC',     !   203: Consistent damping eq pointers
 !              'OINDO',     !   204: Consistent damping entry/eqn
 
 !     Slave boundary array
-
      &         'NSLAV',
 
 !              'NSLAV',     !   205: Slave node numbers
 
 !     Normal vector
-
      &         'NORMV','NSCR ','VTILD','DELTX',
 
 !              'NORMV',     !   206: Normal vector (shell use)
@@ -440,11 +408,10 @@
 !              'DELTX',     !   209: Broyden vector 2
 
 !     Interface storage and Lagrange multiplier
-
-     &         'MATCH','LAGRE','LAGRN','ULAGR','HINTE','HINT1',
+     &         'LAGBC','LAGRE','LAGRN','ULAGR','HINTE','HINT1',
      &         'HINT2','HINT3',
 
-!              'MATCH',     !   210: Lagrange multiplier solutions
+!              'LAGBC',     !   210: Lagrange multiplier B.C.
 !              'LAGRE',     !   211: Lagrange multiplier equations
 !              'LAGRN',     !   212: Lagrange multiplier equations
 !              'ULAGR',     !   213: Lagrange multiplier solutions
@@ -454,14 +421,12 @@
 !              'HINT3',     !   217: Interface history variables
 
 !     Zienkiewicz-Zhu Projector arrays
-
      &         'ZZIB ','ZZIP ',
 
 !              'ZZIB ',     !   218: Zienkiewicz-Zhu boundary nodes
 !              'ZZIP ',     !   219: Zienkiewicz-Zhu active nodes
 
 !     Auto contact pointers
-
      &         'ACON2','ASLD2','ACIQ2','ACON3',
 
 !              'ACON2',     !   220: Autocon array: length = numnp
@@ -470,13 +435,11 @@
 !              'ACON3',     !   223: Autocon array :    lg = ip(numnp)*2
 
 !     Contact lagrange multipliers
-
      &         'IAD  ',
 
 !              'IAD  ',     !   224: Contact lagrange multiplier array
 
 !     User solver pointers
-
      &         'USOL1','USOL2','USOL3','USOL4','USOL5','USOL6',
      &         'USOL7','USOL8','USOL9','USOL0',
 
@@ -492,7 +455,6 @@
 !              'USOL0',     !   234: User solver array
 
 !     Diagonal scaling array
-
      &         'DSCA1','DSCA2','DSCA3','DSCA4',
 
 !              'DSCA1',     !   235: Reciprocal to diagonal sqare root
@@ -501,14 +463,12 @@
 !              'DSCA4',     !   238: Reciprocal to diagonal sqare root
 
 !     Interface type array
-
      &         'ITYPE','IEDOF',
 
 !              'ITYPE',     !   239: Interface types
 !              'IEDOF',     !   240: Interface types
 
 !     Surface load real data
-
      &         'SLODR','EULER','LEULR',
 
 !              'SLODR',     !   241: Surface load real data
@@ -516,7 +476,6 @@
 !              'LEULR',     !   243: Euler angles, element
 
 !     Parallel solver arrays
-
      &         'GN   ','EQ   ','DNNZ ','ONNZ ','GETP ',
      &         'GETV ','SENP ','SENV ',
 
@@ -530,7 +489,6 @@
 !              'SENV ',     !   251: Send data node values
 
 !     Mesh partioner (METIS/PARMETIS) arrays
-
      &         'XADJN','NODG ','NODPT','VXDST',
 
 !              'XADJN',     !   252: Pointer for nodal adjacency list
@@ -539,7 +497,6 @@
 !              'VXDST',     !   255: Distribution array
 
 !     Nodal follower forces
-
      &         'NFORC','ELINK','GUVAL',
 
 !              'NFORC',     !   256: Nodal follower forces
@@ -547,7 +504,6 @@
 !              'GUVAL',     !   258: Global equation values
 
 !     Representative volume element for multi-scale analysis
-
      &         'RVELM','FRVEL','SRVEL',
 
 !              'RVELM'      !   259: Representative volume elements
@@ -559,14 +515,12 @@
 !              'IDSAV'      !   262: Eq numbers without multipliers
 
 !     NURB coordinate storage
-
      &         'NURBS','LNURB',
 
 !              'NURBS'      !   263: Nurb weights
 !              'LNURB'      !   264: Nurb local weights
 
 !     Load table storage
-
      &         'LDTAB','LDNOD','LDVAL','SPINS',
 
 !              'LDTAB'      !   265: Load table pointers
@@ -575,14 +529,12 @@
 !              'SPINS'      !   268: Spin node values
 
 !     Representative Volume Element storage
-
      &         'RVEMA','RVESD' ,
 
 !              'RVEMA'      !   269: List of material numbers for RVE
 !              'RVESD'      !   270: List of material numbers for RVE
 
 !     E-spin data
-
      &         'ESPIN','ESPTR','CEPTR','TRIAD','LTRIA',
 
 !              'ESPIN'      !   271: List of nodes to spin
@@ -590,12 +542,10 @@
 !              'CEPTR'      !   273: Pointer array ofr extraction matrix
 
 !     3-d Boundary rotation triad
-
 !              'TRIAD'      !   274: 3-d boundary triads global
 !              'LTRIA'      !   275: 3-d boundary triads element
 
 !     Plot arrays for NURBS/T-spline projections
-
      &         'I_LIN','X_LIN','U_LIN','N_LIN','T_LIN','S_LIN',
      &         'P_LIN','E_LIN','ID_LN','LKNOT','NELEM',
 
@@ -612,7 +562,6 @@
 !              'NELEM',     !   286: NURB submesh nodes
 
 !     T-Spline storage for extraction operators and Bezier extraction
-
      &         'KNOTP','KNOTV','C_E  ','RC_E ','IC_E ','P_BEZ',
      &         'X_BEZ','W_BEZ','IXBEZ',
 
@@ -626,15 +575,13 @@
 !              'W_BEZ'      !   294: NURB Bezier nodes
 !              'IXBEZ'      !   295: NURB Bezier elements
 
-!     PLot arrays for NURBS/T-spline transient
-
+!     Plot arrays for NURBS/T-spline transient
      &         'V_LIN','EC_E ' ,
 
 !              'V_LIN',     !   296: NURB 3-d graphics displacements
 !              'EC_E ',     !   297: NURB 3-d graphics displacements
 
 !     Set memory for nurb nodes, sides, and blends
-
      &         'KNOTS','NSIDE','KTDIV','NBSID','LKSID',
 
 !              'KNOTS'      !   298: List of knot vectors for NURBS
@@ -644,7 +591,6 @@
 !              'LKSID'      !   302: NURB Block length and knot numbers
 
 !     Plot arrays for NURBS/T-spline history variables
-
      &         'HPLTB','HSELM','HDNP ','H_LIN',
 
 !              'HPLTB'      !   303: History plot table
@@ -653,13 +599,11 @@
 !              'H_LIN'      !   306: Global  array for history plots
 
 !     Sparse solver integer array
-
      &         'IPTAN',
 
 !              'IPTAN',     !   307: Sparse integer tangent array
 
 !     NURBS integer array size arrays
-
      &         'KNOTL', 'SIDEL', 'BLOKL', 'KTNUM', 'NBLOK',
      &         'NESID',
 
@@ -671,7 +615,6 @@
 !              'NESID',     !   313:  NURB (nepatch)
 
 !     NURBS Unused
-
      &         'UNUR1', 'UNUR2', 'UNUR3', 'UNUR4', 'UNUR5',
 
 !              'UNUR1',     !   314:  NURB Unused
@@ -681,14 +624,12 @@
 !              'UNUR5',     !   318:  NURB Unused
 
 !     Diagonal Stiffness for nodal stiffness/damper/mass
-
      &         'KNOTE', 'DTANG',
 
 !              'KNOTE',     !   319:  NURB element size
 !              'DTANG',     !   320:  Diagonal for nodal LHS
 
 !     Plot temporary arrays
-
      &         'PTEM1', 'PTEM2', 'PTEM3', 'PTEM4', 'PTEM5',
      &         'PTEM6', 'PTEM7', 'PTEM8', 'PTEM9', 'PTEM0',
 
@@ -704,7 +645,6 @@
 !              'PTEM0',     !   330: Plot temporary variable
 
 !     Hill-Mandel arrays
-
      &         'HILLI', 'HILLG', 'HILLX',
 
 !              'HILLI',     !   331: Hill-Mandel IXL array
@@ -712,7 +652,6 @@
 !              'HILLX',     !   333: Hill-Mandel  XS array
 
 !     Mixed model extraction arrays
-
      &         'CPTMX', 'C_EMX'/
 
 !              'CPTMX',     !   334: Mixed model extraction pointer
@@ -721,7 +660,6 @@
       if(num.eq.0) then
 
 !       Zero pointer arrays
-
         do i = 1,num_nps
           np(i) = 0
         end do ! i
@@ -743,7 +681,6 @@
       endif
 
 !     Check user allocations then do allocation operation
-
       palloc = ualloc(num-llist,name,length,precis)
 
       end function palloc

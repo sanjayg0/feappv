@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2019: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -288,13 +288,13 @@
             reln = rnorm/rel0
           endif
           if(prnt) write(iow,2001) rnorm,reln,tary
-          if(ior.lt.0.and.prnt) write(*,2001) rnorm,reln,tary
+          if((ior.lt.0.and.prnt).or.echo) write(*,2001) rnorm,reln,tary
           fl(7) = .false.
           fl(8) = .false.
           if(abs(aengy).lt.aold) aold = abs(aengy)
         else
           if(prnt) write(iow,2002) tary
-          if(ior.lt.0.and.prnt) write(*,2002) tary
+          if((ior.lt.0.and.prnt) .or. echo) write(*,2002) tary
         endif
 
 !       Set pointers then factor and solve equations

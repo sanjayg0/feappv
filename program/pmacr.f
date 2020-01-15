@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2019: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -76,7 +76,7 @@
       include  'comblk.h'
 
       integer        :: ncomd
-      parameter        (ncomd = 72)
+      parameter        (ncomd = 73)
 
       character (len=128) :: fint
       character (len=15)  :: lct(200)
@@ -102,7 +102,7 @@
 
      2        'tol ','dt  ','loop','next','prop','data','time','prin',
      2        'nopr','tran','init','iden','newf','back','debu','if  ',
-     2        'else','endi',
+     2        'else','endi','echo',
 
      3        'disp','solv','mesh','plot','subs','writ','read','rest',
      3        'velo','acce','bfgs','arcl','save','eige','epri','eigv',
@@ -128,7 +128,7 @@
 
      2            0,     0,     0,     0,     0,     1,     0,     0,
      2            0,     0,     0,     1,     1,     1,     0,     3,
-     2            3,     3,
+     2            3,     3,     0,
 
      3            0,     0,     0,     0,     0,     1,     1,     1,
      3            0,     0,     1,     1,     1,     0,     0,     1,
@@ -150,7 +150,7 @@
      p            4 /
 
       data nwd1,nwd2,nwd3,nwd4,nwd5,nwd6,nwd7,nwd8,nwd9,nwdp
-     &    /  13,  18,  20,  12,   2,   1,   1,   2,   2,   1 /
+     &    /  13,  19,  20,  12,   2,   1,   1,   2,   2,   1 /
 
       if(initf) then
 
@@ -248,6 +248,7 @@
         hadd   = .true.
         hflgu  = .true.
         h3flgu = .true.
+        echo   = .false.
         linear = .false.
         pfl    = .false.
         pfr    = .true.
@@ -360,7 +361,7 @@
       endif
       if((l.ne.1.and.l.ne.ll).and.pfr) then
         if(prnt) write(iow,2001) i,wd(j),lct(l),(ct(k,l),k=1,3),tary
-        if(ior.lt.0.and.prnt) then
+        if((ior.lt.0.and.prnt) .or. echo) then
           write(*,2001) i,wd(j),lct(l),(ct(k,l),k=1,3),tary
         endif
       endif

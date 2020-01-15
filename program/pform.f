@@ -1,11 +1,11 @@
 !$Id:$
-      subroutine pform(ul,xl,tl,ld,p,s,ie,d,id,x,ix,f,t,jp,
+      subroutine pform(ul,xl,tl,ld,p,s,ie,d,eq,x,ix,f,t,jp,
      &                 u,ud,b,a,al,ndd,nie,ndf,ndm,nen1,nst,
      &                 afl,bfl,dfl,isw,nn1,nn2,nn3)
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2019: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -14,7 +14,7 @@
 !      Inputs:
 !         ie(nie,*)   - Assembly information for material set
 !         d(ndd,*)    - Material set parameters
-!         id(ndf,*)   - Equation numbers for each active dof
+!         eq(ndf,*)   - Equation numbers for each active dof
 !         x(ndm,*)    - Nodal coordinates of mesh
 !         ix(nen1,*)  - Element nodal connections of mesh
 !         f(ndf,*,2)  - Nodal force and displacement values
@@ -49,7 +49,6 @@
 !         a(*)        - Global matrix, diagonal and upper part
 !         al(*)       - Global matrix, lower part
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'cdata.h'
@@ -58,7 +57,6 @@
       include  'elcount.h'
       include  'eldata.h'
       include  'elplot.h'
-      include  'eluser.h'
       include  'eqsym.h'
       include  'erotas.h'
       include  'fdata.h'
@@ -88,7 +86,7 @@
       integer       :: numnp2, ndf, ndm, nrot, ndd, nie, nen1
       real (kind=8) :: un(20), dun(20), temp, prope
 
-      integer       :: ld(*), ie(nie,*), id(ndf,*), ix(nen1,*), jp(*)
+      integer       :: ld(*), ie(nie,*), eq(ndf,*), ix(nen1,*), jp(*)
       real (kind=8) :: xl(ndm,*), p(nst,*),s(nst,*), d(ndd,*),ul(nst,*)
       real (kind=8) :: x(ndm,*) ,f(ndf,numnp),u(ndf,*),ud(*),t(*),tl(*)
       real (kind=8) :: b(*), a(*), al(*)
@@ -96,17 +94,14 @@
       save
 
 !     Set element proportional loading value
-
       prope = theta(3)*(prop - propo) + propo
 
 !     Recover nh1, nh2, nh3 pointers
-
       nh1 = np(50)
       nh2 = np(51)
       nh3 = np(52)
 
 !     Set program and user material count parameters
-
       do i = 1,10
         nomats(1,i) = 0
         nomats(2,i) = 0
@@ -115,7 +110,6 @@
       end do ! i
 
 !     Set up local arrays before calling element library
-
       iel = 0
       efl = .false.
       if(.not.dfl.and.isw.eq.6) efl = .true.
@@ -131,7 +125,6 @@
       endif
 
 !     Set stiffness, damping and mass pointers
-
       nl1    = ndf*nen + 1
       numnp2 = numnp + numnp
       nneq   = numnp*ndf
@@ -141,31 +134,26 @@
       nrvn   = nrt*nneq - nneq - nneq
 
 !     Loop over active elements
-
       do n = nn1,nn2,nn3
 
         n_el = n
 
 !       Check for active regions
-
         if((nreg.lt.0 .and. ix(nen1-1,n).ge.0)
      &                .or. (abs(ix(nen1-1,n)).eq.nreg)) then
 
 !        Set up local arrays
-
          nov = 0        ! Prevent accumualtion of projection weight
          do ma = 1, nummat
 
           if(ie(nie-2,ma).eq.ix(nen1,n)) then
 
 !           Compute address and offset for history variables
-
             ht1 = np(49) + ix(nen+1,n) + ie(nie-3,ma)
             ht2 = np(49) + ix(nen+2,n) + ie(nie-3,ma)
             ht3 = np(49) + ix(nen+3,n) + ie(nie-4,ma)
 
 !           If history variables exist move into nh1,nh2
-
             if(ie(nie,ma).gt.0) then
               do i = 0,ie(nie,ma)-1
                 hr(nh1+i) = hr(ht1+i)
@@ -174,7 +162,6 @@
             endif
 
 !           If Element variables exist move into nh3
-
             if(ie(nie-5,ma).gt.0) then
               do i = 0,ie(nie-5,ma)-1
                 hr(nh3+i) = hr(ht3+i)
@@ -186,13 +173,12 @@
             rotyp = ie(nie-6,ma)
 
 !           Set local arrays for element
-
             fp(1) = ndf*nen*(ma-1) + np(240)        ! iedof
-            call plocal(ld,id,mr(np(31)+nneq),ix(1,n),mr(fp(1)),xl,ul,
+            call plocal(ld,eq,mr(np(31)+nneq),ix(1,n),ie(1,ma),
+     &                  mr(fp(1)),xl,ul,
      &                  tl,p(1,3),x,f,u,ud,t,un,dun, nrot, dfl, jsw)
 
 !           Form element array - rotate parameters if necessary
-
             if(nrot.gt.0) then
               if(iel.gt.0) then
                 call ptrans(ia(1,iel),hr(np(46)),ul,p,s,
@@ -220,11 +206,9 @@
      &                  ndf,ndm,nst,iel,jsw)
 
 !           Store time history plot data from element
-
             if(jsw.eq.6) then
 
 !             Standard element values
-
               do i = 1,nsplts
                 if(ispl(1,i).eq.n) then
                   jj = max(ispl(2,i),1)
@@ -233,7 +217,6 @@
               end do
 
 !             Standard user element values
-
               do i = 1,nuplts
                 if(iupl(1,i).eq.n) then
                   jj = max(iupl(2,i),1)
@@ -244,7 +227,6 @@
             endif
 
 !           Modify for rotated dof's
-
             if(nrot.gt.0) then
               if(iel.gt.0) then
                 call ptrans(ia(1,iel),hr(np(46)),ul,p,s,
@@ -264,7 +246,6 @@
             endif
 
 !           Position update terms 'nt1,nt2' from 'nh1,nh2' to save
-
             if(hflgu .and. ie(nie,ma).gt.0) then
               do i = 0,ie(nie,ma)-1
                 temp      = hr(ht1+i)
@@ -277,7 +258,6 @@
             endif
 
 !           Position update terms 'nt3' from 'nh3' to save
-
             if(h3flgu .and. ie(nie-5,ma).gt.0) then
               do i = 0,ie(nie-5,ma)-1
                 hr(ht3+i) = hr(nh3+i)
@@ -285,7 +265,6 @@
             endif
 
 !           Modify for non-zero displacement boundary conditions
-
             mdfl = .false.
             do i = 1,ndf
               if(dun(i).gt.1.0d-10*un(i)) then
@@ -297,7 +276,6 @@
             if(efl.and.mdfl) then
 
 !             Get current element tangent matrix
-
               if (.not.afl) then
                 dm = prop
                 call elmlib(d(1,ma),ul,xl,ix(1,n),tl,s,p,
@@ -321,8 +299,7 @@
                 endif
               end if
 
-!             Modify for displacements
-
+!             Modify for specified non-zero nodal displacements
               do i = 1,nst
                 p(i,3) = p(i,3)*cc3
               end do
@@ -330,7 +307,6 @@
             end if
 
 !           Add to total array
-
             pstyp = ie(1,ma)
             call passble(s,p,ld,ix(1,n), jp,a,al,b,
      &                   afl,bfl, nst,nov, jsw)

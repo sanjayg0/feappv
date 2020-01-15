@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2019: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -61,6 +61,7 @@
       include  'ptdat3.h'
       include  'ptdat5.h'
       include  'ptdat7.h'
+      include  'ptdat8.h'
       include  'rdata.h'
       include  'rdat0.h'
       include  'rdat1.h'
@@ -856,6 +857,13 @@
         irpl(1,nrplts) = ndf*(n-1)+i
         irpl(2,nrplts) = n
 
+!     User Stresses
+
+      elseif(pcomp(vtype(1),'user',4)) then
+        nuplts         = min(npmx,nuplts + 1)
+        iupl(1,nuplts) = n
+        iupl(2,nuplts) = i
+
 !     Arclength
 
       elseif(pcomp(vtype(1),'arcl',4)) then
@@ -954,6 +962,7 @@
         end do ! k1
       else
 
+        write(*,*) ' CALL OPTID_feappv'
         optflg = .false.
         optmsh = .true.
         call optid()
@@ -1001,14 +1010,23 @@
 
 2011  format(/,
      &  '   C u r r e n t    S o l u t i o n    P a r a m e t e r s',/
-     &  /,'     Number nodes  =',i8,4x,' :  Number elements  =',i8,/
-     &    '     Number matls  =',i8,4x,' :  Number equations =',i8,/
-     &    '     Profile terms =',i8,4x,' :  Avg. column      =',i8,/
-     &    '     Time          =',e12.4,' :  Max. energy norm =',e12.4,/
-     &    '     Dt            =',e12.4,' :  Energy norm      =',e12.4,/
-     &    '     Tol           =',e12.4,' :  Augment factor   =',e12.4,/
-     &    '     Prop load     =',e12.4,' :  Time integration =',i8,/
-     &    '     No. Steps     =',i8,4x,' :  No. Iterations   =',i8)
+     &  /,'     Number Nodes  =',i8,4x,
+     &    '  :  Number elements  =',i8,/
+     &    '     Number Matls  =',i8,4x,
+     &    '  :  Number equations =',i8,/
+     &    '     Profile terms =',i8,4x,
+     &    '  :  Avg. column      =',i8,/
+     &    '     Time          =',1p,1e12.4,
+     &    '  :  Max. energy norm =',1p,1e12.4,/
+     &    '     Dt            =',1p,1e12.4,
+     &    '  :  Energy norm      =',1p,1e12.4,/
+     &    '     Tol           =',1p,1e12.4,
+     &    '  :  Augment factor   =',1p,1e12.4,/
+     &    '     Prop load     =',1p,1e12.4,
+     &    '  :  Time integration =',i8,/
+     &    '     No. Steps     =',i8,4x,
+     &    '  :  No. Iterations   =',i8)
+
 2012  format(/'   Output interval for time history data =',i4)
 
 !     Warnings and errors

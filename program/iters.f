@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2019: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -35,29 +35,28 @@
       include  'ssolve.h'
 
       logical       :: setvar,palloc
-      integer       :: isw,len,kp,bkmax, iptc
+      integer       :: isw,len,kp,bkmax, iptc, u1
       real (kind=4) :: tary(2), etime , tt
 
       save
 
 !     Compute sparse storage for non-zero matrix
-
       if(isw.gt.0) then
-        setvar = palloc(111,'TEMP1', numnp*ndf, 1)
-        call elcnt(numnp,numel,nen,nen1,mr(np(33)),mr(np(111)),.true. )
+        u1 = max(numnp*neq,neq)
+        setvar = palloc(111,'TEMP1', 1, 1)
+        call pzeroi(mr(np(111)),u1)
+        call elcnt(numnp,numel,nen,nen1,mr(np(33)),mr(np(111)))
         call sumcnt(mr(np(111)),numnp*ndf,kp)
 
         setvar = palloc(112,'TEMP2', kp, 1)
-        call pelcon(numel,nen,nen1,mr(np(33)),mr(np(111)),mr(np(112)),
-     &              kp,1)
+        call pelcon(numel,nen,nen1,mr(np(33)),mr(np(31)),
+     &              mr(np(111)),mr(np(112)),kp,1)
       endif
 
 !     1. TANGENT Formation
-
       if(isw.eq.1) then
 
 !       Slot for user supplied sparse solver
-
         if(ittyp.eq.-2) then
           iptc   = 1
 !         ubycol =
@@ -67,7 +66,6 @@
 !         nspo   =
 
 !       Program solvers with sparse assembly
-
         else
           kbycol = .true.     ! Store by columns
           kdiag  = .false.
@@ -90,23 +88,19 @@
      &              kbycol,kdiag,kall)
 
 !       Delete temporary arrays
-
         setvar = palloc(112,'TEMP2', 0, 1)
         setvar = palloc(111,'TEMP1', 0, 1)
 
 !       Set storage for sparse stiffness array
-
         if(ittyp.eq.-1) then
 
           kp  = max(kp+neq,bkmax)
           len = kp
 
 !       User supplied sparse solver location
-
         elseif(ittyp.eq.-2) then
 
 !       Profile solver assembly
-
         else
 
           kp  = kp + neq
@@ -124,7 +118,6 @@
         compfl = .true.
 
 !     2. Consistent MASS Formation
-
       elseif(isw.eq.2) then
         mbycol = .true.       ! Store by columns
         mdiag  = .false.
@@ -144,17 +137,14 @@
      &               mbycol,mdiag,mall)
 
 !       Delete temporary arrays
-
         setvar = palloc(112,'TEMP2', 0, 1)
         setvar = palloc(111,'TEMP1', 0, 1)
 
 !       Allocate mass storage
-
         nnm = kp  + neq
         setvar = palloc(9,'CMAS1', nnm, 2)
 
 !     3. Consistent DAMP Formation
-
       elseif(isw.eq.3) then
         cbycol = .true.       ! Store by columns
         cdiag  = .false.
@@ -174,12 +164,10 @@
      &               cbycol,cdiag,call)
 
 !       Delete temporary arrays
-
         setvar = palloc(112,'TEMP2', 0, 1)
         setvar = palloc(111,'TEMP1', 0, 1)
 
 !       Allocate mass storage
-
         nnc = kp  + neq
         setvar = palloc(17,'DAMP1', nnc, 2)
 
@@ -191,7 +179,6 @@
       endif
 
 !     Output solution properties
-
       tt = etime(tary)
       write(iow,2000) kp,tary
       if(ior.lt.0) then

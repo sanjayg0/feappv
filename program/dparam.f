@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2019: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -13,8 +13,8 @@
 !        ct(3)   := Algorithmic parameters
 !        lct     := 'off ' (noi=0)  Standard Static
 !                   'newm' (noi=1)  Classical Newmark
-!                   'GNpj' (noi=1)  Generalized Newmark
-!                   'SSpj' (noi=2)  Weighted residual FE
+!                   'GNpj' (noi=2)  Generalized Newmark
+!                   'SSpj' (noi=3)  Weighted residual FE
 
 !                   'user' (noi=-1) User time integration routine
 !                   'init'          Initialize the nrt variable
@@ -41,20 +41,20 @@
       logical       :: pcomp
       integer       :: i
 
-      integer       :: ntot(2)
+      integer       :: ntot(3)
       real (kind=8) :: ct(3)
 
       save
 
 !     Set maximum number of vectors for each integration type
-      data ntot/   2 ,   4 /
-!                GNpj, SSpj
+      data ntot/   2 ,  2 ,   4 /
+!                NEWM, GNpj, SSpj
 
 !     Initialize the nrt variable
 
       if(pcomp(lct,'init',4)) then
 
-        nrt = max(ntot(1),ntot(2))
+        nrt = max(ntot(1),ntot(2),ntot(3))
         i   = 0
         call uparam(ct,nrk,nrc,nrm,i,0)
         nrt = max(nrt,i) + 2
@@ -67,30 +67,33 @@
 
         dynflg = .true.
 
-!       GNpj or Classical Newmark-beta method
-
-        if(pcomp(lct,'    ',4).or.pcomp(lct,'newm',4).or.
-     &     pcomp(lct,'gn11',4).or.pcomp(lct,'gn22',4)) then
+!       Classical Newmark-beta method
+        if(pcomp(lct,'    ',4).or.pcomp(lct,'newm',4)) then
 
 !         Location for stiffness, damping and mass
-
           noi = 1
           nrk = 0
           nrc = 1
+          nrm = 2
 
 !         Newmark ct(1) = beta  ;  ct(2) = gamma
+          if(ct(1).eq.0.0d0) ct(1) = 0.25d0
+          if(ct(2).eq.0.0d0) ct(2) = 0.5d0
 
-          if(pcomp(lct,'    ',4).or.pcomp(lct,'newm',4)) then
+          write(iow,2011) ct(1),ct(2)
+          if(ior.lt.0) write(*,2011) ct(1),ct(2)
+          ct(3) = 1.0d0
 
-            if(ct(1).eq.0.0d0) ct(1) = 0.25d0
-            if(ct(2).eq.0.0d0) ct(2) = 0.5d0
+!       GNpj method
+        elseif(pcomp(lct,'gn11',4).or.pcomp(lct,'gn22',4)) then
 
-            write(iow,2011) ct(1),ct(2)
-            if(ior.lt.0) write(*,2011) ct(1),ct(2)
-            ct(1) = 2.d0*ct(1)
-            nrm   = 2
+!         Location for stiffness, damping and mass
 
-          elseif(pcomp(lct,'gn11',4)) then
+          noi = 2
+          nrk = 0
+          nrc = 1
+
+          if(pcomp(lct,'gn11',4)) then
 
             if(ct(1).eq.0.0d0) ct(1) = 1.0d0
             ct(2) = 0.0d0
@@ -110,10 +113,9 @@
           ct(3) = 1.0d0
 
 !       SSpj Algorithm
-
         elseif(pcomp(lct,'ss11',4).or.pcomp(lct,'ss22',4)) then
 
-          noi = 2
+          noi = 3
           nrk = 0
           nrc = 1
 
@@ -140,7 +142,6 @@
           ct(3) = 1.0d0
 
 !       User time integration routine
-
         elseif(pcomp(lct,'user',4)) then
 
           noi    = -1
@@ -149,7 +150,6 @@
           fl(9)  = dynflg
 
 !       Standard static algorithm (noi = 0)
-
         elseif(pcomp(lct,'stat',4).or.pcomp(lct,'off',3)) then
 
           noi     = 0
@@ -172,7 +172,6 @@
           if(ior.lt.0) write(*,2000)
 
 !       ERROR - write message
-
         else
 
           if(ior.lt.0) then
@@ -184,7 +183,6 @@
         endif
 
 !       Transfer values to 'theta' in common /ddata/
-
         do i = 1,3
           theta(i) = ct(i)
         end do

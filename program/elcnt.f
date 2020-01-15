@@ -1,9 +1,9 @@
 !$Id:$
-      subroutine elcnt(numnp, numel, nen, neix, ix, ic,  flag)
+      subroutine elcnt(numnp, numel, nen, neix, ix, ic)
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2019: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -29,7 +29,6 @@
       include  'pointer.h'
       include  'sdata.h'
 
-      logical       :: flag
       integer       :: i,j,k,n
       integer       :: numnp, numel, nen, neix
       integer       :: ix(neix, *), ic(*), nty
@@ -37,8 +36,6 @@
       save
 
 !     Count number of elements attached to each node.
-
-      if(flag) call pzeroi(ic, numnp*ndf)
       do i = 1, numel
         do j =  1, nen
           n = ix(j,i)
@@ -48,19 +45,24 @@
               if(nty.gt.0) ic(nty) = ic(nty) + 1
             end do ! k
           end if ! n > 0
-        end do
-      end do
+        end do ! j
+      end do ! i
+
+!     Element equation treatment
+      if(np(210).ne.0) then
+        call elcntl(mr(np(32)),ix,mr(np(210)), ic)
+      endif
 
       end subroutine elcnt
 
-      subroutine sumcnt(ic,nneq,kp)
+      subroutine sumcnt(ic,neq,kp)
 
 !-----[--.----+----.----+----.-----------------------------------------]
 !      Purpose: Sum counts to get storage of connections
 
 !      Inputs:
 !          ic(*)  - Array of 'heights'
-!          nneq   - Number of entries
+!          neq    - Number of entries
 
 !      Outputs:
 !          ic(*)  - Pointer array
@@ -68,13 +70,12 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit   none
 
-      integer       :: i,kp,nneq,ic(*)
+      integer       :: i,kp,neq,ic(*)
 
 !     Set up pointers.
-
-      do i = 2, nneq
+      do i = 2, neq
          ic(i) = ic(i) + ic(i-1)
       end do
-      kp = ic(nneq)
+      kp = ic(neq)
 
       end subroutine sumcnt

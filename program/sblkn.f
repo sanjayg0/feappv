@@ -4,7 +4,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2019: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -165,6 +165,6 @@
 
 2003  format(/'  N o d a l   C o o r d i n a t e s'//6x,'Node',5(i7,a6))
 
-2004  format(i10,5f13.4)
+2004  format(i10,1p,5e13.4)
 
       end subroutine sblkn

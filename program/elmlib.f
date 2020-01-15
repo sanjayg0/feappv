@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2019: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -32,8 +32,7 @@
       include  'eldata.h'
       include  'iofile.h'
 
-      integer       :: i,j,k,jel,isw
-      integer       :: ix(*)
+      integer       :: i,j,k,jel,isw, ix(*)
       real (kind=8) :: p(*),s(*),d(*),u(*),x(*),t(*)
 
       save
@@ -43,162 +42,160 @@
         call pzero(p,k  )
       endif
 
+!     User element routines
       if(jel.gt.0) then
 
-        go to ( 1, 2, 3, 4, 5, 6, 7, 8, 9,10,11,12,13,14,15), jel
-        go to 400
+        if(    jel.eq. 1) then
+          call elmt01(d,u,x,ix,t,s,p,i,j,k,isw)
+        elseif(jel.eq. 2) then
+          call elmt02(d,u,x,ix,t,s,p,i,j,k,isw)
+        elseif(jel.eq. 3) then
+          call elmt03(d,u,x,ix,t,s,p,i,j,k,isw)
+        elseif(jel.eq. 4) then
+          call elmt04(d,u,x,ix,t,s,p,i,j,k,isw)
+        elseif(jel.eq. 5) then
+          call elmt05(d,u,x,ix,t,s,p,i,j,k,isw)
+        elseif(jel.eq. 6) then
+          call elmt06(d,u,x,ix,t,s,p,i,j,k,isw)
+        elseif(jel.eq. 7) then
+          call elmt07(d,u,x,ix,t,s,p,i,j,k,isw)
+        elseif(jel.eq. 8) then
+          call elmt08(d,u,x,ix,t,s,p,i,j,k,isw)
+        elseif(jel.eq. 9) then
+          call elmt09(d,u,x,ix,t,s,p,i,j,k,isw)
+        elseif(jel.eq.10) then
+          call elmt10(d,u,x,ix,t,s,p,i,j,k,isw)
+        elseif(jel.eq.11) then
+          call elmt11(d,u,x,ix,t,s,p,i,j,k,isw)
+        elseif(jel.eq.12) then
+          call elmt12(d,u,x,ix,t,s,p,i,j,k,isw)
+        elseif(jel.eq.13) then
+          call elmt13(d,u,x,ix,t,s,p,i,j,k,isw)
+        elseif(jel.eq.14) then
+          call elmt14(d,u,x,ix,t,s,p,i,j,k,isw)
+        elseif(jel.eq.15) then
+          call elmt15(d,u,x,ix,t,s,p,i,j,k,isw)
+        else
+          go to 400
+        endif
 
-1       call elmt01(d,u,x,ix,t,s,p,i,j,k,isw)
-        go to 100
-2       call elmt02(d,u,x,ix,t,s,p,i,j,k,isw)
-        go to 100
-3       call elmt03(d,u,x,ix,t,s,p,i,j,k,isw)
-        go to 100
-4       call elmt04(d,u,x,ix,t,s,p,i,j,k,isw)
-        go to 100
-5       call elmt05(d,u,x,ix,t,s,p,i,j,k,isw)
-        go to 100
-6       call elmt06(d,u,x,ix,t,s,p,i,j,k,isw)
-        go to 100
-7       call elmt07(d,u,x,ix,t,s,p,i,j,k,isw)
-        go to 100
-8       call elmt08(d,u,x,ix,t,s,p,i,j,k,isw)
-        go to 100
-9       call elmt09(d,u,x,ix,t,s,p,i,j,k,isw)
-        go to 100
-10      call elmt10(d,u,x,ix,t,s,p,i,j,k,isw)
-        go to 100
-11      call elmt11(d,u,x,ix,t,s,p,i,j,k,isw)
-        go to 100
-12      call elmt12(d,u,x,ix,t,s,p,i,j,k,isw)
-        go to 100
-13      call elmt13(d,u,x,ix,t,s,p,i,j,k,isw)
-        go to 100
-14      call elmt14(d,u,x,ix,t,s,p,i,j,k,isw)
-        go to 100
-15      call elmt15(d,u,x,ix,t,s,p,i,j,k,isw)
-        go to 100
+!     Program element library routines
+      elseif(isw.gt.0) then
 
-      else
-
+!       1-D Element library
         if(j.eq.1) then
 
-          go to(101,102,103,104,105,106,107,108,109), -jel
+          if(    jel.eq. -1) then
+            call solid1d(d,u,x,ix,t,s,p,i,j,k,isw)
+          elseif(jel.eq. -2) then
+            call trussnd(d,u,x,ix,t,s,p,i,j,k,isw)
+          elseif(jel.eq. -3) then
+            write(iow,*) ' No 1-d frame element available. n_el =',n_el
+            write(  *,*) ' No 1-d frame element available. n_el =',n_el
+            call plstop(.true.)
+          elseif(jel.eq. -4) then
+            write(iow,*) ' No 1-d plate element available. n_el =',n_el
+            write(  *,*) ' No 1-d plate element available. n_el =',n_el
+            call plstop(.true.)
+          elseif(jel.eq. -5) then
+            write(iow,*) ' No 1-d shell element available. n_el =',n_el
+            write(  *,*) ' No 1-d shell element available. n_el =',n_el
+            call plstop(.true.)
+          elseif(jel.eq. -6) then
+            write(iow,*) ' No 1-d membrane element available.',
+     &                   '  n_el =',n_el
+            write(  *,*) ' No 1-d membrane element available.',
+     &                   '  n_el =',n_el
+            call plstop(.true.)
+          elseif(jel.eq. -7) then
+            write(iow,*) ' No 1-d thermal element available.',
+     &                   '  n_el =',n_el
+            write(  *,*) ' No 1-d thermal element available.',
+     &                   '  n_el =',n_el
+            call plstop(.true.)
+          elseif(jel.eq. -8) then
+            write(iow,*) ' No 1-d thermal convectionelement available.',
+     &                   '  n_el =',n_el
+            write(  *,*) ' No 1-d thermal convectionelement available.',
+     &                   '  n_el =',n_el
+            call plstop(.true.)
+          elseif(jel.eq. -9) then
+            call pointnd(d,u,s,p,i,k,isw)
+          else
+            go to 400
+          endif
 
-          go to 400
-
-!         1-D solid
-
-101       call solid1d(d,u,x,ix,t,s,p,i,j,k,isw)
-          go to 100
-
-102       call trussnd(d,u,x,ix,t,s,p,i,j,k,isw)
-          go to 100
-
-103       write(*,*) ' No 1-d frame element available.'
-          call plstop(.true.)
-
-104       write(*,*) ' No 1-d plate element available.'
-          call plstop(.true.)
-
-105       write(*,*) ' No 1-d shell element available.'
-          call plstop(.true.)
-
-106       write(*,*) ' No 1-d membrane element available.'
-          call plstop(.true.)
-
-107       write(*,*) ' No 1-d thermal element available.'
-          call plstop(.true.)
-
-108       write(*,*) ' No 1-d thermal convection element available.'
-          call plstop(.true.)
-
-109       call pointnd(d,u,s,p,i,k,isw)
-          go to 100
-
+!       2-D element library
         elseif(j.eq.2) then
 
-          go to(201,202,203,204,205,206,207,208,209), -jel
+          if(    jel.eq. -1) then
+            call solid2d(d,u,x,ix,t,s,p,i,j,k,isw)
+          elseif(jel.eq. -2) then
+            call trussnd(d,u,x,ix,t,s,p,i,j,k,isw)
+          elseif(jel.eq. -3) then
+            call frame2d(d,u,x,ix,s,p,i,j,k,isw)
+          elseif(jel.eq. -4) then
+            call plate2d(d,u,x,ix,s,p,i,j,k,isw)
+          elseif(jel.eq. -5) then
+            call shell2d(d,u,x,ix,s,p,i,j,k,isw)
+          elseif(jel.eq. -6) then
+            write(iow,*) ' No 2-d membrane element available.',
+     &                   '  n_el =',n_el
+            write(  *,*) ' No 2-d membrane element available.',
+     &                   '  n_el =',n_el
+            call plstop(.true.)
+          elseif(jel.eq. -7) then
+            call therm2d(d,u,x,ix,s,p,i,j,k,isw)
+          elseif(jel.eq. -8) then
+            call convec2d(d,u,x,ix,s,p,i,j,k,isw)
+          elseif(jel.eq. -9) then
+            call pointnd(d,u,s,p,i,k,isw)
+          else
+            go to 400
+          endif
 
-          go to 400
-
-!         2-D solid
-
-201       call solid2d(d,u,x,ix,t,s,p,i,j,k,isw)
-          go to 100
-
-202       call trussnd(d,u,x,ix,t,s,p,i,j,k,isw)
-          go to 100
-
-203       call frame2d(d,u,x,ix,s,p,i,j,k,isw)
-          go to 100
-
-204       call plate2d(d,u,x,ix,s,p,i,j,k,isw)
-          go to 100
-
-205       call shell2d(d,u,x,ix,s,p,i,j,k,isw)
-          go to 100
-
-206       write(*,*) ' No 2-d membrane element available.'
-          call plstop(.true.)
-
-207       call therm2d(d,u,x,ix,s,p,i,j,k,isw)
-          go to 100
-
-208       call convec2d(d,u,x,ix,s,p,i,j,k,isw)
-          go to 100
-
-209       call pointnd(d,u,s,p,i,k,isw)
-          go to 100
-
+!       3-D Element library
         elseif(j.eq.3) then
 
-          go to(301,302,303,304,305,306,307,308,309), -jel
-
-          go to 400
-
-!         3-D solid
-
-301       call solid3d(d,u,x,ix,t,s,p,i,j,k,isw)
-          go to 100
-
-302       call trussnd(d,u,x,ix,t,s,p,i,j,k,isw)
-          go to 100
-
-303       call frame3d(d,u,x,ix,s,p,i,j,k,isw)
-          go to 100
-
-304       write(*,*) ' No 3-d plate element available: Use SHELL.'
-          call plstop(.true.)
-
-305       call shell3d(d,u,x,ix,s,p,i,j,k,isw)
-          go to 100
-
-306       call membr3d(d,u,x,ix,s,p,i,j,k,isw)
-          go to 100
-
-307       call therm3d(d,u,x,ix,s,p,i,j,k,isw)
-          go to 100
-
-308       call convec3d(d,u,x,ix,s,p,i,j,k,isw)
-          go to 100
-
-309       call pointnd(d,u,s,p,i,k,isw)
-          go to 100
+          if(    jel.eq. -1) then
+            call solid3d(d,u,x,ix,t,s,p,i,j,k,isw)
+          elseif(jel.eq. -2) then
+            call trussnd(d,u,x,ix,t,s,p,i,j,k,isw)
+          elseif(jel.eq. -3) then
+            call frame3d(d,u,x,ix,s,p,i,j,k,isw)
+          elseif(jel.eq. -4) then
+            write(iow,*) ' No 3-d plate element available:',
+     &                   '  Use SHELL.',n_el
+            write(  *,*) ' No 3-d plate element available:',
+     &                   '  Use SHELL.',n_el
+            call plstop(.true.)
+          elseif(jel.eq. -5) then
+            call shell3d(d,u,x,ix,s,p,i,j,k,isw)
+          elseif(jel.eq. -6) then
+            call membr3d(d,u,x,ix,s,p,i,j,k,isw)
+          elseif(jel.eq. -7) then
+            call therm3d(d,u,x,ix,s,p,i,j,k,isw)
+          elseif(jel.eq. -8) then
+            call convec3d(d,u,x,ix,s,p,i,j,k,isw)
+          elseif(jel.eq. -9) then
+            call pointnd(d,u,s,p,i,k,isw)
+          else
+            go to 400
+          endif
 
         endif
+
       endif
 
-100   return
+      return
 
 !     Error
-
-400   if(ior.gt.0) write(iow,4000) n_el,jel
-      if(ior.lt.0) write(  *,4000) n_el,jel
+400   write(iow,4000) n_el,jel,isw
+      write(  *,4000) n_el,jel,isw
       call plstop(.true.)
 
 !     Format
-
-4000  format('  *ERROR* Element:',i6,', type number',i3,' input')
+4000  format('  *ERROR* ELMLIB: Element:',i6,', type number',i3,
+     &       ' input, isw =', i3)
 
       end subroutine elmlib

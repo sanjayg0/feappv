@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2019: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -45,7 +45,7 @@
       integer       :: ndf,ndm,nst,isw
       integer       :: i,i1, j,jj,j1, l, nn,nhv, istrt
 
-      real (kind=8) :: bdb,bd3,dl,dc,di,dvol0,dvol,dmas0, jac0
+      real (kind=8) :: bdb,bd3,dl,dc,di,dvol0,dmas0, jac0
       real (kind=8) :: cfac,lfac,xx1,xx2, tempi, ta, xlamd,ha
 
       integer       :: ix(*)
@@ -131,7 +131,7 @@
             shpr(i) = 0.0d0
           end do ! i
         end if
-        dvol  = dvol0*detf(1,l)
+        dvol(l)  = dvol0*detf(1,l)
         dmas0 = dvol0*d(4)
 
 !       Compute Cauchy stresses and spatial tangent tensor
@@ -176,10 +176,10 @@
 
 !         Multiply tangent moduli and stresses by volume element.
 
-          sigl(1:4,l) = sigl(1:4,l)*dvol
+          sigl(1:4,l) = sigl(1:4,l)*dvol(l)
           do i = 1,4
             do j = 1,4
-              dd(i,j) = ds(i,j,1)*dvol*ctan(1)
+              dd(i,j) = ds(i,j,1)*dvol(l)*ctan(1)
             end do
           end do
 

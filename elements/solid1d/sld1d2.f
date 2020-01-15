@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2019: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -48,8 +48,8 @@
       real (kind=8) :: d(*),      ul(ndf,nen,*), xl(ndm,*),    tl(*)
       real (kind=8) :: r(ndf,*),  xx(10),        aa(6,6,5,10), dd(7,7)
       real (kind=8) :: sigm(9),   sigl(16,10),   bpra(3),      bbar(8,8)
-      real (kind=8) :: phi(3,10), theta(3,10),   hh(3,3),      bbd(7)
-      real (kind=8) :: press(10), pbar(10),      hsig(6),      eps(6,10)
+      real (kind=8) :: theta(3,10),   hh(3,3),      bbd(7)
+      real (kind=8) :: pbar(10),      hsig(6),      eps(6,10)
       real (kind=8) :: irad(10),  jrad(10),      epsd(3),      epsv(10)
       real (kind=8) :: bf(3),     epsl(3,10),    ta(10) ,      s(nst,*)
 

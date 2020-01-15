@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2019: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -53,7 +53,7 @@
       real (kind=8) :: sig(10,9),eps(9,3)
       real (kind=8) :: gg(5,8),hh(5,5),bb(5),hg(5,8),dui(5),dd(6,6,5,9)
       real (kind=8) :: ss(8,8),shpr(9,9),sigl(6),aa(6,6,9)
-      real (kind=8) :: bd(6,2),dvol(9),r0(9)
+      real (kind=8) :: bd(6,2),r0(9)
 
       save
 

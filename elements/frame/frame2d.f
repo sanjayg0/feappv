@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2019: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -18,8 +18,9 @@
 !       nen  - Two node element (nel = 2)        >= 2
 
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
+
+      include  'debugs.h'
 
       include  'bdata.h'
       include  'cdata.h'
@@ -40,31 +41,26 @@
       save
 
 !     INPUT MATERIAL PARAMETERS
-
       if(isw.eq.1) then
         if(ior.lt.0) write(*,2000)
         write(iow,2000)
         call inmate(d,tdof,3*2,3)
 
 !       Set plot sequence
-
         pstyp = 1
 
 !       Check dimensions
-
         if(ndm.ne.2 .or. ndf.lt.3 .or. nen.lt.2) then
           write(iow,3000) ndm,ndf,nen
           call plstop(.true.)
         endif
 
 !       Deactivate dof in element for dof > 3
-
         do i = 4,ndf
           ix(i) = 0
         end do
 
 !       Check for geometric storage for finite deformation element
-
         if(d(18).lt.0.0d0 ) then
           if(d(79).eq.0.0d0) then
             call framf2d(d,ul,xl,ix,s,p,ndf,ndm,nst,isw)
@@ -74,7 +70,6 @@
         endif
 
 !     CHECK ELEMENT FOR ERRORS
-
       elseif(isw.eq.2) then
 
         cs = xl(1,2) - xl(1,1)
@@ -91,41 +86,38 @@
         endif
 
 !     COMPUTE ELEMENT ARRAYS
-
       else
 
 !       Small deformaion
-
         if(d(18).gt.0.0d0 ) then
 
 !         Shear deformable (2-node: linear interpolations)
-
           if(d(79).eq.0.0d0) then
             call frams2d(d,ul,xl,ix,s,p,ndf,ndm,nst,isw)
 
 !         Euler-Bernoulli  (2-node: cubic interpolations)
-
           else
             call frans2d(d,ul,xl,s,p,ndf,ndm,nst,isw)
           endif
 
 !       Finite deformation (2-node: linear interpolations)
-
         else
 
 !         Shear deformable (2-node: linear, finite displacements)
-
           if(d(79).eq.0.0d0) then
 
             call framf2d(d,ul,xl,ix,s,p,ndf,ndm,nst,isw)
 
 !         No shear case    (2-node: cubic, 2-nd order displacements)
-
           else
 
             call franf2d(d,ul,xl,ix,s,p,ndf,ndm,nst,isw)
 
           endif
+        endif
+        if(debug) then
+          call mprint(p, 1 ,nst, 1 ,'P_frame')
+          call mprint(s,nst,nst,nst,'S_frame')
         endif
       endif
 
@@ -166,19 +158,18 @@
 
       integer       :: ndf,ndm,nst,isw
       integer       :: i,ii, j,jj, ll,lint, mm,nn
-      real (kind=8) :: cs,sn,a1,a2,a3,a4,le,b1,b2,dx,dva,dvi,xjac
-      real (kind=8) :: rhoa, rhoi, ctan1, ctan3, energy
+      real (kind=8) :: cs,sn,a1,a2,a3,a4,le,b1,b2,dx,xjac
+      real (kind=8) :: energy
 
       integer       :: ix(*)
 
       real (kind=8) :: aa(4,4,2),shp(2,3),sg(2,3),forc(4,2),xx(2),b(2)
-      real (kind=8) :: xl(ndm,*),ul(ndf,nen,*)
+      real (kind=8) :: xl(ndm,*),ul(ndf,nen,*),mass(2,2),rhoa(3),dva(3)
       real (kind=8) :: d(*),p(ndf,*),s(nst,nst)
 
       save
 
-!     Small deformation visco-plastic BEAM element.
-
+!     Small deformation BEAM element.
 !     d(21)*d(32)       = EA
 !     d(37)*d(27)*d(32) = kappa*GA
 !     d(21)*d(33)       = EI
@@ -187,50 +178,42 @@
 !
 
 !     Compute element length and direction cosines
-
       if(isw.ge.2) then
         cs = xl(1,nel) - xl(1,1)
         sn = xl(2,nel) - xl(2,1)
-        le  = sqrt(cs*cs + sn*sn)
+        le = sqrt(cs*cs + sn*sn)
         cs = cs/le
         sn = sn/le
 
-        rhoa = d(4)*d(32)
-        rhoi = d(4)*d(33)
+        rhoa(1:2) = d(4)*d(32)
+        rhoa( 3 ) = d(4)*d(33)*d(69)
       endif
 
 !     Read data
-
       if(isw.eq.1) then
 
 !       Increment history storage if necessary
 
+!     Compute residual & tangent arrays
       elseif(isw.eq.3 .or. isw.eq.6) then
 
         lint = nel - 1
         call int1d(lint,sg)
         call bm2trn (ul(1,1,1),cs,sn,ndf*nel,ndf,2)
         call bm2trn (ul(1,1,2),cs,sn,ndf*nel,ndf,2)
+        call bm2trn (ul(1,1,4),cs,sn,ndf*nel,ndf,2)
         call bm2trn (ul(1,1,5),cs,sn,ndf*nel,ndf,2)
         call bm2trn (xl       ,cs,sn,ndm*nel,ndm,2)
-        dva = 0.5d0*rhoa*le
-        dvi  =0.5d0*rhoi*d(69)*le
+        call mprint(ctan,1,3,1,'CTAN')
         do ll = 1,lint
           call shp1db(sg(1,ll),xl,shp,ndm,nel,xjac)
           dx = sg(2,ll)*xjac
           call b2mods (d,ul,forc,aa,energy,shp,ndf,nen,isw)
 
 !         Multiply moduli by solution parameter: ctan(1)
-
-          ctan1 = ctan(1)
-          do jj = 1,4
-            do ii = 1,4
-              aa(ii,jj,1) = aa(ii,jj,1)*ctan1
-            end do ! ii
-          end do ! jj
+          aa(:,:,1) = aa(:,:,1)*ctan(1)
 
 !         Mechanical tangent terms
-
           mm = 0
           do ii = 1,nel
             b1 = shp(1,ii)*dx
@@ -260,46 +243,48 @@
             mm = mm + ndf
           end do ! ii
         end do ! ll
+        call mprint(s,nst,nst,nst,'S_static')
 
 !       Lumped and consistent inertia contributions
-
         if(nint(d(7)).eq.1) then
-          b1 = 2.d0/3.d0
-          b2 = 0.5d0
+          mass(1,1) = 1.0d0/3.0d0
+          mass(1,2) = 1.0d0/6.0d0
         else
-          b1 = 1.0d0
-          b2 = 0.0d0
+          mass(1,1) = 0.5d0
+          mass(1,2) = 0.0d0
         endif
+        mass(2,1) = mass(1,2)
+        mass(2,2) = mass(1,1)
 
 !       Form diagonal terms
-        ctan3 = ctan(3) + d(77)*ctan(2)
+        dva(:)  = rhoa(:)*le
+        p(1:3,1) = p(1:3,1)
+     &   - dva(:)*(mass(1,1)*(ul(1:3,1,5)+d(77)*ul(1:3,1,4))
+     &           + mass(1,2)*(ul(1:3,2,5)+d(77)*ul(1:3,2,4)))
+        p(1:3,2) = p(1:3,2)
+     &   - dva(:)*(mass(2,1)*(ul(1:3,1,5)+d(77)*ul(1:3,1,4))
+     &           + mass(2,2)*(ul(1:3,2,5)+d(77)*ul(1:3,2,4)))
+
+        dva(:)  = dva(:)*(ctan(3) + d(77)*ctan(2))
         jj    = 0
-        do ii = 1,nel
-          p(1,ii)      = p(1,ii) - dva*(ul(1,ii,5)+d(77)*ul(1,ii,4))
-          p(2,ii)      = p(2,ii) - dva*(ul(2,ii,5)+d(77)*ul(2,ii,4))
-          p(3,ii)      = p(3,ii) - dvi*(ul(3,ii,5)+d(77)*ul(3,ii,4))
-          s(jj+1,jj+1) = s(jj+1,jj+1) + dva*ctan3*b1
-          s(jj+2,jj+2) = s(jj+2,jj+2) + dva*ctan3*b1
-          s(jj+3,jj+3) = s(jj+3,jj+3) + dvi*ctan3*b1
+        do j = 1,2
+          ii = 0
+          do i = 1,2
+            s(ii+1,jj+1) = s(ii+1,jj+1) + dva(1)*mass(i,j)
+            s(ii+2,jj+2) = s(ii+2,jj+2) + dva(2)*mass(i,j)
+            s(ii+3,jj+3) = s(ii+3,jj+3) + dva(3)*mass(i,j)
+            ii           = ii + ndf
+          end do ! ii
           jj           = jj + ndf
-        end do
+        end do ! jj
 
-!       Off diagonal terms for consistent mass
-
-        do ii = 1,3
-          s(ii,ndf+ii) = b2*s(ii,ii)
-          s(ndf+ii,ii) = b2*s(ii,ii)
-        end do ! ii
-
-!       Transform stiffness and residual to global coordinates
-
+!       Transform stiffness & residual to global coordinates
         if(isw.eq.3) then
           call bm2trn (s,cs,sn,nst,ndf,1)
         endif
         call bm2trn ( p,cs,-sn,nst,ndf,2)
 
 !       Set body loading factors
-
         if(int(d(74)).gt.0) then
           b(1) = 0.5*le*(d(11) + prldv(int(d(74)))*d(71))
         else
@@ -312,20 +297,20 @@
         endif
 
 !       Add body force components
-
         p(1,1) = p(1,1) + b(1)
         p(1,2) = p(1,2) + b(1)
         p(2,1) = p(2,1) + b(2)
         p(2,2) = p(2,2) + b(2)
 
-!     Output forces
+        call mprint(p,ndf, 2 ,ndf,'P_frams2d')
+        call mprint(s,nst,nst,nst,'S_frams2d')
 
+!     Output forces
       elseif(isw.eq.4 .or. isw.eq.8) then
         lint = nel - 1
         call int1d(lint,sg)
 
 !       Loop over quadrature points
-
         call bm2trn (ul(1,1,1),cs,sn,ndf*nel,ndf,2)
         call bm2trn (ul(1,1,2),cs,sn,ndf*nel,ndf,2)
         call bm2trn (ul(1,1,5),cs,sn,ndf*nel,ndf,2)
@@ -334,7 +319,6 @@
           call shp1db(sg(1,ll),xl,shp,ndm,nel,xjac)
 
 !         Output forces
-
           call b2mods (d,ul,forc,aa,energy,shp,ndf,nen,isw)
           if(isw.eq.4) then
             do i = 1,ndm
@@ -357,7 +341,6 @@
             endif
 
 !         Stress projections save
-
           else
 
             dx = sg(2,ll)*xjac
@@ -381,63 +364,38 @@
         endif
 
 !     Compute mass array
-
       elseif(isw.eq.5) then
 
-        lint = nel
-        call int1d(lint,sg)
-
-!       Compute lumped mass matrix
-
-        call bm2trn (xl,cs,sn,ndm*nel,ndm,2)
-        do ll = 1,lint
-
-!         Compute shape functions
-
-          call shp1db(sg(1,ll),xl,shp,ndm,nel,xjac)
-
-          dva  = sg(2,ll)*xjac*rhoa
-          dvi  = sg(2,ll)*xjac*rhoi*d(69)
-
-!         For each node j compute db = rho*shape*dv
-
-          do j = 1,nel
-            b1 = shp(2,j)*dva
-            b2 = shp(2,j)*dvi
-
-!           Compute a lumped mass
-
-            p(1,j) = p(1,j) + b1
-            p(2,j) = p(2,j) + b1
-            p(3,j) = p(3,j) + b2
-          end do ! j
-        end do ! ll
-
-!       Place in consistent mass
-
+!       Lumped and consistent inertia contributions
         if(nint(d(7)).eq.1) then
-          b1 = 2.d0/3.d0
-          b2 = 0.5d0
+          mass(1,1) = 1.0d0/3.0d0
+          mass(1,2) = 1.0d0/6.0d0
         else
-          b1 = 1.0d0
-          b2 = 0.0d0
+          mass(1,1) = 0.5d0
+          mass(1,2) = 0.0d0
         endif
+        mass(2,1) = mass(1,2)
+        mass(2,2) = mass(1,1)
+        dva(:)    = rhoa(:)*le
 
+!       Form diagonal mass
+        p(1:3,1) = dva(:)*0.5d0
+        p(1:3,2) = dva(:)*0.5d0
+
+!       Form consistent or lumped mass
         jj = 0
-        do j = 1,nel
-          s(jj+1,jj+1) = p(1,j)*b1
-          s(jj+2,jj+2) = p(2,j)*b1
-          s(jj+3,jj+3) = p(3,j)*b1
+        do j = 1,2
+          ii = 0
+          do i = 1,2
+            s(ii+1,jj+1) = s(ii+1,jj+1) + dva(1)*mass(i,j)
+            s(ii+2,jj+2) = s(ii+2,jj+2) + dva(2)*mass(i,j)
+            s(ii+3,jj+3) = s(ii+3,jj+3) + dva(3)*mass(i,j)
+            ii           = ii + ndf
+          end do ! ii
           jj = jj + ndf
-        end do ! j
+        end do ! jj
 
-!       Off diagonal consistent mass terms
-
-        do ii = 1,3
-          s(ii,ndf+ii) = b2*s(ii,ii)
-          s(ndf+ii,ii) = b2*s(ii,ii)
-        end do ! ii
-
+!     Update cross sectional data
       elseif(isw.eq.12) then
 
         lint = nel - 1
@@ -450,9 +408,7 @@
           call b2mods (d,ul,forc,aa,energy,shp,ndf,nen,isw)
         end do ! ll
 
-
 !     Compute energy
-
       elseif(isw.eq.13) then
 
         lint = nel - 1
@@ -461,30 +417,25 @@
         call bm2trn (ul(1,1,2),cs,sn,ndf*nel,ndf,2)
         call bm2trn (ul(1,1,4),cs,sn,ndf*nel,ndf,2)
         call bm2trn (xl       ,cs,sn,ndm*nel,ndm,2)
-        dva = 0.5d0*rhoa*a1
-        dvi  =0.5d0*rhoi*d(69)*a1
+        dva(:) = 0.25d0*rhoa(:)*le
 
 !       Compute internal energy
-
         do ll = 1,lint
 
 !         Compute energy density from stress and deformation
-
           call shp1db(sg(1,ll),xl,shp,ndm,nel,xjac)
           dx = sg(2,ll)*xjac
           call b2mods (d,ul,forc,aa,energy,shp,ndf,nen,isw)
 
 !         Accumulate energy
-
           epl(8) = epl(8) + 0.5d0*energy*dx
 
         end do ! ll
 
 !       Compute kinetic energy for lumped mass
-
-        epl(7) = epl(7) + 0.5d0*dva*(ul(1,1,4)**2 + ul(1,2,4)**2
-     &                             + ul(2,1,4)**2 + ul(2,2,4)**2)
-     &                  + 0.5d0*dvi*(ul(3,1,4)**2 + ul(3,2,4)**2)
+        epl(7) = epl(7) + dva(1)*(ul(1,1,4)**2 + ul(1,2,4)**2)
+     &                  + dva(2)*(ul(2,1,4)**2 + ul(2,2,4)**2)
+     &                  + dva(3)*(ul(3,1,4)**2 + ul(3,2,4)**2)
 
       endif
 
@@ -1050,18 +1001,13 @@
       save
 
 !     Resultant model
-
       dl(1) = d(1)*d(32)
       dl(2) = d(1)*d(32)*d(37)*0.5d0/(1.d0+d(2))
       dl(3) = d(1)*d(33)
 
-      do i = 1,9
-        cc(i,1,1) = 0.0d0
-        cc(i,1,2) = 0.0d0
-      end do ! i
 
 !     Elastic resultant model only
-
+      cc(:,:,:) = 0.0d0
       do i = 1,3
         cc(i,i,1) = dl(i)
         cc(i,i,2) = dl(i)
@@ -1229,9 +1175,8 @@
       include   'iofile.h'
       include   'prld1.h'
 
-
       integer       :: i,j,ii,jj,i1,j1,i2,j2,ndf,ndm,nst,isw
-      real (kind=8) :: cs,sn,le,xx,yy,xn,xm,vv,eps,chi,gam,EA,EI,RA
+      real (kind=8) :: cs,sn,le,xx,yy,xn,xm,vv,eps,chi,gam,EA,EI,RA,RI
       real (kind=8) :: b1,b2
 
       real (kind=8) :: d(*),ul(ndf,nen,*),xl(ndm,*),s(nst,*),p(*)
@@ -1240,7 +1185,6 @@
       save
 
 !     COMPUTE ELEMENT ARRAYS
-
       cs = xl(1,2) - xl(1,1)
       sn = xl(2,2) - xl(2,1)
       le = sqrt(cs*cs+sn*sn)
@@ -1248,11 +1192,9 @@
       sn = sn/le
 
 !     Compute elment stiffness/residual arrays
-
       if(isw.eq.3 .or. isw.eq.6) then
 
 !       Set body loading factors
-
         if(int(d(81)).gt.0) then
           b1 = 0.5*le*(d(11) + prldv(int(d(81)))*d(71))
         else
@@ -1265,16 +1207,15 @@
         endif
 
 !       Compute momentum residual and tangent matrix
-
         call pzero(sm,36)
         EA = d(21)*d(32)
         EI = d(21)*d(33)
         RA = d(4)*d(32)
+        RI = d(4)*d(33)*d(69)
         call beam2d(s ,EA,EI,le,cs,sn,nst,ndf)
-        call massf2(sm,pm,d(7),RA,le,cs,sn,6,3)
+        call massf2(sm,pm,d(7),RA,RI,le,cs,sn,6,3)
 
 !       Stress and mass modification to residual and stiffness
-
         i1 = 0
         i2 = 0
         do ii = 1,2
@@ -1287,12 +1228,10 @@
               do j = 1,ndf
 
 !               Residual
-
                 p(i+i1)      = p(i+i1) -  s(i+i1,j+j1)*ul(j,jj,1)
      &                                 - sm(i+i2,j+j2)*ul(j,jj,5)
 
 !               Tangent
-
                 s(i+i1,j+j1) =  s(i+i1,j+j1)*ctan(1)
      &                       + sm(i+i2,j+j2)*ctan(3)
 
@@ -1300,20 +1239,12 @@
               j1 = j1 + ndf
               j2 = j2 + 3
             end do
-
-!           Lumped mass modification to residual and tangent
-
-            p(i+i1)      = p(i+i1)      - pm(i+i2)*ul(i,ii,5)
-
-            s(i+i1,i+i1) = s(i+i1,i+i1) + pm(i+i2)*ctan(3)
-
           end do
           i1 = i1 + ndf
           i2 = i2 + 3
         end do
 
 !     Compute element output quantities
-
       elseif(isw.eq.4) then
 
         xx  = 0.5d0*(xl(1,1)+xl(1,2))
@@ -1342,7 +1273,8 @@
 
       elseif(isw.eq.5) then
         RA = d(4)*d(32)
-        call massf2(s,p,d(7),RA,le,cs,sn,nst,ndf)
+        RI = d(4)*d(33)*d(69)
+        call massf2(s,p,d(7),RA,RI,le,cs,sn,nst,ndf)
       end if
 
 !     Formats
@@ -1401,14 +1333,14 @@
 
       end subroutine beam2d
 
-      subroutine massf2(s,p,cfac,ra,le,cs,sn,nst,ndf)
+      subroutine massf2(s,p,cfac,ra,ri,le,cs,sn,nst,ndf)
 
 !     Frame mass matrix
 
       implicit   none
 
       integer        :: nst,ndf,i,j,l,ii(4)
-      real (kind=8) ::  cfac,lfac,ra,le,cs,sn,t,dv,s1,s2,s3
+      real (kind=8) ::  cfac,lfac,ra,ri,le,cs,sn,t,dv,s1,s2,s3
       real (kind=8) ::  p(nst),s(nst,nst),sg(2,4),bb(4)
 
       data       ii /2,3,5,6/
@@ -1421,11 +1353,13 @@
       t        = 0.5d0*ra*le
       p(1)     = t
       p(2)     = t
+      p(3)     = 0.5d0*ri*le
       p(ndf+1) = t
       p(ndf+2) = t
+      p(ndf+3) = 0.5d0*ri*le
 
 !     Consistent mass matrix
-
+      s(:,:)         = 0.0d0
       s(1    ,1    ) = 0.6666666666666667d0*t
       s(1    ,ndf+1) = 0.3333333333333333d0*t
       s(ndf+1,ndf+1) = s(1,1)
@@ -1566,7 +1500,7 @@
         hle = 0.5d0*len
 
         rhoa = d(4)*d(32)
-        rhoi = d(4)*d(33)
+        rhoi = d(4)*d(33)*d(69)
       endif
 
 !     Read data
@@ -1594,7 +1528,7 @@
           call shp1db(sg(1,ll),xl,shpu,ndm,nel,xjac)
 
           dva  = sg(2,ll)*xjac*rhoa
-          dvi  = sg(2,ll)*xjac*rhoi*d(69)
+          dvi  = sg(2,ll)*xjac*rhoi
 
 !         For each node j compute db = rho*shape*dv
 
@@ -1635,7 +1569,7 @@
         call bm2trn (ul(1,1,5),cs,sn,ndf*nel,ndf,2)
         call bm2trn (xl       ,cs,sn,ndm*nel,ndm,2)
         dva = rhoa*hle
-        dvi = rhoi*hle*d(69)
+        dvi = rhoi*hle
 
         do ll = 1,lint
 
@@ -1953,7 +1887,7 @@
         elseif(isw.eq.13) then
 
           dva = hle*rhoa
-          dvi  =hle*rhoi*d(69)
+          dvi  =hle*rhoi
 
 !         Compute internal energy
 

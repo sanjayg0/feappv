@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2019: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -38,10 +38,10 @@
       real (kind=8) :: df(9,9),    fi(9,2,9),      finv(9,9)
       real (kind=8) :: xxm(3),     xu(2,9),        ru(2,9),     r(*)
       real (kind=8) :: bbd(2,7),   bei(6),         ad(7,7,5,9), dd(7,7)
-      real (kind=8) :: dvol(9),    detf(2,9)
+      real (kind=8) :: detf(2,9)
       real (kind=8) :: sigm(9),    sigl(9,9),      bpra(3),shpbar(2,9,9)
       real (kind=8) :: acc(2),     theta(2,9),     hh(3,3)
-      real (kind=8) :: press(9),   hsig(3)
+      real (kind=8) :: hsig(3)
 
       save
 

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2019: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !     Three Dimensional Solid Element Driver
@@ -59,7 +59,7 @@
 !     Output element type
 
       if(isw.eq.0 .and. ior.lt.0) then
-        write(*,*) '   Elmt  1: 3-d Solid Linear/Finite Defm. Element.'
+        write(*,*) '   SOLID3D: 3-d Solid Linear/Finite Defm. Element.'
       endif
 
       return

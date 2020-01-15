@@ -9,14 +9,15 @@
 #      integer*8, it is necessary to reset the parameter 'ipr = 1'
 #      in file 'feappv.f' located in the 'main' directory.
 #------------------------------------------------------------------------
-# Location of feappv include files
+# Location of feappv include files (integer4 is no longer in the distribution
+# as of version 5.1)
 
   FINCLUDE = $(FEAPPVHOME5_1)/include
 
 # Location of C-compiler include files (depends where compiler installed)
 
-# CINCLUDE = /usr/X11R6/include -I$(FEAPPVHOME5_1)/include
-  CINCLUDE = /opt/local/include -I$(FEAPPVHOME5_1)/include
+  CINCLUDE = /usr/X11R6/include -I$(FEAPPVHOME5_1)/include
+# CINCLUDE = /opt/local/include -I$(FEAPPVHOME5_1)/include
 
 #------------------------------------------------------------------------
 # Which compilers to use (Set compiler names available on your computer)
@@ -34,16 +35,8 @@
   FF = gfortran
   CC = gcc
 
-# FF = ifort                         # Intel compiler
-# CC = icc                           # Intel compiler
-
 #------------------------------------------------------------------------
 # What optimization level to use
-
-# Intel: ifort/icc compilers
-
-# FFOPTFLAG = -O2 -Warn all -g
-# CCOPTFLAG = -O2 -Wall -g
 
 # Gnu: gfortran/gcc compilers
 
@@ -64,6 +57,7 @@
 
   FSOURCE =
   CSOURCE =
+  F90SOURCE =
 
 #------------------------------------------------------------------------
 # Source Extender
@@ -81,14 +75,10 @@
 #------------------------------------------------------------------------
 # What options to be used by the loader
 
-# Intel
-
-# LDOPTIONS = -L/opt/local/lib -mkl  -lX11 -lm
-  LDOPTIONS = -L/opt/local/lib -lX11 -lm
-
 # gfortran
 
 # LDOPTIONS = -L/opt/local/lib -lX11 -lm
+  LDOPTIONS = -L/usr/X11R6/lib -lX11 -lm
 
 # Loader options for FE2 build
 
@@ -102,21 +92,17 @@
 #------------------------------------------------------------------------
 # Archive name
 
-# ARFEAPPV = $(FEAPPVHOME5_1)/Feappv.a
   ARFEAPPV = $(FEAPPVHOME5_1)/Feappv_g.a
 #------------------------------------------------------------------------
 # Archive name FE2
 
-# ARFE2FEAPPV = $(FEAPPVHOME5_1)/libfeappvfe2.a
   ARFE2FEAPPV = $(FEAPPVHOME5_1)/libfeappvfe2_g.a
 #------------------------------------------------------------------------
 # Archive name IgA
 
-# ARIFEAPPV = $(FEAPPVHOME5_1)/iga/libfeappviga.a
   ARIFEAPPV = $(FEAPPVHOME5_1)/iga/libfeappviga_g.a
 #------------------------------------------------------------------------
 # Archive name VEM
 
-# ARVFEAPPV = $(FEAPPVHOME5_1)/vem/libfeappvvem.a
   ARVFEAPPV = $(FEAPPVHOME5_1)/vem/libfeappvvem_g.a
 #------------------------------------------------------------------------

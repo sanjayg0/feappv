@@ -5,3 +5,6 @@ filein
 *.dSYM/
 *.o
 feappv
+fe2feappv
+ifeappv
+vfeappv

@@ -16,7 +16,7 @@ clean:
 fclean:
 	rm -f vfeappv
 	rm -r -f vfeap*.dSYM
-	@@echo "--> Feappv cleaned <--"
+	@@echo "--> VEM Feappv cleaned <--"
 
 %.o: %.f
 	$(FF) -c $(FFOPTFLAG) -I$(FINCLUDE) -I$(NINCLUDE) $< -o $@

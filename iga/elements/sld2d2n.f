@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2019: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -54,8 +54,7 @@
       real*8    bbd(3,7),   aa(6,6,5,64),   dd(7,7)
       real*8    sigm(9),    sigl(16,64),    bpra(3)
       real*8    al(3),      ac(3),          x0(2)
-      real*8    phi(6,64),  theta(3,64)
-      real*8    press(64),  pbar(64),       eps(9,3,64)
+      real*8    theta(3,64),pbar(64),       eps(9,3,64)
       real*8    irad(64),   ta(64)
       real*8    bdy(3),     epsm(9),        eps3(64)
 

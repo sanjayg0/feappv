@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2019: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -47,7 +47,7 @@
             if(pcomp(typ,'esid',4)) then
               write(ios,'(a,4i8)') '  eside',(nint(tc(i)),i=1,4)
             else
-              if(ior.gt.0) backspace ior
+              if(ior.gt.0) backspace (ior)
             endif
           elseif(nint(td(1)).eq.3) then
 
@@ -67,7 +67,7 @@
                 write(ios,'(16i8)') (nint(tc(i)),i=1,j)
                 nn = nn + j
               else
-!               if(ior.gt.0) backspace ior
+!               if(ior.gt.0) backspace (ior)
                 sidefl = .false.
               endif
             end do ! while

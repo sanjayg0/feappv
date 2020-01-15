@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2019: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -87,7 +87,7 @@
                   nblk(j+7,ib) = nint(tc(j))  ! eside(1:4)
                 end do ! j
               else
-                if(ior.gt.0) backspace ior
+                if(ior.gt.0) backspace (ior)
               endif
 
               call pknotelm(knots(1,knotn),lknot(1,knotn), last_elm)

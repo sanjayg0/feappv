@@ -21,8 +21,8 @@ clean:
 
 fclean:
 	rm -f ifeappv
-	rm -r -f ifeap*.dSYM
-	@@echo "--> Feap cleaned <--"
+	rm -r -f ifeappv.dSYM
+	@@echo "--> iFeapPV cleaned <--"
 
 %.o: %.f
 	$(FF) -c $(FFOPTFLAG) -I$(FINCLUDE) -I$(NINCLUDE) $< -o $@

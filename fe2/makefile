@@ -23,8 +23,8 @@ OBJECTS = $(FEAPPVHOME5_1)/main/feappv.o \
 
 install: $(OBJECTS) $(ARFEAPPV)
 	ranlib $(ARFEAPPV)
-	$(FFE2) -o feap $(OBJECTS) $(ARFEAPPV) $(LDOPTIONSFE2)
-	dsymutil feap
+	$(FFE2) -o fe2feappv $(OBJECTS) $(ARFEAPPV) $(LDOPTIONSFE2)
+	dsymutil fe2feappv
 	@@echo "--> FE2 FEAPpv executable made <--"
 
 clean:
@@ -33,8 +33,8 @@ clean:
 	rm -f *genmod.f90
 
 fclean:
-	rm -f feap
-	rm -r -f feap*.dSYM
+	rm -f fe2feappv
+	rm -r -f fe2feappv.dSYM
 
 %.o: %.f
 	$(FFE2) -c $(FFOPTFLAG) -I$(FINCLUDE) $< -o $@

@@ -6,7 +6,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2019: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -70,7 +70,6 @@
       include   'eldata.h'
       include   'elplot.h'
       include   'eltran.h'
-      include   'eluser.h'
       include   'erotas.h'
       include   'iofile.h'
       include   'hdata.h'

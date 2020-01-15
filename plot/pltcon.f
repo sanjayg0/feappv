@@ -4,7 +4,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2019: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -208,7 +208,7 @@
       end do
       if(xmx.ne.xmn) xmx = 8.2d0/(xmx-xmn)
       if(ymx.ne.ymn) ymx = 8.2d0/(ymx-ymn)
-      if(vmn.eq.vmx) then
+      if(vmn.eq.00d0 .and. vmx.eq.0.0d0) then
         write(iow,2005)
         if(ior.lt.0) write(*,2005)
         return
@@ -539,7 +539,7 @@
 2000  format('   ------ Contour Values for Plot ------'/(3x,5e15.6))
 2001  format(' Input',i3,' Contour Values for Plot - 8 Values/Line')
 2002  format(' Input number for first contour label > ',$)
-2005  format(' ** ERROR ** No plot - zero difference in values')
+2005  format(' ** ERROR ** No plot - all zero values')
 2006  format(' Input values correct? (y or n, c = cancel) > ',$)
 2007  format(' ** WARNING ** Initial label reset to fit screen')
 2008  format(' Input Min/Max (Default:',1p,e9.2,'/',1p,e9.2,'): >',$)

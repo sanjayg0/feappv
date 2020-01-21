@@ -628,11 +628,7 @@
 
 !         Elastic 'tangent moduli'
 
-          do i = 1,5
-            do j = 1,5
-              D_t(j,i) = 0.0d0
-            end do ! j
-          end do ! i
+          D_t(:,:) = 0.0d0
           D_t(1,1) = B11*dvol
           D_t(1,2) = B12*dvol
           D_t(2,1) = B12*dvol
@@ -668,17 +664,13 @@
           end do
 
 !         Compute residual and tangent
-
-          do a = 1,3
-            rr(a,1) = 0.0d0
-            rr(a,2) = 0.0d0
-          end do ! a
+          rr(:,:) = 0.0d0
+          ss(:,:) = 0.0d0
 
           i1 = 0
           do i = 1,2
 
 !           Compute the residual term
-
             do a = 1,3
               rr(a,i) = rr(a,i) - bb(1,a,i)*N_11
      &                          - bb(2,a,i)*N_22
@@ -718,11 +710,7 @@
             i1 = i1 + 3
           end do ! i
 
-          do j = 1,6
-            do i = 1,6
-              ss(i,j) = ss(i,j)*ctan(1)
-            end do ! i
-          end do ! j
+          ss(:,:) = ss(:,:)*ctan(1)
 
 !         Inertial terms
 
@@ -767,6 +755,7 @@
 
           else
 
+            ss(:,:) = 0.0d0
             i1 = 0
             do i = 1,2
               j1 = 0

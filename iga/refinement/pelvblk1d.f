@@ -77,7 +77,6 @@
       endif
 
 !     Elevate 1 direction knots
-
       sid1 = nblksd(1,blk)
       les  = lside(1,sid1)     ! Length of side 1
       kno  = lside(2,sid1)     ! Knot vector for side 1 - kside(sid1)
@@ -85,7 +84,6 @@
       ord  = lknot(2,kno)      ! Order of knot vector for side 1
 
 !     Place side-1 nodes in list in order inserted above
-
       do l = 1,le1
         ns2(l) = nsides(l,sid1)
       end do ! l
@@ -94,31 +92,26 @@
      &             hr(np(43)),hr(np(263)), leq,leu)
 
 !     Write knot vectors
-
       write(ios,'(/a)') 'KNOTs'
       write(ios,2002) kno,leu,(UU2(l),l=1,leu)
       ktnum(1,blk) = kno
 
 !     Allocate storage to save new coordinates and weights
-
       setvar = palloc(111, 'TEMP1', ndm*leq, 2) ! Coords
       setvar = palloc(112, 'TEMP2',     leq, 2) ! Wts
 
       call psetnurb(hr(np(111)),hr(np(112)), QQ2, 0,leq,1)
 
 !     Output NURB coordinates and weights
-
       call poutnurb(hr(np(111)),hr(np(112)), leq,  1)
 
       setvar = palloc(111, 'TEMP1', 0, 2)
       setvar = palloc(112, 'TEMP2', 0, 2)
 
 !     NBLOck output form
-
       if(blockfl) then
 
 !       Output side control points
-
         write(ios,'(/a)') 'NSIDes'
         nnside = nnside + 1
         write(ios,2001) nnside,leq,kno,(l+cnurnp,l=1,leq)
@@ -126,20 +119,17 @@
       endif
 
 !     Output Region description
-
       if(nblk(3,blk).gt.0) then   ! nuregn(blk)
         write(ios,'(/a,i5)') 'REGIon1',nblk(3,blk)
       endif
 
 !     Output Block description
-
       if(blockfl) then
 
         write(ios,'(/a,a)') 'NBLOck PART=',partname(nblk(5,blk))
-        write(ios,2003), 1,nblk(2,blk),nnside  ! nurmat(blk)
+        write(ios,2003)     1,nblk(2,blk),nnside  ! nurmat(blk)
 
 !     Output Patch description
-
       else
 
         write(ios,'(/a,a)') 'NPATch PART=',partname(nblk(5,blk))

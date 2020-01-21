@@ -19,12 +19,13 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit   none
 
-      logical    psflag
+      logical          :: psflag
 
-      real*8     xx(2),ndisp(3), x,y,e,nu,a,b,kappa, mu,alpha,p, u,v
-      complex*16 z,zeta, phi, psi, d_phi, beta, zalpha
+      real    (kind=8) :: x,y,e,nu,a,b,kappa, mu,alpha,p, u,v
+      real    (kind=8) :: xx(2),ndisp(3)
+      complex (kind=8) :: z,zeta, phi, psi, d_phi, beta, zalpha
 
-      real*8     r,m
+      real    (kind=8) :: r,m
 
       e     = 1.0d5
       nu    = 0.3d0
@@ -32,13 +33,11 @@
       alpha = 0.0d0
 
 !     Plane strain
-
       if(psflag) then
 
         kappa = 3.0d0 - 4.0d0*nu
 
 !     Plane stress
-
       else
 
         kappa = (3.0d0 - nu)/(1.0d0 + nu)
@@ -46,7 +45,6 @@
       endif
 
 !     set traction
-
       p = ndisp(1)  ! Traction at infinity
       a = ndisp(2)  ! x-axis of hole ellipse
       b = ndisp(3)  ! y-axis of hole ellipse
@@ -57,9 +55,9 @@
       r = (a + b)*0.5d0
       m = (a - b)/(a + b)
 
-      z      = cmplx(x,y)
+      z      = dcmplx(x,y)
       zeta   = 0.5d0/(m*r)*(z - zsqrt(z*z - 4.0d0*m*r**2))
-      zalpha = cmplx(0.0d0,2.d0*alpha)
+      zalpha = dcmplx(0.0d0,2.d0*alpha)
 
 !     Stress functions
 !     phi  =  0.25d0*p*r*((2.d0*zexp(zalpha)-m)*zeta + 1.d0/zeta)

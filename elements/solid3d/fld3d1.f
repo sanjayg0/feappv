@@ -100,11 +100,9 @@
         if(isw.eq.14) then
 
           do l = 1,lint
-            do i = 1,9
-              f(i,1,l)    = 0.0d0
-              f(i,2,l)    = 0.0d0
-              finv(i,1,l) = 0.0d0
-            end do ! i
+            f(:,1,l)    = 0.0d0
+            f(:,2,l)    = 0.0d0
+            finv(:,:,l) = 0.0d0
             detfi(1,l)  = 1.d0
             detfi(2,l)  = 1.d0
             do i = 1,9,4

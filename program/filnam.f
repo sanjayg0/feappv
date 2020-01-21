@@ -279,7 +279,7 @@
      & '    F I N I T E   E L E M E N T   A N A L Y S I S',
      & '   P R O G R A M'
      &   /14x,'FEAPpv (P e r s o n a l   V e r s i o n)',
-     &  //11x,'FEAP (C) Regents of the University of California'
+     &  //11x,'FEAPpv(C) Regents of the University of California'
      &   /25x,'All Rights Reserved.'/23x,'VERSION: ',a/26x,'DATE: ',a)
 
 2001  format(/8x,' I n p u t    F i l e n a m e s',

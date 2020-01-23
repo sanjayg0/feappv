@@ -16,7 +16,7 @@
 
 # Location of C-compiler include files (depends where compiler installed)
 
-  CINCLUDE = /usr/X11R6/include -I$(FEAPPVHOME5_1)/include
+  CINCLUDE = /usr/X11/include -I$(FEAPPVHOME5_1)/include
 # CINCLUDE = /opt/local/include -I$(FEAPPVHOME5_1)/include
 
 #------------------------------------------------------------------------
@@ -78,7 +78,7 @@
 # gfortran
 
 # LDOPTIONS = -L/opt/local/lib -lX11 -lm
-  LDOPTIONS = -L/usr/X11R6/lib -lX11 -lm
+  LDOPTIONS = -L/usr/X11/lib -lX11 -lm
 
 # Loader options for FE2 build
 

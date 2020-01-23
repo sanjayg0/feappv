@@ -19,7 +19,7 @@ fclean:
 	@@echo "--> VEM Feappv cleaned <--"
 
 %.o: %.f
-	$(FF) -c $(FFOPTFLAG) -I$(FINCLUDE) -I$(NINCLUDE) $< -o $@
+	$(FF) -c $(FFOPTFLAG) -I$(FINCLUDE) $< -o $@
 
 %.o: %.f90
 	$(FF) -c $(FFOPTFLAG) -I$(FINCLUDE) $< -o $@

@@ -1,6 +1,6 @@
 include $(FEAPPVHOME5_1)/makefile.in
 
-OBJECTS = feappv.o elmt01.o
+OBJECTS = feappv.o 
 
 feappv: $(OBJECTS) $(ARFEAPPV)
 	ranlib $(ARFEAPPV)

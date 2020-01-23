@@ -876,7 +876,7 @@
               endif
               if(ietype.eq.1 .or.ietype.eq.5) write(*,2019) ii,jj
             endif
-          elseif(.not.uflag) then
+          elseif(.not.uflag .and. imat.ne.13) then
             write(iow,4000)
             if(ior.lt.0) write(*,4000)
             erflag = .true.

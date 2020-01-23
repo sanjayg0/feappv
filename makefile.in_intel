@@ -19,6 +19,9 @@
 # CINCLUDE = /usr/X11R6/include -I$(FEAPPVHOME5_1)/include
   CINCLUDE = /opt/local/include -I$(FEAPPVHOME5_1)/include
 
+# IgA (Isogeometric)
+  NINCLUDE = $(FEAPPVHOME5_1)/iga/include
+
 #------------------------------------------------------------------------
 # Which compilers to use (Set compiler names available on your computer)
 

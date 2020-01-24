@@ -65,6 +65,7 @@
       include  'hdatam.h'
       include  'mdata.h'
       include  'modreg.h'
+      include  'oelmt.h'
       include  'p_int.h'
       include  'pointer.h'
       include  'prld1.h'
@@ -92,6 +93,14 @@
       real (kind=8) :: b(*), a(*), al(*)
 
       save
+
+!     Initialize data
+      if(isw.eq.3 .or. isw.eq.6) then
+        v_avg  = 0.0d0
+        v_rho  = 0.0d0
+        v_c    = 0.0d0
+        sig_33 = 0.0d0
+      endif
 
 !     Set element proportional loading value
       prope = theta(3)*(prop - propo) + propo

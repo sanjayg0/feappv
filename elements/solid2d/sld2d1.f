@@ -19,6 +19,7 @@
       include  'fdata.h'
       include  'hdata.h'
       include  'iofile.h'
+      include  'oelmt.h'
       include  'pmod2d.h'
       include  'prstrs.h'
       include  'qudshp.h'
@@ -42,18 +43,15 @@
       data      eps/ 27*0.0d0 /
 
 !     Compute stress-divergence vector (p) and stiffness matrix (s)
-
       nhv   = nint(d(15))
       istrt = nint(d(84))
 
 !     No action for isw = 1
-
       if(isw.eq.1) then
 
       elseif(isw.eq.3  .or. isw.eq.6 .or. isw.eq.14) then
 
 !       Integration order set to static
-
         if(d(7).lt.0.0d0) then
           cfac = 0.0d0
           lfac = 0.0d0
@@ -63,27 +61,19 @@
         endif
 
 !       Compute gauss quadrature points and weights
-
         call quadr2d(d,.true.)
 
 !       Zero mass matrix
-
-        do j = 1,9
-          do k = 1,nel
-            mass(k,j) = 0.0d0
-          end do ! k
-          shpr(j) = 0.0d0
-        end do ! j
+        mass(:,:) = 0.0d0
+        shpr(:)   = 0.0d0
 
 !       Numerical integration loop
-
         nn = 0
         do l = 1,lint
 
           call interp2d(l, xl,ix, ndm,nel, .false.)
 
 !         Compute stresses and strains
-
           call strn2d(d,xl,ul,tl,shp2(1,1,l),ndf,ndm,nel,
      &                xx,yy,ta,eps)
           call modlsd(l,d,ta,eps,hr(nh1+nn),hr(nh2+nn),nhv,istrt,
@@ -92,7 +82,6 @@
           if(isw.eq.3 .or. isw.eq.6) then
 
 !           Multiply jacobian by radius for axisymmetry
-
             if(stype.eq.3) then
               jac0   = jac(l)
               jac(l) = jac(l)*xx
@@ -103,8 +92,12 @@
               jac0 = 0.0d0
             end if
 
-!           Rayleigh Damping
+!           Set element parameters for multiscale
+            v_avg  = v_avg + jac(l)
+            v_rho  = v_rho + jac(l)*d(4)
+            sig_33 = sig_33 + jac(l)*sig(3,l)
 
+!           Rayleigh Damping
             dv = d(4)*(ctan(3) + d(77)*ctan(2))*jac(l)
 
             if(d(78).ne.0.0d0) then
@@ -116,16 +109,13 @@
             endif
 
 !           Compute gravity, thermal, inertia, and stress contributions
-
             call resid2d(cfac,lfac,jac(l),jac0,shp2(1,1,l),eps,sig(1,l),
      &                   d,ul(1,1,4),ul(1,1,5),p,ndf,l)
 
 !           Loop over rows
-
             if(isw.eq.3) then
 
 !             Modify tangent for stiffness rayleigh damping
-
               do j = 1,4
                 do k = 1,4
                   dd(k,j,1) = dd(k,j,1)*ctan(1) + dd(k,j,5)*sfac
@@ -139,7 +129,6 @@
                 aj3 = shp2(3,j,l)*jac0
 
 !               Compute B_trans * D * j * w
-
                 bd11 = aj1*dd(1,1,1) + aj3*dd(3,1,1) + aj2*dd(4,1,1)
                 bd12 = aj1*dd(1,2,1) + aj3*dd(3,2,1) + aj2*dd(4,2,1)
                 bd13 = aj1*dd(1,3,1) + aj3*dd(3,3,1) + aj2*dd(4,3,1)
@@ -151,14 +140,12 @@
                 bd24 = aj2*dd(2,4,1) + aj1*dd(4,4,1)
 
 !               Compute lumped mass matrix
-
                 aj0       = shp2(3,j,l)*dv
                 mass(j,j) = mass(j,j) + aj0*lfac
 
 !               Loop over columns (symmetry noted)
-
-                k1 = j1
-                do k = j,nel
+                k1 = 1
+                do k = 1,nel
                   s(j1  ,k1  ) = s(j1  ,k1  ) + bd11*shp2(1,k,l)
      &                                        + bd14*shp2(2,k,l)
      &                                        + bd13*shpr(k)
@@ -174,7 +161,6 @@
      &                                        + bd24*shp2(1,k,l)
 
 !                 Compute consistent mass matrix
-
                   mass(j,k)    = mass(j,k)    + cfac*aj0*shp2(3,k,l)
                   k1 = k1 + ndf
                 end do ! k
@@ -185,22 +171,9 @@
           nn = nn + nhv
         end do ! l
 
-!       Form lower part by symmetry
-
         if(isw.eq.3) then
-          do j = 1,ndf*nel
-            do k = j+1,ndf*nel
-              s(k,j) = s(j,k)
-            end do ! k
-          end do ! j
 
 !         Assemble mass matrix into tangent
-
-          do j = 1,nel
-            do k = j+1,nel
-              mass(k,j) = mass(j,k)
-            end do ! k
-          end do ! j
           j1 = 0
           do j = 1,ndf*nel,ndf
             j1 = j1 + 1
@@ -214,22 +187,18 @@
         endif
 
 !     Output of element quantities
-
       elseif(isw.eq.4 .or. isw.eq.8) then
 
         call quadr2d(d,.true.)
 
 !       Compute element stresses, strains, and forces
-
         nn = 0
         do l = 1,lint
 
 !         Compute element shape functions
-
           call interp2d(l, xl,ix, ndm,nel, .false.)
 
 !         Compute strains and coordinates
-
           call strn2d(d,xl,ul,tl,shp2(1,1,l),ndf,ndm,nel,
      &                xx,yy,ta,eps)
           call modlsd(l,d,ta,eps,hr(nh1+nn),hr(nh2+nn),nhv,istrt,
@@ -246,7 +215,6 @@
             call pstr2d(sig(1,l),sig(7,l))
 
 !           Output stresses and strains
-
             mct = mct - 2
             if(mct.le.0) then
             write(iow,2001) o,head
@@ -266,17 +234,15 @@
         end do ! l
 
 !       Compute nodal stress values
-
         if(isw.eq.8) then
 
 !         Project stress values to nodes
-
           call slcn2d(sig,p,s,p(nen+1),nel,9)
 
         endif
       endif
 
-!     Formats for input-output
+!     Formats
 
 2001  format(a1,20a4//5x,'Element Stresses'//'    Elmt Mat Angle',
      &   '   11-stress   22-stress   33-stress   12-stress',

@@ -94,7 +94,8 @@
       end do ! j
 
 !     Set up local nodal rotation array for inclined b.c.
-      call pangl(ix,nen,hr(np(46)),hr(np(45)),nrot)
+c     call pangl(ix,nen,hr(np(46)),hr(np(45)),nrot)
+      nrot = 0
 
 !     Set element type
       eltyp = ix(nen+7)  ! N.B. FE elements have negative type

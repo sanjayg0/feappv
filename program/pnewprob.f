@@ -115,7 +115,9 @@
       contrfl = .true.
       do while(.not.pcomp(ctext,'    ',4))
         errck  = tinput(ctext,1,td(2),8)
-        if(    pcomp(ctext,'node',4) .or. pcomp(ctext,'numnp',5)) then
+        if(pcomp(ctext,'feap',4)) then
+          if(rank.eq.0) write(*,*) ' * WARNING * Multiple FEAP record'
+        elseif(pcomp(ctext,'node',4) .or. pcomp(ctext,'numnp',5)) then
           numnp = nint(td(2))
           contrfl = .false.
         elseif(pcomp(ctext,'elem',4) .or. pcomp(ctext,'numel',5)) then

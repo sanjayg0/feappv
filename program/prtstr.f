@@ -78,7 +78,7 @@
 
 2000  format('   N o d a l   P r o j e c t i o n s'//'   Node',
      & 3(i3,'-Pr.Value'),'  1-Pr.Angle'/
-     & 7x,'   I_1 Value   J_2 Value   J_3 Value'/(7x,6(i6,' Value')))
+     & 7x,'   I_1 Value Mises Value   J_3 Value'/(7x,6(i6,' Value')))
 
 2001  format(/i7,1p,4e12.4/7x,1p,3e12.4/(7x,1p,6e12.4))
 

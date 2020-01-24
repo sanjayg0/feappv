@@ -76,7 +76,7 @@
       logical            :: tangfl, strefl
       real      (kind=4) :: etime, tary(2), tt
       real      (kind=8) :: volmr
-      real      (kind=8) :: rbuf(25), sbuf(58), sig(6),dd(6,6), td(1)
+      real      (kind=8) :: rbuf(26), sbuf(72), sig(6),dd(6,6), td(1)
       real      (kind=8) :: valoop,vmxits
 
       integer            :: idum(1)
@@ -84,8 +84,6 @@
       save
 
 !     Start process and compute arrays for projections
-
-
       if(ntasks.le.1) then
 
         write(iow,*) ' *ERROR* MPI solution for np = 2 only'
@@ -321,9 +319,9 @@
 !             Place results and moduli into send buffer
 !             N.B. Stress and moduli multiplied by 'volmr'
 
+              if(debug) call mprint(sbuf(2),1,6,1,'SIG:SEND')
               k = 7
               do i = 1,6
-                sbuf(i+1) = sig(i)
                 do j = 1,6
                   k = k + 1
                   sbuf(k) = dd(j,i)

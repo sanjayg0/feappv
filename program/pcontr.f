@@ -291,7 +291,7 @@
           l1 = l2 - 3
           head(i) = titl(l1:l2)
         end do ! i
-        call uprob(titl)
+        call uprob
 
 !     Perform inputs from an include file
       elseif(pcomp(titl(1:4),'incl',4)) then

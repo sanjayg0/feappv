@@ -1,5 +1,5 @@
 !$Id:$
-      subroutine uprob(titl)
+      subroutine uprob
 
 !      * * F E A P * * A Finite Element Analysis Program
 
@@ -13,14 +13,12 @@
 !      Purpose: Dummy user problem file
 
 !      Inputs:
-!         titl   - Record from pcontr
+!         none
 
 !      Outputs:
 !         none   - Users are responsible for generating problem inputs
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
-
-      character (len=80) :: titl
 
 !     Perform user problem inputs
 

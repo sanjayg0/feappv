@@ -57,7 +57,6 @@
       save
 
 !     Initialize averaged flux, stress and tangent modulus arrays
-
       pflux(1:3)    = 0.0d0
       ptau(1:6)     = 0.0d0
       ht(1:nss*nss) = 0.0d0                          ! Zero h array
@@ -122,17 +121,14 @@
       sig_33 = sigsv
 
 !     Solve for tangent moduli
-
       if(tangfl) then
 
 !       Modify shear terms
-
         if(prtype.eq.2) then
 
           call ptang(g,ht, neq,nss)   ! Include half factors on shears
 
 !         Inform warning is o.k.
-
           if(rank.eq.0 .and. ndm.lt.3) then
             if(ior.lt.0) then
               write(  *,2000)
@@ -146,7 +142,6 @@
         if(neq.gt.0) then
 
 !         Copy G_1 to G_2
-
           g(:,:,2) = g(:,:,1)
 
           if(debug) then

@@ -88,10 +88,9 @@
             endif
 
 !           Compute mean stress and mises stress
-
             press    = (sp(ii,1) + sp(ii,2) + sp(ii,3))*third
             sp(ii,5) = press
-            sp(ii,6) = sqrt(0.5d0*((sp(ii,1) - press)**2
+            sp(ii,6) = sqrt(1.5d0*((sp(ii,1) - press)**2
      &                           + (sp(ii,2) - press)**2
      &                           + (sp(ii,3) - press)**2))
             sp(ii,7) = (third*(sp(ii,1)-press)**3

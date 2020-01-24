@@ -117,7 +117,11 @@
       dtext = 0.11d0
       call tplot(xhead,ycor,blnk,17,1)
       if(mc.eq.5) then
-        write(yy,'(a13,a4)' ) strs(mc),slab(min(7,ic))
+        if(ic.eq.6) then
+          write(yy,'(a17)' ) '  MISES STRESS   '
+        else
+          write(yy,'(a13,a4)' ) strs(mc),slab(min(7,ic))
+        endif
       else
         write(yy,'(a13,i2)' ) strs(mc),ic
       endif

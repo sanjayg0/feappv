@@ -1,5 +1,5 @@
 !$Id:$
-      subroutine uprob(titl)
+      subroutine uprob
 
 !      * * F E A P * * A Finite Element Analysis Program
 
@@ -16,7 +16,7 @@
 !      Called from pcontr for input files beginning 'ufeap' or 'fe2feap'
 
 !      Inputs:
-!         titl   - Record from pcontr
+!         none
 
 !      Outputs:
 !         none   - Users are responsible for generating problems
@@ -39,7 +39,6 @@
       include   'mpif.h'
 
       logical             :: setvar, pcomp, vinput
-      character (len= 80) :: titl
       character (len=132) :: sbuf
       character (len=128) :: filenam
       character (len= 15) :: uvalue

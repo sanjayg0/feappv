@@ -56,7 +56,7 @@
       integer       :: usr_msg, msg_stat(MPI_STATUS_SIZE), ierr
       integer       :: a, nproce
       integer       :: ums(ncol,nrow), idum(2)
-      real (kind=8) :: frvel(dsend,*), srvel(drecv,*), sbuf(25),rbuf(72)
+      real (kind=8) :: frvel(dsend,*), srvel(drecv,*), sbuf(26),rbuf(72)
 
       save
 

@@ -513,6 +513,7 @@
           endif
 !       Solid Mechanics Representative Volume Material behavior
         elseif(ietype.ne.6 .and. (pcomp(text(1),'srve',4)   .or.
+     &                            pcomp(text(1),'frve',4)   .or.
      &                            pcomp(text(1),'rve' ,3))) then
 
           if(ntasks.le.1) then
@@ -876,7 +877,7 @@
               endif
               if(ietype.eq.1 .or.ietype.eq.5) write(*,2019) ii,jj
             endif
-          elseif(.not.uflag) then
+          elseif(.not.uflag .and. imat.ne.13) then
             write(iow,4000)
             if(ior.lt.0) write(*,4000)
             erflag = .true.
@@ -2416,7 +2417,7 @@
       include  'pmod2d.h'
       include  'sdata.h'
 
-      integer       :: i,j,nh,ii,istrt,isw, umat,uprm
+      integer       :: i,nh,ii,istrt,isw, umat,uprm
       real (kind=8) :: ta
 
       real (kind=8) :: d(*),eps(9,*),h1(*),h2(*)
@@ -2425,55 +2426,36 @@
       save
 
 !     Extract analysis type: 1=plane stress; 2=plane strain; 3=axi
-
       stype = nint(d(16))
       uprm  = ndd-nud
       umat  = int(d(uprm)) - 100
 
-!     Zero stress and dd arrays
-
-      do i = 1,6
-        sig(i) = 0.0d0
-        do j = 1,6
-          dd(j,i,1) = 0.0d0
-          dd(j,i,2) = 0.0d0
-          dd(j,i,3) = 0.0d0
-          dd(j,i,4) = 0.0d0
-          dd(j,i,5) = 0.0d0
-        end do ! j
-      end do ! i
+!     Zero dd arrays
+      dd(:,:,:) = 0.0d0
 
 !     Set constant initial stresses
-
       if(nint(d(160)).eq.1) then
-        do i = 1,6
-          sig(i) = d(160+i)
-        end do !
+        sig(1:6) = d(161:166)
+      else
+        sig(1:6)  = 0.0d0
       end if
 
 !     Program material models
-
       if(umat.lt.0) then
 
 !       Set model type
-
         plasfl = nint(d(40)).eq.1
         viscfl = nint(d(40)).eq.2
 
-!       Move h1 to h2
-
-        do i = 1,nh
-          h2(i) = h1(i)
-        end do ! i
-
 !       P l a s t i c i t y
-
         if(plasfl) then
 
           if(nint(d(40)).eq.1) then
 
-!           Plane stress plasticity
+!           Move h1 to h2
+            h2(1:nh) = h1(1:nh)
 
+!           Plane stress plasticity
             if (stype.eq.1 .or.stype.eq.4) then
 
               call epps2d(d,eps,h2,h2(4),h2(7),istrt, sig,dd,dd(1,1,5))
@@ -2484,7 +2466,6 @@
               endif
 
 !           Plane strain, axisymmetric or 3D plasticity
-
             else
 
               call mises(d,eps,h2(3),h2,istrt, sig,dd,dd(1,1,5))
@@ -2499,13 +2480,11 @@
           endif
 
 !       Representative volume element model (two-scale solutions)
-
         elseif(nint(d(40)).eq.4) then
 
           call srvemat(d,eps,ta,h1,h2,nh, sig,dd, isw)
 
 !       E l a s t i c i t y
-
         else
 
           call estrsd(d,ta,eps,sig,dd,dd(1,1,5))
@@ -2514,8 +2493,10 @@
         end if
 
 !       V i s c o e l a s t i c i t y
-
         if(viscfl) then
+
+!         Move h1 to h2
+          h2(1:nh) = h1(1:nh)
 
           if(ndm.le.2) then
             i = 4
@@ -2528,7 +2509,6 @@
         end if
 
 !     U s e r    M o d e l    I n t e r f a c e
-
       else
 
 !       Compute trace to pass to user module
@@ -3397,6 +3377,8 @@
 
       save
 
+
+      write(*,*) ' ISW = ',isw
 !     Perform (augmented) iteration on penalty
 
       d1    = augf*d(21)
@@ -3414,27 +3396,27 @@
 
       if    (isw.eq.1) then
 
-        u    = d1*( detf**2 - 1.d0 ) - d1*log(abs(detf))
-        up   = d1*( detf - 1.d0/detf    )
-        upp  = d1*( 1.d0 + 1.d0/detf**2 )
+        u   = 0.5d0*d1*(0.5d0*detf**2 - 0.5d0 - log(abs(detf)))
+        up  = 0.5d0*d1*( detf - 1.d0/detf    )
+        upp = 0.5d0*d1*( 1.d0 + 1.d0/detf**2 )
 
 !     Model 2.) U(J) = K*0.5*(J-1)^2
 
       elseif(isw.eq.2) then
 
-        u    = d1*(detf - 1.d0)**2*0.5d0
-        up   = d1*(detf - 1.d0)
-        upp  = d1
+        u   = d1*(detf - 1.d0)**2*0.5d0
+        up  = d1*(detf - 1.d0)
+        upp = d1
 
 !     Model 3.) U(J) = K*0.5*(log J)^2
 
       elseif(isw.eq.3) then
 
-!       up   = ( d1*log( detf ) - 3*K*alpha*(T - Tref) )/detf
+!       up  = ( d1*log( detf ) - 3*K*alpha*(T - Tref) )/detf
 
-        u    = d1*log(abs(detf))**2*0.5d0
-        up   = d1*log(abs(detf)) / detf
-        upp  = ( d1/detf  - up )/detf
+        u   = d1*log(abs(detf))**2*0.5d0
+        up  = d1*log(abs(detf)) / detf
+        upp = ( d1/detf  - up )/detf
 
       endif
 
@@ -3555,7 +3537,6 @@
         imat = nint(d(20))
 
 !       Compute elastic stress and tangents
-
         if    (imat.eq.1) then
           call stnh3f(d,detf(1),bb, sig,aa,xlamd,ha,estore)
         elseif(imat.eq.2) then

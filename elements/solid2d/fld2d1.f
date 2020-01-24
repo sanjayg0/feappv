@@ -36,6 +36,7 @@
       include  'eltran.h'
       include  'hdata.h'
       include  'iofile.h'
+      include  'oelmt.h'
       include  'pmod2d.h'
       include  'prstrs.h'
       include  'ptdat6.h'
@@ -174,44 +175,39 @@
             tt(j+j1) = sigl(j,l)
           end do
 
-!         Multiply tangent moduli and stresses by volume element.
+!         Set element parameters for multiscale
+          v_avg  = v_avg + dvol(l)
+          v_rho  = v_rho + dvol(l)*d(4)
+          sig_33 = sig_33 + dvol(l)*sigl(3,l)
 
+!         Multiply tangent moduli and stresses by volume element.
           sigl(1:4,l) = sigl(1:4,l)*dvol(l)
-          do i = 1,4
-            do j = 1,4
-              dd(i,j) = ds(i,j,1)*dvol(l)*ctan(1)
-            end do
-          end do
+          dd(1:4,1:4) = ds(1:4,1:4,1)*dvol(l)*ctan(1)
 
 !         Compute accelerations
-
-          al(1) = cfac*(shp2(3,1,l)*ul(1,1,5) + shp2(3,2,l)*ul(1,2,5)
-     &                + shp2(3,3,l)*ul(1,3,5) + shp2(3,4,l)*ul(1,4,5))
-
-          al(2) = cfac*(shp2(3,1,l)*ul(2,1,5) + shp2(3,2,l)*ul(2,2,5)
-     &                + shp2(3,3,l)*ul(2,3,5) + shp2(3,4,l)*ul(2,4,5))
+          al(:) = 0.0d0
+          do i = 1,nel
+            al(:) = al(:) + ul(1:2,i,5)*shp2(3,i,l)
+          end do ! i
+          al(:) = al(:)*cfac
 
 !         COMPUTE STRESS DIVERGENCE AND INERTIA TERMS
-
           xx1 = xx(1)*d(65)**2
           xx2 = xx(2)*d(65)**2
 
           do i = 1,nel
 
 !           Compute inertial and body load effects
-
             ac(1)   = (al(1) + lfac*ul(1,i,5))*dmas0
      &              -  d(11)*dvol0 - xx1*dmas0
             ac(2)   = (al(2) + lfac*ul(2,i,5))*dmas0
      &              -  d(12)*dvol0 - xx2*dmas0
 
 !           Stress divergence term (used in geometric stiffness)
-
             r1(1,i) = shp2(1,i,l)*sigl(1,l) + shp2(2,i,l)*sigl(4,l)
             r1(2,i) = shp2(1,i,l)*sigl(4,l) + shp2(2,i,l)*sigl(2,l)
 
 !           Element residual
-
             r(sa(i)+1) = r(sa(i)+1) - r1(1,i) - ac(1)*shp2(3,i,l)
      &                              - shpr(i)*sigl(3,l)
             r(sa(i)+2) = r(sa(i)+2) - r1(2,i) - ac(2)*shp2(3,i,l)
@@ -219,11 +215,9 @@
           end do
 
 !         COMPUTE K (s(nst,nst) = K)
-
           if(isw.eq.3) then
 
 !           PART 1. - Geometric and inertial part.
-
             dc  = cfac*ctan(3)*dmas0
             dl  = lfac*ctan(3)*dmas0
             i1  = 0
@@ -240,7 +234,7 @@
               if(gflag) then
                 bd3 = shpr(i)*sigl(3,l)*ctan(1)
                 j1  = 0
-                do j = 1,i
+                do j = 1,nel
                   bdb          = (r1(1,i)*shp2(1,j,l)
      &                         +  r1(2,i)*shp2(2,j,l))*ctan(1)
      &                         +       di*shp2(3,j,l)
@@ -250,10 +244,9 @@
                 end do
 
 !             Include inertia only
-
               else
                 j1  = 0
-                do j = 1,i
+                do j = 1,nel
                   bdb          = di*shp2(3,j,l)
                   s(i1+1,j1+1) = s(i1+1,j1+1) + bdb
                   s(i1+2,j1+2) = s(i1+2,j1+2) + bdb
@@ -265,12 +258,10 @@
             end do
 
 !           PART 2. - Tangent modulus part (based upon dd-array)
-
             i1 = 0
             do i  = 1,nel
 
 !             Compute bmat-t * dd * dvol
-
               do jj = 1,4
 
                 bbd(jj,1) = shp2(1,i,l)*dd(1,jj)
@@ -283,7 +274,6 @@
               end do ! jj
 
 !             Compute tangent stiffness
-
               j1 = 0
               do j  = 1,nel
 

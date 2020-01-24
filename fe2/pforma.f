@@ -179,7 +179,7 @@
 !             Set local arrays for element
 
               fp(1) = ndf*nen*(ma-1) + np(240)        ! iedof
-              call plocal(ld,id,mr(np(31)+nneq),ix(1,n),
+              call plocal(ld,id,mr(np(31)+nneq),ix(1,n),ie(1,ma),
      &                    mr(fp(1)),xl,ul,tl,p(1,3),x,f,u,ud,t,
      &                    un,dun, nrot, dfl, jsw)
 

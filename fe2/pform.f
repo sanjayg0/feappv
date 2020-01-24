@@ -90,7 +90,6 @@
       endif
 
 !     Initialize data
-
       if(isw.eq.3 .or. isw.eq.6) then
         v_avg  = 0.0d0
         v_rho  = 0.0d0
@@ -106,20 +105,17 @@
       endif
 
 !     Set element proportional loading value
-
       prope = (theta(3)*(prop - propo) + propo)
       if(isw.ne.23) then        ! Element arclength case
         prope = prope*rlnew
       endif
 
 !     Set nh1, nh2, nh3 pointers for local history variables
-
       nh1 = np(50)
       nh2 = np(51)
       nh3 = np(52)
 
 !     Set program and user material count parameters
-
       do i = 1,10
         nomats(1,i) = 0
         nomats(2,i) = 0
@@ -128,7 +124,6 @@
       end do ! i
 
 !     Initialize RVELM array -- stores list of elements to send-receive
-
       if(isw.eq.14 .and. svfl) then
         if(np(259).eq.0) then
           setval = palloc(259,'RVELM',numel,1)
@@ -139,7 +134,6 @@
       endif
 
 !     Set flags and parameters for solution
-
       iel = 0
       if(isw.eq.3 .and. bfl) then
         efl = .true.
@@ -150,7 +144,6 @@
       endif
 
 !     Other cases
-
       if(isw.eq.19) then
         if(bfl) efl = .true.
         jsw = 5
@@ -168,14 +161,12 @@
 
 !     Loop over active elements: Compute any local elements and the
 !     deformation gradient for send/receive microscale points.
-
       call pforma(ul,xl,tl,ld,p,s,ie,d,id,x,ix,f,t,jp,
      &            u,ud,b,a,al,ndd,nie,ndf,ndm,nen1,nst,nneq,
      &            prope,afl,bfl,dfl,efl,
      &            rvfl,svfl,jsw,ksw,nn1,nn2,nn3)
 
 !     Parallel send/receives for RVE
-
       if(svfl .and. nsend.gt.0 .and. .not.pltmfl) then
         if(isw.eq.14) then
           setval = palloc(260,'FRVEL', dsend*nsend, 2)
@@ -184,7 +175,6 @@
           call rvesr(hr(np(260)),hr(np(261)),mr(np(270)), isw)
 
 !         Form remaining micro-scale contributions
-
           call pforma(ul,xl,tl,ld,p,s,ie,d,id,x,ix,f,t,jp,
      &                u,ud,b,a,al,ndd,nie,ndf,ndm,nen1,nst,nneq,
      &                prope,afl,bfl,dfl,efl,

@@ -38,7 +38,7 @@
       integer       :: usr_msg, msg_stat(MPI_STATUS_SIZE), ierr
       integer       :: nproce
 
-      real (kind=8) :: sbuf(24), rbuf(91)
+      real (kind=8) :: sbuf(26), rbuf(91)
 
 !     Compute time update
 

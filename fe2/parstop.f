@@ -7,15 +7,6 @@
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
-!     Modification log                                Date (dd/mm/year)
-!       Original version                                    01/11/2006
-!       1. Increase rbuf to 20 words                        20/01/2011
-!       2. Set nrbuf to dsend + 7                           08/05/2012
-!       3. Increase rbuf to 24 words                        20/)7/2012
-!       4. Replace 'omacr1.h' by 'elpers.h'                 21/05/2013
-!       5. Add check on mpiflg to stop MPI processes        30/05/2016
-!       6. Change 'nrbuf' to 'nsbuf'; add prints on debug   24/01/2018
-!-----[--.----+----.----+----.-----------------------------------------]
 !      Purpose: Close any open parallel array and delete memory use
 !               Dummy routine in serial version.
 
@@ -28,10 +19,15 @@
       implicit   none
 
       include   'debugs.h'
+      include   'comfil.h'   ! finp
       include   'elpers.h'
+      include   'iodata.h'   ! ios
       include   'setups.h'
       include   'mpif.h'
 
+      character (len=128) :: ufinp
+      character (len=  3) :: fext
+      logical       :: lopen, lexist
       integer       :: i, ierr, nsbuf, usr_msg
       real (kind=8) :: rbuf(24)
 
@@ -61,5 +57,26 @@
       if(mpiflg) then
         call MPI_Finalize( ierr )
       endif
+
+!     Clean up input files
+      do i = 1,ntasks - 1
+!       Set extender for file
+        fext = '000'
+        if(i.lt.10) then
+          write(fext(3:3),'(i1)') i
+        elseif(i.lt.100) then
+          write(fext(2:3),'(i2)') i
+        endif
+
+!       Input files
+        ufinp = ' '
+        ufinp = finp
+        call addext(ufinp,fext,128,3)
+        inquire(file=ufinp,opened=lopen,exist=lexist)
+        if(lexist) then
+          if(.not.lopen) open(unit=ios,file = ufinp)
+          close(unit=ios,status='delete')
+        endif
+      end do ! i
 
       end subroutine parstop

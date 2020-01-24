@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -23,7 +23,7 @@
       implicit   none
 
       type(windowconfig)  :: textscreen
-      logical             :: status
+      logical             :: vstatus
 
       save
 
@@ -33,7 +33,7 @@
 
 !     Get Current Input Data Window Size
 
-      status  = getwindowconfig(textscreen)
+      vstatus  = getwindowconfig(textscreen)
 
 !     Set the x & y pixels & font to give 80 x 50 text window
 
@@ -48,11 +48,11 @@
 
       textscreen.mode = qwin$scrolldown
 
-      status = setwindowconfig(textscreen)
-      if(.not.status) status = setwindowconfig(textscreen)
+      vstatus = setwindowconfig(textscreen)
+      if(.not.vstatus) vstatus = setwindowconfig(textscreen)
 
-      status = deletemenuqq(4, 0)
+      vstatus = deletemenuqq(4, 0)
 
-      status = displaycursor($gcursoron)
+      vstatus = displaycursor($gcursoron)
 
-      end
+      end subroutine pwopn

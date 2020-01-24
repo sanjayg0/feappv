@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -15,7 +15,6 @@
 !      Outputs:
 !         none      - Data stored in blank common locations
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'cdata.h'
@@ -30,9 +29,11 @@
       include  'sdata.h'
       include  'comblk.h'
 
-      character fnam*128, fext*4, vtype*4
-      logical   lsave, oprt,oprth
-      integer   i,n,l1, iosave
+      character (len=128) :: fnam
+      character (len=4)   :: fext, vtype
+
+      logical       :: lsave, oprt,oprth
+      integer       :: i,n,l1, iosave
 
       save
 
@@ -271,4 +272,4 @@
 
 3000  format(' *ERROR* Edge data file',a,' does not exist')
 
-      end
+      end subroutine pedgin

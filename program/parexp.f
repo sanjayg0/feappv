@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -29,10 +29,10 @@
 
       include  'conval.h'
 
-      logical   error
-      character x*(*),xs*(*)
-      integer   i,j,k,l, i1,i2,nex
-      real*8    val, v(*)
+      logical       :: error
+      character     :: x*(*),xs*(*)
+      integer       :: i,j,k,l, i1,i2,nex
+      real (kind=8) :: val, v(*)
 
       save
 
@@ -87,4 +87,4 @@
         endif
       end do ! i
 
-      end
+      end subroutine parexp

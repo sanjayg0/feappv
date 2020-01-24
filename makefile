@@ -1,16 +1,17 @@
+
 # N.B.  It is necessary to modify 'makefile.in' before using make.
 
-include $(FEAPPVHOME4_1)/makefile.in
+include $(FEAPPVHOME5_1)/makefile.in
 
-CLEANDIRS = elements program user main plot unix
+CLEANDIRS = elements program plot unix user main
 
 feappv: archive
 	(cd main; make feappv)
 	@@echo "--> FEAPpv executable made <--"
 
 archive:   
-	(cd program; make archive)
 	(cd elements; make archive)
+	(cd program; make archive)
 	(cd plot; make archive)
 	(cd unix; make archive)
 	(cd user; make archive)

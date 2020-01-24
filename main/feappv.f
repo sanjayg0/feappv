@@ -3,13 +3,11 @@
 !-----[--.----+----.----+----.-----------------------------------------]
 !      * * F E A P p v * * Finite Element Analysis Program
 !                          -      -       -        -
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
-!     Finite Element Analysis Program -- personal version -- (FEAPpv) for
-!     solution of general problem classes using the finite element method.
-!     Problem size is controlled by dimension of blank common  & value of
-!     variable 'maxm' as set in the parameter statement below.
+!     Finite Element Analysis Program - personal version - (FEAPpv) for
+!     solution of general problem types using the finite element method.
 
 !     Programmed by:
 !                R. L. Taylor
@@ -21,7 +19,7 @@
 !-----[--.----+----.----+----.-----------------------------------------]
 !     Notes:
 
-!     1. Precision is controlled by ipr:
+!     1. Precision is controlled by parameter "ipr":
 
 !        Set ipr = 1 for 8-byte integers; = 2 for 4-byte integers.
 
@@ -29,10 +27,10 @@
 !        for all variables in each subprogram.
 
 !        e.g.    implicit  none
-!                real*8    a(12)
-!                integer   name
-!                character word*6
-!                logical   flag
+!                real      (kind=8) :: a(12)
+!                integer   (kind=4) :: name
+!                character  (len=6) :: word
+!                logical            :: flag
 !                etc.
 
 !     3. FEAPpv may create temporary input files during use.
@@ -65,21 +63,21 @@
       include      'iodata.h'
       include      'iofile.h'
       include      'prmptd.h'
-      include      'psize.h'
-      include      'pathn.h'
       include      'setups.h'
       include      'vdata.h'
 !-----[--.----+----.----+----.-----------------------------------------]
-
 !     Set version header for output to file and screen
 
-      versn(1) = '4.1 Revision i'
-      versn(2) = '21 April 2018'
+      versn(1) = 'Release 5.1.1a'
+      versn(2) = '01 January 2020'
 
+!-----[--.----+----.----+----.-----------------------------------------]
 !     Set precision for real variables:
 
       ipr = 2                  ! 32-bit integer arrays version
+!                              ! Pointers to arrays are 64 bit
 
+!-----[--.----+----.----+----.-----------------------------------------]
 !     Set default logical unit numbers for files
 
       iop = 11
@@ -91,6 +89,7 @@
       lun = 17
       icl = 18
 
+!-----[--.----+----.----+----.-----------------------------------------]
 !     Set data input parsing flag
 
       coflg = .true.  ! Parse all input as expressions   (slower mode)
@@ -101,54 +100,36 @@
 !     ciflg = .false. ! or from keyboard entry if .false.
                       ! N.B. Used for Windows version only
 
+!-----[--.----+----.----+----.-----------------------------------------]
 !     Set graphics default options
 
       defalt = .true. ! Graphics with default contour intervals, etc.
       prompt = .true. ! Prompt for graphics inputs when defalt = .false.
 
+!-----[--.----+----.----+----.-----------------------------------------]
 !     Set PostScript default mode
 
       pscolr = .true. ! PostScript outputs are in color
       psrevs = .false.! Color order is normal
 
+!-----[--.----+----.----+----.-----------------------------------------]
 !     Set help display level: (0=Basic, 1=Intermediate, 2=Advanced)
 
       hlplev = 0      ! Basic
 
-!     Set increment for reducing array size
-
-      incred = 2      ! No reduction unless array is less by 'incred'
-
+!-----[--.----+----.----+----.-----------------------------------------]
 !     Set solver flag: Program-solver = .true.; User-solver = .false.
 
       solver    = .true.
-
 !-----[--.----+----.----+----.-----------------------------------------]
 
 !     Initialize solution system
-
       call pstart()
 
-!     Check installation options
-
-      call pinstall()
-
-!     Open files: Must open unit ior (input) and iow (output)
-
-      call filnam()
-
-!     Initialize clock
-
-      call stime()
-
 !     Solve problem
-
       call pcontr()
 
-!     Close plot
-
-      call plstop(.false.) ! Normal exit
-
+!-----[--.----+----.----+----.-----------------------------------------]
 !     No additional calls to routines after PLSTOP
 
-      end
+      end program feappv

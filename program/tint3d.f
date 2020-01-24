@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -18,8 +18,8 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
-      integer   i, j, ll, lint
-      real*8    s(5,*)
+      integer       :: i, j, ll, lint
+      real (kind=8) :: s(5,*)
 
       save
 
@@ -132,4 +132,4 @@
         s(4,j) = 1.d0 - (s(1,j) + s(2,j) + s(3,j))
       end do ! j
 
-      end
+      end subroutine tint3d

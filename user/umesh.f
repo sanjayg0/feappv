@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -21,13 +21,13 @@
 !     IOR is logical unit number for data inputs (if negative input from *)
 !     IOW is logical unit number for output data
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'iofile.h'
 
-      logical   prt,pcomp
-      character cc*4, tx(*)*15
+      character (len=15) :: tx(*)
+      character (len=4)  :: cc
+      logical       :: prt,pcomp
 
 !     Match on 'USER':  Can add as many checks as desired with 'user'
 !                       replaced by 4-character word for each command.
@@ -56,4 +56,4 @@
 
       endif
 
-      end
+      end function umesh

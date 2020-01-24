@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -26,12 +26,12 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
-      integer   nr,ns,ndm, side, n, j
-      real*8    ang
+      integer       :: nr,ns,ndm, side, n, j
+      real (kind=8) :: ang
 
-      integer   is(*), isr(10)
-      real*8    xs(3,*), shp(*), x(ndm,*), rs(3,*), dx(3)
-      real*8    e(3,3), elen
+      integer       :: is(*), isr(10)
+      real (kind=8) :: xs(3,*), shp(*), x(ndm,*), rs(3,*), dx(3)
+      real (kind=8) :: e(3,3), elen
 
       save
 
@@ -137,4 +137,4 @@
         end do ! n
       endif
 
-      end
+      end subroutine arcint1

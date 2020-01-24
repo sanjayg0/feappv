@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -19,24 +19,24 @@
 !      Outputs:
 !         id(*)      - B.C./Equation numbers identifiers
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'cdata.h'
       include  'iofile.h'
       include  'sdata.h'
 
-      logical   ckno0i,errck,pinput,prt,prth
+      logical       :: ckno0i,errck,pinput,prt,prth, norec
 
-      integer   i,ii,is,il,k,l,lg,n,ng
+      integer       :: i,ii,is,il,k,l,lg,n,ng
 
-      integer   id(ndf,*),idl(*)
-      real*8    td(16)
+      integer       :: id(ndf,*),idl(*)
+      real (kind=8) :: td(16)
 
       save
 
 !     [boun]dary codes - read in restraint conditions for each node
 
+      norec = .true.
       n = 0
       ng = 0
 401   l = n
@@ -65,6 +65,7 @@
         end do
       endif
       if(n.gt.0.and.n.le.numnp) then
+        norec = .false.
         do i = 1,ndf
           id(i,n) = idl(i)
           if(l.ne.0.and.idl(i).eq.0.and.id(i,l).lt.0) id(i,n) = -1
@@ -93,6 +94,14 @@
         end do
       endif
 
+!     Warning on no data iput
+
+      if(norec) then
+        write(  *,4001)
+        write(iow,4001)
+        return
+      endif
+
 !     Formats
 
 2000  format('  N o d a l   B. C.'//
@@ -102,4 +111,7 @@
 
 3000  format(' Input: node#, inc., (b. codes, i=1,ndf)'/3x,'>',$)
 
-      end
+4001  format(' *WARNING* PBOUIN: No data found for a -> BOUN',
+     &       ' <- data set.')
+
+      end subroutine pbouin

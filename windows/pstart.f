@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 !                        -      -       -        -
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -27,18 +27,21 @@
       include  'comfil.h'
       include  'iodata.h'
       include  'pdata2.h'
+      include  'setups.h'
 
-      integer      status, ilen, i
-      character    file_spec*512, fildata*512, pathname*512
-      logical*4    ldrv
+      character (len=512) :: file_spec, fildata, pathname
+
       character*(*), parameter:: filter_spec = "Text Files"C // "I*"C
      &             // "All Files"C // "*.*"C // ""C
       character*(*), parameter:: DLGTITLE = "Choose Input File"C
 
+      integer          :: status, ilen, i
+      logical (kind=4) :: ldrv
+
       type(T_OPENFILENAME) :: ofn
 
       interface
-        logical(4)  function initialsettings
+        logical(kind=4) function initialsettings
         end function
       end interface
 
@@ -107,13 +110,32 @@
 
       call pwopn()
 
+!     Start versions that use MPI
+
+      mpiflg = .false.
+      call mpi_start_feap()
+
+!     Start other versions
+
+      if(.not.mpiflg) then
+
+!       Check user installation options
+
+        call pinstall()
+
+!       Set all filenames
+
+        call filnam()
+
+      endif
+
 !     Formats
 
 2000  format(a/a/a/a/a/1p,1e25.15)
 
-      end
+      end subroutine pstart
 
-      logical(4) function initialsettings ( )
+      logical(kind=4) function initialsettings ( )
 
       use       IFQWIN
 
@@ -131,4 +153,4 @@
 
       initialsettings = .true.
 
-      end function
+      end function initialsettings

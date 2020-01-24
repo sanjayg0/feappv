@@ -1,3 +1,3 @@
 
-      integer         ndf,ndm,nen1,nst,nneq
-      common /sdata/  ndf,ndm,nen1,nst,nneq
+      integer         ndf,ndm,nen1,nst,nneq,ndl
+      common /sdata/  ndf,ndm,nen1,nst,nneq,ndl

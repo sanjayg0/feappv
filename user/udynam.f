@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -22,16 +22,14 @@
 !      Outputs:
 !        ud(nneq,*) - User controlled vectors
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
-      integer   n,nneq,isw
-      real*8    du(*),u(nneq,2),ud(nneq,*)
+      integer       :: n,nneq,isw
+      real (kind=8) :: du(*),u(nneq,2),ud(nneq,*)
 
 !     Loop structure for partitions
-
       do n = 1,nneq
 !       Perform steps here
       end do
 
-      end
+      end subroutine udynam

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -29,12 +29,12 @@
 !         iel    - Element type for request
 !         errck  - Flag, true if request found
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
-      logical   pcomp, errck
-      character tx*15
-      integer   iel
+      character (len=15) :: tx
+
+      logical       :: pcomp, errck
+      integer       :: iel
 
       save
 
@@ -64,4 +64,4 @@
         errck = .true.
       endif
 
-      end
+      end subroutine pelnum

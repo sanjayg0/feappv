@@ -4,7 +4,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -41,7 +41,6 @@
 !         f(ndf,*)    - Nodal force and boundary values
 !         ang(*)      - Angles for sloping boundary nodes
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'comfil.h'
@@ -55,34 +54,38 @@
       include  'pointer.h'
       include  'comblk.h'
 
-      character ptype*15,fnam*128,fext*4, wd(12)*4, vtype*4
-      logical   prt,prth,errck,pinput,tinput,pcomp,lsave, polfl, wdflg
-      logical   setmem,palloc, oprt,oprth
-      integer   wdlist,fnorm,ddof
-      integer   ndf,ndm,nen,nen1,numnp,numel,isw
-      integer   i,i1,i2,i3,j,m,n,nn,iosave,ntyp,ntot,numprt,l,lint
-      real*8    cn,sn, y1,y2, tol0,tol,tolxi
-      real*8    ff,df,xi, d,gap0,alpha
-      real*8    ximin,ximax,xia,xib,xic,fa,fb,fxa,fxb,fya,fyb, pa,pb,pc
-      real*8    xc,yc, x1,x2, xy, xi1,xi2, zeta, zeta1,zeta2
+      character (len=128) :: fnam
+      character (len=15)  :: ptype
+      character (len=4)   :: fext, wd(14), vtype
+
+      logical       :: prt,prth,errck,pinput,tinput,pcomp,lsave, polfl
+      logical       :: setmem,palloc, oprt,oprth, wdflg, axifl
+      integer       :: wdlist,fnorm,ddof
+      integer       :: ndf,ndm,nen,nen1,numnp,numel,nipt,isw
+      integer       :: i,i1,i2,i3,j,m,n,nn,nel
+      integer       :: iosave,ntyp,ntot,numprt,l,lint
+      real (kind=8) :: cn,sn, tol0,tol,tolxi
+      real (kind=8) :: ff,df,xi, d,gap0, ra
+      real (kind=8) :: ximin,ximax,xia,xib
+      real (kind=8) :: yc, xi1,xi2, zeta,zeta1,zeta2
 
       integer   id(ndf,numnp,*),ix(nen1,*),ip(*),ep(numel,*)
       integer   nend(2,2)
-      real*8    xin(*),x(ndm,*),f(ndf,numnp,*),ang(*)
-      real*8    xe(2,3),xl(2,3),dxl(2), xp(2),x0(3),pl(30)
-      real*8    shp(2,3),sg(3),wg(3), fl(2,3), td(5)
-      real*8    xld(2),xqd(2)
+      real (kind=8) :: xin(*),x(ndm,*),f(ndf,numnp,*),ang(*)
+      real (kind=8) :: xe(2,3),xl(2,3), xp(2),x0(3),pl(30)
+      real (kind=8) :: shp(2,3),sg(2,3), fl(2,3), td(5)
+      real (kind=8) :: xld(2),xqd(2)
 
       save
 
       data      tol0 / 1.0d-5/, tolxi / 1.0d-8 /
 
-      data      wdlist /12/
+      data      wdlist /14/
       data      wd / 'gap ', 'node', 'line', 'quad', 'pola', 'cart',
-     &               'disp', 'tang', 'norm', 'surf', 'segm', 'dofs'/
+     &               'disp', 'tang', 'norm', 'surf', 'segm', 'dofs',
+     &               'axis', 'plan' /
 
 !     Coordinate surface loading, boundary condition, and angle inputs
-
       if     (isw.eq.1) then
         ntot = nsurf - 1
       else if(isw.eq.2) then
@@ -102,12 +105,10 @@
       do nn = 0,ntot
 
 !       Default to normal loading
-
         fnorm  = 1
         numprt = 0
 
 !       Set file extender and number of input items
-
         if(isw.eq.1) then
           fext = 'sl0'
           ntyp = max(3,ndm+ndf)
@@ -129,7 +130,6 @@
         endif
 
 !       Check for file numbers
-
         if(nn.le.9) then
           write(fext(3:3),'(i1)') nn
         elseif(nn.le.99) then
@@ -158,9 +158,9 @@
 
         gap0  = 0.0d0
         polfl = .false.
+        axifl = .false.
 
 !       Input type and pressure on surface
-
 1       ptype = ' '
         errck = tinput(ptype,1,pl,ntyp)
         if(errck) then
@@ -169,14 +169,12 @@
         endif
 
 !       Check for legal data
-
         wdflg = .false.
         do i = 1,wdlist
           if(pcomp(ptype,wd(i),4)) wdflg = .true.
         end do
 
 !       Delete file and go to next list
-
         if(.not.wdflg) then
           close(ior,status = 'delete')
           ior = iosave
@@ -186,6 +184,12 @@
           go to 1
         elseif( pcomp(ptype,'tang',4)) then
           fnorm = 2
+          go to 1
+        elseif( pcomp(ptype,'axis',4)) then
+          axifl = .true.
+          go to 1
+        elseif( pcomp(ptype,'plan',4)) then
+          axifl = .false.
           go to 1
         elseif( pcomp(ptype,'disp',4) .or. pcomp(ptype,'dofs',4)) then
           ddof  = max(1,min(ndf,nint(pl(1))))
@@ -198,7 +202,7 @@
      &                  vtype,prt,prth)
           elseif(isw.eq.2) then
             call pcboun(pl,x,id(1,1,2),mr(point),ndm,ndf,numnp,numprt,
-     &                  gap0,vtype,prt,prth)
+     &                  gap0,vtype,prt,prth,'-B.C.')
           elseif(isw.eq.3) then
             call paboun(pl,x,ang,mr(point),ndm,numnp,numprt,
      &                  prt,prth)
@@ -258,7 +262,6 @@
           end do ! while
 
 !         For linear segments average to get mid value/point
-
           if(i1.eq.2) then
             xl(1,3) = 0.5d0*(xl(1,1) + xl(1,2))
             xl(2,3) = 0.5d0*(xl(2,1) + xl(2,2))
@@ -266,7 +269,6 @@
           endif
 
 !       Quadratic segment
-
         elseif( pcomp(ptype,'quad',4)) then
           do i = 1,3
             errck = pinput(td,4)
@@ -277,7 +279,6 @@
           end do
 
 !       Linear segment
-
         elseif( pcomp(ptype,'line',4)) then
           do i = 1,2
             errck = pinput(td,4)
@@ -292,7 +293,6 @@
         endif
 
 !       Output data
-
         if(prt) then
           if(isw.eq.1 .or. isw.eq.5) then
             if(fnorm.le.2) then
@@ -340,15 +340,12 @@
         endif
 
 !       Projections nodes to points
-
         errck = .false.
         tol   =  tol0
-!       tol   = 3.d0
 
 100     call prj2dl(gap0,tol0,tol,x0,ip,xin,x,xl,ndm,numnp,polfl)
 
 !       Check if end points found
-
         ximin = +1.d0
         ximax = -1.d0
         do n = 1,numnp
@@ -359,7 +356,6 @@
         end do
 
 !       For cylindrical coordinates check number of 1 and -1 values
-
         if(polfl) then
           i1 = 0
           i2 = 0
@@ -380,14 +376,12 @@
         endif
 
         tol = tol0 + max(1.d0+ximin,1.d0-ximax,0.0d0)
-!       tol = tol0 + max(1.d0-ximin,0.0d0)
 
         errck = .not.errck
         errck = .false.
         if(errck .and. tol.gt.tol0+tolxi) go to 100
 
 !       Loop through elements to find adjacent nodes
-
         do n = 1,numel
           ep(n,1) = 0
           ep(n,2) = 0
@@ -423,7 +417,6 @@
         end do ! n
 
 !       Remove duplicates
-
         do n = 1,numel-1
           if(ep(n,1).gt.0) then
             do m = n+1,numel
@@ -439,7 +432,6 @@
 
 !       Check for polar projections: Possible that angle 0 and 360 both
 !       project to 'xi' of -1.0d0
-
         if(polfl) then
           do n = 1,numel
             if(ep(n,1).gt.0) then
@@ -460,11 +452,9 @@
         endif
 
 !       Compute nodal forces from surface pressures
-
         if(isw.eq.1 .and. fnorm.le.2) then
 
 !         Find end points
-
           do n = 1,numnp
             ip(n) = 0
           end do
@@ -477,7 +467,6 @@
             if(ep(n,1).gt.0) then
 
 !             Order segments along master direction
-
               if(polfl) then
                 yc = xl(2,3) + xin(ep(n,1))*(xld(2)
      &                       + 0.5d0*xin(ep(n,1))*xqd(2))
@@ -503,14 +492,12 @@
               end if
 
 !             Count occurances of node
-
               if(ep(n,1).gt.0) ip(ep(n,1)) = ip(ep(n,1)) + 1
               if(ep(n,2).gt.0) ip(ep(n,2)) = ip(ep(n,2)) + 1
             end if
           end do
 
 !         Set end point array
-
           j         = 0
           nend(1,1) = 0
           nend(2,1) = 0
@@ -522,7 +509,6 @@
           end do
 
 !         Check for error
-
           if(nend(1,1).eq.0 .or. nend(2,1).eq.0) then
             write(iow,*) '  *ERROR* No surface located'
             if(ior.lt.0) then
@@ -531,7 +517,6 @@
           endif
 
 !         Compute nodal forces for pressures
-
           if(prt) then
             write(iow,2001)
             if(ior.lt.0) write(*,2001)
@@ -544,283 +529,113 @@
             if(i1.gt.0) then
 
               i2     = ep(n,2)
-              i3     = ep(n,3)
               xia    = xin(i1)
               xib    = xin(i2)
-              if(i3.eq.0) then
-                dxl(1) = x(1,i2) - x(1,i1)
-                dxl(2) = x(2,i2) - x(2,i1)
-
-                if(xia.lt.-1.d0) then
-                  if(xib.gt.1.0d0) then
-                    pa    = pl(1)
-                    pb    = pl(2)
-                    pc    = pl(3)
-                    alpha = 1.d0/(xib - xia)
-                    pa    = alpha*(pa + pc + pc)*0.3333333333333333d0
-                    pb    = alpha*(pc + pc + pb)*0.3333333333333333d0
-                    fb    = ((-1.d0 - xia)*pa + (1 - xia)*pb)*alpha
-                    fa    = pa + pb - fb
-                  elseif (xib.gt.-1.d0) then
-                    xic   = -0.5d0 + xib*0.5d0
-                    pa    = pl(1)
-                    pb    = pl(1)*0.5d0*xib*(xib-1.d0)
-     &                    + pl(3)*(1.d0-xib*xib)
-     &                    + pl(2)*0.5d0*xib*(xib+1.d0)
-                    pc    = pl(1)*0.5d0*xic*(xic-1.d0)
-     &                    + pl(3)*(1.d0-xic*xic)
-     &                    + pl(2)*0.5d0*xic*(xic+1.d0)
-                    if(xib-xia .gt. tolxi) then
-                      alpha = (xib + 1.0d0)/(xib - xia)
-                    else
-                      alpha = 1.d0
-                    endif
-                    fa    = (pa + pc + pc)*0.1666666666666667d0
-                    fb    = (pc + pc + pb)*0.1666666666666667d0
-                    fb    = alpha*(fa + fb)
-                    fa    = alpha*alpha*fa
-                    fb    = fb - fa
-                  end if
-                elseif (xia.lt.1.d0) then
-
-                  pa    = pl(1)*0.5d0*xia*(xia-1.d0)
-     &                  + pl(3)*(1.d0-xia*xia)
-     &                  + pl(2)*0.5d0*xia*(xia+1.d0)
-
-                  if(xib.lt.1.d0) then
-
-                    xic   = (xia + xib)*0.5d0
-                    pb    = pl(1)*0.5d0*xib*(xib-1.d0)
-     &                    + pl(3)*(1.d0-xib*xib)
-     &                    + pl(2)*0.5d0*xib*(xib+1.d0)
-                    alpha = 1.d0
-
-                  else
-
-                    xic   = xia*0.5d0 + 0.5d0
-                    pb    = pl(2)
-                    if(xib-xia .gt. tolxi) then
-                      alpha = (1.d0 - xia)/(xib - xia)
-                    else
-                      alpha = 1.d0
-                    endif
-
-                  end if
-                  pc    = pl(1)*0.5d0*xic*(xic-1.d0)
-     &                  + pl(3)*(1.d0-xic*xic)
-     &                  + pl(2)*0.5d0*xic*(xic+1.d0)
-
-                  fa    = (pa + pc + pc)*0.1666666666666667d0
-                  fb    = (pc + pc + pb)*0.1666666666666667d0
-                  fa    = alpha*(fa + fb)
-                  fb    = alpha*alpha*fb
-                  fa    = fa - fb
-
-                else
-                  fa = 0.0d0
-                  fb = 0.0d0
-                  pa = 0.0d0
-                  pb = 0.0d0
-                end if
-
-!               Add forces
-
-                if(abs(fa)+abs(fb).gt.0.0d0) then
-
-                  if(fnorm.eq.1) then
-                    fxa =  fa*dxl(2)
-                    fya = -fa*dxl(1)
-                    fxb =  fb*dxl(2)
-                    fyb = -fb*dxl(1)
-                  elseif(fnorm.eq.2) then
-                    fxa =  fa*dxl(1)
-                    fya =  fa*dxl(2)
-                    fxb =  fb*dxl(1)
-                    fyb =  fb*dxl(2)
-                  endif
-
-!                 Check for sloping boundary conditions
-
-                  if(ang(i1).ne.0.0d0) then
-                    call pdegree(ang(i1), sn,cn)
-                    ff  =  cn*fxa + sn*fya
-                    fya = -sn*fxa + cn*fya
-                    fxa =  ff
-                  endif
-
-                  if(ang(i2).ne.0.0d0) then
-                    call pdegree(ang(i2), sn,cn)
-                    ff  =  cn*fxb + sn*fyb
-                    fyb = -sn*fxb + cn*fyb
-                    fxb =  ff
-                  endif
-
-!                 Normal element
-
-                  if(ndf.lt.8) then
-
-                    f(1,i1,1) =  f(1,i1,1) + fxa
-                    f(2,i1,1) =  f(2,i1,1) + fya
-                    f(1,i2,1) =  f(1,i2,1) + fxb
-                    f(2,i2,1) =  f(2,i2,1) + fyb
-
-!                 Hierarchic formulation
-
-                  else
-
-                    lint = 3
-                    call int1d(lint,sg,wg)
-                    do l = 1,lint
-                      call shap1d(sg(l),2,shp)
-                      dxl(1) = shp(1,1)*x(1,i1) + shp(1,2)*x(1,i2)
-                      dxl(2) = shp(1,1)*x(2,i1) + shp(1,2)*x(2,i2)
-                      xc     = shp(2,1)*x(1,i1) + shp(2,2)*x(1,i2)
-                      yc     = shp(2,1)*x(2,i1) + shp(2,2)*x(2,i2)
-                      ff = (pa*0.5d0*sg(l)*(sg(l)-1.d0)
-     &                   +  pc*(1.d0-sg(l)*sg(l))
-     &                   +  pb*0.5d0*sg(l)*(sg(l)+1.d0))*wg(l)
-                      x1        = xc - x(1,i1)
-                      y1        = yc - x(2,i1)
-                      x2        = x1*x1
-                      xy        = x1*y1
-                      y2        = y1*y1
-                      f(1,i1,1) = f(1,i1,1) + dxl(2)*shp(2,1)*ff
-                      f(2,i1,1) = f(2,i1,1) - dxl(1)*shp(2,1)*ff
-                      f(3,i1,1) = f(3,i1,1) + x2*dxl(2)*shp(2,1)*ff
-                      f(4,i1,1) = f(4,i1,1) - x2*dxl(1)*shp(2,1)*ff
-                      f(5,i1,1) = f(5,i1,1) + xy*dxl(2)*shp(2,1)*ff
-                      f(6,i1,1) = f(6,i1,1) - xy*dxl(1)*shp(2,1)*ff
-                      f(7,i1,1) = f(7,i1,1) + y2*dxl(2)*shp(2,1)*ff
-                      f(8,i1,1) = f(8,i1,1) - y2*dxl(1)*shp(2,1)*ff
-
-                      x1        = xc - x(1,i2)
-                      y1        = yc - x(2,i2)
-                      x2        = x1*x1
-                      xy        = x1*y1
-                      y2        = y1*y1
-                      f(1,i2,1) = f(1,i2,1) + dxl(2)*shp(2,2)*ff
-                      f(2,i2,1) = f(2,i2,1) - dxl(1)*shp(2,2)*ff
-                      f(3,i2,1) = f(3,i2,1) + x2*dxl(2)*shp(2,2)*ff
-                      f(4,i2,1) = f(4,i2,1) - x2*dxl(1)*shp(2,2)*ff
-                      f(5,i2,1) = f(5,i2,1) + xy*dxl(2)*shp(2,2)*ff
-                      f(6,i2,1) = f(6,i2,1) - xy*dxl(1)*shp(2,2)*ff
-                      f(7,i2,1) = f(7,i2,1) + y2*dxl(2)*shp(2,2)*ff
-                      f(8,i2,1) = f(8,i2,1) - y2*dxl(1)*shp(2,2)*ff
-                    end do
-
-                  endif
-
-                  if(prt) then
-                    write(iow,2002) i1,fxa,fya,i2,fxb,fyb
-                    if(ior.lt.0) then
-                      write(*,2002) i1,fxa,fya,i2,fxb,fyb
-                    endif
-                  endif
-
-                end if
 
 !             Numerically integrated edge loading
 
+!             Set order
+              if(ep(n,3).ne.0) then
+                nel = 3
               else
+                nel = 2
+              endif
 
-!               Compute end values for each coordinate
+!             Compute end values for each coordinate
+              do i = 1,nel
+                xe(1,i) = x(1,ep(n,i))
+                xe(2,i) = x(2,ep(n,i))
+                fl(1,i) = 0.0d0
+                fl(2,i) = 0.0d0
+              end do
 
-                do i = 1,3
-                  xe(1,i) = x(1,ep(n,i))
-                  xe(2,i) = x(2,ep(n,i))
-                  fl(1,i) = 0.0d0
-                  fl(2,i) = 0.0d0
-                end do
+              zeta1 = xia
+              zeta2 = xib
 
-                zeta1 = xia
-                zeta2 = xib
+              xi1 = max(-1.d0, -(2.d0+zeta1+zeta2)/(zeta2-zeta1))
+              xi2 = min( 1.d0,  (2.d0-zeta1-zeta2)/(zeta2-zeta1))
 
-                xi1 = max(-1.d0, -(2.d0+zeta1+zeta2)/(zeta2-zeta1))
-                xi2 = min( 1.d0,  (2.d0-zeta1-zeta2)/(zeta2-zeta1))
+              df  = 0.5d0*(xi2 - xi1)
 
-                df  = 0.5d0*(xi2 - xi1)
+              lint = nel
+              call int1d(lint,sg)
+              do l = 1,lint
 
-                lint = 3
-                call int1d(lint,sg,wg)
-                do l = 1,lint
+!               Coordinates for facet and interpolation surface
+                xi   = 0.5d0*((1.d0 - sg(1,l))*xi1
+     &                      + (1.d0 + sg(1,l))*xi2)
+                zeta = 0.5d0*((1.d0 - xi)*zeta1 + (1.d0 + xi)*zeta2)
 
-!                 Coordinates for facet and interpolation surface
+!               Magnitude of loading
+                ff    = (pl(1)*0.5d0*zeta*(zeta-1.d0)
+     &                +  pl(2)*0.5d0*zeta*(zeta+1.d0)
+     &                +  pl(3)*(1.d0-zeta*zeta))*sg(2,l)*df
 
-                  xi   = 0.5d0*((1.d0 - sg(l))*xi1 + (1.d0 + sg(l))*xi2)
-                  zeta = 0.5d0*((1.d0 - xi)*zeta1  + (1.d0 + xi)*zeta2)
+!               Shape functions for facet
+                call shap1d(xi,nel,shp)
 
-!                 Magnitude of loading
+!               Tangent vector to facet
+                xp(1) = shp(1,1)*xe(1,1)
+                xp(2) = shp(1,1)*xe(2,1)
+                do i = 2,nel
+                  xp(1) = xp(1) + shp(1,i)*xe(1,i)
+                  xp(2) = xp(2) + shp(1,i)*xe(2,i)
+                end do ! i
 
-                  ff    = (pl(1)*0.5d0*zeta*(zeta-1.d0)
-     &                  +  pl(2)*0.5d0*zeta*(zeta+1.d0)
-     &                  +  pl(3)*(1.d0-zeta*zeta))*wg(l)*df
-
-!                 Shape functions for facet
-
-                  call shap1d(xi,3,shp)
-
-!                 Tangent vector to facet
-
-                  xp(1) = shp(1,1)*xe(1,1)
-     &                  + shp(1,2)*xe(1,2)
-     &                  + shp(1,3)*xe(1,3)
-                  xp(2) = shp(1,1)*xe(2,1)
-     &                  + shp(1,2)*xe(2,2)
-     &                  + shp(1,3)*xe(2,3)
-
-!                 Tangential loading values
-
-                  do i = 1,3
-                    fl(1,i) = fl(1,i) + shp(2,i)*xp(1)*ff
-                    fl(2,i) = fl(2,i) + shp(2,i)*xp(2)*ff
+!               Axisymmetric coordinates
+                if(axifl) then
+                  ra = 0.0d0
+                  do i = 1,nel
+                    ra = ra + shp(2,i)*xe(1,i)
                   end do ! i
-                end do ! l
-
-!               Transform for normal loading
-
-                if(fnorm.eq.1) then
-                  do i = 1,3
-                    ff      =  fl(1,i)
-                    fl(1,i) =  fl(2,i)
-                    fl(2,i) = -ff
-                  end do
+                  ff = ff*ra  ! multiply load intensity by radius
                 endif
 
-!               Perform outputs and add to nodal forces
+!               Tangential loading values
+                do i = 1,nel
+                  fl(1,i) = fl(1,i) + shp(2,i)*xp(1)*ff
+                  fl(2,i) = fl(2,i) + shp(2,i)*xp(2)*ff
+                end do ! i
+              end do ! l
 
+!             Transform for normal loading
+              if(fnorm.eq.1) then
                 do i = 1,3
-                  i1 = ep(n,i)
-
-                  if(prt) then
-                    write(iow,2002) i1,fl(1,i),fl(2,i)
-                    if(ior.lt.0) then
-                      write(*,2002) i1,fl(1,i),fl(2,i)
-                    endif
-                  endif
-
-!                 Sloping boundary conditions
-
-                  if(ang(i1).ne.0.0d0) then
-                    call pdegree(ang(i1), sn,cn)
-                    ff      =  cn*fl(1,i) + sn*fl(2,i)
-                    fl(2,i) = -sn*fl(1,i) + cn*fl(2,i)
-                    fl(1,i) =  ff
-                  endif
-
-!                 Add to nodal forces
-
-                  f(1,i1,1) =  f(1,i1,1) + fl(1,i)
-                  f(2,i1,1) =  f(2,i1,1) + fl(2,i)
+                  ff      =  fl(1,i)
+                  fl(1,i) =  fl(2,i)
+                  fl(2,i) = -ff
                 end do
+              endif
 
-              end if
+!             Perform outputs and add to nodal forces
+              do i = 1,nel
+                i1 = ep(n,i)
+
+                if(prt) then
+                  write(iow,2002) i1,fl(1,i),fl(2,i)
+                  if(ior.lt.0) then
+                    write(*,2002) i1,fl(1,i),fl(2,i)
+                  endif
+                endif
+
+!               Sloping boundary conditions
+                if(ang(i1).ne.0.0d0) then
+                  call pdegree(ang(i1), sn,cn)
+                  ff      =  cn*fl(1,i) + sn*fl(2,i)
+                  fl(2,i) = -sn*fl(1,i) + cn*fl(2,i)
+                  fl(1,i) =  ff
+                endif
+
+!               Add to nodal forces
+                f(1,i1,1) =  f(1,i1,1) + fl(1,i)
+                f(2,i1,1) =  f(2,i1,1) + fl(2,i)
+              end do
 
             end if
 
           end do
 
 !       Other options
-
         else
 
           do n = 1,numnp
@@ -838,7 +653,6 @@
           end do
 
 !         Set specified displacements on line
-
           if(isw.eq.1 .and. fnorm.eq.3) then
 
             if(prt) then
@@ -846,8 +660,10 @@
               if(ior.lt.0) write(*,2031)
             end if
 
+            nipt = 0
             do n = 1,numnp
               if(ip(n).gt.0) then
+                nipt   = nipt + 1
                 xia    = xin(n)
                 f(ddof,n,2) = pl(1)*0.5d0*xia*(xia-1.d0)
      &                      + pl(3)*(1.d0-xia*xia)
@@ -860,10 +676,14 @@
                 endif
 
               endif
-            enddo
+            end do ! n
+
+            if(nipt.eq.0) then ! No data found
+              write(  *,3004) 'CDISpl'
+              write(iow,3004) 'CDISpl'
+            endif
 
 !         Set boundary conditions for nodes on surface
-
           elseif(isw.eq.2) then
 
             if(prt) then
@@ -889,7 +709,6 @@
             end do
 
 !         Set boundary angles for nodes on surface
-
           elseif(isw.eq.3) then
 
             if(prt) then
@@ -914,7 +733,6 @@
             enddo
 
 !         Set displacements for nodes on surface
-
           elseif(isw.eq.4) then
 
             if(prt) then
@@ -939,7 +757,6 @@
             enddo
 
 !         Set proportional load numbers for surface
-
           elseif(isw.eq.6) then
 
             if(prt) then
@@ -970,13 +787,11 @@
         go to 1
 
 !       End of current file
-
 300     continue
 
       end do
 
 !     Restore parameter values
-
       do i = 0,36
         do n = 1,26
           vvv(n,i) = vvsave(n,i)
@@ -991,21 +806,21 @@
 1001  format(1p,4e20.12)
 
 2000  format('   C o o r d i n a t e    S u r f a c e   L o a d s'/
-     &       '   x_1 coord.   y_1 coord.   x_2 coord.   y_2 coord.',
-     &       '   x_3 coord.   y_3 coord.'/1p,6e13.4/
-     &       '   p_1 press.                p_2 press.             ',
-     &       '   p_3 press.'/3(1p,1e13.4,13x))
+     &       '   x_1 Coord.   y_1 Coord.   x_2 Coord.   y_2 Coord.',
+     &       '   x_3 Coord.   y_3 Coord.'/1p,6e13.4/
+     &       '   p_1 Press.                p_2 Press.             ',
+     &       '   p_3 Press.'/3(1p,1e13.4,13x))
 
 2001  format(/'       N o d a l    F o r c e s'//
-     &       '       a_node    x_a force    y_a force       b_node',
-     &       '    x_b force    y_b force'/)
+     &       '       a_Node    x_a Force    y_a Force       b_Node',
+     &       '    x_b Force    y_b Force'/)
 
 2002  format(2(i13,1p,2e13.4))
 
 2010  format('   C o o r d i n a t e    S u r f a c e',
      &       '   C o n d i t i o n'/
-     &       '   x_1 coord.   y_1 coord.   x_2 coord.   y_2 coord.',
-     &       '   x_3 coord.   y_3 coord.'/1p,6e13.4/
+     &       '   x_1 Coord.   y_1 Coord.   x_2 Coord.   y_2 Coord.',
+     &       '   x_3 Coord.   y_3 Coord.'/1p,6e13.4/
      &       (10(i3,' B.C.',:)))
 
 2011  format(10i8)
@@ -1016,29 +831,29 @@
 2013  format(7i10/(10x,6i10))
 
 2020  format('   C o o r d i n a t e    S u r f a c e   L o a d s'/
-     &       '   x_1 coord.   y_1 coord.   x_2 coord.   y_2 coord.',
-     &       '   x_3 coord.   y_3 coord.'/1p,6e13.4/
-     &       '   a_1 angle                 a_2 angle              ',
-     &       '   a_3 angle '/3(1p,1e13.4,13x))
+     &       '   x_1 Coord.   y_1 Coord.   x_2 Coord.   y_2 Coord.',
+     &       '   x_3 Coord.   y_3 Coord.'/1p,6e13.4/
+     &       '   a_1 Angle                 a_2 Angle              ',
+     &       '   a_3 Angle '/3(1p,1e13.4,13x))
 
 2021  format(/'       N o d a l    A n g l e s'//
-     &       '       a_node    t_a angle')
+     &       '       a_Node    t_a Angle')
 
 2030  format('   C o o r d i n a t e    S u r f a c e   D i s p l.'/
-     &       '   x_1 coord.   y_1 coord.   x_2 coord.   y_2 coord.',
-     &       '   x_3 coord.   y_3 coord.'/1p,6e13.4/
-     &       '   d_1 displ                 d_2 displ              ',
-     &       '   d_3 displ '/3(1p,1e13.4,13x))
+     &       '   x_1 Coord.   y_1 Coord.   x_2 Coord.   y_2 Coord.',
+     &       '   x_3 Coord.   y_3 Coord.'/1p,6e13.4/
+     &       '   d_1 Displ                 d_2 Displ              ',
+     &       '   d_3 Displ '/3(1p,1e13.4,13x))
 
 2031  format(/'       N o d a l    D i s p l a c e m e n t s'//
-     &       '       a_node    a_dof   d_a displ')
+     &       '       a_Node    a_dof   d_a Displ')
 
 2032  format(i13,i8,1p,e13.4)
 
 2040  format('   C o o r d i n a t e    S u r f a c e',
      &       '   C o n d i t i o n'/
-     &       '   x_1 coord.   y_1 coord.   x_2 coord.   y_2 coord.',
-     &       '   x_3 coord.   y_3 coord.'/1p,6e13.4/
+     &       '   x_1 Coord.   y_1 Coord.   x_2 Coord.   y_2 Coord.',
+     &       '   x_3 Coord.   y_3 Coord.'/1p,6e13.4/
      &       (10(i3,' Disp',:)))
 
 2041  format(10i8)
@@ -1046,13 +861,14 @@
 2042  format(/'       N o d a l    B o u n d a r y    D i s p l.'//
      &       '    Node',6(i6,'-Displ':)/(10x,6(i6,'-Displ':)))
 
-3000  format(' *ERROR* Surface loading file',a,' does not exist')
+3000  format(' *ERROR* PESURF:Surface loading file',a,' does not exist')
 
-3001  format(' *ERROR* CSURF Segment node too large, node =',i5)
+3001  format(' *ERROR* PESURF: Segment node too large, node =',i5)
 
-3002  format(' *ERROR* CSURF Segment for element',i8,
+3002  format(' *ERROR* PESURF: Segment for element',i8,
      &       ' has bad projection values for nodes',i8,' and',i8)
 
-3003  format(' *ERROR* in surface condition inputs')
+3003  format(' *ERROR* PESURF: In surface condition inputs')
 
-      end
+3004  format(' --> WARNING: No nodes found for ',a,' data type')
+      end subroutine pesurf

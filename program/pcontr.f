@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -36,12 +36,14 @@
       include  'edgdat.h'
       include  'elname.h'
       include  'errchk.h'
+      include  'hdatam.h'
       include  'hlpdat.h'
       include  'iodata.h'
       include  'iofile.h'
       include  'ioincl.h'
       include  'iosave.h'
       include  'linka.h'
+      include  'lmdata.h'
       include  'mdata.h'
       include  'mxsiz.h'
       include  'pdata2.h'
@@ -52,7 +54,6 @@
       include  'plflag.h'
       include  'prflag.h'
       include  'print.h'
-      include  'psize.h'
       include  'qudshp.h'
       include  'refng.h'
       include  'region.h'
@@ -61,13 +62,16 @@
       include  'vdata.h'
       include  'comblk.h'
 
-      logical   errs,setvar,palloc,tinput,pcomp,evint,lp_in,cinput
-      logical   cprt,oprt,oprth,mulprob,newprob,usetfl(12)
-      character titl*80,dnam*15, fext*4
-      character uset(12)*4, vtype*4, usub*15, tx(8)*15
-      integer   i, iorsv, j,jj, l1,l2,l3,l4
-      integer   usetno(12), itd(1)
-      real*8    td(12)
+      character (len=80) :: titl
+      character (len=15) :: dnam, usub, tx(8)
+      character (len=4)  :: fext, uset(12), vtype
+
+      logical       :: errs,setvar,palloc,tinput,pcomp,evint,lp_in
+      logical       :: cprt,oprt,oprth,mulprob,newprob,usetfl(12)
+      logical       :: cinput, pinput, setlagf
+      integer       :: i, iorsv, j,jj, l1,l2,l3,l4
+      integer       :: usetno(12), itd(1)
+      real (kind=8) :: td(12)
 
       save
 
@@ -77,7 +81,6 @@
      &                 'man7', 'man8', 'man9', 'ma10', 'ma11' , 'ma12'/
 
 !     Destroy old output file if it exists
-
       inquire(file=fout,exist=initf)
       if(initf) then
         open (unit=iow,file=fout,status='old')
@@ -85,12 +88,10 @@
       endif
 
 !     Open files for input and output
-
       open(unit=ior,file=finp,status='old')
       open(unit=iow,file=fout,status='new')
 
 !     Initial values for include options
-
       chflg   = .false.
       cprt    = .true.
       everon  = .false.
@@ -99,10 +100,13 @@
       incf    = .false.
       intr    = .false.
       intx    = .false.
+      keepfl  = .true.
+      lagrfl  = .false.
       lp_in   = .true.
       newprob = .false.
       mulprob = .false.
       nocount = .true.
+      pltmfl  = .false.
       debug   = .false.
       lread   = .false.
       lsave   = .false.
@@ -114,13 +118,12 @@
       irdef   = ior
       fincld(1) = finp
       irecrd(1) = 0
+      ndfl(:) = 0
 
 !     Set default to print headers
-
       prth   = .true.
 
 !     Flags for user manipulation commands
-
       do j = 1,12
         usetfl(j) = .false.
         usetno(j) = 0
@@ -129,7 +132,6 @@
 !     Install user functions
 
 !     Set user element names
-
       td(1)  = 0.0d0
       itd(1) = 0
       do j = 1,15
@@ -141,7 +143,6 @@
       end do ! j
 
 !     Set user mesh input names
-
       do j = 1,12
         if(j.lt.10) then
           write(usub,'(a3,i1)') 'mes',j
@@ -154,7 +155,6 @@
       end do ! j
 
 !     Set user macro input names
-
       do j = 1,12
         if(j.lt.10) then
           write(usub,'(a3,i1)') 'mac',j
@@ -168,7 +168,6 @@
       end do ! j
 
 !     Set umati model names
-
       do j = 1,5
         write(usub,'(a3,i1)') 'mat',j
         uct = 'mate'
@@ -179,7 +178,6 @@
       call uconst(usub,td,td,td,l1,l2,l3)
 
 !     Set uplot input names
-
       do j = 1,5
         write(usub,'(a3,i1)') 'plt',j
         uct = usub(1:4)
@@ -188,7 +186,6 @@
       end do ! j
 
 !     Set umanipulation names
-
       do j = 1,12
         uct     = uset(j)
         call usetlib(j)
@@ -196,7 +193,6 @@
       end do ! j
 
 !     Input with interactive interactive statements
-
 1     if(intx) then
         if(cprt) then
           write(*,2009)
@@ -205,7 +201,6 @@
         errck = tinput(dnam,1,td,0)
 
 !       Read command interactively
-
         if(pcomp(dnam,'y',1)) then
           write(*,2010)
 !         read (*,1000,err=900,end=910) yyy
@@ -216,9 +211,7 @@
           cprt = .true.
 
 !       Read command from current file and turn off intx flag
-
         else
-          evint = .false.
           cprt  = .false.
           intr  = .false.
           intx  = .false.
@@ -227,33 +220,35 @@
         endif
 
 !     Input from current file
-
       else
         ior = abs(ior)
         read(ior,1000,err=900,end=910) yyy
       endif
 
 !     Compare with command list
-
       call pstrip(xxx,yyy,1)
       l1   = len(xxx)
       titl = xxx(1:l1)
 
 !     Start solution of new problem
-
       if(pcomp(titl(1:4),'feap',4)) then
         go to 100
 
 !     Set count/nocount mode
-
       elseif(pcomp(titl(1:4),'noco',4)) then
         nocount = .false.
 
       elseif(pcomp(titl(1:4),'coun',4)) then
         nocount = .true.
 
-!     User command sets
+!     Set keep/nokeep flags for output file retension
+      elseif(pcomp(titl(1:4),'keep',4)) then
+        keepfl = .true.
 
+      elseif(pcomp(titl(1:4),'noke',4)) then
+        keepfl = .false.
+
+!     User command sets
       elseif(pcomp(titl(1:4),uset(1),4)) then
         usetno(1) = usetno(1) + 1
         usetfl(1) = .true.
@@ -280,8 +275,25 @@
         fext  = 'u5a'
         go to 300
 
-!     Perform inputs from an include file
+!     User problem selection
+      elseif(pcomp(titl(1:5),'ufeap',5)      .or.
+     &       pcomp(titl(1:7),'fe2feap',7) ) then
 
+        if(titl(1:1).eq.'u') then
+          l3 = 1
+        else
+          l3 = 0
+        endif
+
+        newprob = .true.
+        do i = 1,20
+          l2 = 4*i + l3
+          l1 = l2 - 3
+          head(i) = titl(l1:l2)
+        end do ! i
+        call uprob
+
+!     Perform inputs from an include file
       elseif(pcomp(titl(1:4),'incl',4)) then
         call acheck(titl,yyy,15,80,80)
         read(yyy,1002,err=900,end=900) titl(1:4),dnam
@@ -299,7 +311,6 @@
         cprt = .false.
 
 !     Perform inputs for initial conditions
-
       elseif(pcomp(titl(1:4),'init',4)) then
         call acheck(titl,yyy,15,80,80)
         read(yyy,1001,err=900,end=900) titl(1:4),dnam(1:4)
@@ -307,7 +318,6 @@
         if(errs) return
 
 !     Solution mode
-
       elseif(pcomp(titl(1:4),'inte',4)) then
         ior   = -abs(ior)
         evint = .true.
@@ -325,7 +335,6 @@
         go to 400
 
 !     Manual level set: 0 = basic; 1 = advanced; 2 = expert
-
       elseif(pcomp(titl(1:4),'manu',4)) then
         call acheck(titl,yyy,15,80,80)
         read(yyy,1003,err=900,end=911) titl(1:4),hlplev
@@ -334,7 +343,6 @@
 !     Mesh manipulations: Link and tie
 
 !     Reset id list to link dof's on different nodes - set by node #
-
       elseif(pcomp(titl(1:4),'link',4)) then
         call plinka('lnk ','set')
         lkflg = .true.
@@ -343,42 +351,51 @@
         go to 500
 
 !     Parameter sets
-
       elseif(pcomp(titl(1:4),'para',4) .or.
      &       pcomp(titl(1:4),'cons',4)) then
         coflg = .true.
         call pconst(prt)
 
 !     Loop start
-
       elseif(pcomp(titl(1:4),'loop',4)) then
         call acheck(titl,yyy,15,80,80)
         read(yyy,1002,err=900,end=911) titl(1:4),dnam
         call ploops(lp_in,dnam,1)
 
 !     Loop end
-
       elseif(pcomp(titl(1:4),'next',4)) then
         call acheck(titl,yyy,15,80,80)
         read(yyy,1002,err=900,end=911) titl(1:4),dnam
         call ploops(lp_in,dnam,2)
 
-!     Remarks to output file
+!     Set list of Lagrange multiplier nodal variables
+      elseif(pcomp(titl(1:4),'lagr',4)) then
+        do i = 1,ndf,16
+          errck = pinput(td(1),min(16,ndf-i+1))
+          jj = 0
+          do j = i,min(i+15,ndf)
+            jj           = jj + 1
+            ndfl(i) = nint(td(jj))
+          end do ! j
+        end do ! i
+        write(iow,2024) (i,ndfl(i),i=1,ndf)
+        lagrfl = .true.
 
+!     Remarks to output file
       elseif(pcomp(titl(1:4),'rema',4)) then
         write(*,2008) titl(1:78)
 
 !     Stop execution
-
       elseif(pcomp(titl(1:4),'stop',4)) then
-        call pdelfl()
         if(evint) write(*,2004) fout
-        if(ior.eq.irdef) return
+        if(abs(ior).eq.irdef) then
+          call pdelfl()
+          call plstop(.false.)
+        endif
 
       endif
 
 !     Read again
-
       go to 1
 
 !     Start Problem: Read and print control information
@@ -420,22 +437,24 @@
       if(tfl) then
 
 !       If ties have occurred merge boundary conditions, forces & contact
-
         if(tief) then
           call tiefor(mr(np(31)+nneq),hr(np(27)),mr(np(79)),ndf,numnp)
         endif
 
 !       Compute boundary nodes (after ties)
-
         call pextnd()
 
 !       Allocate memory to store all possible equations
 
+!       Nodal equations
         neq = numnp*ndf
+!       Element equations
+        if(setlagf(mr(np(33)),mr(np(32)))) then
+          neq = neq + ndl*numel
+        endif
         setvar = palloc( 21, 'JP1  ', neq, 1)
 
 !       Set user commands
-
         do j = 1,12
           fext = 'u1a'
           write(fext(2:2),'(i1)') j
@@ -627,6 +646,9 @@
 2014  format(/5x,'Tie: direction =',i3,' X =',1p,1e12.5/1x)
 2015  format(/5x,'Tie all nodes with common coordinates'/1x)
 
+2024  format(/'   N o d a l   L a g r a n g e   M u l t p l i e r'/
+     &        '      ndf  Multiplier'/'             Number'/(i8,i12))
+
 !     Error Messages
 
 3001  format(/' *ERROR* Attempt to solve problem before mesh input.'/
@@ -634,4 +656,4 @@
 3002  format(/' *ERROR* Can not do BATCH execution from this mode.'/
      &        '         Do INTERACTIVE or put in INCLUDE file.'/1x)
 
-      end
+      end subroutine pcontr

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -20,18 +20,17 @@
 !      Outputs:
 !         none       - Plot outputs to screen/file
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'comblk.h'
       include  'pointer.h'
 
-      logical   visbl
-      integer   j, k, ndm, nface
+      logical       :: visbl
+      integer       :: j, k, ndm, nface
 
-      integer   ix(4), ip
-      integer   iln(2),ilnd(2)
-      real*8    x(ndm,*),xl(3,4),ct
+      integer       :: ix(4), ip
+      integer       :: iln(2),ilnd(2)
+      real (kind=8) :: x(ndm,*),xl(3,4),ct
 
       save
 
@@ -74,4 +73,4 @@
 
       endif
 
-      end
+      end subroutine pfacev

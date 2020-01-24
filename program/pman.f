@@ -1,9 +1,9 @@
 !$Id:$
-      subroutine pman(name,nn)
+      subroutine pman(mname,nn)
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -11,22 +11,25 @@
 !               set in main program.  Must have extender '.t'
 
 !      Inputs:
-!         name      - Name of command to display
+!         mname     - Name of command to display
 !         nn        - Type of command: 1=mesh, 2=macro, 3=plot
 
 !      Outputs:
 !         To screen
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'comfil.h'
       include  'iodata.h'
       include  'pathn.h'
 
-      logical   lexst,cinput
-      character name*4,filel*44,line*80,y*1
-      integer   nn, iposl, ipos, i,j,mod
+      character (len=80) :: line
+      character (len=44) :: filel
+      character (len=4)  :: mname
+      character (len=1)  :: y
+
+      logical       :: lexst,cinput
+      integer       :: nn, iposl, ipos, i,j,mod
 
       save
 
@@ -38,14 +41,14 @@
 
 !     Find first blank, add 'name' and extender '.t'
 
-      if(name(1:1).lt.'a' .or. name(1:1).gt.'z') then
+      if(mname(1:1).lt.'a' .or. mname(1:1).gt.'z') then
         write(*,2006) filel
         return
       endif
 
       do i = 1,4
-        if(name(i:i).eq.' ') go to 101
-        filel(iposl+i:iposl+i) = name(i:i)
+        if(mname(i:i).eq.' ') go to 101
+        filel(iposl+i:iposl+i) = mname(i:i)
       end do
       i = 5
 101   filel(iposl+i:iposl+i+1)   = '.t'
@@ -55,7 +58,7 @@
          end do
       endif
 
-      write(*,2001) name
+      write(*,2001) mname
       write(*,2002) filel
 
 !     Open file for manual page
@@ -111,4 +114,4 @@
 2006  format(/3x,'The requested file does not exist; file:'/
      &       8x,a44)
 
-      end
+      end subroutine pman

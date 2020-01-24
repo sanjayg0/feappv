@@ -1,9 +1,9 @@
 !$Id:$
-      subroutine profil (jp,idl,id,ix,iop,prt)
+      subroutine profil (jp,idl,eq,ix,iop,prt)
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -20,7 +20,7 @@
 !        idl(*) - Array to hold temporary information
 
 !      Outputs:
-!        id(*)  - Equation numbers for degree of freedoms     (iop = 1)
+!        eq(*)  - Equation numbers for degree of freedoms     (iop = 1)
 !        jp(*)  - Pointer array to row/column ends of profile (iop = 2)
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
@@ -28,27 +28,30 @@
       include  'cdata.h'
       include  'iofile.h'
       include  'sdata.h'
+      include  'pointer.h'
+      include  'comblk.h'
 
-      logical   prt
-      integer   iop, mm,nad
-      integer   jp(*),idl(*),id(*),ix(*)
+      logical       :: prt, setvar,palloc
+      integer       :: iop, mm,nad
+      integer       :: jp(*),idl(*),eq(*),ix(*)
 
       save
 
 !     Set up equation numbers
-
       if(iop.eq.1) then
 
-        call seteq(id,ndf,ndm,numnp,neq,prt)
+        call seteq(eq,prt)
+
+!       Reset size of solution array if necessary
+        setvar = palloc(26,'DR   ',max(neq,numnp*max(ndf,ndm)),2)
 
 !     Compute column heights
-
       elseif(iop.eq.2) then
 
-        call rstprf(jp,idl,id,ix,ndf,nen1,nen,neq,numel)
+        call rstprf(jp,idl,eq,ix,mr(np(32)),
+     &              ndl,ndf,nen1,nen,neq,numel,nummat)
 
 !       Compute diagonal pointers for profile
-
         call nwprof(jp,neq)
 
 !       Output statistics
@@ -68,4 +71,4 @@
      & 10x,'Average col. height   =',i10,3x,'Number elements  =',i8/
      & 10x,'Number profile terms  =',i10,3x,'Number materials =',i8/)
 
-      end
+      end subroutine profil

@@ -3,22 +3,21 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!      * Changed the dimension of vt and xt according to 
+!....  Copyright (c) 1984-2020: Regents of the University of California
+!      * Changed the dimension of vt and xt according to
 !        http://feap.berkeley.edu/forum/index.php?topic=2124
 !        Feb 19, 2019
-!....  Copyright (c) 1984-2017: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
 !      Purpose: Fill quadrilaterals with contour values
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit   none
 
-      logical    cont
-      integer    i1,i2, i, nc,ilq(*),ilt(3)
-      real*8     xl(3,*),vl(*),vc(nc)
-      real*8     xt(3,4),vt(4)
+      logical       :: cont
+      integer       :: i1,i2, i, nc,ilq(*),ilt(3)
+      real (kind=8) :: xl(3,*),vl(*),vc(nc)
+      real (kind=8) :: xt(3,4),vt(4)
 
       save
 
@@ -45,4 +44,4 @@
 
       end do ! i1
 
-      end
+      end subroutine pltqfl

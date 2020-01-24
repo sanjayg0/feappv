@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--+---------+---------+---------+---------+---------+---------+-]
@@ -24,7 +24,7 @@
       include  'plflag.h'
       include  'psdat3.h'
 
-      integer   status, vfarea
+      integer       :: status, vfarea
 
       save
 
@@ -43,4 +43,4 @@
 
       ipan = 0
 
-      end
+      end subroutine clpan

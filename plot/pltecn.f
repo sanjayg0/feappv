@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -26,9 +26,9 @@
       include  'plcon1.h'
       include  'plflag.h'
 
-      integer   i,j,ii,ivc,jvc,nc,nn
-      real*8    s,x1,y1,z1,vv
-      real*8    vc(12),vt(3),xt(3,3)
+      integer       :: i,j,ii,ivc,jvc,nc,nn
+      real (kind=8) :: s,x1,y1,z1,vv
+      real (kind=8) :: vc(12),vt(3),xt(3,3)
 
       save
 
@@ -75,4 +75,4 @@
         endif
       end do ! nn
 
-      end
+      end subroutine pltecn

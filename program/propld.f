@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -51,14 +51,14 @@
       include  'pointer.h'
       include  'comblk.h'
 
-      logical   pcomp, errck, pinput, setvar, palloc
-      integer   i, j, k, l, m, nprtot, lunit
-      real*8    t, tt, propl, prop2, prop2i, prop2p
+      logical       :: pcomp, errck, pinput, setvar, palloc
+      integer       :: i, j, k, l, m, nprtot, lunit
+      real (kind=8) :: t, tt, propl, prop2, prop2i, prop2p
 
       integer   lctl(2), ilast(50),itime(50)
-      real*8    td(16)
+      real (kind=8) :: td(16)
 
-      real*8    propld
+      real (kind=8) :: propld
 
       save
 
@@ -269,4 +269,4 @@
 3002  format('  *WARNING* Deleted proportional load number',i3/
      &       '            Maximum proportional load number',i3)
 
-      end
+      end function propld

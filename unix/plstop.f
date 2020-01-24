@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--+---------+---------+---------+---------+---------+---------+-]
@@ -15,21 +15,22 @@
 !      Outputs:
 !         none
 !-----[--+---------+---------+---------+---------+---------+---------+-]
-
       implicit  none
 
+      include  'iofile.h'
       include  'pdata2.h'
       include  'pdatps.h'
       include  'plflag.h'
+      include  'setups.h'
       include  'x11f.h'
 
-      logical   eflag
+      logical       :: eflag
 
       save
 
 !     Error message
 
-      if(eflag) then
+      if(eflag .and. rank.eq.0) then
         write(*,'(a)')
      &       ' --> ERRORS OCCURRED: For details see output file.'
       endif
@@ -46,6 +47,15 @@
 
       call ptimpl()
 
+!     Close parallel arrays
+
+      call parstop()
+
+!     Close last input & output file
+
+      close(unit=ior, status = 'keep')
+      close(unit=iow, status = 'keep')
+
       stop
 
-      end
+      end subroutine plstop

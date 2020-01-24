@@ -4,7 +4,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -59,14 +59,14 @@
 
       include  'p_iterat.h'
 
-      logical   accrcy,prt
-      integer   i,nupd,nbfgs
-      integer   id(*), jp(*)
-      real*8    g,g0,s, rnorm,onorm,dnorm,energy,stol,etol
+      logical       :: accrcy,prt
+      integer       :: i,nupd,nbfgs
+      integer       :: id(*), jp(*)
+      real (kind=8) :: g,g0,s, rnorm,onorm,dnorm,energy,stol,etol
 
-      real*8    ad(*),oldrsd(*),d(*),v(*),w(*),t(*)
+      real (kind=8) :: ad(*),oldrsd(*),d(*),v(*),w(*),t(*)
 
-      real*8    dot, gamma1
+      real (kind=8) :: dot, gamma1
 
       save
 
@@ -127,7 +127,7 @@
           g = gamma1(id,pu,prsd,d,t,s)
         endif
 
-        call update(id,hr(np(30)),hr(pu),hr(np(42)),d,fl(9),2)
+        call pupdate(id,hr(np(30)),hr(pu),hr(np(42)),d,fl(9),2)
 
 !       Convergence checks: Norm of residual vector and energy incr.
 
@@ -164,4 +164,4 @@
 
 2003  format(4x,'Iteration',i3,': G0 =',1p,1e15.7,', G =',1p,1e15.7)
 
-      end
+      end subroutine iterat

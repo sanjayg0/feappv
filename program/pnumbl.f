@@ -3,13 +3,13 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
       implicit  none
 
-      logical   flag
-      integer   ndm,nr,ns,nt,ntyp,nf,ng
+      logical       :: flag
+      integer       :: ndm,nr,ns,nt,ntyp,nf,ng
 
       save
 
@@ -93,4 +93,4 @@
 
       endif
 
-      end
+      end subroutine pnumbl

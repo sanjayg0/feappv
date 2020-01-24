@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -29,9 +29,9 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
-      integer   a,au,b,bu,c,dir,i,ii,inc,nip,numa,step,pass
-      integer   ic(*),ip(nip,*)
-      real*4    za(*)
+      integer       :: a,au,b,bu,c,dir,i,ii,inc,nip,numa,step,npass
+      integer       :: ic(*),ip(nip,*)
+      real (kind=4) :: za(*)
 
       save
 
@@ -41,13 +41,11 @@
       end do ! ii
 
 !     Perform sort on list pairs in increments of step
-
-      pass = 0
+      npass = 0
  100  step = min(2*inc,max(1,numa))
       do ii = 1,numa,step
 
 !       Set values for pointers - limit to entries in list
-
         a    = ii
         au   = min(a  - 1 + inc,numa)
         b    = min(au + 1,      numa)
@@ -55,11 +53,9 @@
         c = 1
 
 !       Perform merge of two lists
-
  110    if(dir.ge.0) then
 
 !         Increasing sort
-
           if(za(ip(1,a)).le.za(ip(1,b))) then
             ic(c) = ip(1,a)
             a     = a + 1
@@ -71,7 +67,6 @@
         else
 
 !         Decreasing sort
-
           if(za(ip(1,a)).ge.za(ip(1,b))) then
             ic(c) = ip(1,a)
             a     = a + 1
@@ -82,7 +77,6 @@
         endif
 
 !       Copy remaining list when first list is finished
-
         if(a.gt.au) then
           do i = b, bu
             c     = c + 1
@@ -95,14 +89,12 @@
           end do ! i
 
 !       Increment and repeat for next list items
-
         else
           c = c + 1
           go to 110
         endif
 
 !       Lists have been sorted into ic, copy back to original list
-
         b = ii - 1
         do i = ii,bu
           ip(1,i) = ic(i-b)
@@ -110,10 +102,9 @@
       end do ! ii
 
 !     Increment step size for next pass
-
       inc  = step
-      pass = pass + 1
+      npass = npass + 1
 
       if(inc.lt.numa) go to 100
 
-      end
+      end subroutine merges

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -27,18 +27,17 @@
 !      Outputs:
 !         none      - Plot output to screen/file
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'eldata.h'
       include  'pbody.h'
       include  'pdata2.h'
 
-      integer   nie, ndm, nen, nen1, n1,n2, nume, isp
-      integer   i, j, ii, nn
+      integer       :: nie, ndm, nen, nen1, n1,n2, nume, isp
+      integer       :: i, j, ii, n,nn
 
-      integer   ie(nie,*),ix(nen1,*), ip(*)
-      real*8    x(ndm,*),xl(ndm,*)
+      integer       :: ie(nie,*),ix(nen1,*), ip(*)
+      real (kind=8) :: x(ndm,*),xl(ndm,*)
 
       save
 
@@ -95,4 +94,4 @@
         endif
       end do
 
-      end
+      end subroutine plot2d

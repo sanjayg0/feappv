@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -19,7 +19,7 @@
 
       include  'pdata2.h'
 
-      integer   icl, icol, iln(2), ilns(2)
+      integer      :: icl, icol, iln(2), ilns(2)
 
       save
 
@@ -57,4 +57,4 @@
       ilno(1) = ilns(1)
       ilno(2) = ilns(2)
 
-      end
+      end subroutine plbord

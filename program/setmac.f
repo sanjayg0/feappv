@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -23,12 +23,16 @@
 
       implicit  none
 
-      logical   pcomp
-      integer   ll, i,j, nwd
+      logical       :: pcomp
+      integer       :: ll, i,j, nwd
 
-      character clab1*4,clab2*15,wd(nwd)*4,lct(*)*15,xxx*45,yyy*80
-      character lzz(*)*80, temp*47
-      integer   jct(*)
+      character (len=80) :: yyy,lzz(*)
+      character (len=47) :: temp
+      character (len=45) :: xxx
+      character (len=15) :: clab2,lct(*)
+      character (len=4)  :: clab1,wd(nwd)
+
+      integer       :: jct(*)
 
       save
 
@@ -72,4 +76,4 @@
 
 3000  format(' *WARNING* Illegal command ',a4,' in procedure.')
 
-      end
+      end subroutine setmac

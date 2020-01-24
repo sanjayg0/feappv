@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -22,12 +22,11 @@
 !      Outputs:
 !         a(*)      - Uncompressed vector
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
-      integer   n,neq,nneq
-      integer   id(*)
-      real*8    a(*),t(*)
+      integer       :: n,neq,nneq
+      integer       :: id(*)
+      real (kind=8) :: a(*),t(*)
 
 !     Copy compressed to temporary vector
 
@@ -45,4 +44,4 @@
         endif
       end do
 
-      end
+      end subroutine pexpd

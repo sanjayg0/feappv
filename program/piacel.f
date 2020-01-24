@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -18,11 +18,10 @@
 !      Outputs:
 !         a(*)     - Initial acceleration
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
-      integer   n,neq
-      real*8    ml(*),dr(*),a(*)
+      integer       :: n,neq
+      real (kind=8) :: ml(*),dr(*),a(*)
 
       save
 
@@ -36,4 +35,4 @@
         endif
       end do
 
-      end
+      end subroutine piacel

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -28,12 +28,12 @@
       include  'pointer.h'
       include  'comblk.h'
 
-      logical   errv
-      integer   ndm, numnp, issw, isw, ii, ij, i,j ,n
-      real*8    xcen,xw1, xw2
-      integer   ip(8)
-      real*8    x(ndm,*),xmn(3),xmx(3),xmino(3),xmaxo(3)
-      real*8    xp(3,8), xpm(3,2), rp(3,6)
+      logical       :: errv
+      integer       :: ndm, numnp, issw, isw, ii, ij, i,j ,n
+      real (kind=8) :: xcen,xw1, xw2
+      integer       :: ip(8)
+      real (kind=8) :: x(ndm,*),xmn(3),xmx(3),xmino(3),xmaxo(3)
+      real (kind=8) :: xp(3,8), xpm(3,2), rp(3,6)
 
       save
 
@@ -163,20 +163,20 @@
 
 !     Default values
 
-      scale  = max(xmax(1)-xmin(1),xmax(2)-xmin(2))
-      if(scale.le.0.0d0) scale = scaleg*0.1d0
+      scalef  = max(xmax(1)-xmin(1),xmax(2)-xmin(2))
+      if(scalef.le.0.0d0) scalef = scaleg*0.1d0
 
 !     Reset values for deformed plotting
 
 !     do i = 1,3
       do i = 1,ii
         xcen = xmax(i)+xmin(i)
-        xmax(i) = (xcen + 1.1d0*scale)*0.5d0
-        xmin(i) = (xcen - 1.1d0*scale)*0.5d0
+        xmax(i) = (xcen + 1.1d0*scalef)*0.5d0
+        xmin(i) = (xcen - 1.1d0*scalef)*0.5d0
       end do
-      scaleg = 0.4d0/scale
-      scale  = scaleg
+      scaleg = 0.4d0/scalef
+      scalef  = scaleg
       s0(1)  = 0.5d0
       s0(2)  = 0.5d0
 
-      end
+      end subroutine frame

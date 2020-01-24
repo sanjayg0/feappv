@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -22,10 +22,12 @@
       include  'conval.h'
       include  'iofile.h'
 
-      logical   error
-      character x*(*),y*256
-      integer   nt,n0,nn, i, ivd(2,16)
-      real*8    vd(*)
+      character (len=256) :: y
+      character           :: x*(*)
+
+      logical       :: error
+      integer       :: nt,n0,nn, i, ivd(2,16)
+      real (kind=8) :: vd(*)
 
       save
 
@@ -61,4 +63,4 @@
 3000  format(/' *ERROR* DCHECK: Attempt to input',i3,' value(s).',
      &        '  Input is:'/a)
 
-      end
+      end subroutine dcheck

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -27,10 +27,11 @@
       include  'psdat5.h'
       include  'psdat6.h'
 
-      logical   pcomp
-      character coord*10
-      integer   i, num, x,y
-      real*4    xp(*), yp(*)
+      character (len=10) :: coord
+
+      logical       :: pcomp
+      integer       :: i, num, x,y
+      real (kind=4) :: xp(*), yp(*)
 
       save
 
@@ -86,4 +87,4 @@
 
       ocvar = ' g'
 
-      end
+      end subroutine fpplps

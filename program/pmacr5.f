@@ -1,9 +1,9 @@
 !$Id:$
-      subroutine pmacr5 (lct,ct,j)
+      subroutine pmacr5 (lct,j)
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -11,7 +11,6 @@
 
 !     Inputs:
 !        lct      - Command option for current command
-!        ct(3)    - Command parameters for current command
 !        j        - Number of command to execute
 
 !     Outputs:
@@ -19,9 +18,11 @@
 !-----[--+---------+---------+---------+---------+---------+---------+-]
       implicit   none
 
-      integer    j
-      character  lct*15
-      real*8     ct(3)
+      include   'iofile.h'
+
+      character (len=15) :: lct
+
+      integer       :: j
 
       save
 
@@ -31,10 +32,16 @@
 
         write(*,2000) ' OUTMesh '
 
+!     [comm]ent,<message> Echo comment to screen when in batch mode
+
+      elseif(j.eq.2) then
+        if(ior.gt.0) write(*,2001) lct
+
       endif
 
 !     Formats
 
 2000  format('  *ERROR*',a,'command only available in FEAP version')
+2001  format('   Comment: ',a)
 
-      end
+      end subroutine pmacr5

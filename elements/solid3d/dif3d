@@ -1,0 +1,464 @@
+2c2
+<       subroutine sld3d1(d,ul,xl,ix,tl,s,p,ndf,ndm,nst,isw)
+---
+>       subroutine sld3d1(d,ul,xl,ix,tl,s,r,ndf,ndm,nst,isw)
+4,5c4,10
+< !_____________________________________________________________________c
+< !     3-D linear elastic displacment element for feap
+---
+> !      * * F E A P * * A Finite Element Analysis Program
+> 
+> !....  Copyright (c) 1984-2018: Regents of the University of California
+> !                               All rights reserved
+> 
+> !-----[--.----+----.----+----.-----------------------------------------]
+> !      Purpose: 3-D linear elastic displacment element for feap
+10a16
+> !                         1-sig,  2-sig,  3-sig
+14,16c20
+< 
+< !_____________________________________________________________________c
+< 
+---
+> !-----[--.----+----.----+----.-----------------------------------------]
+20a25,26
+>       include  'debugs.h'
+>       include  'elcoor.h'
+21a28
+>       include  'elplot.h'
+25d31
+<       include  'prld1.h'
+26a33,34
+>       include  'ptdat6.h'
+>       include  'qudshp.h'
+28d35
+<       include  'comblk.h'
+30,39c37
+<       integer   i,j,l,nn, i1,j1
+<       integer   ndf,ndm,nst,isw
+<       integer   lint,nhv,tdof, istrt
+< 
+<       real*8    dv, dvm, xn, yn, zn, ta, rr, lfac, cfac, am, mass
+<       real*8    a11, a12, a13, a21, a22, a23, a31, a32, a33
+<       real*8    a41, a42, a43, a51, a52, a53, a61, a62, a63
+<       real*8    b1 , b2 , b3
+<       real*8    shp(4,8,8),sg(4,8),sig(8),eps(9,3),dd(6,6,5), xsj(8)
+<       real*8    th(8),sv(5,4)
+---
+>       include  'comblk.h'
+41,42c39,47
+<       integer   ix(*)
+<       real*8    d(*),xl(ndm,*),ul(ndf,nen,*),tl(*),s(nst,*),p(nst)
+---
+>       integer   i,j,l,nn,i1,j1,ndf,ndm,nst,isw,nhv,istrt,ix(*)
+>       integer   tdof
+>       real*8    sig(10,125),eps(9,3),dd(6,6,5),th(125)
+>       real*8    d(*),xl(ndm,*),ul(ndf,nen,*),tl(*),s(nst,*),r(*)
+>       real*8    psig(3),epp(6),peps(3)
+>       real*8    xn, yn, zn, ta, lfac, cfac
+>       real*8    a11, a12, a13, a14, a15, a16
+>       real*8    a21, a22, a23, a24, a25, a26
+>       real*8    a31, a32, a33, a34, a35, a36
+45a51,56
+> !     Input modifications
+> 
+>       if(isw.eq.1) then
+>         return
+>       endif
+> 
+61,68d71
+< !     Transfer to correct processor
+< 
+<       go to (1,1,3,3,1,3,1,3,1,1,1,3), isw
+< 
+< !     Return
+< 
+< 1     return
+< 
+71,74d73
+< 3     l = 2
+< 
+< !     Set number of history terms
+< 
+78c77
+<       if(mod(isw,3).eq.0) then
+---
+> !     Get quadrature information
+80c79
+< !       Set body loading factors
+---
+>       call quadr3d(d,.true.)
+82,96c81,89
+<         if(int(d(74)).gt.0) then
+<           b1 = d(11) + prldv(int(d(74)))*d(71)
+<         else
+<           b1 = d(11)*dm
+<         endif
+<         if(int(d(75)).gt.0) then
+<           b2 = d(12) + prldv(int(d(75)))*d(72)
+<         else
+<           b2 = d(12)*dm
+<         endif
+<         if(int(d(76)).gt.0) then
+<           b3 = d(13) + prldv(int(d(76)))*d(73)
+<         else
+<           b3 = d(13)*dm
+<         endif
+---
+> !     Compute shape functions
+> 
+>       do l = 1,lint
+>         call interp3d(l, xl, ndm,nel)
+>       end do ! l
+> 
+> !     Compute the residual and tangent arrays or energy
+> 
+>       if(isw.eq.3 .or. isw.eq.6 .or. isw.eq.14) then
+98c91
+< !       Set mass factors
+---
+> !       Compute intertial effects
+100,101c93
+<         rr   = d(4)
+<         if(d(7).ge.0.0d0) then
+---
+>         if(ctan(3).ne.0.0) then
+103c95
+<           lfac = 1.d0 - cfac
+---
+>           lfac = 1.0d0 - cfac
+109,115c101
+< !       Get quadrature information
+< 
+<         if(nel.eq.4) then
+<           call tint3d(l,lint,sv)
+<         else
+<           call int3d(l,lint,sg)
+<         endif
+---
+> !       Compute residual and tangent arrays
+119,125d104
+<           if(nel.eq.4) then
+<             call tetshp(sv(1,l),xl,ndm,xsj(l),shp(1,1,l))
+<             dv = xsj(l)*sv(5,l)
+<           else
+<             call shp3d(sg(1,l),xsj(l),shp(1,1,l),xl,ndm)
+<             dv = xsj(l)*sg(4,l)
+<           endif
+129c108
+<           call strn3d(d,ul,th,shp(1,1,l),ndf,nel, eps,ta)
+---
+>           call strn3d(d,ul,th,shp3(1,1,l),ndf,nel, eps,ta)
+134,138c113
+<      &                dd,sig, isw)
+< 
+< !         Residual computations
+< 
+<           if(isw.eq.3 .or.isw.eq.6) then
+---
+>      &                dd,sig(1,l),isw)
+140c115
+< !           Add stiffness part of Rayleigh damping to stress
+---
+> !         Residual and tangent computation
+142,145c117
+<             if(d(78).ne.0.0d0) then
+<               call rays3d(d,shp(1,1,l),shp(1,1,l),sig,dd,ul(1,1,4),
+<      &                    ndf,nel,.false.)
+<             endif
+---
+>           if(isw.eq.3 .or. isw.eq.6) then
+149,153c121,122
+<             call resid3d(dv,shp(1,1,l),sig,d,
+<      &                   ul(1,1,4),ul(1,1,5),p,ndf,l)
+<           endif
+< 
+< !         Stiffness computations
+---
+>             call resid3d(jac(l),shp3(1,1,l),sig(1,l),d,
+>      &                   ul(1,1,4),ul(1,1,5),r,ndf, l)
+155c124
+<           if(isw.eq.3) then
+---
+> !           Stiffness computations
+157,158c126
+<             dvm   = rr*(ctan(3) + d(77)*ctan(2))*dv
+<             dv    =    (ctan(1) + d(78)*ctan(2))*dv
+---
+>             if(isw.eq.3) then
+160,161c128
+<             j1 = 1
+<             do j = 1,nel
+---
+> !             Modify tangent for stiffness Rayleigh damping
+163c130,191
+< !             Compute d * b matrix = a
+---
+>               do j = 1,6
+>                 do i = 1,6
+>                   dd(i,j,1) = dd(i,j,1)*ctan(1)
+>                 end do ! i
+>               end do ! j
+> 
+>               i1 = 1
+>               do i = 1,nel
+> 
+> !               Compute d * b matrix = a
+> 
+>                 xn  = shp3(1,i,l)*jac(l)
+>                 yn  = shp3(2,i,l)*jac(l)
+>                 zn  = shp3(3,i,l)*jac(l)
+> 
+>                 a11 = xn*dd(1,1,1) + yn*dd(4,1,1) + zn*dd(6,1,1)
+>                 a12 = xn*dd(1,2,1) + yn*dd(4,2,1) + zn*dd(6,2,1)
+>                 a13 = xn*dd(1,3,1) + yn*dd(4,3,1) + zn*dd(6,3,1)
+>                 a14 = xn*dd(1,4,1) + yn*dd(4,4,1) + zn*dd(6,4,1)
+>                 a15 = xn*dd(1,5,1) + yn*dd(4,5,1) + zn*dd(6,5,1)
+>                 a16 = xn*dd(1,6,1) + yn*dd(4,6,1) + zn*dd(6,6,1)
+> 
+>                 a21 = xn*dd(4,1,1) + yn*dd(2,1,1) + zn*dd(5,1,1)
+>                 a22 = xn*dd(4,2,1) + yn*dd(2,2,1) + zn*dd(5,2,1)
+>                 a23 = xn*dd(4,3,1) + yn*dd(2,3,1) + zn*dd(5,3,1)
+>                 a24 = xn*dd(4,4,1) + yn*dd(2,4,1) + zn*dd(5,4,1)
+>                 a25 = xn*dd(4,5,1) + yn*dd(2,5,1) + zn*dd(5,5,1)
+>                 a26 = xn*dd(4,6,1) + yn*dd(2,6,1) + zn*dd(5,6,1)
+> 
+>                 a31 = xn*dd(6,1,1) + yn*dd(5,1,1) + zn*dd(3,1,1)
+>                 a32 = xn*dd(6,2,1) + yn*dd(5,2,1) + zn*dd(3,2,1)
+>                 a33 = xn*dd(6,3,1) + yn*dd(5,3,1) + zn*dd(3,3,1)
+>                 a34 = xn*dd(6,4,1) + yn*dd(5,4,1) + zn*dd(3,4,1)
+>                 a35 = xn*dd(6,5,1) + yn*dd(5,5,1) + zn*dd(3,5,1)
+>                 a36 = xn*dd(6,6,1) + yn*dd(5,6,1) + zn*dd(3,6,1)
+> 
+>                 j1 = 1
+>                 do j = 1,nel
+> 
+> !                 Compute stiffness matrix
+> 
+>                   xn = shp3(1,j,l)
+>                   yn = shp3(2,j,l)
+>                   zn = shp3(3,j,l)
+> 
+>                   s(i1  ,j1  ) = s(i1  ,j1  ) + a11*xn + a14*yn + a16*zn
+>                   s(i1  ,j1+1) = s(i1  ,j1+1) + a14*xn + a12*yn + a15*zn
+>                   s(i1  ,j1+2) = s(i1  ,j1+2) + a16*xn + a15*yn + a13*zn
+> 
+>                   s(i1+1,j1  ) = s(i1+1,j1  ) + a21*xn + a24*yn + a26*zn
+>                   s(i1+1,j1+1) = s(i1+1,j1+1) + a24*xn + a22*yn + a25*zn
+>                   s(i1+1,j1+2) = s(i1+1,j1+2) + a26*xn + a25*yn + a23*zn
+> 
+>                   s(i1+2,j1  ) = s(i1+2,j1  ) + a31*xn + a34*yn + a36*zn
+>                   s(i1+2,j1+1) = s(i1+2,j1+1) + a34*xn + a32*yn + a35*zn
+>                   s(i1+2,j1+2) = s(i1+2,j1+2) + a36*xn + a35*yn + a33*zn
+> 
+>                   j1 = j1 + ndf
+>                 end do ! j
+>                 i1 = i1 + ndf
+>               end do ! i
+>             endif
+165,222c193
+<               xn  = shp(1,j,l)*dv
+<               yn  = shp(2,j,l)*dv
+<               zn  = shp(3,j,l)*dv
+<               a11 = dd(1,1,1)*xn + dd(1,4,1)*yn + dd(1,6,1)*zn
+<               a21 = dd(2,1,1)*xn + dd(2,4,1)*yn + dd(2,6,1)*zn
+<               a31 = dd(3,1,1)*xn + dd(3,4,1)*yn + dd(3,6,1)*zn
+<               a41 = dd(4,1,1)*xn + dd(4,4,1)*yn + dd(4,6,1)*zn
+<               a51 = dd(5,1,1)*xn + dd(5,4,1)*yn + dd(5,6,1)*zn
+<               a61 = dd(6,1,1)*xn + dd(6,4,1)*yn + dd(6,6,1)*zn
+<               a12 = dd(1,2,1)*yn + dd(1,4,1)*xn + dd(1,5,1)*zn
+<               a22 = dd(2,2,1)*yn + dd(2,4,1)*xn + dd(2,5,1)*zn
+<               a32 = dd(3,2,1)*yn + dd(3,4,1)*xn + dd(3,5,1)*zn
+<               a42 = dd(4,2,1)*yn + dd(4,4,1)*xn + dd(4,5,1)*zn
+<               a52 = dd(5,2,1)*yn + dd(5,4,1)*xn + dd(5,5,1)*zn
+<               a62 = dd(6,2,1)*yn + dd(6,4,1)*xn + dd(6,5,1)*zn
+<               a13 = dd(1,3,1)*zn + dd(1,5,1)*yn + dd(1,6,1)*xn
+<               a23 = dd(2,3,1)*zn + dd(2,5,1)*yn + dd(2,6,1)*xn
+<               a33 = dd(3,3,1)*zn + dd(3,5,1)*yn + dd(3,6,1)*xn
+<               a43 = dd(4,3,1)*zn + dd(4,5,1)*yn + dd(4,6,1)*xn
+<               a53 = dd(5,3,1)*zn + dd(5,5,1)*yn + dd(5,6,1)*xn
+<               a63 = dd(6,3,1)*zn + dd(6,5,1)*yn + dd(6,6,1)*xn
+< 
+< !             Add diagonal mass effects
+< 
+<               am           = shp(4,j,l)*dvm
+<               s(j1  ,j1  ) = s(j1  ,j1  ) + am*lfac
+<               s(j1+1,j1+1) = s(j1+1,j1+1) + am*lfac
+<               s(j1+2,j1+2) = s(j1+2,j1+2) + am*lfac
+< 
+<               if(isw.eq.3) then
+<                 i1 = 1
+<                 do i = 1,j
+< 
+< !                 Compute consistent mass matrix
+< 
+<                   xn   = shp(1,i,l)
+<                   yn   = shp(2,i,l)
+<                   zn   = shp(3,i,l)
+<                   mass = shp(4,i,l)*am*cfac
+< 
+<                   s(i1  ,j1  ) = s(i1  ,j1  ) + xn*a11 + yn*a41 + zn*a61
+<      &                                        + mass
+<                   s(i1  ,j1+1) = s(i1  ,j1+1) + xn*a12 + yn*a42 + zn*a62
+<                   s(i1  ,j1+2) = s(i1  ,j1+2) + xn*a13 + yn*a43 + zn*a63
+<                   s(i1+1,j1  ) = s(i1+1,j1  ) + yn*a21 + xn*a41 + zn*a51
+<                   s(i1+1,j1+1) = s(i1+1,j1+1) + yn*a22 + xn*a42 + zn*a52
+<      &                                        + mass
+<                   s(i1+1,j1+2) = s(i1+1,j1+2) + yn*a23 + xn*a43 + zn*a53
+<                   s(i1+2,j1  ) = s(i1+2,j1  ) + zn*a31 + yn*a51 + xn*a61
+<                   s(i1+2,j1+1) = s(i1+2,j1+1) + zn*a32 + yn*a52 + xn*a62
+<                   s(i1+2,j1+2) = s(i1+2,j1+2) + zn*a33 + yn*a53 + xn*a63
+<      &                                        + mass
+<                   i1 = i1 + ndf
+<                 end do
+<               endif
+<               j1 = j1 + ndf
+<             end do
+<           endif
+---
+>           endif ! isw
+224c195
+<         end do
+---
+>         end do ! l
+226c197
+< !       Construct symmetric part
+---
+> !       Compute intertial effects
+228,233c199,201
+<         if(isw.eq.3) then
+<           do i = 2,ndf*nel
+<             do j = 1,i
+<               s(i,j) = s(j,i)
+<             end do
+<           end do
+---
+>         if(ctan(3).ne.0.0) then
+>           call iner3d(d,xl,ul(1,1,4),ul(1,1,5),s,r,
+>      &                nel,ndf,ndm,nst)
+235d202
+<       endif
+239,245c206
+<       if(isw.eq.4) then
+< 
+<         if(nel.eq.4) then
+<           call tint3d(l,lint,sv)
+<         else
+<           call int3d(l,lint,sg)
+<         endif
+---
+>       elseif(isw.eq.4 .or. isw.eq.8) then
+251,255d211
+<           if(nel.eq.4) then
+<             call tetshp(sv(1,l),xl,ndm,xsj(l),shp)
+<           else
+<             call shp3d(sg(1,l),xsj(l),shp,xl,ndm)
+<           endif
+259c215
+<           call strn3d(d,ul,th,shp,ndf,nel, eps,ta)
+---
+>           call strn3d(d,ul,th,shp3(1,1,l),ndf,nel, eps,ta)
+264c220,222
+<      &                dd,sig, isw)
+---
+>      &                dd,sig(1,l),isw)
+> 
+> !         Output values
+266c224,259
+< !         Compute coordinates
+---
+>           if(isw.eq.4) then
+> 
+> !           Compute coordinates
+> 
+>             xn = 0.0
+>             yn = 0.0
+>             zn = 0.0
+>             do j = 1,nel
+>               xn = xn + shp3(4,j,l)*xl(1,j)
+>               yn = yn + shp3(4,j,l)*xl(2,j)
+>               zn = zn + shp3(4,j,l)*xl(3,j)
+>             end do ! j
+> 
+> !           Compute principal stress values
+> 
+>             do i = 1,3
+>               epp(i  ) = eps(i  ,1)
+>               epp(i+3) = eps(i+3,1)*0.5d0
+>             end do ! i
+>             call pstr3d(sig(1,l),psig)
+>             call pstr3d(epp     ,peps)
+> 
+>             mct = mct - 5
+>             if(mct.le.0) then
+>               write(iow,2010) o,head
+>               if(ior.lt.0) write(*,2010) o,head
+>               mct = 50
+>             endif
+>             write(iow,2011) n_el,ma,xn,yn,zn,
+>      &                      (sig(i,l),i=1,6),(epp(i),i=1,6),
+>      &                      (psig(i),i=1,3),(peps(i),i=1,3)
+>             if(ior.lt.0) then
+>               write(*,2011) n_el,ma,xn,yn,zn,
+>      &                      (sig(i,l),i=1,6),(epp(i),i=1,6),
+>      &                      (psig(i),i=1,3),(peps(i),i=1,3)
+>             endif
+268,283d260
+<           xn = 0.0
+<           yn = 0.0
+<           zn = 0.0
+<           do j = 1,nel
+<             xn = xn + shp(4,j,1)*xl(1,j)
+<             yn = yn + shp(4,j,1)*xl(2,j)
+<             zn = zn + shp(4,j,1)*xl(3,j)
+<           end do
+< 
+< !         Compute principal stress values
+< 
+<           mct = mct - 3
+<           if(mct.le.0) then
+<             write(iow,2010) o,head
+<             if(ior.lt.0) write(*,2010) o,head
+<             mct = 50
+285,288d261
+<           write(iow,2011) n_el,xn,(sig(i),i=1,6),ma,yn,(eps(i,1),i=1,6)
+<           if(ior.lt.0) then
+<             write(*,2011) n_el,xn,(sig(i),i=1,6),ma,yn,(eps(i,1),i=1,6)
+<           end if
+290c263
+<         end do
+---
+>         end do ! l
+292c265
+< !     Plot stress values
+---
+> !       Plot stress values
+294,296c267,269
+<       elseif(isw.eq.8) then
+<         call stcn3d(ix(1),d,xl,th,ul,shp,hr(nph),hr(nph+numnp),
+<      &              ndf,ndm,nel,numnp,nhv,istrt)
+---
+>         if(isw.eq.8) then
+>           call slcn3d(sig,r,s,nel,10)
+>         endif
+298d270
+<       return
+302,306c274,281
+< 2010  format(a1,20a4//5x,'Element Stresses'//' Elmt 1-coord',
+<      &    2x,'11-stress  22-stress  33-stress  12-stress',
+<      &    2x,'23-stress  31-stress'/' matl 2-coord  11-strain',
+<      &    2x,'22-strain  33-strain  12-strain  23-strain',
+<      &    2x,'31-strain'/39(' -'))
+---
+> 2010  format(a1,20a4//5x,'Element Stresses'//'     Elmt Mat',
+>      &   '    1-coord    2-coord    3-coord'/12x,
+>      &   '  11-stress  22-stress  33-stress  12-stress',
+>      &   '  23-stress  31-stress'/12x,
+>      &   '  11-strain  22-strain  33-strain  12-strain',
+>      &   '  23-strain  31-strain'/12x,
+>      &   '   1-stress   2-stress   3-stress',
+>      &   '   1-strain   2-strain   3-strain',/39(' -'))
+308c283
+< 2011  format(i4,0p1f9.3,1p6e11.3/i4,0p1f9.3,1p6e11.3/)
+---
+> 2011  format(/i9,i4,1p,3e11.3/(12x,1p,6e11.3))

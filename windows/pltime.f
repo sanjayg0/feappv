@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--+---------+---------+---------+---------+---------+---------+-]
@@ -18,19 +18,17 @@
       include  'tdata.h'
       include  'pdatxt.h'
 
-      character yy*15
+      character (len=15) :: yy
 
       save
-
-      data      yy / ' ' /
 
 !     Display time for current view
 
       dtext = 0.11d0
-      call pppcol(-1,1)
-      call tplot(1.02d0 , 0.135d0, yy, 15, 1)
       call pppcol(1,1)
+      yy = ' '
+      call tplot(1.02d0 , 0.135d0, yy, 15, 1)
       write(yy, '(6hTime =,1p,1e9.2)' ) ttim
       call tplot(1.02d0 , 0.135d0, yy, 15, 1)
 
-      end
+      end subroutine pltime

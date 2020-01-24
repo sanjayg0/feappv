@@ -1,9 +1,9 @@
 !$Id:$
-      subroutine pedges(x,id,ndm,ndf,numnp,vtype,prt,prth,name)
+      subroutine pedges(x,id,ndm,ndf,numnp,vtype,prt,prth,ename)
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -27,21 +27,24 @@
       include  'pointer.h'
       include  'comblk.h'
 
-      character text*15, vtype*4, label*4, name*(*)
-      logical   prt,prth, errck, tinput, vinput, pcomp, gapfl
-      integer   ndm,ndf,numnp, i,j,n
-      real*8    dx, x0, gap
+      character (len=15) :: text
+      character (len=4)  :: vtype, label
+      character          :: ename*(*)
 
-      integer   id(ndf,numnp),idl(14)
-      real*8    x(ndm,numnp),td(16)
+      logical       :: prt,prth, errck, tinput, vinput, pcomp, gapfl
+      integer       :: ndm,ndf,numnp, i,j,n
+      real (kind=8) :: dx, x0, gap
 
-      real*8    pdiff
+      integer       :: id(ndf,numnp),idl(14)
+      real (kind=8) :: x(ndm,numnp),td(16)
+
+      real (kind=8) :: pdiff
 
       save
 
 !     Read input of boundary edge for restraints
 
-      label = name
+      label = ename
       gap   = 1.0d-3/sqrt(dble(max(1,numnp)))
       gapfl = .false.
 100   if(ior.lt.0) write(*,3001)
@@ -119,4 +122,4 @@
 
 3001  format(' Input: ndir,x(ndir),(idl(i),i=1,ndf)','   >',$)
 
-      end
+      end subroutine pedges

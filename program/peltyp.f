@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -20,10 +20,11 @@
 !         nnty       - FEAP element type number
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit   none
- 
-      logical          :: pcomp
-      character        :: tx*15,ty*15
-      integer (kind=4) :: nnty, l
+
+      character (len=15) :: tx,ty
+
+      logical       :: pcomp
+      integer       :: nnty, l
 
       if(pcomp(tx,'line',4)) then
         nnty = -1
@@ -41,6 +42,12 @@
         nnty = -7
       elseif(pcomp(tx,'poin',4)) then
         nnty = -8
+      elseif(pcomp(tx,'vem2',4)) then
+        nnty = -22
+      elseif(pcomp(tx,'vem3',4)) then
+        nnty = -23
+      elseif(pcomp(tx,'vem',3)) then
+        nnty = -22
       elseif(pcomp(tx(1:1),'u',1)) then ! User elements
         ty = trim(adjustl(tx))
         l  = len(trim(ty))

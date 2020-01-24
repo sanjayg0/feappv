@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !     P l o t   C o n t r o l   R o u t i n e   F o r   F E A P
@@ -18,7 +18,6 @@
 !      Outputs:
 !         none      - Plot outputs to screen/file
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'comblk.h'
@@ -30,6 +29,7 @@
       include  'cdat1.h'
       include  'evdata.h'
       include  'fdata.h'
+      include  'hdatam.h'
       include  'hlpdat.h'
       include  'idptr.h'
       include  'iofile.h'
@@ -54,24 +54,26 @@
       include  'sdata.h'
       include  'umac1.h'
 
-      character lci*4,lct*4,tx(2)*15
-      logical   cflag,errv,labl,odefalt,outf,pflag,ppr,symf
-      logical   pltact
-      logical   pcomp,tinput,vinput,palloc, setvar, tr,fa
+      character (len=15) :: tx(2)
+      character (len=4)  :: lci,lct
 
-      integer   i,icol,icp,ijump,jj,k1,k2,k3,k4,k5,l
-      integer   n,nsizt,nxd,nxn,nne,nface,nfaco, iln(2)
-      integer   nix
+      logical       :: cflag,errv,labl,odefalt,outf,pflag,ppr,symf
+      logical       :: pltact
+      logical       :: pcomp,tinput,vinput,palloc, setvar, tr,fa
 
-      real*8    dumv,es,xm,zcol, prop
-      real*8    ct(3),ss(4),tt(4),td(4)
+      integer       :: i,icol,icp,ijump,jj,k1,k2,k3,k4,k5,l
+      integer       :: n,nsizt,nxd,nxn,nne,nface,nfaco, iln(2)
+      integer       :: nix
+
+      real (kind=8) :: dumv,es,xm,zcol, prop
+      real (kind=8) :: ct(3),ss(4),tt(4),td(4)
 
 !     Dictionary storage
 
-      integer      list
-      parameter (  list = 45)
-      character wd(list)*4
-      integer   ed(list)
+      integer           :: list
+      parameter         (  list = 46)
+      character (len=4) :: wd(list)
+      integer           :: ed(list)
 
       save
 
@@ -81,15 +83,16 @@
      1        'load','disp','stre','node','boun','elem','zoom','colo',
      2        'fill','eigv','scal','axis','pers','hide','defo','unde',
      3        'cont','velo','acce','post','reac','mate','dofs','estr',
-     4        'pstr','prom','defa','rang','nora','snod','manu','uplo',
+     4        'pstr','prom','defa','rang','nora','snod','prof','manu',
+     5        'uplo',
      u        'plt1','plt2','plt3','plt4','plt5'/
 
       data ed/    1,     0,     1,     2,     0,     1,     0,     0,
      1            0,     0,     0,     0,     0,     0,     0,     1,
      2            0,     0,     1,     0,     0,     0,     0,     0,
      3            0,     0,     0,     0,     0,     0,     1,     0,
-     4            0,     2,     2,     1,     1,     0,     4,     3,
-     u            4,     4,     4,     4,     4/
+     4            0,     2,     2,     1,     1,     0,     0,     4,
+     u            3,     4,     4,     4,     4,     4/
 
       data ss/.25d0,.75d0,.25d0,.75d0/,tt/.75d0,.75d0,.25d0,.25d0/
       data tr/.true./, fa /.false./
@@ -305,19 +308,19 @@
 !            a  p  c  n  r  n  s  t  a  s  r  d  u  e  o  l  l  g  a  i
 !            m  e  t  t  t  e  h  l  d  p  e  e  n  m  m  o  l  v  l  s
 
-     &      21,22,23,24,25,4,25,28,29,30,31,11,11,34,35,36,37,38,39,40,
+     &      21,22,23,24,25, 4,25,28,29,30,31,11,11,34,35,36,37,38,39,40,
 
-!            p  h  d  u  c  v  a  p  r  m  d  e  p  p  d  r  n s  m  u
-!            e  i  e  n  o  e  c  o  e  a  o  s  s  r  e  a  o n  a  p
-!            r  d  f  d  n  l  c  s  a  t  f  t  t  o  f  n  r o  n  l
-!            s  e  o  e  t  o  e  t  c  e  s  r  r  m  a  g  a d  u  o
+!            p  h  d  u  c  v  a  p  r  m  d  e  p  p  d  r  n  s  p  m
+!            e  i  e  n  o  e  c  o  e  a  o  s  s  r  e  a  o  n  r  a
+!            r  d  f  d  n  l  c  s  a  t  f  t  t  o  f  n  r  o  o  n
+!            s  e  o  e  t  o  e  t  c  e  s  r  r  m  a  g  a  d  f  u
 
-     &      800,800,800,800,800), l
+     &      41, 800,800,800,800,800), l
 
-!            p   p   p   p   p
-!            l   l   l   l   l
-!            t   t   t   t   t
-!            1   2   3   4   5
+!            u   p   p   p   p   p
+!            p   l   l   l   l   l
+!            l   t   t   t   t   t
+!            o   1   2   3   4   5
 
       go to 200
 
@@ -332,11 +335,11 @@
 1     ifrm = nint(ct(1))
       ifrm = min(5,ifrm)
 110   if(ifrm.ge.1 .and. ifrm.le.4) then
-         scale = 0.5d0*scaleg*fact
+         scalef = 0.5d0*scaleg*fact
          s0(1) = ss(ifrm)
          s0(2) = tt(ifrm)
       elseif(ifrm.eq.0) then
-         scale = scaleg*fact
+         scalef = scaleg*fact
          s0(1) = 0.5d0
          s0(2) = 0.5d0
       endif
@@ -522,9 +525,9 @@
       fp(1)= nph + numnp
       fp(2)= ner + numnp
       k5 = 1
-      if(.not.fl(11)) then
+!     if(.not.fl(11)) then
         call pjstrs(trifl)
-      endif
+!     endif
       if(l.eq.11) then
         k1 = min(npstr-1,max(k1,1))
         fp(2)= fp(1) + numnp*(k1 - 1)
@@ -621,7 +624,7 @@
         k2 = max( 1,min(nne,int(ct(1))))
         k3 = max(k2,min(nne,int(ct(2))))
       endif
-      call pltelm(hr(np(53)),mr(np(32)),mr(np(nix)),scale,nie,3,
+      call pltelm(hr(np(53)),mr(np(32)),mr(np(nix)),scalef,nie,3,
      &            nxd,k2,k3)
       go to 200
 
@@ -965,8 +968,10 @@
       if(ct(1).lt.0.0d0) then
         call pload(mr(np(31)),hr(np(30)),hr(np(112)),prop*rlnew,tr)
       endif
+      pltmfl = .true.
       call formfe(npuu,np(112),np(112),np(112),
-     &            fa,tr,fa,tr,6,1,numel,1)
+     &            fa,tr,tr,6,1,numel,1)
+      pltmfl = .false.
       call pdefm(hr(npxx),hr(npuu),cs,hr(np(45)),ndm,ndf,numnp,
      &           hr(np(53)),.true.)
       call pltfor(hr(np(53)),hr(np(112)),hr(np(45)),mr(np(31)),
@@ -1110,14 +1115,21 @@
       setvar = palloc(111,'TEMP1',    0,1)
       go to 200
 
+!     [prof]ile,<ct.eq.0> - Plot layout of upper profile
+!     [prof]ile,<ct.ne.0> - Plot layout of total profile
+
+39    call plopen
+      call pltprf(mr(np(21)),neq,ct(1).ne.0.0d0)
+      go to 200
+
 !     [manu]al,,hlplev - Set manual help display level
 
-39    hlplev = max(-1,min(3,nint(ct(1))))
+40    hlplev = max(-1,min(3,nint(ct(1))))
       go to 200
 
 !     [uplo]t - ct: User plots
 
-40    call plopen
+41    call plopen
       call pppcol(1,0)
       call uplot(ct)
       go to 200
@@ -1175,4 +1187,4 @@
 2036  format('  Line type 6: Short+long dash; Width =',i3)
 2037  format('  Line type 7: wide dash      ; Width =',i3)
 
-      end
+      end subroutine pplotf

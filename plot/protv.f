@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -21,13 +21,12 @@
 !      Outputs:
 !         du(ndf,*) - Cartesian displacements at nodes
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
-      logical   flag
-      integer   ndm,ndf,numnp, i,n, nty(*)
-      real*8    ang,cn,sn
-      real*8    u(ndf,*),angl(*),du(ndf,*)
+      logical       :: flag
+      integer       :: ndm,ndf,numnp, i,n, nty(*)
+      real (kind=8) :: ang,cn,sn
+      real (kind=8) :: u(ndf,*),angl(*),du(ndf,*)
 
       save
 
@@ -52,4 +51,4 @@
         endif
       end do ! n
 
-      end
+      end subroutine protv

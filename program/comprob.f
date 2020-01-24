@@ -1,10 +1,10 @@
 !$Id:$
-      subroutine comprob(numnp, nen, nen1, ndf, ix, id,
-     &                   ic, ielc, ir, jc, bycol, wdiag, all)
+      subroutine comprob(numnp, nen, nen1, ndf, ix, eq,
+     &                   ic, ielc, ir, jc, bycol, wdiag, rc_all)
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -17,12 +17,12 @@
 !         nen1       -  Dimension for 'ix' array
 !         ndf        -  Number of unknowns at each node.
 !         ix(nen1,*) -  List of nodes connected to each element
-!         id         -  Active unknowns at each node.
+!         eq         -  Active equation numbers at each node.
 !         ic         -  Pointer for ielc list
 !         ielc(*)    -  Holds set of elements connected to each node.
 !         bycol      -  Storage by columns if true
 !         wdiag      -  Include diagonal if true
-!         all        -  All terms in row/col if true
+!         rc_all        -  All terms in row/col if true
 
 !      Outputs:
 !         ir(*)      -  Row number of each nonzero in stiffness matrix.
@@ -34,24 +34,22 @@
       include  'pointer.h'
       include  'comblk.h'
 
-      logical   bycol, wdiag, all
-      integer   i, j, k, ne, nep, neq, nn
-      integer   numnp, nen, nen1, ndf, kp, kpo
-      integer   ix(nen1,*), id(ndf,*), ic(*), ir(*), ielc(*), jc(*)
+      logical      :: bycol, wdiag, rc_all
+      integer      :: i, j, k, ne, nep, neq, nn
+      integer      :: numnp, nen, nen1, ndf, kp, kpo
+      integer      :: ix(nen1,*),eq(ndf,*),ic(*),ir(*),ielc(*),jc(*)
 
       save
 
 !     Set up compressed profile pointers.
-
       neq = 0
       do i = 1, numnp
         do j = 1,ndf
-          neq = max(neq,id(j,i))
+          neq = max(neq,eq(j,i))
         end do ! j
       end do ! i
 
 !     Do all equations
-
       kp  = 0
       nep = 1
       do i = 1, neq
@@ -62,10 +60,13 @@
           nn = ielc(k)
 
 !         Check element type(>0: FE, <0: contact)
-
           if(nn.gt.0) then
-            call comelm(id,ix(1,nn), ir, ndf,nen,  kpo,kp,i,
-     &                  bycol,wdiag,all)
+            call comelm(eq,ix(1,nn), ir, ndf,nen,  kpo,kp,i,
+     &                  bycol,wdiag,rc_all)
+            if(np(210).ne.0) then
+              call comelmeq(mr(np(32)),ix(1,nn),mr(np(210)),ir,kpo,kp,
+     &                      nn,i,bycol,wdiag,rc_all)
+            endif
           endif
 
 !         End element tests
@@ -75,4 +76,4 @@
         nep   = ne + 1
       end do ! i
 
-      end
+      end subroutine comprob

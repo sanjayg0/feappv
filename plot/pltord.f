@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -17,7 +17,6 @@
 !         iju       - Number of points to describe element plot
 !         jplt(*)   - Element nodal plot sequence
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'cdata.h'
@@ -25,7 +24,7 @@
       include  'pdata5.h'
       include  'pdata6.h'
 
-      integer   iel, iiu, iju, ij, iplt(9),ix(*),jplt(*)
+      integer       :: iel, iiu, iju, ij, iplt(9),ix(*),jplt(*)
 
       save
 
@@ -181,4 +180,4 @@
 
       endif
 
-      end
+      end subroutine pltord

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -33,12 +33,17 @@
       include  'sdata.h'
       include  'umac1.h'
 
-      logical   pcomp, errck, pinput,tinput,vinput, lmesh
-      logical   flag,readfl,savefl, eltype,pblktyp
-      character cc*4,c2*8, tx(2)*15
-      integer   numn,nume,numm,num,nt,nn,n0,n1,n2,n3,n4,n5,n6,n7,n8,mab
-      integer   di(1), dnumb,dlayer,nlay,j, loop_l,loop_t,loop_d(20)
-      real*8    tb(7),td(16),du(1), loop_v
+      character (len=15) :: tx(2)
+      character (len=8)  :: c2
+      character (len=4)  :: cc
+
+      logical       :: pcomp, errck, pinput,tinput,vinput, lmesh
+      logical       :: flag,readfl,savefl, eltype,pblktyp
+      integer       :: numn,nume,numm,num
+      integer       :: nt,nn,n0,n1,n2,n3,n4,n5,n6,n7,n8,mab
+      integer       :: di(1), dnumb,dlayer,nlay,j
+      integer       :: loop_l,loop_t,loop_d(20)
+      real (kind=8) :: tb(7),td(16),du(1), loop_v
 
       save
 
@@ -566,4 +571,4 @@
 
 3003  format(' *ERROR* Blending option: ',a,' not supported')
 
-      end
+      end subroutine pnums

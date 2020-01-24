@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -24,10 +24,10 @@
       include  'ppers.h'
       include  'pview.h'
 
-      logical   errv
-      integer   numnp,i,n
-      integer   ntyp(*)
-      real*8    t1(3),xp(3,numnp), alpha
+      logical       :: errv
+      integer       :: numnp,i,n
+      integer       :: ntyp(*)
+      real (kind=8) :: t1(3),xp(3,numnp), alpha
 
       save
 
@@ -53,7 +53,7 @@
               return
             else
               write(iow,2000)
-              call plstop
+              call plstop(.true.)
             endif
           elseif(xp(3,n).gt.zview) then
             lview = .true.
@@ -69,4 +69,4 @@
 
 2000  format(//1x,' Point too close, choose another one!'//)
 
-      end
+      end subroutine perspj

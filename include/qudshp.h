@@ -1,6 +1,6 @@
 
-      logical          quad, ttfl, nurbfl
-      common /qudshpa/ quad, ttfl, nurbfl
+      logical          quad, ttfl, nurbfl, vemfl
+      common /qudshpa/ quad, ttfl, nurbfl, vemfl
 
       real*8           jac
       integer                    lint, npm, nvn
@@ -27,3 +27,16 @@
       real*8           hsize   ,hksize   ,xx0   ,dist_min
       common /qudhsiz/ hsize(2),hksize(2),xx0(3),dist_min
 
+      real (kind=8) :: sigp        , epsp
+      common /qudshpp/ sigp(10,125), epsp(6,125)
+
+      integer          sa     , ga, la, lint1, lint2, lint3
+      common /qudshpi/ sa(125), ga, la, lint1, lint2, lint3
+
+      real (kind=8) :: phi        , press      , dvol
+      common /qudshp5/ phi(10,125), press(125), dvol(125)
+
+!     Projection arrays for local least-squares
+
+      real (kind=8) :: matnp         ,prjnp
+      common /qudshp6/ matnp(125,125),prjnp(125)

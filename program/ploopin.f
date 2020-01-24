@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -18,9 +18,12 @@
       include   'iofile.h'
       include   'setups.h'
 
-      logical    pcomp, lopen
-      character  lp_file*15,lp_ext*1, xxx*256,yyy*256
-      integer    lp_lun, lp_max, lp_num, lenx, loop_l(9)
+      character (len=256) :: xxx,yyy
+      character (len=15)  :: lp_file
+      character (len=1)   :: lp_ext
+
+      logical       :: pcomp, lopen
+      integer       :: lp_lun, lp_max, lp_num, lenx, loop_l(9)
 
       save
 
@@ -109,4 +112,4 @@
 
 3000  format(' *ERROR* PLOOPIN: Mesh loop levels nested deeper than 9')
 
-      end
+      end subroutine ploopin

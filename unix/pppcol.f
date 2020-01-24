@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--+---------+---------+---------+---------+---------+---------+-]
@@ -16,7 +16,6 @@
 !      Outputs:
 !         none     - Set values returned in common blocks
 !-----[--+---------+---------+---------+---------+---------+---------+-]
-
       implicit  none
 
       include  'pdata2.h'
@@ -25,10 +24,10 @@
       include  'prmptd.h'
       include  'psdat2.h'
 
-      integer   icol, ii, isw, jsw,jj
-      real*4    c1,c2
+      integer       :: icol, ii, isw, jsw,jj
+      real (kind=4) :: c1,c2
 
-      integer   ipal(7), ipsm(7)
+      integer       :: ipal(7), ipsm(7)
 
       save
 
@@ -111,4 +110,4 @@
 4001  format(' g',i1)
 4002  format('h',i1,' ')
 
-      end
+      end subroutine pppcol

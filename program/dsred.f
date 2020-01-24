@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -19,8 +19,8 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
-      integer   j,jh
-      real*8    dsred, ud, dj, au(jh),ad(jh)
+      integer       :: j,jh
+      real (kind=8) :: dsred, ud, dj, au(jh),ad(jh)
 
       dj = 0.0d0
       do j = 1,jh
@@ -30,4 +30,4 @@
       end do
       dsred = dj
 
-      end
+      end function dsred

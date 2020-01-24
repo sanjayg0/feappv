@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -17,16 +17,15 @@
 !      Outputs:
 !         none      - Output through common /plclip/
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'plclip.h'
       include  'pointer.h'
       include  'comblk.h'
 
-      logical   flag
-      integer   i,n,ndm,numnp
-      real*8    x(ndm,*)
+      logical       :: flag
+      integer       :: i,n,ndm,numnp
+      real (kind=8) :: x(ndm,*)
 
       save
 
@@ -53,4 +52,4 @@
         end if
       end do
 
-      end
+      end subroutine setclp

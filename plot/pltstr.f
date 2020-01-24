@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -34,9 +34,9 @@
       include  'prstrs.h'
       include  'comblk.h'
 
-      integer   numnp,ndm, i,ii
-      real*8    dh,press, third
-      real*8    dt(numnp),sp(numnp,*),st(numnp,*),sig(9)
+      integer       :: numnp,ndm, i,ii
+      real (kind=8) :: dh,press, third
+      real (kind=8) :: dt(numnp),sp(numnp,*),st(numnp,*),sig(9)
 
       save
 
@@ -88,10 +88,9 @@
             endif
 
 !           Compute mean stress and mises stress
-
             press    = (sp(ii,1) + sp(ii,2) + sp(ii,3))*third
             sp(ii,5) = press
-            sp(ii,6) = sqrt(0.5d0*((sp(ii,1) - press)**2
+            sp(ii,6) = sqrt(1.5d0*((sp(ii,1) - press)**2
      &                           + (sp(ii,2) - press)**2
      &                           + (sp(ii,3) - press)**2))
             sp(ii,7) = (third*(sp(ii,1)-press)**3
@@ -107,4 +106,4 @@
 
       end do
 
-      end
+      end subroutine pltstr

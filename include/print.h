@@ -1,3 +1,3 @@
 
-      logical         prt,prth,prnt,pfl,fopn
-      common /print/  prt,prth,prnt,pfl,fopn
+      logical         prt,prth,prnt,pfl,fopn,echo,convfl
+      common /print/  prt,prth,prnt,pfl,fopn,echo,convfl

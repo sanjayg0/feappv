@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -37,14 +37,14 @@
 
       include  'p_gamma1.h'
 
-      logical   fa,tr
-      integer   n
-      real*8    s
+      logical       :: fa,tr
+      integer       :: n
+      real (kind=8) :: s
 
-      integer   id(*)
-      real*8    du(*),t(nneq,*)
+      integer       :: id(*)
+      real (kind=8) :: du(*),t(nneq,*)
 
-      real*8    dot
+      real (kind=8) :: dot
 
       save
 
@@ -70,12 +70,12 @@
 
 !     Update with step control
 
-      call update(id,hr(np(30)),hr(pu),hr(np(42)),du,fl(9),2)
+      call pupdate(id,hr(np(30)),hr(pu),hr(np(42)),du,fl(9),2)
 
 !     Compute residual
 
       call pload(id,hr(np(30)),hr(pr),prop,tr)
-      call formfe(pu,pr,pr,pr,fa,tr,fa,fa,6,1,numel,1)
+      call formfe(pu,pr,pr,pr,fa,tr,fa,6,1,numel,1)
 
 !     Restore quantities from saves
 
@@ -87,4 +87,4 @@
 
       gamma1 = dot (du,hr(pr),neq)
 
-      end
+      end function gamma1

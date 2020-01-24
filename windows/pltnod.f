@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--+---------+---------+---------+---------+---------+---------+-]
@@ -25,18 +25,18 @@
       include  'pdata4.h'
       include  'plflag.h'
 
-      logical   zoom
-      integer   n, ndm, n1, n2, n3
-      real*8    x1, x2, x3, dx1
+      logical       :: zoom
+      integer       :: n, ndm, n1, n2, n3
+      real (kind=8) :: x1, x2, x3, dx1
 
-      real*8    x(ndm,*)
-      integer   ip(*)
+      real (kind=8) :: x(ndm,*)
+      integer       :: ip(*)
 
       save
 
 !     Open plot and plot locations of all nodes: Add labels if n1 .ne. 0
 
-      dx1 = .002d0/scale
+      dx1 = .002d0/scalef
       x3 = 0.0d0
       do n = n2,n3
         if(ip(n).gt.0 .and. zoom(x(1,n),ndm)) then
@@ -55,4 +55,4 @@
         endif
       end do
 
-      end
+      end subroutine pltnod

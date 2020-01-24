@@ -1,4 +1,4 @@
-include $(FEAPPVHOME4_1)/makefile.in
+include $(FEAPPVHOME5_1)/makefile.in
 
 SOURCES   = $(wildcard $(FSOURCE)*.$(FEXT)) $(wildcard $(CSOURCE)*.$(CEXT)) $(wildcard $(F90SOURCE)*.$(F90EXT))
 GENMODS   = $(wildcard *genmod.$(F90EXT))

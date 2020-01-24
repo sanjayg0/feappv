@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -22,7 +22,6 @@
 !      Outputs:
 !         none      - Plot outputs to screen/file
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'pdata1.h'
@@ -30,18 +29,18 @@
       include  'pointer.h'
       include  'comblk.h'
 
-      logical   zoom,bc0
-      integer   ndm,ndf,numnp,nbou, n
-      real*8    dx1, x1,x2,x3, cs,sn,ang
-      integer   id(ndf,*),ip(*)
-      real*8    x(ndm,*),angl(*)
+      logical       :: zoom,bc0
+      integer       :: ndm,ndf,numnp,nbou, n
+      real (kind=8) :: dx1, x1,x2,x3, cs,sn,ang
+      integer       :: id(ndf,*),ip(*)
+      real (kind=8) :: x(ndm,*),angl(*)
 
       save
 
 !     Plot boundary restraints (lines = fixed)
 
       bc0 = nbou.eq.0
-      dx1 = .006d0/scale
+      dx1 = .006d0/scalef
       do n = 1,numnp
         if(ip(n).gt.0) then
           if(angl(n).ne.0.0d0) then
@@ -95,4 +94,4 @@
 
       end do
 
-      end
+      end subroutine pltbou

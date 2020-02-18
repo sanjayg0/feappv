@@ -505,7 +505,7 @@
             endif
           endif
 
-          if(np(112).gt.0) setvar = palloc(112,'TEMP2',0, 2)
+          if(np(112).ne.0) setvar = palloc(112,'TEMP2',0, 2)
 
 !       Write error
 

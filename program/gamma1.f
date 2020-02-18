@@ -60,7 +60,7 @@
 
       call pmove(hr(pu)  ,t     ,3*nneq)
       call pmove(    du  ,t(1,4),  nneq)
-      if(np(42).gt.0) call pmove(hr(np(42)),t(1,5),nneq*nrt)
+      if(np(42).ne.0) call pmove(hr(np(42)),t(1,5),nneq*nrt)
 
 !     Multiply increment by current step size
 
@@ -81,7 +81,7 @@
 
       call pmove( t     ,hr(pu),3*nneq)
       call pmove( t(1,4),    du,  nneq)
-      if(np(42).gt.0) call pmove(t(1,5),hr(np(42)),nneq*nrt)
+      if(np(42).ne.0) call pmove(t(1,5),hr(np(42)),nneq*nrt)
 
 !     Compute value of gamma
 

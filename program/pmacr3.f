@@ -606,7 +606,7 @@
           write(*,2009) (i,ndfeig(i),i=1,ndf)
         endif
 
-      elseif(np(77).gt.0) then
+      elseif(np(77).ne.0) then
 
         call pzero(hr(np(26)),nneq)
         tfl = pfr

@@ -1673,7 +1673,6 @@
 !     Assign material properties
 
 !     No rotation
-
       if(psi.eq.0.0d0) then
 
         dmg(1,1) = d(21)
@@ -1719,11 +1718,9 @@
         betag(6) = 0.0d0
 
 !     Orthotropic material (rotations)
-
       else
 
 !       Set up constants for transformation
-
         si = sin(psi)
         co = cos(psi)
         s2 = si*si
@@ -1731,7 +1728,6 @@
         cs = co*si
 
 !       Set up transformation matrix for plane problem
-
         qm(1,1) =  c2
         qm(1,2) =  s2
         qm(1,3) =  0.0d0
@@ -1750,7 +1746,6 @@
         qm(4,4) =  c2 - s2
 
 !       Set up local (orthotropic) plane matrix
-
         dml(1,1) = d(21)
         dml(2,2) = d(22)
         dml(3,3) = d(23)
@@ -1776,7 +1771,6 @@
         dml(4,4) = d(27)
 
 !       Convert plane local to global matrix
-
         do j = 1,4 ! {
 
           dmlqj(1) = dml(1,1)*qm(1,j) + dml(1,2)*qm(2,j)
@@ -1795,14 +1789,12 @@
         end do ! j   }
 
 !       Set up global shear matrix
-
         dmg(5,5) = c2 * d(28) + s2 * d(29)
         dmg(5,6) = cs * ( d(29) - d(28) )
         dmg(6,5) = dmg(5,6)
         dmg(6,6) = s2 * d(28) + c2 * d(29)
 
 !       Global thermal stiffness vector
-
         betag(1) = c2 * d(47) + s2 * d(48)
         betag(2) = s2 * d(47) + c2 * d(48)
         betag(3) = d(49)
@@ -1837,11 +1829,9 @@
       save
 
 !     Compute stress
-
       sig   = sig + d(1)*(eps - d(3)*ta)
 
 !     Set modulus
-
       dd(1) = d(1)
       dd(2) = d(1)
 
@@ -1869,7 +1859,6 @@
 !         dd(*,*)   - material tangent matrix at t-n+1
 !         dr(*,*)   - rayleigh damping matrix at t-n+1
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'eldata.h'
@@ -1891,7 +1880,6 @@
       data  One3 / 0.3333333333333333d0 /
 
 !     Check state for iterations
-
       if(rnmax.eq.0.0d0) then  ! First iteration in step
         if(istrt.le.0) then
           state = .false.
@@ -1906,7 +1894,6 @@
       endif
 
 !     Set-up elastic moduli
-
       call dmat2d(d,0.d0,dd,dum)
       do i = 1,4
         do j = 1,4
@@ -1915,13 +1902,11 @@
       end do ! i
 
 !     Compute trial stress
-
       sigtr(1) = dd(1,1)*(eps(1)-epsp(1)) + dd(1,2)*(eps(2)-epsp(2))
       sigtr(2) = dd(2,1)*(eps(1)-epsp(1)) + dd(2,2)*(eps(2)-epsp(2))
       sigtr(3) = dd(4,4)*(eps(4)-epsp(3))
 
 !     Compute yield state
-
       eta(1)  = sigtr(1) - alp(1)
       eta(2)  = sigtr(2) - alp(2)
       eta(3)  = sigtr(3) - alp(3)
@@ -1930,14 +1915,12 @@
       xlam0   = 0.0d0
 
 !     Compute scale factor and compute elastic-plastic tangent
-
       if (yldtr+dyld.gt.rad2 .and.state) then
 
         epn(2) = 1.0d0
         dm     = ylds2d(d,sigtr,alp,eta,dd,beta,epn(1),xlam0,hprim)
 
 !       Compute plastic strains
-
         a1      = (2.d0*eta(1) - eta(2))*One3
         a2      = (2.d0*eta(2) - eta(1))*One3
         epsp(1) = epsp(1) + xlam0*a1
@@ -1945,7 +1928,6 @@
         epsp(3) = epsp(3) + xlam0*2.d0*eta(3)
 
 !       Compute a "normal" and finish computation of tangent
-
         en(1) = dd(1,1)*a1 + dd(1,2)*a2
         en(2) = dd(2,1)*a1 + dd(2,2)*a2
         en(3) = 0.0d0
@@ -1965,7 +1947,6 @@
       endif
 
 !     Set stresses
-
       sig(1) = sigtr(1)
       sig(2) = sigtr(2)
       sig(3) = 0.0d0
@@ -1987,7 +1968,6 @@
       save
 
 !     Stress:
-
       call dmat2d(d,d(31),dd,beta)
 
       do i = 1,6
@@ -1999,7 +1979,6 @@
       end do
 
 !     Set plane stress case (dd(3,3) = 0.0d0)
-
       if(dd(3,3) .eq. 0.0d0 ) then
 
         eps(3) = d(90)*sig(1) + d(91)*sig(2) + d(92)*ta
@@ -2034,7 +2013,6 @@
       save
 
 !     Extract constants
-
       y0     = d(41)
       yinf   = d(42)
       delta  = d(43)
@@ -2042,7 +2020,6 @@
       hprim  = d(45)
 
 !     Compute yield function and derivative
-
       eep    = exp(-delta*ep)
       xk     =  y0 + (yinf - y0)*(1.d0 - eep) + ylin*ep
       xkprim = delta*(yinf - y0)*eep          + ylin
@@ -2102,7 +2079,6 @@
       data      Two3 / 0.6666666666666667d0 /
 
 !     Check state for iterations
-
       if(rnmax.eq.0.0d0) then    ! First iteration in step
         if(istrt.le.0) then
           state = .false.
@@ -2117,7 +2093,6 @@
       endif
 
 !     Set number stress/strain components
-
       if(ndm.eq.2) then
         ntm = 4
       elseif(ndm.eq.3) then
@@ -2127,7 +2102,6 @@
       end if
 
 !     Set parameters
-
       s23   = sqrt(Two3)
 
       G     = d(27)
@@ -2141,7 +2115,6 @@
       beta  =     d(43)
 
 !     Compute constants
-
       Hk23  = Two3*Hk
       Hi23  = Two3*Hi
       His23 =  s23*Hi
@@ -2153,7 +2126,6 @@
       Gbar  = twoG + Hi23 + Hk23
 
 !     Compute volumetric and deviatoric strains
-
       theta = (eps(1) + eps(2) + eps(3))*One3
       do i = 1,3
         ep(i)   = eps(i) - theta
@@ -2165,7 +2137,6 @@
       theta = theta*3.0d0
 
 !     Compute trial values
-
       do i = 1,ntm
         sig(i) = sig(i) + twoG*(ep(i) - epsp(i))
         alp(i) = Hk23*epsp(i)
@@ -2173,17 +2144,14 @@
       end do
 
 !     Compute trial norm of stress - back stress
-
       xin = sqrt(dot(xi,xi,ntm) + dot(xi(4),xi(4),ntm-3))
       Rn  = Rinf + His23*epp(1)
       Rb  = (R0  - Rinf)*expb
 
 !     Check yield
-
       if(xin+dyld .gt. (Rn+Rb) .and. state) then
 
 !       Compute consistency
-
         epp(2) = 1.0d0
         lam    = (xin - Rn - Rb) / (Gbar + Bbar)
         conv   = .false.
@@ -2200,7 +2168,6 @@
         end do
 
 !       Warning: Not converged
-
         if(.not.conv) then
           write( *,*) '  *WARNING* No convergence in MISES'
           write(16,*) '  *WARNING* No convergence in MISES'
@@ -2211,7 +2178,6 @@
         endif
 
 !       Compute normal vector
-
         do i = 1,ntm
           en(i) = xi(i)/xin
         end do
@@ -2221,7 +2187,6 @@
         bb  = twoG*(bb - twoG/(Gbar + Bbar*expl))
 
 !       Compute plastic tangent from normal
-
         do i = 1,ntm
           cc = bb*en(i)
           do j = 1,ntm
@@ -2230,7 +2195,6 @@
         end do
 
 !     Set for elastic increment
-
       else
 
         epp(2) = 0.0d0
@@ -2250,7 +2214,6 @@
       endif
 
 !     Compute deviator stress, plastic strain, and accumulated plastic strain
-
       do i = 1,ntm
         sig(i)  = sig(i)  - twoG*lam*en(i)
         epsp(i) = epsp(i) + lam*en(i)
@@ -2258,14 +2221,12 @@
       epp(1) = epp(1) + s23*lam
 
 !     Add pressure
-
       press = K*theta
       do i = 1,3
         sig(i) = sig(i) + press
       end do
 
 !     Compute tangent moduli
-
       cc = K - aa*One3
       bb = K - twoG*One3
 
@@ -2304,7 +2265,6 @@
 !          sig(2)  -  stress at point.
 
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'cdat1.h'
@@ -2319,12 +2279,10 @@
       save
 
 !     Extract analysis type: 1=plane stress; 2=plane strain; 3=axi
-
       uprm  = ndd - nud
       umat  = int(d(uprm)) - 100
 
 !     Set initial stress and zero tangent modulus
-
       dd(1)  = 0.0d0
       if(nint(d(160)).eq.1) then
         sig(1) = d(161)
@@ -2334,20 +2292,17 @@
       endif
 
 !     Program material models
-
       if(umat.lt.0) then
 
         plasfl = int(d(40)).eq.1
         viscfl = int(d(40)).eq.2
 
 !       Move hn to h1
-
         do i = 1,nh
           h1(i) = hn(i)
         end do
 
 !       P l a s t i c i t y
-
         if(plasfl) then
 
           call plas1d(d,ta,eps(1),h1,istrt, sig(1),dd)
@@ -2358,14 +2313,12 @@
           endif
 
 !       V i s c o e l a s t i c i t y
-
         elseif(viscfl) then
 
           call visc1d(d,eps(1),h1(1),h1(2), sig(1),dd)
           nomats(1,4) = nomats(1,4) + 1
 
 !       E l a s t i c i t y
-
         else
 
           call elas1d(d,ta,eps(1), sig(1),dd)
@@ -2374,7 +2327,6 @@
         end if
 
 !     U s e r    M o d e l    I n t e r f a c e
-
       else
 
         call umod1d(umat,eps(1),ta,d(1),d(uprm+1),hn(1),h1(1),nh,ii,
@@ -2383,7 +2335,6 @@
       end if
 
 !     Rayleigh stress
-
       sig(2) = dd(2)*eps(2)
 
       end subroutine modl1d
@@ -2407,9 +2358,7 @@
 !                                            | dd_3   dd_4 |
 !                       Rayleigh damping: dd_5
 !          sig(6)    -  stresses at point.
-
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'cdat1.h'
@@ -2546,7 +2495,6 @@
       save
 
 !     Check state for iterations (N.B. 'rnmax' zero in first iteration)
-
       if(rnmax.eq.0.0d0) then
         if(istrt.eq.0) then         ! First iteration in step
           state = .false.
@@ -2592,39 +2540,33 @@
       data     etol /1.d-08/
 
 !     Extract effective plastic strain
-
       epn   = h1(1)
       epp   = h1(2)
 
 !     Compute trial stress
-
-      sigtr = sig + d(21)*(eps - epn - d(3)*ta)
+      sigtr = sig + d(1)*(eps - epn - d(3)*ta)
 
 !     Check yield
-
       alp   = d(45)*epn
       ff    = abs(sigtr-alp)
       yld   = d(42) + (d(41) - d(42))*exp(-d(43)*epp) + d(44)*epp
 
 !     Plastic state
-
       if(ff.gt.yld .and. state) then
 
         lambda =  0.0d0
         sig    =  sigtr
 
-        cc     =  1.d0/d(21)
+        cc     =  1.d0/d(1)
         epstr  =  cc*sigtr
 
 !       Newton solution for state
-
         noconv = .true.
         count  =  0
 
         do while(noconv)
 
 !         Compute Newton parameters
-
           count =  count + 1
           dyld  = (d(42) - d(41))*exp(-d(43)*epp)
           yld   =  d(42) - dyld + d(44)*epp
@@ -2636,12 +2578,10 @@
           det   =  1.d0/(dyld*cc + nn*nn)
 
 !         Compute increments
-
           dsig  =  det*(dyld*Rs + nn*rf)
           dlam  =  det*(  nn*Rs - cc*rf)
 
 !         Update variables
-
           lambda = lambda + dlam
           sig    = sig    + dsig
 
@@ -2650,7 +2590,6 @@
           alp    = d(45)*epn
 
 !         Check convergence
-
           if(abs(dlam).lt.etol*abs(lambda)) then
             if(abs(dsig).lt.etol*abs(sig))  then
               noconv = .false.
@@ -2665,28 +2604,25 @@
         end do ! while noconv
 
 !       Elasto-plastic modulus
-
-        dd(1) = d(21)*(1.d0 - nn*nn*det)
+        dd(1) = d(1)*(1.d0 - nn*nn*det)
 
 !       Update history variables
-
         h1(1) = epn
         h1(2) = epp
         h1(3) = 1.d0
 
 !     Elastic state
-
       else
 
 !       Elastic modulus
 
         sig   = sigtr
-        dd(1) = d(21)
+        dd(1) = d(1)
         h1(3) = 0.d0
 
       endif
 
-      dd(2)  = d(21)
+      dd(2)  = d(1)
 
       end subroutine pllh1d
 
@@ -2711,14 +2647,12 @@
       data      etol /1.d-08/
 
 !     Extract effective plastic strain
-
       epn   = h1(1)
       epp   = h1(2)
       alp   = h1(4)
 
 !     Compute trial stress
-
-      sig = sig + d(21)*(eps - epn - d(3)*ta)
+      sig = sig + d(1)*(eps - epn - d(3)*ta)
 
       i = 1
       call tyld1d(nseg,table, epp, yld, iso, kin, i)
@@ -2726,26 +2660,22 @@
       ff    = abs(sig - alp)
 
 !     Plastic state
-
       if(ff.gt.yld .and. state) then
 
         lambda =  0.0d0
-        ee     =  d(21)
+        ee     =  d(1)
         cc     =  1.d0/ee
 
 !       Newton solution for state
-
         noconv = .true.
         count  =  0
 
         do while(noconv)
 
 !         Compute Newton parameters
-
           count =  count + 1
 
 !         Compute parameters
-
           call tyld1d(nseg,table, epp, yld, iso, kin, i)
 
           ff   =  abs(sig - alp)
@@ -2765,13 +2695,11 @@
           a23  = -kin*nn
 
 !         Compute increments
-
           dsig = (a11*rsig + a12*ralp + a13*rf)*det
           dalp = (a12*rsig + a22*ralp + a23*rf)*det
           dlam = (a13*rsig + a23*ralp -1.d0*rf)*det
 
 !         Update variables
-
           lambda = lambda + dlam
           sig    = sig    + dsig
           alp    = alp    + dalp
@@ -2780,7 +2708,6 @@
           epp    = h1(2)  + lambda
 
 !         Check convergence
-
           if(  abs(dlam).lt.etol*abs(lambda)) then
             if(abs(dsig).lt.etol*abs(sig) .and.
      &         abs(dalp).lt.etol*abs(alp))  then
@@ -2796,22 +2723,18 @@
         end do ! while noconv
 
 !       Elasto-plastic modulus
-
         dd(1) = a11*det
 
 !       Update history variables
-
         h1(1) = epn
         h1(2) = epp
         h1(3) = 1.d0
 
 !     Elastic state
-
       else
 
 !       Elastic modulus
-
-        dd(1) = d(21)
+        dd(1) = d(1)
         h1(3) = 0.d0
 
       endif
@@ -2830,7 +2753,6 @@
       real (kind=8) :: epp, del, yld, iso,kin, table(3,*)
 
 !     Check yield
-
       flag = .true.
       i    = 1
       do while (flag)
@@ -2875,7 +2797,6 @@
 !       q(*)    - Viscoelastic stress components at t_n+1
 !       ee(*)   - Tangent moduli
 !-----[--+---------+---------+---------+---------+---------+---------+-]
-
       implicit  none
 
       include  'tdata.h'
@@ -2887,7 +2808,6 @@
       real (kind=8) :: hvisc
 
 !     Set initial values
-
       ee(1) = d(1)
       ee(2) = d(1)
       sig   = 0.0d0
@@ -2895,28 +2815,24 @@
       mu    = 0.0d0
 
 !     Accumulate viscoelastic terms
-
       nv    = nint(d(57))
       do n = 1,nv
 
         mu_n  = d(2*n+49)
 
 !       Exact integral
-
         dtau  = dt/d(2*n+50)
         exp_n = exp( -dtau)
         dq    = mu_n*hvisc(dtau,exp_n)
         q(n)  = exp_n*q(n) + dq*(eps - epsn)
 
 !       Mid-point integral
-
 !       dtau  = dt/d(2*n+50)*0.5d0
 !       exp_n = exp( -dtau)
 !       dq    = mu_n*exp_n
 !       q(n)  = exp_n*exp_n*q(n) + dq*(eps - epsn)
 
 !       Accumulate terms
-
         sig   = sig  + q(n)
         mu    = mu   + mu_n
         efac  = efac + dq
@@ -2924,7 +2840,6 @@
       end do
 
 !     Set final values and add elastic component
-
       mu    = 1.d0 - mu
       sig   = ee(1)*(mu*eps + sig)
       ee(1) = ee(1)*(mu + efac)
@@ -2935,7 +2850,6 @@
       subroutine viscoe(d,eps,en,qi,ntm,sig,dd,dr)
 
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'sdata.h'
@@ -2954,12 +2868,10 @@
       save
 
 !     Set elastic parameters for G (mu) and lambda
-
       G = d(1)/(2.d0*(1.d0 + d(2)))
       K = d(1)/(3.d0*(1.d0 - 2.d0*d(2)))
 
 !     Compute volumetric strain and deviatoric components
-
       theta = (eps(1) + eps(2) + eps(3))*0.3333333333333333d0
       do i = 1,3
         ee(i  ) = eps(i) - theta
@@ -2969,7 +2881,6 @@
       end do ! i
 
 !     Set properties for integrating the q_i terms
-
       do i = 1,ntm
         sig(i) = 0.0d0
       end do ! i
@@ -2987,7 +2898,6 @@
         mu_0 = mu_0 + mu_n
 
 !       Update history and compute viscoelastic deviatoric stress
-
         do i = 1,ntm
           qi(i,n) = exp_n*qi(i,n) + dq_n*(ee(i) - en(i))
           sig(i)  = sig(i) + qi(i,n)
@@ -2995,7 +2905,6 @@
       end do ! n
 
 !     Finish updates and save the strains
-
       mu_0 = 1.d0 - mu_0
       gfac = gfac + mu_0
       do i = 1,ntm
@@ -3004,14 +2913,12 @@
       end do ! i
 
 !     Add elastic bulk term
-
       Kth = K*theta*3.0d0
       do i = 1,3
         sig(i) = sig(i) + Kth
       end do ! i
 
 !     Set tangent parameters
-
       Gg = G*gfac
       Kg = K - 0.6666666666666666d0*Gg
       K  = K - 0.6666666666666666d0*G
@@ -3053,7 +2960,6 @@
 !          yldgpl - yield function value for current iterate
 !          lambda - consistency parameter (from constitutive model)
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'iofile.h'
@@ -3068,11 +2974,9 @@
       data      two3 / 0.6666666666666667d0 /
 
 !     Set parameters
-
       g2  = g + (hiso + hkin)*one3
 
 !     Solution of quadratic equation
-
       a1 = saltrm - tt * (yield + hiso*ep)
       a2 = saltrm - salm
       a3 = 2.0d0 * g - delta
@@ -3095,7 +2999,6 @@
       function ylds2d(d,sigtr,alp,eta,dd,beta,epn,lam0,hprim)
 
 !-----[--.----+----.----+----.-----------------------------------------]
-
 !     Plane stress plasticity routine for return map algorithm
 
       implicit  none
@@ -3125,7 +3028,6 @@
       psi(3) = eta(3)
 
 !     Compute scale factor
-
       psi1 = psi(1)*psi(1)*0.3333333333333333d0
       psi2 = psi(2)*psi(2) + psi(3)*psi(3)*2.d0
       twoh3= two3*hprim
@@ -3135,7 +3037,6 @@
       e2   = d2 + twoh3
 
 !     Newton's method for determining correct lambda
-
       lam  = lam0
       icnt = 0
 100   f1   = 1.d0/(1.d0 + e3*lam)
@@ -3161,11 +3062,9 @@
 110   write(iow,2000) dlam,lam
 
 !     Scale psi onto yield surface using lambda
-
 120   continue
 
 !     Compute plasticity map dd array
-
       f1      = 1.d0/(1.d0 + e3*lam)
       f2      = 1.d0/(1.d0 + e2*lam)
       gam1    = 1.d0 + twoh3*lam
@@ -3180,7 +3079,6 @@
       dd(4,4) = d2
 
 !     Compute stresses on yield surface
-
       psi(1)  = psi(1)*f1
       psi(2)  = psi(2)*f2
       psi(3)  = psi(3)*f2
@@ -3228,14 +3126,12 @@
       data      two3 / 0.6666666666666667d0 /
 
 !     Compute deviator stress
-
       do i = 1,3
         sigb_d(i  ) = two3 *(sigb(i  ) - p_bar)
         sigb_d(i+3) = two3 * sigb(i+3)
       end do ! i
 
 !     D_11: B_matrix part
-
       fac1 = p_mix - two3*p_bar
       do j = 1,3
         do i = 1,3
@@ -3256,15 +3152,13 @@
         dd(j+3,j+3) = dd(j+3,j+3) + fac1
       end do ! j
 
-!     D_12: Coupling matrix with
-
+!     D_12: Coupling matrix with volume
       do j = 1,6
         dd(7,j) = dd(7,j) + sigb_d(j)
         dd(j,7) = dd(j,7) + sigb_d(j)
       end do ! j
 
 !     D_22: Volumetric part
-
       dd(7,7) = dd(7,7) - one3*p_bar
 
       end subroutine dmatdx
@@ -3294,7 +3188,6 @@
 !        dd(7,7)   - Mixed material tangent for material stiffness
 !                    computations.
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       integer       :: i , j
@@ -3306,7 +3199,6 @@
       data      third/ 0.3333333333333333d0 /
 
 !     Load moduli from constitution
-
       do i = 1,6
         do j = 1,6
           dd(i,j) = aa(i,j)
@@ -3314,14 +3206,12 @@
       end do
 
 !     Compute left and right multiples with trace
-
       do i = 1,6
         dd(i,7) = (aa(i,1) + aa(i,2) + aa(i,3))*third
         dd(7,i) = (aa(1,i) + aa(2,i) + aa(3,i))*third
       end do
 
 !     Convert upper 6 x 6 to a deviatoric D_11
-
       do i = 1,6
         do j = 1,3
           dd(i,j) = dd(i,j) - dd(i,7)
@@ -3330,11 +3220,9 @@
       end do
 
 !     Form last term, D_22
-
       dd(7,7) = (dd(1,7) + dd(2,7) + dd(3,7))*third
 
 !     Final update to form D_12 and D_21
-
       do i = 1,3
         dd(i,7) = dd(i,7) - dd(7,7)
         dd(7,i) = dd(7,i) - dd(7,7)
@@ -3365,7 +3253,6 @@
 !       hp          - First derivative of augmentation function
 !       hpp         - Second derivative of augmentation function
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'augdat.h'
@@ -3377,10 +3264,7 @@
 
       save
 
-
-      write(*,*) ' ISW = ',isw
 !     Perform (augmented) iteration on penalty
-
       d1    = augf*d(21)
 
 !     Free energy function
@@ -3393,7 +3277,6 @@
 !     Current volumetric functions are:
 
 !     Model 1.) U(J) = K*0.5*(J^2-1) - K*(log J)
-
       if    (isw.eq.1) then
 
         u   = 0.5d0*d1*(0.5d0*detf**2 - 0.5d0 - log(abs(detf)))
@@ -3401,7 +3284,6 @@
         upp = 0.5d0*d1*( 1.d0 + 1.d0/detf**2 )
 
 !     Model 2.) U(J) = K*0.5*(J-1)^2
-
       elseif(isw.eq.2) then
 
         u   = d1*(detf - 1.d0)**2*0.5d0
@@ -3409,11 +3291,9 @@
         upp = d1
 
 !     Model 3.) U(J) = K*0.5*(log J)^2
-
       elseif(isw.eq.3) then
 
 !       up  = ( d1*log( detf ) - 3*K*alpha*(T - Tref) )/detf
-
         u   = d1*log(abs(detf))**2*0.5d0
         up  = d1*log(abs(detf)) / detf
         upp = ( d1/detf  - up )/detf
@@ -3424,7 +3304,6 @@
 !     Current augmented Lagrangian function is
 
 !     Model 1.) h(J) = (J - 1)
-
       ha  = detf - 1.d0
       hp  = 1.0d0
       hpp = 0.0d0
@@ -3478,11 +3357,9 @@
       save
 
 !     Set finite deformation flag for Hill-Mandel
-
       finflg = .true.
 
 !     Set number of active stress components
-
       if(ndm.eq.1) then
         ntm = 1
       elseif(ndm.eq.2) then
@@ -3492,12 +3369,10 @@
       endif
 
 !     Set material model type and user material pointers
-
       uprm  = ndd-nud
       umat  = int(d(uprm)) - 100
 
 !     Zero stress and moduli
-
       do i = 1,6
         sig(i) = 0.0d0
         do j = 1,6
@@ -3510,7 +3385,6 @@
       end do ! i
 
 !     Set constant initial stress state
-
       if(nint(d(160)).eq.1) then
         do i = 1,6
           sig(i) = d(160+i)
@@ -3518,7 +3392,6 @@
       endif
 
 !     Compute Left Cauchy-Green deformation tensor
-
       bb(1) = f(1,1)*f(1,1) + f(1,2)*f(1,2) + f(1,3)*f(1,3)
       bb(2) = f(2,1)*f(2,1) + f(2,2)*f(2,2) + f(2,3)*f(2,3)
       bb(3) = f(3,1)*f(3,1) + f(3,2)*f(3,2) + f(3,3)*f(3,3)
@@ -3527,11 +3400,9 @@
       bb(6) = f(1,1)*f(3,1) + f(1,2)*f(3,2) + f(1,3)*f(3,3)
 
 !     Program material models
-
       if(umat.lt.0) then
 
 !       Set model type
-
         plasfl = nint(d(40)).eq.1
 
         imat = nint(d(20))
@@ -3565,15 +3436,10 @@
       endif
 
 !     Project aa to D-matrix for B-bar
-
       if(bbar) then
-
         call dmatmx ( aa, dd )
-
       else
-
         call pmove  ( aa, dd, 36 )
-
       end if
 
       end subroutine modlfd
@@ -3596,7 +3462,6 @@
 !         sigma(i,j) =  | sig(4)  sig(2)  sig(5) |
 !                       | sig(6)  sig(5)  sig(3) |
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       integer       :: i
@@ -3606,11 +3471,9 @@
       save
 
 !     Reciprocal deformation gradient determinant
-
       jrec = 1.d0/detf
 
 !     fs = f^t*s
-
       do i = 1,3
         fs(i,1) = f(i,1)*s(1) + f(i,2)*s(4) + f(i,3)*s(6)
         fs(i,2) = f(i,1)*s(4) + f(i,2)*s(2) + f(i,3)*s(5)
@@ -3643,7 +3506,6 @@
 !     Outputs:
 !         ds(6,6) - spatial moduli
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit none
 
       integer       :: i,j,k
@@ -3653,11 +3515,9 @@
       save
 
 !     Reciprocal deformation gradient determinant
-
       jrec = 1.d0/detf
 
 !     Compute matrix product: dtj = dm*tr
-
       do j = 1,6
         do i = 1,6
           dtj(i) = 0.0d0
@@ -3667,7 +3527,6 @@
         end do
 
 !       Compute spatial tensor: ds = tl_trans*dt
-
         do i = 1,6
           ds(i,j) = 0.0d0
           do k = 1,6
@@ -3716,7 +3575,6 @@
       ha    = detf - 1.0d0
 
 !     Set CAUCHY stresses and elastic tangent moduli
-
       mu  =  d(22)/detf
       mu2 =  mu + mu
       do i = 1,3
@@ -3727,7 +3585,6 @@
       end do
 
 !     Add volumetric correction to aa
-
       aa(1,2) = aa(1,2) + uppj
       aa(2,1) = aa(1,2)
       aa(1,3) = aa(1,3) + uppj
@@ -3736,7 +3593,6 @@
       aa(3,2) = aa(2,3)
 
 !     Compute stored energy
-
       estore = d(21)*logj*logj*0.5d0
      &       + d(22)*(0.5d0*(bb(1) + bb(2) + bb(3)) - 1.5d0 - logj)
 
@@ -3756,7 +3612,6 @@
 !       ds(6,6) - Spatial moduli
 !       energy  - Energy density
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'debugs.h'
@@ -3788,7 +3643,6 @@
       end do
 
 !     Compute factors for updates
-
       if(energy.ge.0.0d0) then
         fac1 = 0.5d0 * theta(3)
         fac2 = 1.d0/theta(3) - 1.d0
@@ -3798,14 +3652,12 @@
       endif
 
 !     Compute deformation gradients at t_n and t_n+1
-
       do i = 1,9
         fn(i) = fa(i) -      df(i)
         f1(i) = fa(i) + fac2*df(i)
       end do
 
 !     Compute Green-Lagrange strains
-
       fac2  = 0.5d0 - fac1
 
       ee(1) = fac1*(f1(1)*f1(1) + f1(2)*f1(2) + f1(3)*f1(3))
@@ -3826,7 +3678,6 @@
      &      + fac2*(fn(7)*fn(1) + fn(8)*fn(2) + fn(9)*fn(3))
 
 !     Compute 2nd P-K stress
-
       do i = 1,6
         ss(i) = 0.0d0
         do j = 1,6
@@ -3835,7 +3686,6 @@
       end do
 
 !     Push to current configuration
-
       if(energy.ge.0.0d0) then
 
         call tranr4(fa,fa,tl)
@@ -3852,7 +3702,6 @@
       endif
 
 !     Compute energy density
-
       else
         energy = 0.5d0*dot(ss,ee,6)
       endif
@@ -3877,7 +3726,6 @@
 !        (I,J) | 1,1  2,2  3,3  1,2  2,3  3,1
 !     or (i,j) |                2,1  3,2  1,3
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       integer       :: i,j
@@ -3890,7 +3738,6 @@
       data      i2 /1,2,3,2,3,1/
 
 !     Form transformation array for a 4th rank tensor in matrix form
-
       do i = 1,3
         do j = 1,3
           t(i,j) =  fl(i1(j),i1(i))*fr(i2(j),i2(i))

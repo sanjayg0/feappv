@@ -10,11 +10,12 @@
       implicit  none
 
       include  'cdata.h'
+      include  'prstrs.h'
       include  'strnum.h'
       include  'qudshp.h'
 
       integer       :: j,l,nel
-      real (kind=8) :: xg,erav
+      real (kind=8) :: xg
 
       real (kind=8) :: flux(3,*),p(*),s(nen,*),se(*)
 

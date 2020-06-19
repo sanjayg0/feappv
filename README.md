@@ -6,4 +6,4 @@ parallel capability, contact and a number of other advanced features, but newly 
 
 For information on FEAP see http://projects.ce.berkeley.edu/feap
 
-There is a FEAP and FEAPpv forum at http://feap.berkeley.edu and there is a nacient wiki at http://feap.berkeley.edu/wiki
+There is a FEAP and FEAPpv forum at http://feap.berkeley.edu and there is a nacent wiki at http://feap.berkeley.edu/wiki

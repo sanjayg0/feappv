@@ -35,12 +35,12 @@
       if(isw.eq.-1) then
 
         setvar = palloc(153,'USER3', numnp*ndf, 1)
-        call elcnt(numnp,numel,nen,nen1,mr(np(33)),mr(np(153)),.true. )
+        call elcnt(numnp,numel,nen,nen1,mr(np(33)),mr(np(153)))
         call sumcnt(mr(np(153)),numnp*ndf,kp)
 
         setvar = palloc(154,'USER4', kp, 1)
-        call pelcon(numel,nen,nen1,mr(np(33)),mr(np(153)),mr(np(154)),
-     &              kp,1)
+        call pelcon(numel,nen,nen1,mr(np(33)),mr(np(31)),
+     &              mr(np(153)),mr(np(154)),kp,1)
 
 !       Assign storage type
 

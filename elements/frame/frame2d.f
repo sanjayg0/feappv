@@ -441,12 +441,12 @@
 
 !     Formats
 
-2001  format(a1,20a4/5x,'time',e13.5,5x,' element forces '//
+2001  format(a1,20a4/5x,'Time',e13.5,5x,' Element Forces '//
      &  43x,'*********  FORCE / STRAIN  *********'/
-     &   3x,'element  material',
-     &  3x,'1-coord',3x,'2-coord',6x,'n-dir',8x,'s-dir',8x,'m-dir'/)
+     &   3x,'Element  Matl',
+     &  5x,'1-Coord',5x,'2-Coord',6x,'n-Dir',8x,'s-Dir',8x,'m-Dir'/)
 
-2002  format(2i10,0p,2f10.3,1p,3e13.4/40x,1p,3e13.4)
+2002  format(i10,i6,1p,2e12.4,1p,3e13.4/40x,1p,3e13.4)
 
       end subroutine frams2d
 
@@ -871,12 +871,12 @@
 
 !     Formats
 
-2001  format(a1,20a4/5x,'time',e13.5,5x,' element forces '//
+2001  format(a1,20a4/5x,'Time',e13.5,5x,' Element Forces '//
      &  43x,'*********  FORCE / STRAIN  *********'/
-     &   3x,'element  material',
-     &  3x,'1-coord',3x,'2-coord',6x,'n-dir',8x,'s-dir',8x,'m-dir'/)
+     &   3x,'Element  Matl',
+     &  5x,'1-Coord',5x,'2-Coord',6x,'n-Dir',8x,'s-Dir',8x,'m-Dir'/)
 
-2002  format(2i10,0p,2f10.3,1p,3e13.4/40x,1p,3e13.4)
+2002  format(i10,i6,1p,2e12.4,1p,3e13.4/40x,1p,3e13.4)
 
       end subroutine framf2d
 
@@ -1280,7 +1280,7 @@
 !     Formats
 
 2000  format(a1,20a4//5x,'Beam Element Stresses'//
-     &     '    Elmt  Matl     x-coord     y-coord     ',
+     &     '    Elmt  Matl     x-Coord     y-Coord     ',
      &     ' Force      Moment       Shear'/
      & 43x,'Strain    Curvature      Gamma')
 
@@ -1917,11 +1917,11 @@
 
 !     Formats
 
-2001  format(a1,20a4/5x,'time',e13.5,5x,' element forces '//
+2001  format(a1,20a4/5x,'Time',e13.5,5x,' Element Forces '//
      &  43x,'*********  FORCE / STRAIN  *********'/
-     &   3x,'element  material',
-     &  3x,'1-coord',3x,'2-coord',6x,'n-dir',8x,'s-dir',8x,'m-dir'/)
+     &   3x,'Element  Matl',
+     &  3x,'1-Coord',3x,'2-Coord',6x,'n-Dir',8x,'s-Dir',8x,'m-Dir'/)
 
-2002  format(2i10,0p,2f10.3,1p,3e13.4/40x,1p,3e13.4)
+2002  format(i10,i6,1p,2e12.4,1p,3e13.4/40x,1p,3e13.4)
 
       end subroutine franf2d

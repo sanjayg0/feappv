@@ -1,3 +1,5 @@
+[![Github All Releases](https://img.shields.io/github/downloads/sanjayg0/feappv/total.svg)]()
+
 # feappv
 FEAPpv -- free personal version of the FEAP (A Finite Element Analysis Program)
 

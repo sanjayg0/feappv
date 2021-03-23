@@ -68,8 +68,8 @@
 !-----[--.----+----.----+----.-----------------------------------------]
 !     Set version header for output to file and screen
 
-      versn(1) = 'Release 5.1.1a'
-      versn(2) = '01 January 2020'
+      versn(1) = 'Release 5.1.2a'
+      versn(2) = '23 March 2021'
 
 !-----[--.----+----.----+----.-----------------------------------------]
 !     Set precision for real variables:

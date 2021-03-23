@@ -3,7 +3,7 @@
 
 include $(FEAPPVHOME5_1)/makefile.in
 
-CLEANDIRS = elements program plot unix user main
+CLEANDIRS = modules elements program plot unix user main
 
 feappv: archive
 	(cd main; make feappv)

@@ -31,11 +31,11 @@ clean:
 	rm -f *genmod.f90
 
 (%.o): %.f
-	@if $(FF) -c -I$(FINCLUDE) $(FFOPTFLAG) $< -o $*.o; then echo $*.o >> $(FL); else false; fi;
+	@if $(FF) -c -I$(FINCLUDE) $(FFOPTFLAG) $(PMODULEDIR) $< -o $*.o; then echo $*.o >> $(FL); else false; fi;
 	@echo "Building $*.o"
 
 (%.o): %.f90
-	@if $(FF) -c -I$(FINCLUDE) $(FFOPTFLAG) $< -o $*.o; then echo $*.o >> $(FL); else false; fi;
+	@if $(FF) -c -I$(FINCLUDE) $(FFOPTFLAG) $(PMODULEDIR) $< -o $*.o; then echo $*.o >> $(FL); else false; fi;
 	@echo "Building $*.o"
 
 (%.o): %.c

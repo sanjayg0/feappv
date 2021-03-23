@@ -12,15 +12,15 @@
 # Location of feappv include files (integer4 is no longer in the distribution
 # as of version 5.1)
 
-  FINCLUDE = $(FEAPPVHOME5_1)/include
+  FINCLUDE = $(FEAPPVHOME5_1)/include -I$(FEAPPVHOME5_1)/modules
 
 # Location of C-compiler include files (depends where compiler installed)
 
-  CINCLUDE = /usr/X11/include -I$(FEAPPVHOME5_1)/include
-# CINCLUDE = /opt/local/include -I$(FEAPPVHOME5_1)/include
+# CINCLUDE = /usr/X11R6/include -I$(FEAPPVHOME5_1)/include
+  CINCLUDE = /opt/local/include -I$(FEAPPVHOME5_1)/include
 
 # IgA (Isogeometric)
-  NINCLUDE = $(FEAPPVHOME5_1)/iga/include 
+  NINCLUDE = $(FEAPPVHOME5_1)/iga/include -I$(FEAPPVHOME5_1)/iga/modules
 
 #------------------------------------------------------------------------
 # Which compilers to use (Set compiler names available on your computer)
@@ -35,25 +35,16 @@
 
 # Serial Build
 
-  FF = gfortran
-  CC = gcc
+  FF = ifort                         # Intel compiler
+  CC = icc                           # Intel compiler
 
 #------------------------------------------------------------------------
 # What optimization level to use
 
-# Gnu: gfortran/gcc compilers
+# Intel: ifort/icc compilers
 
-# FFOPTFLAG = -O3 -ftree-vectorize -Wall
-# CCOPTFLAG = -O3 -ftree-vectorize -Wall
-
-# FFOPTFLAG = -g -Wall
-# CCOPTFLAG = -g -Wall
-
-  FFOPTFLAG = -g -O3 -ftree-vectorize -Wall
-  CCOPTFLAG = -g -O3 -ftree-vectorize -Wall
-
-# FFOPTFLAG = -O2 -Wall
-# CCOPTFLAG = -O2 -Wall
+  FFOPTFLAG = -O2 -Warn all -g
+  CCOPTFLAG = -O2 -Wall -g
 
 #------------------------------------------------------------------------
 # Source Types (generally this is blank)
@@ -61,6 +52,15 @@
   FSOURCE =
   CSOURCE =
   F90SOURCE =
+
+#------------------------------------------------------------------------
+# Select modules by compiler type
+
+# GNU: gfortran
+# PMODULEDIR = -J$(FEAPPVHOME5_1)/modules
+
+# Intel: ifort
+  PMODULEDIR = -module $(FEAPPVHOME5_1)/modules
 
 #------------------------------------------------------------------------
 # Source Extender
@@ -78,10 +78,10 @@
 #------------------------------------------------------------------------
 # What options to be used by the loader
 
-# gfortran
+# Intel
 
-# LDOPTIONS = -L/opt/local/lib -lX11 -lm
-  LDOPTIONS = -L/usr/X11/lib -lX11 -lm
+# LDOPTIONS = -L/opt/local/lib -mkl  -lX11 -lm
+  LDOPTIONS = -L/opt/local/lib -lX11 -lm
 
 # Loader options for FE2 build
 
@@ -95,17 +95,17 @@
 #------------------------------------------------------------------------
 # Archive name
 
-  ARFEAPPV = $(FEAPPVHOME5_1)/Feappv_g.a
+  ARFEAPPV = $(FEAPPVHOME5_1)/Feappv_i.a
 #------------------------------------------------------------------------
 # Archive name FE2
 
-  ARFE2FEAPPV = $(FEAPPVHOME5_1)/libfeappvfe2_g.a
+  ARFE2FEAPPV = $(FEAPPVHOME5_1)/libfeappvfe2_i.a
 #------------------------------------------------------------------------
 # Archive name IgA
 
-  ARIFEAPPV = $(FEAPPVHOME5_1)/iga/libfeappviga_g.a
+  ARIFEAPPV = $(FEAPPVHOME5_1)/iga/libfeappviga_i.a
 #------------------------------------------------------------------------
 # Archive name VEM
 
-  ARVFEAPPV = $(FEAPPVHOME5_1)/vem/libfeappvvem_g.a
+  ARVFEAPPV = $(FEAPPVHOME5_1)/vem/libfeappvvem_i.a
 #------------------------------------------------------------------------

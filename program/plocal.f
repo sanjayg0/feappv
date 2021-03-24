@@ -4,7 +4,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2020: Regents of the University of California
+!....  Copyright (c) 1984-2021: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -94,7 +94,7 @@
       end do ! j
 
 !     Set up local nodal rotation array for inclined b.c.
-c     call pangl(ix,nen,hr(np(46)),hr(np(45)),nrot)
+!     call pangl(ix,nen,hr(np(46)),hr(np(45)),nrot)
       nrot = 0
 
 !     Set element type

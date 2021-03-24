@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2020: Regents of the University of California
+!....  Copyright (c) 1984-2021: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -97,7 +97,7 @@
 !     Compute stress-divergence vector (p) and stiffness matrix (s)
       elseif(isw.eq.3 .or. isw.eq.4  .or. isw.eq.6   .or.
      &       isw.eq.8 .or. isw.eq.10 .or. isw.eq.14) then
-  
+
 !       Displacement Model
         if(etype.eq.1) then
           if(dtype.gt.0) then

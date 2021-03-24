@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2020: Regents of the University of California
+!....  Copyright (c) 1984-2021: Regents of the University of California
 !                               All rights reserved
 
 !     P l o t   C o n t r o l   R o u t i n e   F o r   F E A P

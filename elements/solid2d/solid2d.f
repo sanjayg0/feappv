@@ -30,7 +30,6 @@
       save
 
 !     Extract type data
-
       stype = nint(d(16))
       etype = nint(d(17))
       dtype = nint(d(18))
@@ -51,37 +50,32 @@
       endif
 
 !     Input material properties
-
       if(isw.eq.1) then
         write(iow,2001)
         if(ior.lt.0) write(*,2001)
         nhv = 0
-        call inmate(d,i,nhv,1)
+        call inmate(d,tdof,nhv,1)
         if(etype.eq.2) then
           nh1 = nh1 + 2
         endif
 
 !       Deactivate dof in element for dof > 2
-        if(nint(d(19)).eq.3) then
+        if(tdof.eq.3) then
           nhv = 4
         else
           nhv = 3
         endif
-
         do i = nhv,ndf
           ix(i) = 0
         end do ! i
 
 !       Set plot sequence for 2-d
-
         pstyp = 2
 
 !       Set number of projected stresses
-
         istv = max(9,istv)
 
 !     Check element for errors in input data
-
       elseif(isw.eq.2) then
         if(nel.eq.3. .or. nel.eq.6 .or. nel.eq.7) then
           call cktris(ix,xl,shp,ndm)
@@ -90,7 +84,6 @@
         endif
 
 !     Compute mass or geometric stiffness matrix
-
       elseif(isw.eq.5) then
 
         if(imtyp.eq.1) then
@@ -102,12 +95,10 @@
       endif
 
 !     Compute residuals and tangents for parts
-
       if(isw.eq.1 .or. isw.eq.3 .or. isw.eq.4  .or. isw.eq.10 .or.
      &   isw.eq.6 .or. isw.eq.8 .or. isw.eq.14) then
 
 !       Displacement Model
-
         if(etype.eq.1) then
 
           if(dtype.gt.0) then
@@ -117,7 +108,6 @@
           endif
 
 !       Mixed Model (B-Bar)
-
         elseif(etype.eq.2) then
 
           if(dtype.gt.0) then
@@ -127,7 +117,6 @@
           endif
 
 !       Enhanced Strain Model
-
         elseif(etype.eq.3) then
 
           if(dtype.gt.0) then
@@ -138,9 +127,12 @@
 
         endif
 
+!     Any other entries
+      else
+
       endif
 
-!     Formats for input-output
+!     Formats for output
 
 2001  format(
      & /5x,'T w o   D i m e n s i o n a l   S o l i d   E l e m e n t'/)

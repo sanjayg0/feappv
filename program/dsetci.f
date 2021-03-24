@@ -147,6 +147,18 @@
 
         endif
 
+!     Backward Euler Algorithm
+      elseif(noi.eq.4) then
+        c1  = 1.d0/dt
+        cc1 = 1.0d0
+        cc2 = 1.0d0
+        cc3 = 1.0d0
+
+!       Set update parameters for element
+        gtan(1) = 1.d0
+        gtan(2) = c1
+        gtan(3) = c1
+
       elseif(noi.eq.-1) then
 
         call usetci(dt,theta,gtan,cc1,cc2,cc3)

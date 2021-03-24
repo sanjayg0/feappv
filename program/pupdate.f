@@ -92,6 +92,11 @@
 
           call dyna03(u,urate,nneq,1)
 
+!       Backward Euler updates
+        elseif(noi.eq.4) then
+
+          call dyna04(u,urate,nneq,1)
+
 !       USER:  User generated routine
         elseif(noi.eq.-1) then
 
@@ -157,6 +162,11 @@
 
             call dyna03(u(nneq2+1),urate,nneq,2)
 
+!         Backward Euler Updates
+          elseif(noi.eq.4) then
+
+            call dyna04(u(nneq2+1),urate,nneq,2)
+
 !         USER:  User generated routine
           elseif(noi.eq.-1) then
 
@@ -184,6 +194,11 @@
           elseif(noi.eq.3) then
 
             call dyna03(u(nneq+1),urate,nneq,3)
+
+!         Backward Euler updates
+          elseif(noi.eq.4) then
+
+            call dyna04(u(nneq+1),urate,nneq,3)
 
 !         USER:  User generated routine
           elseif(noi.eq.-1) then

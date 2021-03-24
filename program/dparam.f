@@ -15,6 +15,7 @@
 !                   'newm' (noi=1)  Classical Newmark
 !                   'GNpj' (noi=2)  Generalized Newmark
 !                   'SSpj' (noi=3)  Weighted residual FE
+!                   'back' (noi=4)  Backward Euler
 
 !                   'user' (noi=-1) User time integration routine
 !                   'init'          Initialize the nrt variable
@@ -41,20 +42,20 @@
       logical       :: pcomp
       integer       :: i
 
-      integer       :: ntot(3)
+      integer       :: ntot(4)
       real (kind=8) :: ct(3)
 
       save
 
 !     Set maximum number of vectors for each integration type
-      data ntot/   2 ,  2 ,   4 /
-!                NEWM, GNpj, SSpj
+      data ntot/   2 ,  2 ,   4,   2 /
+!                NEWM, GNpj, SSpj, Back
 
 !     Initialize the nrt variable
 
       if(pcomp(lct,'init',4)) then
 
-        nrt = max(ntot(1),ntot(2),ntot(3))
+        nrt = maxval(ntot)
         i   = 0
         call uparam(ct,nrk,nrc,nrm,i,0)
         nrt = max(nrt,i) + 2
@@ -141,6 +142,20 @@
           endif
           ct(3) = 1.0d0
 
+!       Backward Euler implicit
+        elseif(pcomp(lct,'back',4)) then
+
+          noi = 4
+          nrk = 0
+          nrc = 1
+          nrm = 2
+
+          ct(1) = 1.0d0
+          ct(2) = 0.0d0
+          ct(3) = 1.0d0
+          write(iow,2031)
+          if(ior.lt.0) write(*,2031)
+
 !       User time integration routine
         elseif(pcomp(lct,'user',4)) then
 
@@ -201,6 +216,8 @@
      &        ' Theta_1 = ',f9.4/1x)
 2022  format(/' SS22 Parameters:',
      &        ' Theta_1 = ',f9.4,' Theta_2 = ',f9.4/1x)
+
+2031  format(/' Backward Euler for First Order Systems.'/1x)
 
 3000  format(/' *ERROR* ',a,' Not an implemented method'/1x)
 

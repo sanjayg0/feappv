@@ -13,9 +13,9 @@ jobs:
       run: |
         sudo apt-get install gfortran
         echo Finish GFORTRAN install
-        export FEAPPVHOME4_1=`pwd`
+        export FEAPPVHOME5_1=`pwd`
         echo set envrionment variable
-        echo $FEAPPVHOME4_1
+        echo $FEAPPVHOME5_1
         make install
     - name: Run a multi-line script
       run: |

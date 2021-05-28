@@ -12,7 +12,11 @@ jobs:
     - name: Run a one-line script
       run: |
         sudo apt-get install gfortran
-        export FEAPPVHOME4_1=`pwd`; make install
+        echo Finish GFORTRAN install
+        export FEAPPVHOME4_1=`pwd`
+        echo set envrionment variable
+        echo $FEAPPVHOME4_1
+        make install
     - name: Run a multi-line script
       run: |
         echo Add other actions to build,

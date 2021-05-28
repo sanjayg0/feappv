@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -22,9 +22,9 @@
 
       include  'iofile.h'
 
-      character ah*(*)
-      real*8    a(*)
-      integer   nn,i,k,n
+      character     :: ah*(*)
+      integer       :: nn,i,k,n
+      real (kind=8) :: a(*)
 
       save
 
@@ -49,4 +49,4 @@
 
 2001  format(1p,8d10.2)
 
-      end
+      end subroutine wprojm

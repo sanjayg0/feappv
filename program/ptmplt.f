@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -25,11 +25,14 @@
       include  'pdata2.h'
       include  'iodata.h'
 
-      logical   exst
-      character ftyp*(*), fnamr*128, fext*8
-      integer   ntplts,ntstep, n,nn,ntp,ntl, m, ipos
-      real*8    ttim, tpl(ntplts)
-      real*8    tdum
+      character (len=128) :: fnamr
+      character (len=8)   :: fext
+      character           :: ftyp*(*)
+
+      logical       :: exst
+      integer       :: ntplts,ntstep, n,nn,ntp,ntl, m, ipos
+      real (kind=8) :: ttim, tpl(ntplts)
+      real (kind=8) :: tdum
 
       save
 
@@ -91,4 +94,4 @@
 
 2000  format(1p,21e12.4)
 
-      end
+      end subroutine ptmplt

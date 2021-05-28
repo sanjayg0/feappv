@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--+---------+---------+---------+---------+---------+---------+-]
@@ -15,7 +15,6 @@
 !      Outputs:
 !         none      - Returns command outputs to text device
 !-----[--+---------+---------+---------+---------+---------+---------+-]
-
       implicit  none
 
       include  'iofile.h'
@@ -35,4 +34,4 @@
 
       if(screfl) call gdx11(5,xx,yy)
 
-      end
+      end subroutine plclos

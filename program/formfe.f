@@ -1,10 +1,10 @@
 !$Id:$
-      subroutine formfe(pnu,pnb,pna,pnl,aufl,bfl,alfl,dfl,
+      subroutine formfe(pnu,pnb,pna,pnl,aufl,bfl,dfl,
      &                  isw,nl1,nl2,nl3)
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -17,7 +17,6 @@
 !         pnl    - Pointer for FEM lower part of array
 !         aufl   - If true assemble 'a' array (which includes 'au')
 !         bfl    - If true assemble 'b' array
-!         alfl   - If true assemble 'al' array (feap only)
 !         dfl    - If true assembel 'b' uncompressed
 !         isw    - Solution switch controlling action to be taken
 !         nl1    - First element to be processed
@@ -34,6 +33,7 @@
       include  'cdata.h'
       include  'cdat1.h'
       include  'hdatam.h'
+      include  'ldata.h'
       include  'ndata.h'
       include  'p_formfe.h'
       include  'pointer.h'
@@ -41,10 +41,17 @@
       include  'sdata.h'
       include  'comblk.h'
 
-      logical   aufl,bfl,alfl,dfl
-      integer   isw, nl1, nl2, nl3
+      logical       :: aufl,bfl,dfl
+      integer       :: isw, nl1, nl2, nl3
 
       save
+
+!     Set flag for convergence checks
+
+      if(isw.eq.3 .or. (isw.eq.6 .and. .not.dfl)) then
+        lvcn     = lv
+        floop(1) = .true.
+      endif
 
 !     Form appropriate finite element arrays
 
@@ -60,4 +67,4 @@
       hflgu  = .false.
       h3flgu = .false.
 
-      end
+      end subroutine formfe

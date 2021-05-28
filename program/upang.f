@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -15,8 +15,8 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit   none
 
-      integer    ia(*), ndf,isw, j
-      real*8     ang,sn,cs,tm,ul(ndf,*)
+      integer       :: ia(*), ndf,isw, j
+      real (kind=8) :: ang,sn,cs,tm,ul(ndf,*)
 
       if(ia(1).ne.0 .and. ia(2).ne.0) then
         call pdegree(ang, sn,cs)
@@ -33,4 +33,4 @@
         endif
       endif
 
-      end
+      end subroutine upang

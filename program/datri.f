@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -45,16 +45,16 @@
       include  'iofile.h'
       include  'print.h'
 
-      integer   neqs, neqt, neq , n0, n1, n2, n3
-      integer   i, id, ie, ih, is, idh, ifig, j, jd, je, jh, jr, jrh
-      real*8    zero, one, tol, dd, daval, dfig, dimx, dimn
+      integer       :: neqs, neqt, neq , n0, n1, n2, n3
+      integer       :: i,id,ie,ih,is,idh,ifig, j,jd,je,jh,jr,jrh
+      real (kind=8) :: zero, one, tol, dd, daval, dfig, dimx, dimn
 
-      integer   jp(*)
-      real*4    tary(2)
-      real*8    al(*),au(*),ad(*)
+      integer       :: jp(*)
+      real (kind=4) :: tary(2)
+      real (kind=8) :: al(*),au(*),ad(*)
 
-      real*4    etime, tt
-      real*8    dot, dsred, dured
+      real (kind=4) :: etime, tt
+      real (kind=8) :: dot, dsred, dured
 
       save
 
@@ -267,4 +267,4 @@
 3000  format(' ---> Equation = ',i5,' , Time: CPU = ',f12.2,
      &       ' , System = ',f12.2)
 
-      end
+      end subroutine datri

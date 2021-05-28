@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -19,10 +19,11 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
-      character xxx*(*)
-      logical   cksep,pcomp
-      integer   is,iv,n,nn,nc,nl,no,nv,nu, iau,izu,id
-      real*8    d(nn)
+      character     :: xxx*(*)
+
+      logical       :: cksep,pcomp
+      integer       :: is,iv,n,nn,nc,nl,no,nv,nu, iau,izu,id
+      real (kind=8) :: d(nn)
 
       save
 
@@ -96,7 +97,7 @@
 !     Format separators are blanks, commas, or equals
 
       if(cksep(xxx(n:n))) then
-        if(n.gt.no) call setval(xxx(no:n),n-no,d(nv))
+        if(n.gt.no) call setval(xxx(no:n-1),n-no,d(nv))
 31      n  = n  + 1
         if(n.lt.nl.and.xxx(n:n).eq.' ') go to 31
         no = n
@@ -108,6 +109,6 @@
 
 !     Fill in last value if needed
 
-      if(n.gt.no.and.nv.le.nn) call setval(xxx(no:n),n-no,d(nv))
+      if(n.gt.no.and.nv.le.nn) call setval(xxx(no:n-1),n-no,d(nv))
 
-      end
+      end function vinput

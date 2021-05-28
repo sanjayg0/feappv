@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -18,7 +18,6 @@
 !      Outputs:
 !         Depends on command number j
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'allotd.h'
@@ -39,6 +38,7 @@
       include  'ddata.h'
       include  'debugs.h'
       include  'edgdat.h'
+      include  'elname.h'
       include  'endata.h'
       include  'eqsym.h'
       include  'evdata.h'
@@ -56,11 +56,12 @@
       include  'prflag.h'
       include  'print.h'
       include  'prlod.h'
-      include  'psize.h'
       include  'ptdat1.h'
       include  'ptdat2.h'
       include  'ptdat3.h'
       include  'ptdat5.h'
+      include  'ptdat7.h'
+      include  'ptdat8.h'
       include  'rdata.h'
       include  'rdat0.h'
       include  'rdat1.h'
@@ -71,20 +72,22 @@
       include  'xtout.h'
       include  'comblk.h'
 
-      logical   pcomp,sfl,accrcy,tfl,cknon0
-      logical   pfro,setvar,palloc,pinput,tinput
-      character vtype(1)*4,yyy(1)*15,fint*128
-      integer   i,ii,imas, j,jj, k,kk,k1,k2,k3, lflag, ml1, ml2
-      integer   mad, n,nn, npr,nnp,nbfgs,nnn, ittyo
-      real*8    dd, dist
-      real*8    step,stol,etol, ee,phi2,vphi, chec, tau, reln
+      character (len=128) :: fint
+      character (len=15)  :: lct(*),yyy(1)
+      character (len=4)   :: vtype(1)
 
-      integer   ndfeig(20)
-      real*8    td(20),xc(3)
-      real*8    dot, dotid, dotx
+      logical       :: pcomp,sfl,accrcy,tfl,cknon0
+      logical       :: pfro,setvar,palloc,pinput,tinput
+      integer       :: i,ii,imas, j,jj, k,kk,k1,k2,k3, lflag, ml1, ml2
+      integer       :: mad, n,nn, npr,nnp,nbfgs,nnn, ittyo
+      real (kind=8) :: dd, dist
+      real (kind=8) :: step,stol,etol, ee,phi2,vphi, chec, tau, reln
 
-      character lct(*)*15
-      real*8    ct(3,*)
+      integer       :: ndfeig(20)
+      real (kind=8) :: td(20),xc(3)
+      real (kind=8) :: dot, dotid, dotx
+
+      real (kind=8) :: ct(3,*)
 
       save
 
@@ -93,7 +96,7 @@
 
 !     Transfer to correct process
 
-      go to (1,2,3,4,5,6,7,8,1,1,11,12,13,14,15,16,17,18,19), j
+      go to (1,2,3,4,5,6,7,8,1,1,11,12,13,14,15,16,17,18,19,20), j
 
 !     Print displacements
 
@@ -198,9 +201,8 @@
           fp(1)  = na
           fp(2)  = nau
           fp(3)  = nal
-          fp(4)  = np(26)
-          fp(5)  = np(21)
-          call psolve(fp,.false.,.true.,.true.,prnt)
+          fp(4)  = np(21)
+          call psolve(hr(np(26)),fp,.false.,.true.,.true.,prnt)
         endif
 
 !       Update iteration counter
@@ -253,8 +255,8 @@
         call pload(mr(np(31)),hr(np(30)),hr(np(26)),prop*rlnew,.false.)
       endif
 
-      call update(mr(np(31)),hr(np(30)),hr(np(40)),hr(np(42)),
-     &            hr(np(26)),fl(9),2)
+      call pupdate(mr(np(31)),hr(np(30)),hr(np(40)),hr(np(42)),
+     &             hr(np(26)),fl(9),2)
       fl(8) = .false.
       return
 
@@ -604,7 +606,7 @@
           write(*,2009) (i,ndfeig(i),i=1,ndf)
         endif
 
-      elseif(np(77).gt.0) then
+      elseif(np(77).ne.0) then
 
         call pzero(hr(np(26)),nneq)
         tfl = pfr
@@ -672,13 +674,10 @@
 !       Output loaded user element descriptors
 
 17    if(pcomp(lct(l),'elem',4)) then
-        write(*,2010)
-!        do nn = 1,50,20
-!          do i = nn,min(nn+19,50)
-          do i = 1,15
-            call elmlib(hr,hr,hr,mr,hr,hr,hr,ndf,ndm,ndm,i,0)
-          end do
-!        end do
+        write(*,2010) (nn,umatn(nn),nn=1,15)
+        do nn = 1,15
+          call elmlib(hr,hr,hr,mr,hr,hr,hr,ndf,ndm,ndm,nn,0)
+        end do ! nn
 
 !     Dictionary prints
 
@@ -720,6 +719,7 @@
 !                acce,n1,n2,x,y,z
 !                reac,n1,n2,x,y,z
 !                stre,n1,n2,x,y,z
+!                arcl,n1,n2,x,y,z
 !                show
 !     Set output incrment
 
@@ -751,7 +751,8 @@
         if(pcomp(yyy(1),'disp',4) .or.
      &     pcomp(yyy(1),'velo',4) .or.
      &     pcomp(yyy(1),'acce',4) .or.
-     &     pcomp(yyy(1),'reac',4)) then
+     &     pcomp(yyy(1),'reac',4) .or.
+     &     pcomp(yyy(1),'arcl',4)) then
 
           call pgetd('X    ',nx,ml2,nn, setvar)
           dist = 0.d+0
@@ -856,6 +857,20 @@
         irpl(1,nrplts) = ndf*(n-1)+i
         irpl(2,nrplts) = n
 
+!     User Stresses
+
+      elseif(pcomp(vtype(1),'user',4)) then
+        nuplts         = min(npmx,nuplts + 1)
+        iupl(1,nuplts) = n
+        iupl(2,nuplts) = i
+
+!     Arclength
+
+      elseif(pcomp(vtype(1),'arcl',4)) then
+        nlplts         = min(npmx,nlplts + 1)
+        ilpl(1,nlplts) = n
+        ilpl(2,nlplts) = ndf*(n-1)+i
+
 !     Show: Active outputs
 
       elseif(pcomp(vtype(1),'show',4)) then
@@ -889,6 +904,20 @@
           write(iow,3012) n,ispl(1,n),ispl(2,n)
         end do
 
+        if(nlplts.gt.0) then
+          if(ior.lt.0) then
+            write(*,30131)
+          endif
+          write(iow,30131)
+          do n = 1,nlplts
+            i = ilpl(2,n) - ndf*(ilpl(1,n) -1)
+            if(ior.lt.0) then
+              write(*,3013) n,ilpl(1,n),i
+            endif
+            write(iow,3013) n,ilpl(1,n),i
+          end do ! n
+        endif
+
         return
 
       endif
@@ -907,8 +936,7 @@
         ittyo  =  ittyp
         ittyp  =  0
         fp(1)  =  np(13)
-        fp(4)  =  np(26)
-        call psolve(fp,.false.,.true.,.false., prnt)
+        call psolve(hr(np(26)),fp,.false.,.true.,.false.,prnt)
         ittyp  =  ittyo
         go to 2
       else
@@ -917,6 +945,46 @@
         endif
         write(iow,3011)
       endif
+      return
+
+!     [opti]mize node numbering then reset profile
+!     [opti,off]  - Turn off profile optimization
+
+20    if(pcomp(lct(l),'off',3)) then
+
+!       Set renumber array to input values
+
+        optflg  = .false.
+        optmsh  = .false.
+
+        do k1 = 0,numnp-1
+          mr(np(89)+k1) = k1 + 1
+        end do ! k1
+      else
+
+        write(*,*) ' CALL OPTID_feappv'
+        optflg = .false.
+        optmsh = .true.
+        call optid()
+        if(debug) call iprint(mr(np(89)),1,numnp,1,'Node Renumbers')
+
+      endif
+
+!     Set ID to current boundary condition array
+
+      do k2 = 0,nneq-1
+        mr(np(31)+k2) = mr(np(31)+k2+nneq)
+      end do
+
+!     Set region indicator so all active region elements are assembled
+
+      nreg = -1
+
+!     Set new current profile
+
+      call profil(mr(np(21)),mr(np(34)),mr(np(31)),mr(np(33)),1,pfr)
+      call profil(mr(np(21)),mr(np(34)),mr(np(31)),mr(np(33)),2,pfr)
+
       return
 
 !     Output formats
@@ -935,17 +1003,30 @@
 2008  format('   Save to file : ',a)
 2009  format(/'   Eigenpair active DOF (1 = active; 0 = inactive)'/
      &      (7x,6(i3,'-dof =',i3)))
-2010  format('   A v a i l a b l e    E l e m e n t    T y p e s',/)
+2010  format('   N a m e s    o f    U s e r    E l e m e n t s',/,
+     &     5(3(5x,i4,1x,a15)/),/,
+     &       '   A v a i l a b l e    U s e r    E l e m e n t    ',
+     &       'T y p e s',/)
+
 2011  format(/,
      &  '   C u r r e n t    S o l u t i o n    P a r a m e t e r s',/
-     &  /,'     Number nodes  =',i8,4x,' :  Number elements  =',i8,/
-     &    '     Number matls  =',i8,4x,' :  Number equations =',i8,/
-     &    '     Profile terms =',i8,4x,' :  Avg. column      =',i8,/
-     &    '     Time          =',e12.4,' :  Max. energy norm =',e12.4,/
-     &    '     Dt            =',e12.4,' :  Energy norm      =',e12.4,/
-     &    '     Tol           =',e12.4,' :  Augment factor   =',e12.4,/
-     &    '     Prop load     =',e12.4,' :  Time integration =',i8,/
-     &    '     No. Steps     =',i8,4x,' :  No. Iterations   =',i8)
+     &  /,'     Number Nodes  =',i8,4x,
+     &    '  :  Number elements  =',i8,/
+     &    '     Number Matls  =',i8,4x,
+     &    '  :  Number equations =',i8,/
+     &    '     Profile terms =',i8,4x,
+     &    '  :  Avg. column      =',i8,/
+     &    '     Time          =',1p,1e12.4,
+     &    '  :  Max. energy norm =',1p,1e12.4,/
+     &    '     Dt            =',1p,1e12.4,
+     &    '  :  Energy norm      =',1p,1e12.4,/
+     &    '     Tol           =',1p,1e12.4,
+     &    '  :  Augment factor   =',1p,1e12.4,/
+     &    '     Prop load     =',1p,1e12.4,
+     &    '  :  Time integration =',i8,/
+     &    '     No. Steps     =',i8,4x,
+     &    '  :  No. Iterations   =',i8)
+
 2012  format(/'   Output interval for time history data =',i4)
 
 !     Warnings and errors
@@ -958,14 +1039,16 @@
 3006  format(' Input: Type (disp:velo:acce:stres:reac);'/
      &       '        Node/Elmt; dof/no.')
 3007  format(10x,'>',$)
-3008  format(1x,'Plot',i3,' Displ. : Node  =',i4,' DOF =',i3)
-3009  format(1x,'Plot',i3,' Veloc. : Node  =',i4,' DOF =',i3)
-3010  format(1x,'Plot',i3,' Accel. : Node  =',i4,' DOF =',i3)
+3008  format(1x,'Plot',i3,' Displ. : Node  =',i8,' DOF =',i3)
+3009  format(1x,'Plot',i3,' Veloc. : Node  =',i8,' DOF =',i3)
+3010  format(1x,'Plot',i3,' Accel. : Node  =',i8,' DOF =',i3)
 3011  format(' *ERROR* DSOL: No lumped mass matrix available'/)
-3012  format(1x,'Plmt',i3,' Stress : Elmt  =',i4,' No. =',i3)
+3012  format(1x,'Plmt',i3,' Stress : Elmt  =',i8,' No. =',i3)
+3013  format(1x,'Plot',i3,' Arclen : Node  =',i8,' DOF =',i3)
+30131 format(1x,'Plot  - Arclen : Load level')
 
 !     Prompts
 
 4000  format(' Input DOF for eigen computations'/5x,'>',$)
 
-      end
+      end subroutine pmacr3

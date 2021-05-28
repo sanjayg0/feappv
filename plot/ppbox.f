@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -19,13 +19,12 @@
 !      Outputs:
 !         none    - Plot outputs to screen/file
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'plclip.h'
 
-      integer   is
-      real*8    x, y, dx, dy
+      integer       :: is
+      real (kind=8) :: x, y, dx, dy
 
       save
 
@@ -44,4 +43,4 @@
 
       clchk = .false.
 
-      end
+      end subroutine ppbox

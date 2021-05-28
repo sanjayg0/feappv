@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -25,7 +25,7 @@
 
       implicit  none
 
-      integer         idxl,idyl,jfill
+      integer      :: idxl,idyl,jfill
       common /vgraph/ idxl,idyl,jfill
 
       include  'plclip.h'
@@ -37,9 +37,9 @@
       include  'plflag.h'
       include  'wdata.h'
 
-      integer   ipen,ipin, status, vpline
-      integer*2 iwx1,iwy1,iwx2,iwy2
-      real*8    x, y, wmin(2),wmax(2)
+      integer          :: ipen,ipin, status, vpline
+      integer (kind=2) :: iwx1,iwy1,iwx2,iwy2
+      real    (kind=8) :: x, y, wmin(2),wmax(2)
 
       save
 
@@ -141,4 +141,4 @@
 
       endif
 
-      end
+      end subroutine dplot

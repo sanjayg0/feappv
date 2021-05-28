@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -19,15 +19,16 @@
 !      Outputs:
 !         None    - Outputs to screen command information
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'hlpdat.h'
 
-      logical   pcomp, prtman
-      integer   i,j,ii,nwd,nsd
-      integer   ed(nwd)
-      character wd(nwd)*4,cc*4,sd(100)*4,temp*4, wrd*(*)
+      character (len=4) :: wd(nwd),cc,sd(100),temp
+      character         :: wrd*(*)
+
+      logical       :: pcomp, prtman
+      integer       :: i,j,ii,nwd,nsd
+      integer       :: ed(nwd)
 
       save
 
@@ -99,4 +100,4 @@
 2003  format(/3x,'The following ',a,' commands are available:'/
      &        3x,'Terminate execution with an END (e) command.'/)
 
-      end
+      end subroutine phelp

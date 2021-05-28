@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -42,10 +42,11 @@
       implicit  none
 
       include  'iofile.h'
+      include  'setups.h'
 
-      integer   jp(*)
-      integer   is, j, jr, jh, neqs, neqt, neq
-      real*8    bd, energy, al(*),au(*),ad(*),b(*), dot
+      integer       :: jp(*)
+      integer       :: is, j, jr, jh, neqs, neqt, neq
+      real (kind=8) :: bd, energy, al(*),au(*),ad(*),b(*), dot
 
       save
 
@@ -58,8 +59,10 @@
       do is = 1,neqt
         if(b(is).ne.0.0d0) go to 100
       end do
-      if(ior.gt.0) write(iow,2000)
-      if(ior.lt.0) write(*,2000)
+      if(rank.eq.0) then
+        if(ior.gt.0) write(iow,2000)
+        if(ior.lt.0) write(*,2000)
+       endif
       return
 
 !     Reduce right hand side
@@ -108,4 +111,4 @@
 
 2000  format(' *WARNING* Zero right-hand-side vector')
 
-      end
+      end subroutine dasol

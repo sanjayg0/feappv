@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -19,8 +19,8 @@
 
       implicit  none
 
-      integer   n,nn
-      logical   fl(nn),val
+      integer       :: n,nn
+      logical       :: fl(nn),val
 
       save
 
@@ -28,4 +28,4 @@
         fl(n) = val
       end do
 
-      end
+      end subroutine pzerol

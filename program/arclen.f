@@ -3,7 +3,7 @@
 
 !     * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -54,14 +54,14 @@
       include  'prlod.h'
       include  'tdata.h'
 
-      integer   i,j,jj,ndf,numnp,neq,nneg
-      real*8    time, cs,ds,dcs,damp,rr,rat
-      real*8    alfa,alfa1,alfold, dtold,energy,tol
+      integer       :: i,j,jj,ndf,numnp,neq,nneg
+      real (kind=8) :: time, cs,ds,dcs,damp,rr,rat
+      real (kind=8) :: alfa,alfa1,alfold, dtold,energy,tol
 
-      integer   jp(*),id(ndf,*)
-      real*8    du(*),u1(*),u2(*),f(ndf,*),al(*),au(*),ad(*)
+      integer       :: jp(*),id(ndf,*)
+      real (kind=8) :: du(*),u1(*),u2(*),f(ndf,*),al(*),au(*),ad(*)
 
-      real*8    dot
+      real (kind=8) :: dot
 
       save
 
@@ -88,8 +88,8 @@
           do i = 1,numnp
             jj = id(j,i)
             if (jj.gt.0) u1(jj) = f(j,i)
-          end do
-        end do
+          end do ! i
+        end do ! j
         rr = dot(du,u1,neq)
 
 !       Set arc length constant  (only in very first time step)
@@ -98,7 +98,7 @@
 
 !       First load/time step only
 
-        if (time.le.dt) then
+        if (nastep.le.1) then
           r     = 1.0d0
           ds0   = ds
           c0    = rr
@@ -120,21 +120,21 @@
 !       Check if stiffness parameter passes infinity
 !       or limit point (then change of sign!)
 
-        if (time.gt.2.d0*dt) then
+        if (nastep.gt.2) then
           if (cs02.gt.0.0d0.and.cs.lt.0.0d0) then
             dcs = cs02 - cs01
-!           if (dcs.lt.0.0d0) r = rr*sign(1.d0,c0)
-            if (dcs.lt.0.0d0) r = rr
+!           if (dcs.lt.0.0d0) r = rr
+            if (dcs.lt.0.0d0) r = -sign(1.d0,r)
           elseif (cs02.lt.0.0d0.and.cs.gt.0.0d0) then
             dcs = cs02 - cs01
-!           if (dcs.gt.0.0d0) r = rr*sign(1.d0,c0)
-            if (dcs.gt.0.0d0) r = rr
+!           if (dcs.gt.0.0d0) r = rr
+            if (dcs.gt.0.0d0) r = -sign(1.d0,r)
           endif
         endif
 
 !       Save current stiffness values
 
-        if (time.eq.dt) then
+        if (nastep.eq.1) then
           cs01 = cs
         else
           cs01 = cs02
@@ -163,7 +163,7 @@
           do i = 1,neq
             du(i) = du(i)*alfa0
             u1(i) = du(i)
-          end do
+          end do ! i
 
           if(prnt) then
             write (iow,2001) time,ds,alfa0
@@ -175,19 +175,18 @@
               write (*,2005) cs,cs01,cs02
             endif
           endif
-        endif
 
 !       Displacement control (beginning of time step)
 !       calculate displacements for load level 1.0
 
-        if (kflag.eq.4.or.kflag.eq.5) then
+        elseif (kflag.eq.4.or.kflag.eq.5) then
 
           do j = 1,ndf
             do i = 1,numnp
               jj = id(j,i)
               if (jj.gt.0) u1(jj) = f(j,i)*prop
-            end do
-          end do
+            end do ! i
+          end do ! j
           call dasol(al,au,ad,u1,jp,neqs,neq,energy)
 
 !         Load factor for displacement control
@@ -198,7 +197,7 @@
 
           do i = 1,neq
             du(i) = du(i) + alfa*u1(i)
-          end do
+          end do ! i
 
 !         Update load level
 
@@ -239,8 +238,8 @@
             do i = 1,numnp
               jj = id(j,i)
               if (jj.gt.0) u2(jj) = f(j,i)
-            end do
-          end do
+            end do ! i
+          end do ! j
           call dasol(al,au,ad,u2,jp,neqs,neq,energy)
         endif
 
@@ -258,7 +257,7 @@
           if (ite.eq.1) then
             do i = 1,neq
               u2(i) = u1(i)
-            end do
+            end do ! i
           endif
           alfa  = dot(du,u2,neq)
           alfa1 = dot(u1,u2,neq)
@@ -324,14 +323,14 @@
         if(kflag.le.1.or.kflag.eq.4) then
           do i = 1,neq
             du(i) = du(i)*damp + u1(i)*alfa
-          end do
+          end do ! i
 
 !         Updated normal plane iteration
 
           if (kflag.eq.1) then
             do i = 1,neq
               u2(i) = u1(i) + du(i)
-            end do
+            end do ! i
           endif
 
 !       Update displacements in iteration step
@@ -340,21 +339,21 @@
 
           do i = 1,neq
             du(i) = u2(i)*alfa + du(i)*damp
-          end do
+          end do ! i
 
 !         Only for updated normal plane iteration
 
           if (kflag.eq.3) then
             do i = 1,neq
               u1(i) = du(i) + u1(i)
-            end do
+            end do ! i
 
 !         New tangent plane
 
           elseif (kflag.eq.6) then
             do i = 1,neq
               u1(i) =  du(i)
-            end do
+            end do ! i
           endif
         endif
 
@@ -369,7 +368,7 @@
             endif
             det = det + log(abs(ad(i)))
           endif
-        end do
+        end do ! i
         if(time.le.dt) det0 = det
         det = max(-30.d0,min(30.d0,det0 - det))
         det = exp(det)
@@ -402,4 +401,4 @@
 
  2007 format( 3x,'Determinant Ratio = ',g12.5,' Neg. diagonals =',i3)
 
-      end
+      end subroutine arclen

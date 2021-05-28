@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -30,14 +30,14 @@
 
       include  'iofile.h'
 
-      logical   up
-      integer   i,j,ii,nupd,neq,nbfgs
-      real*8    s,g0,g,condmx,delgam,dlkdl,coef,fact,stcond, engy
+      logical       :: up
+      integer       :: i,j,ii,nupd,neq,nbfgs
+      real (kind=8) :: s,g0,g,condmx,delgam,dlkdl,coef,fact,stcond, engy
 
-      integer   jp(*)
-      real*8    ad(*),d(*),ri(*),r0(*),v(*),w(*)
+      integer       :: jp(*)
+      real (kind=8) :: ad(*),d(*),ri(*),r0(*),v(*),w(*)
 
-      real*8    dot
+      real (kind=8) :: dot
 
       save
 
@@ -127,4 +127,4 @@
 
 2000  format(' ---> Stiffness condition no. ',e12.5)
 
-      end
+      end subroutine dfind

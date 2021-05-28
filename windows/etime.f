@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -20,8 +20,8 @@
 
       include  'etime1.h'
 
-      real      tt(2)
-      integer*2 ihr, imin, isec, ihth
+      real    (kind=4) :: tt(2)
+      integer (kind=2) :: ihr, imin, isec, ihth
 
       save
 
@@ -34,4 +34,4 @@
       endif
       etime = tt(1) + tt(2)
 
-      end
+      end function etime

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -22,9 +22,9 @@
 
       include  'umac1.h'
 
-      logical   pcomp
-      character lct*15
-      real*8    ctl(3)
+      character (len=15) :: lct
+      logical       :: pcomp
+      real (kind=8) :: ctl(3)
 
       save
 
@@ -40,4 +40,4 @@
 
       endif
 
-      end
+      end subroutine umacr12

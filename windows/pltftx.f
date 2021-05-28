@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--+---------+---------+---------+---------+---------+---------+-]
@@ -33,16 +33,18 @@
       include  'rpdata.h'
       include  'sdata.h'
 
-      character yy*17
-      integer   ic, mc, i
-      real*4    xph,yph
+      character (len=17) :: yy,blnk
+      character (len=13) :: strs(7)
+      character (len=4)  :: slab(7)
 
-      real*8    xdv,dy,xleft,xright,xtext,xhead
-      real*8    ycor,yphbot,yphtop
+      integer       :: ic, mc, i
+      real (kind=4) :: xph,yph
 
-      character strs(7)*13,slab(7)*4,blnk*17
-      integer   ipal(7)
-      real*8    vc(6),yfr(4)
+      real (kind=8) :: xdv,dy,xleft,xright,xtext,xhead
+      real (kind=8) :: ycor,yphbot,yphtop
+
+      integer       :: ipal(7)
+      real (kind=8) :: vc(6),yfr(4)
 
       save
 
@@ -115,7 +117,11 @@
       dtext = 0.11d0
       call tplot(xhead,ycor,blnk,17,1)
       if(mc.eq.5) then
-        write(yy,'(a13,a4)' ) strs(mc),slab(min(7,ic))
+        if(ic.eq.6) then
+          write(yy,'(a17)' ) '  MISES STRESS   '
+        else
+          write(yy,'(a13,a4)' ) strs(mc),slab(min(7,ic))
+        endif
       else
         write(yy,'(a13,i2)' ) strs(mc),ic
       endif
@@ -180,4 +186,4 @@
 
       endif
 
-      end
+      end subroutine pltftx

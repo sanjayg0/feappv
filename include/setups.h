@@ -1,6 +1,9 @@
 
-      integer         processor
-      common /setups/ processor
+      integer         soltyp,rank,ntasks,nsend,nrecv,nproc,ndomn,nrve
+      common /setups/ soltyp,rank,ntasks,nsend,nrecv,nproc,ndomn,nrve
 
-      logical         solver
-      common /setups/ solver
+      integer         rvetyp
+      common /setups/ rvetyp
+
+      logical         solver,sendfl,recvfl,perflg,mpiflg,rveflg
+      common /setups/ solver,sendfl,recvfl,perflg,mpiflg,rveflg

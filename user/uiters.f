@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--+---------+---------+---------+---------+---------+---------+-]
@@ -18,7 +18,6 @@
 !                   np(151) for # terms/column
 !                   np(152) for location of terms
 !-----[--+---------+---------+---------+---------+---------+---------+-]
-
       implicit   none
 
       include   'allotd.h'
@@ -26,11 +25,10 @@
       include   'comblk.h'
       include   'compac.h'
       include   'pointer.h'
-      include   'psize.h'
       include   'sdata.h'
 
-      logical    setvar,palloc
-      integer    isw,kp,nnu
+      logical        :: setvar,palloc
+      integer        :: isw,kp,nnu
 
 !     Compute sparse storage for matrix
 
@@ -72,4 +70,4 @@
         write(*,*) '  *ERROR* OPTION NOT IMPLEMENTED FOR ISW =',isw
       endif
 
-      end
+      end subroutine uiters

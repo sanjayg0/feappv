@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -16,10 +16,10 @@
 !      Outputs:
 !         N.B. Users must provide output via common blocks, etc.
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
-      character vtype(2)*15
-      real*8    td(5)
+      character (len=15) :: vtype(2)
 
-      end
+      real (kind=8) :: td(5)
+
+      end subroutine uglobl

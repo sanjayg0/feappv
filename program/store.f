@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -28,7 +28,7 @@
 
       integer   nv, itrn, ns
 
-      real*8    v(*),w(*)
+      real (kind=8) :: v(*),w(*)
 
       save
 

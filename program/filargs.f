@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -23,7 +23,6 @@
       include  'comfil.h'
 
       integer   (kind=4)  :: nargs
-      character (len=128) :: inp, otp, res, sav
       character (len=130) :: argv
       integer   (kind=4)  :: i, nchars
 
@@ -31,10 +30,10 @@
 
 !     Set files to blank
 
-      inp = ' '
-      otp = ' '
-      res = ' '
-      sav = ' '
+      finp = ' '
+      fout = ' '
+      fres = ' '
+      fsav = ' '
 
 !     Check arguments set on command line
 
@@ -44,29 +43,30 @@
         do i = 1, nargs
 
           call get_command_argument(i,argv)
+
           nchars = len_trim(argv)
-  
+
           if (argv(1:1) .eq. '-') then
 
 !           Input file specification
 
             if      (argv(2:2).eq.'i') then
-              inp = argv(3:nchars)
+              finp = argv(3:nchars)
 
 !           Output file specification
 
             else if (argv(2:2).eq.'o') then
-              otp = argv(3:nchars)
+              fout = argv(3:nchars)
 
 !           Restart read file specification
 
             else if (argv(2:2).eq.'r') then
-              res = argv(3:nchars)
+              fres = argv(3:nchars)
 
 !           Restart save file specification
 
             else if (argv(2:2).eq.'s') then
-              sav = argv(3:nchars)
+              fsav = argv(3:nchars)
 
 !           Error on command line
 
@@ -85,19 +85,19 @@
 
 !       Check that files are correct if nargs > 0
 
-        if(inp.ne.' ') then
+        if(finp.ne.' ') then
 
-          if(otp.eq.' ') then
-            otp      = inp
-            otp(1:1) = 'O'
+          if(fout.eq.' ') then
+            fout      = finp
+            fout(1:1) = 'O'
           endif
-          if(res.eq.' ') then
-            res      = inp
-            res(1:1) = 'R'
+          if(fres.eq.' ') then
+            fres      = finp
+            fres(1:1) = 'R'
           endif
-          if(sav.eq.' ') then
-            sav      = inp
-            sav(1:1) = 'R'
+          if(fsav.eq.' ') then
+            fsav      = finp
+            fsav(1:1) = 'R'
           endif
 
 !       One of the command arguments must be for input file
@@ -118,4 +118,4 @@
 2002  format(' *ERROR* Command line arguments must include an'/
      &       '         INPUT filename with form: -iI....')
 
-      end
+      end subroutine filargs

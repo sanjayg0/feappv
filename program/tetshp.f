@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -27,12 +27,12 @@
 
       include  'iofile.h'
 
-      integer   ndm
-      integer   i, j, k, l
+      integer       :: ndm
+      integer       :: i, j, k, l
 
-      real*8    xsj, detr
-      real*8    xi(4), xl(ndm,*), shp(4,*)
-      real*8    a(4,3), xip(4)
+      real (kind=8) :: xsj, detr
+      real (kind=8) :: xi(4), xl(ndm,*), shp(4,*)
+      real (kind=8) :: a(4,3), xip(4)
 
 !     Compute determinants for transformation minors
 
@@ -91,4 +91,4 @@
 
       end do ! i
 
-      end
+      end subroutine tetshp

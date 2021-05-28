@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -25,10 +25,10 @@
 
       include  'machnc.h'
 
-      integer   i,j,k,l,m,n,ierr,jp1,ii,l1,mml,n2
-      real*8    b,c,f,g,h,hh,p,r,s,scale
+      integer       :: i,j,k,l,m,n,ierr,jp1,ii,l1,mml,n2
+      real (kind=8) :: b,c,f,g,h,hh,p,r,s,scale
 
-      real*8    a(*),d(*),e(*),z(n,n)
+      real (kind=8) :: a(*),d(*),e(*),z(n,n)
 
 !     Eispac QL algorithm adapted from 'tred2' and 'tql2'
 
@@ -209,4 +209,4 @@
 
 500   ierr = l
 
-      end
+      end subroutine eisql

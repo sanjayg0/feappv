@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--+---------+---------+---------+---------+---------+---------+-]
@@ -19,15 +19,14 @@
 !      Outputs:
 !         none      - Plot outputs to screen/file
 !-----[--+---------+---------+---------+---------+---------+---------+-]
-
       implicit  none
 
       include  'pdata2.h'
       include  'plclip.h'
 
-      integer   iel, ndm, nel, isp, i, j, is, iu, iplt(30)
-      integer   ix(*)
-      real*8    x(ndm,*),v
+      integer       :: iel, ndm, nel, isp, i, j, is, iu, iplt(30)
+      integer       :: ix(*)
+      real (kind=8) :: x(ndm,*),v
 
       save
 
@@ -95,4 +94,4 @@
 
       endif
 
-      end
+      end subroutine plot9

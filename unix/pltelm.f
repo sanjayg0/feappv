@@ -1,48 +1,51 @@
 !$Id:$
-      subroutine pltelm(x,ie,ix,scale,nie,ndm,nen1,n1,n2)
+      subroutine pltelm(x,ie,ix,pscale,nie,ndm,nen1,n1,n2)
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
+!-----[--.----+----.----+----.-----------------------------------------]
+!     Modification log                                Date (dd/mm/year)
+!       Original version                                    01/11/2006
+!       1. Remove 'pdata2.h' (unused)                       27/04/2018
 !-----[--+---------+---------+---------+---------+---------+---------+-]
 !      Purpose: Place element numbers on plots of mesh
 
 !      Inputs:
-!         x(ndm,*)  - Nodal coordinates of mesh
-!         ie(nie,*) - Assembly data for material sets
-!         ix(nen1,*)- Element nodal connections
-!         scale     - Plot scale factor
-!         nie       - Dimension of ie array
-!         ndm       - Dimension of x array
-!         nen1      - Dimension of ix array
-!         n1        - First element number to display
-!         n2        - Last element number to display
+!         x(ndm,*)   - Nodal coordinates of mesh
+!         ie(nie,*)  - Assembly data for material sets
+!         ix(nen1,*) - Element nodal connections
+!         pscale     - Plot scale factor
+!         nie        - Dimension of ie array
+!         ndm        - Dimension of x array
+!         nen1       - Dimension of ix array
+!         n1         - First element number to display
+!         n2         - Last element number to display
 
 !      Outputs:
-!         none      - Plot outputs to screen/file
+!         none       - Plot outputs to screen/file
 !-----[--+---------+---------+---------+---------+---------+---------+-]
-
       implicit  none
 
       include  'pbody.h'
-      include  'pdata2.h'
       include  'pdata4.h'
       include  'plflag.h'
 
-      logical   zoom
-      integer   nie,ndm,nen1, i,j,n,ii,jj,nn,ma,nd, n1,n2, iplt(30)
-      real*8    scale,dx1
+      logical       :: zoom
+      integer       :: nie,ndm,nen1, i,j,n,ii,jj,nn,ma,nd, n1,n2
+      integer       :: iplt(50)
+      real (kind=8) :: pscale,dx1
 
-      integer   ie(nie,*),ix(nen1,*)
-      real*8    x(ndm,*),xx(3)
+      integer       :: ie(nie,*),ix(nen1,*)
+      real (kind=8) :: x(ndm,*),xx(3)
 
       save
 
 !     Write element labels
 
-      dx1 = .005d0/scale
+      dx1 = .005d0/pscale
       nd = 5
       do n = n1,n2
         ma = ix(nen1,n)
@@ -63,7 +66,7 @@
               if(ndm.ge.2) xx(2) = xx(2) + x(2,ii)
               if(ndm.ge.3) xx(3) = xx(3) + x(3,ii)
             endif
-          end do
+          end do ! i
           if(jj.gt.0) then
             xx(1) = xx(1)/jj
             xx(2) = xx(2)/jj
@@ -74,6 +77,6 @@
             endif
           endif
         endif
-      end do
+      end do ! n
 
-      end
+      end subroutine pltelm

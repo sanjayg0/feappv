@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -30,12 +30,15 @@
       include  'comfil.h'
       include  'idata1.h'
 
-      logical   pcomp,errck,vinput,cinput
-      integer   nwd,nlp,nnx,ll,i,is,n,nc
-      character clab1*4,lct(*)*15,wd(nwd)*4,y*1
+      character (len=15) :: lct(*)
+      character (len=4)  :: clab1,wd(nwd)
+      character (len=1)  :: y
 
-      integer   jct(*)
-      real*8    ct(3,*)
+      logical       :: pcomp,errck,vinput,cinput
+      integer       :: nwd,nlp,nnx,ll,i,is,n,nc
+
+      integer       :: jct(*)
+      real (kind=8) :: ct(3,*)
 
       save
 
@@ -101,4 +104,4 @@
 
 2003  format(/' *ERROR* loop/next execution not permitted')
 
-      end
+      end subroutine histex

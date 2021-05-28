@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--+---------+---------+---------+---------+---------+---------+-]
@@ -24,10 +24,10 @@
       include  'prmptd.h'
       include  'psdat2.h'
 
-      integer   icol, ii, isw, jsw,jj
-      integer   coli,status,vstcol,vslcol
+      integer       :: icol, ii, isw, jsw,jj
+      integer       :: coli,status,vstcol,vslcol
 
-      integer   ipal(15), ipsm(15)
+      integer       :: ipal(15), ipsm(15)
 
       save
 
@@ -83,9 +83,9 @@
             endif
           else
             if(psrevs) then
-              ii = max( 1, min( 7, 8 - ii) )
+              ii = max( 1, min(7, 8 - ii) )
             else
-              ii = max( 1, min( 7, ii    ) )
+              ii = max( 1, min(7, ii    ) )
             endif
             write( colv, '(i1,1x)' ) ii
           endif
@@ -106,4 +106,4 @@
 4002  format('h',i1,' ')
 
 
-      end
+      end subroutine pppcol

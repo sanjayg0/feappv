@@ -3,17 +3,16 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit   none
 
       call pinset(1)
       call pinset(2)
 
-      end
+      end subroutine pinstall
 
       subroutine pinset(isw)
 
@@ -26,13 +25,13 @@
       include  'iofile.h'
       include  'iosave.h'
       include  'prmptd.h'
-      include  'psize.h'
       include  'pathn.h'
 
-      character text(3)*15
-      logical   pcomp,cksep,exst, flag, tinput
-      integer   i,j, isw
-      real*8    td(1)
+      character (len=15) :: text(3)
+
+      logical       :: pcomp,cksep,exst, flag, tinput
+      integer       :: i,j, isw
+      real (kind=8) :: td(1)
 
       save
 
@@ -136,13 +135,8 @@
             else
               hlplev = 3      ! Expert
             endif
-
-!         Set increment for reducing array size
-
-          elseif(pcomp(text(1),'increme',7)) then
-            call setval(text(2),15, td(1))
-            incred = nint(td(1))
           endif
+
         end do ! while
         close(ior)
       endif
@@ -151,4 +145,4 @@
 
 3000  format(/' *ERROR* on FILE record in feap.ins')
 
-      end
+      end subroutine pinset

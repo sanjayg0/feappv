@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -45,6 +45,7 @@
       include   'iofile.h'
       include   'ioincl.h'
       include   'iosave.h'
+      include   'lmdata.h'
       include   'mdata.h'
       include   'mxsiz.h'
       include   'nblend.h'
@@ -63,12 +64,14 @@
       include   'vdata.h'
       include   'comblk.h'
 
-      character  fileck*128
-      logical    errs,oprt,setvar,palloc,tinput,vinput,pcomp
-      logical    contrfl,lopen
-      character  cdate*24, ctext*15
-      integer    isw,iii, i,j, l1,l2,l3,l4,l5,l6
-      real*8     td(12)
+      character (len=128) :: fileck
+      character (len=24)  :: cdate
+      character (len=15)  :: ctext
+
+      logical       :: errs,oprt,setvar,palloc,tinput,vinput,pcomp
+      logical       :: contrfl,lopen
+      integer       :: isw,iii, i,j, l1,l2,l3,l4,l5,l6
+      real (kind=8) :: td(12)
 
       save
 
@@ -105,18 +108,22 @@
       intr   = .false.
       intx   = .false.
       nurbfl = .false.
+      vemfl  = .false.
+      cdate  = '  '
       call fdate( cdate )
       ctext   = 'start'
       contrfl = .true.
       do while(.not.pcomp(ctext,'    ',4))
         errck  = tinput(ctext,1,td(2),8)
-        if(    pcomp(ctext,'node',4) .or. pcomp(ctext,'numnp',5)) then
+        if(pcomp(ctext,'feap',4)) then
+          if(rank.eq.0) write(*,*) ' * WARNING * Multiple FEAP record'
+        elseif(pcomp(ctext,'node',4) .or. pcomp(ctext,'numnp',5)) then
           numnp = nint(td(2))
           contrfl = .false.
         elseif(pcomp(ctext,'elem',4) .or. pcomp(ctext,'numel',5)) then
           numel = nint(td(2))
           contrfl = .false.
-        elseif(pcomp(ctext,'mate',4) .or. pcomp(ctext,'nummat',5)) then
+        elseif(pcomp(ctext,'mate',4) .or. pcomp(ctext,'numma',5)) then
           nummat = nint(td(2))
           contrfl = .false.
         elseif(pcomp(ctext,'dime',4) .or. pcomp(ctext,'ndm',3)) then
@@ -171,6 +178,10 @@
       numsn  = 0
       numsd  = 0
       numbd  = 0
+
+!     Number of NURBS materials
+
+      nurma  = 0
 
 !     Contact array initialization
 
@@ -348,6 +359,7 @@
       efcfl = .false.
       eprfl = .false.
       espfl = .false.
+      lbcfl = .false.
       finflg= .false.
       surfl = .false.
       boufl = .false.
@@ -360,6 +372,7 @@
       tiefl = .true.
       tief  = .false.
       stifl = .false.
+      lagrfl= .false.
 
 !     Rotation parameters
 
@@ -393,9 +406,10 @@
       nepro  = 0
       ncurv  = 0
       nespi  = 0
+      nlbou  = 0
+      ndfl(:)= 0
 
 !     Zero global parameters
-
       if(    ndm.le.2) then
         g2type = 2           ! default plane strain
       elseif(ndm.eq.3) then
@@ -419,14 +433,12 @@
       augf   =  1.0d0        ! Augmenting factor multiplier
 
 !     Set pointers for allocation of mesh arrays
-
       nen1      = nen + 11
       nie       = 13 ! 1,2 defined; others are nie, nie-1, etc.
       nst       = max(nen*ndf + nad,1)
       nneq      = ndf*numnp
 
 !     Allocate size for arrays for mesh and solution vecors
-
       l1   = ndm*numnp
       l2   = max(ndf*numnp,1)
       l3   = max(nen+1,7*nst,21)
@@ -435,7 +447,6 @@
       l6   = max(1,numel)
 
 !     Allocate and zero arrays
-
       setvar = palloc( 26,'DR   ',l4          ,  2)
       setvar = palloc( 34,'LD   ',l3          ,  1)
       setvar = palloc( 35,'P    ',nst*3       ,  2)
@@ -463,12 +474,10 @@
       setvar = palloc( 89,'NREN ',numnp*2     ,  1)
 
 !     Set ID address pointers
-
       id31    = np(31)
       idpt(1) = np(31)
 
 !     Set pointers
-
       npid    = np(31)         ! ID
       npix    = np(33)         ! IX
       npuu    = np(40)         ! U
@@ -477,53 +486,63 @@
       npty    = np(190)        ! NDTYP
 
 !     Set initial numbering in renumber vector and mark nodes as unused.
-
       do i = 0,numnp-1
         mr(np( 89)+i      ) = i+1  ! Remap list
         mr(np( 89)+i+numnp) = i+1  ! Reverse list
         mr(np(190)+i      ) = 0
       end do ! i
 
-!     Open file to store material data
+!     Mark all elements as unused
+      do i = 1,numel
+        mr(np(33)+nen1*i-1) = -99
+      end do ! i
 
+!     Set element assembly array
+      sa(1) = 0
+      do j = 2,nen
+        sa(j) = sa(j-1) + ndf
+      end do ! j
+      la = ndf*nen   ! Location of element equations in element array
+      ga = la + nad  ! Location of global  equations in element array
+
+!     Open file to store material data
       inquire(unit=iwd,name=fileck, opened=errs)
 
 !     Input a mesh from binary file (if it exists)
-
       iii   =  0
 
 !     Input mesh data from file
-
       call pmesh(iii,prt,prth)
 
 !     Set edge boundary codes, forces, displacements, and angles
-
       if(eanfl.or.ebcfl.or.edifl.or.efcfl.or.eprfl) then
         call pedgin()
       endif
 
 !     Set cordinate angles, boundary codes, forces, displacements,
 !         proportional load types and surface loads
-
       if(boufl .or. surfl .or. angfl .or.
      &   disfl .or. cprfl .or. forfl) then
         call ploadc()
       endif
 
-!     Perform simple check on mesh to ensure basic data was input
+!     Set element multiplier boundary conditions
+      if(lbcfl) then
+        call plboun()
+        lbcfl = .false.
+      endif
 
+!     Perform simple check on mesh to ensure basic data was input
       setvar = palloc(111,'TEMP1',numnp*ndf, 1)
       call meshck(mr(np(111)),mr(np(32)),mr(np(240)),mr(np(31)+nneq),
      &            mr(np(190)),mr(np(33)),nie,nen,nen1,ndf,
      &            numnp,numel,nummat,errs)
       setvar = palloc(111,'TEMP1',0, 1)
       if(errs) then
-        call pdelfl()
-        return
+        call plstop(.true.)
       endif
 
 !     Compute boundary nodes (before ties)
-
       if(tiefl) then
         setvar = palloc( 78,'EXTND',numnp ,1)
         call pextnd()
@@ -534,22 +553,17 @@
 
 !     Input/output formats
 
-2000  format(1x,19a4,a3//4x,
-     & 'F I N I T E   E L E M E N T   A N A L Y S I S   P R O G R A M'
-     &     /14x,'FEAPpv (P e r s o n a l   V e r s i o n)',
-     &    //13x,'(C) Regents of the University of California'
-     &     /23x,'All Rights Reserved.'
-     &     //5x,'Solution date: ',a//14x,'VERSION: ',a/14x,'DATE: ',a/
-     &      /5x,'Input Data Filename: ',a/
-     &      /5x,'Number of Nodal Points  - - - - - - :',i9
-     &      /5x,'Number of Elements  - - - - - - - - :',i9/
-     &      /5x,'Spatial Dimension of Mesh - - - - - :',i9
-     &      /5x,'Degrees-of-Freedom/Node (Maximum) - :',i9
-     &      /5x,'Equations/Element       (Maximum) - :',i9
-     &      /5x,'Number Element Nodes    (Maximum) - :',i9/
-     &      /5x,'Number of Material Sets - - - - - - :',i9
-     &      /5x,'Number Parameters/Set   (Program) - :',i9
-     &      /5x,'Number Parameters/Set   (Users  ) - :',i9)
+2000  format(1x,19a4,a3//5x,'Solution date: ',a//14x,a/14x,a/
+     &                /5x,'Input Data Filename: ',a/
+     &                /5x,'Number of Nodal Points  - - - - - - :',i9
+     &                /5x,'Number of Elements  - - - - - - - - :',i9/
+     &                /5x,'Spatial Dimension of Mesh - - - - - :',i9
+     &                /5x,'Degrees-of-Freedom/Node (Maximum) - :',i9
+     &                /5x,'Equations/Element       (Maximum) - :',i9
+     &                /5x,'Number Element Nodes    (Maximum) - :',i9/
+     &                /5x,'Number of Material Sets - - - - - - :',i9
+     &                /5x,'Number Parameters/Set   (Program) - :',i9
+     &                /5x,'Number Parameters/Set   (Users  ) - :',i9)
 
 2017  format(/'  Problem definitions are specified by include files.'
      &      //'  Output for each problem is written to separate files.'
@@ -563,4 +577,4 @@
 
 3003  format(/' *ERROR* PCONTR: File name error')
 
-      end
+      end subroutine pnewprob

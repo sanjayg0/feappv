@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -19,7 +19,7 @@
 
       include  'iofile.h'
 
-      character subnam*(*),chr*(*)
+      character     :: subnam*(*),chr*(*)
 
       if (ior.gt.0)  then
         write(iow,2000) subnam
@@ -34,4 +34,4 @@
 
  2000 format (' *ERROR in ',a,' ** end of file encountered')
 
-      end
+      end subroutine endclr

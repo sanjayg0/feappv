@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -23,15 +23,14 @@
 !      Outputs:
 !         none      - Plot outputs to screen/file
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'pdata4.h'
 
-      integer   n, ndm, nen1, numnp, numel, nface, iln(2)
+      integer       :: n, ndm, nen1, numnp, numel, nface, iln(2)
 
-      integer   ix(nen1,numel), ip(numel)
-      real*8    x(ndm,numnp),ct
+      integer       :: ix(nen1,numel), ip(numel)
+      real (kind=8) :: x(ndm,numnp),ct
 
       save
 
@@ -65,4 +64,4 @@
 
       call plline(iln)
 
-      end
+      end subroutine plface

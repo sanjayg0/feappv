@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -22,7 +22,6 @@
 !      Outputs:
 !         None      - Outputs to file
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'cdata.h'
@@ -30,10 +29,10 @@
       include  'iofile.h'
       include  'xtout.h'
 
-      logical   prth
-      integer   ndm,ndf,n1,n2,n3, i,k,n,  count, nxt1
+      logical       :: prth
+      integer       :: ndm,ndf,n1,n2,n3, i,k,n,  count, nxt1
 
-      real*8    x(ndm,*),r(ndf,*),rsum(6),asum(6),psum(6)
+      real (kind=8) :: x(ndm,*),r(ndf,*),rsum(6),asum(6),psum(6)
 
       save
 
@@ -95,4 +94,4 @@
 
 2004  format( '  |Sum|',1p,6e12.4:/(7x,1p,6e12.4))
 
-      end
+      end subroutine prtrea

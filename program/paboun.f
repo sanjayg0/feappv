@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -26,14 +26,14 @@
 
       include  'iofile.h'
 
-      logical   prt,prth,clflg
-      integer   ndm,numnp,numprt, n,nbc
-      real*8    xmn, tmn
+      logical       :: prt,prth,clflg
+      integer       :: ndm,numnp,numprt, n,nbc
+      real (kind=8) :: xmn, tmn
 
-      integer   ntyp(*)
-      real*8    x(ndm,numnp),ang(*),td(*)
+      integer       :: ntyp(*)
+      real (kind=8) :: x(ndm,numnp),ang(*),td(*)
 
-      real*8    dotx
+      real (kind=8) :: dotx
 
       save
 
@@ -86,4 +86,4 @@
 
 2001  format(i8,1p,e12.4)
 
-      end
+      end subroutine paboun

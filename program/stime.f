@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -20,7 +20,7 @@
 
       include  'etime1.h'
 
-      real*4    etime, tt(2)
+      real (kind=4) :: etime, tt(2)
 
       save
 

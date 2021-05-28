@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -18,8 +18,8 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
-      integer   l
-      real*8    sw(2,*), t
+      integer       :: l
+      real (kind=8) :: sw(2,*), t
 
       save
 
@@ -86,7 +86,7 @@
 
       endif
 
-      end
+      end subroutine int1dg
 
       subroutine gausspw (nn,sw)
 
@@ -100,9 +100,9 @@
 !-----[--.----+-!--.----+----.----+------------------------------------]
       implicit   none
 
-      integer    nn, n
-      real*8     sw(2,*)
-      real*8     fn, beta, cc, xt, dpn,pn1, flgama
+      integer       :: nn, n
+      real (kind=8) :: sw(2,*)
+      real (kind=8) :: fn, beta, cc, xt, dpn,pn1, flgama
 
       fn   = dble(nn)
       beta = exp(2.d0*flgama(1.d0) - flgama(2.d0))
@@ -160,7 +160,7 @@
         sw(1,n) = - sw(1,n)
       end do ! n
 
-      end
+      end subroutine gausspw
 
       subroutine root (x,nn,dpn,pn1)
 
@@ -171,11 +171,11 @@
 !-----[--.----+-!--.----+----.----+------------------------------------]
       implicit   none
 
-      logical    notconv
-      integer    nn, iter
-      real*8     x,dpn,pn1, d,p,dp
+      logical       :: notconv
+      integer       :: nn, iter
+      real (kind=8) :: x,dpn,pn1, d,p,dp
 
-      real*8     eps
+      real (kind=8) ::  eps
       data       eps / 1.d-39 /
 
       iter = 0
@@ -192,15 +192,15 @@
       end do ! while
       dpn = dp
 
-      end
+      end subroutine root
 
       subroutine recur (pn,dpn,pn1,x,nn)
 
       implicit   none
 
-      integer    nn, n
-      real*8     pn,dpn,pn1,x, c
-      real*8     p1, p,dp, dp1, q,dq
+      integer       :: nn, n
+      real (kind=8) :: pn,dpn,pn1,x, c
+      real (kind=8) :: p1, p,dp, dp1, q,dq
 
       p1  = 1.d0
       p   = x
@@ -220,14 +220,14 @@
       dpn = dp
       pn1 = p1
 
-      end
+      end subroutine recur
 
       function flgama (w)
 
       implicit none
 
-      integer  m, i
-      real*8   flgama, w, pi,x, p, fk, y, z,zz
+      integer       :: m, i
+      real (kind=8) :: flgama, w, pi,x, p, fk, y, z,zz
 
       pi =  acos(-1.d0)
       x  =  w
@@ -274,4 +274,4 @@
 
 2000  format (2x,'gamma(',e11.4,') is negative')
 
-      end
+      end function flgama

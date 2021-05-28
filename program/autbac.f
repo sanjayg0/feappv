@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -31,10 +31,10 @@
       include  'tdata.h'
       include  'comblk.h'
 
-      integer   i,k1
-      real*8    dtnew,propld
+      integer       :: i,k1
+      real (kind=8) :: dtnew,propld
 
-      integer   npl(2)
+      integer       :: npl(2)
 
       save
 
@@ -59,8 +59,8 @@
 
 !     Reinitialize solution and dynamic vectors for step
 
-          call update(mr(np(31)),hr(np(30)),hr(np(40)),hr(np(42)),
-     &                hr(np(26)),fl(9),3)
+          call pupdate(mr(np(31)),hr(np(30)),hr(np(40)),hr(np(42)),
+     &                 hr(np(26)),fl(9),3)
 
 !     Reinitialize history vectors for step
 
@@ -92,8 +92,8 @@
 
         if(fl(9)) then
           call dsetci
-          call update(mr(np(31)),hr(np(30)),hr(np(40)),hr(np(42)),
-     &                hr(np(26)),fl(9),1)
+          call pupdate(mr(np(31)),hr(np(30)),hr(np(40)),hr(np(42)),
+     &                 hr(np(26)),fl(9),1)
         end if
 
 !       Zero displacement increments for time step
@@ -119,4 +119,4 @@
      &         ': Total proportional load ',1p,1e11.4:/
      &         '   Individual factors: '/(3x,4(i4,' =',1p,1e12.4)))
 
-      end
+      end subroutine autbac

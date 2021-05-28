@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -15,10 +15,9 @@
 !         pp(1)  - Principal stresses in order: sig-1, sig-2, angle
 !                  (degrees): sig-xx to sig-1
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
-      real*8    sig(4), pp(3), xi1, xi2, rho
+      real (kind=8) :: sig(4), pp(3), xi1, xi2, rho
 
       save
 
@@ -33,4 +32,4 @@
         pp(3)  = 45.0d0
       endif
 
-      end
+      end subroutine pstr2d

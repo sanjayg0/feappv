@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -19,9 +19,10 @@
 !-----[--+---------+---------+---------+---------+---------+---------+-]
       implicit   none
 
-      integer    j
-      character  lct*15
-      real*8     ct(3)
+      character (len=15) :: lct
+
+      integer       :: j
+      real (kind=8) :: ct(3)
 
       save
 
@@ -29,25 +30,26 @@
 
       if(nint(ct(1)).ge.0) then
 
-!       [extract block n_blk, k_dir inc_order
-!       [extract patch n_blk, k_dir inc_order
+!       [elevate block n_blk, k_dir inc_order
+!       [elevate patch n_blk, k_dir inc_order
 
         if(j.eq.1) then
 
-          write(*,2000) ' EXTRact '
+          write(*,2000) ' ELEVate ',lct,ct(1:3)
 
 !       [insert block n_blk, k_dir u_knot n_times
 !       [insert patch n_blk, k_dir u_knot n_times
 
         elseif(j.eq.2) then
 
-          write(*,2000) ' INSErt '
+          write(*,2000) ' INSErt ',lct,ct(1:3)
 
         endif
       endif
 
 !     Formats
 
-2000  format('  *ERROR*',a,'command only available in NURBS version')
+2000  format('  *ERROR*',a,'command only available in NURBS version'/
+     &       '           Input record: ',a,1p,3e12.4)
 
-      end
+      end subroutine pmacr8

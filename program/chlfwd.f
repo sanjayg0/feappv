@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -20,8 +20,8 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
-      integer   i,j,id,im,jd,nn
-      real*8    u(*),g(*),s(nn,nn), dot
+      integer       :: i,j,id,im,jd,nn
+      real (kind=8) :: u(*),g(*),s(nn,nn), dot
 
 !     Choleski factorization of a symmetric, positive definite matrix
 
@@ -70,4 +70,4 @@
         jd = jd + j
       end do
 
-      end
+      end subroutine chlfwd

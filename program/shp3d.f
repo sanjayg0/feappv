@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -23,13 +23,12 @@
 !                     shp(3,i) = dN_i/dz
 !                     shp(4,i) =  N_i
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
-      integer   ndm , i , j , k
-      real*8    rxsj,xsj, ap1,am1,ap2,am2,ap3,am3, c1,c2,c3
+      integer       :: ndm , i , j , k
+      real (kind=8) :: rxsj,xsj, ap1,am1,ap2,am2,ap3,am3, c1,c2,c3
 
-      real*8    ss(3),shp(4,8),xl(ndm,8),xs(3,3),ad(3,3)
+      real (kind=8) :: ss(3),shp(4,8),xl(ndm,8),xs(3,3),ad(3,3)
 
       save
 
@@ -159,4 +158,4 @@
 
       end do
 
-      end
+      end subroutine shp3d

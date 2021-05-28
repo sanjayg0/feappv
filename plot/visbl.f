@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -15,13 +15,12 @@
 !      Outputs:
 !         visbl     - Flag, true if visible from view point
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'ppers.h'
 
-      integer   k
-      real*8    xl(3,4),v1(3),v2(3),v3(3), dot
+      integer       :: k
+      real (kind=8) :: xl(3,4),v1(3),v2(3),v3(3), dot
 
       save
 

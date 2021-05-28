@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--+---------+---------+---------+---------+---------+---------+-]
@@ -19,17 +19,16 @@
 !      Outputs:
 !         none      - Plot outputs to screen/file
 !-----[--+---------+---------+---------+---------+---------+---------+-]
-
       implicit  none
 
       include  'iofile.h'
       include  'plclip.h'
 
-      integer   i, j, k, icol, icx, icn, nel, nc
-      real*8    vci, s
+      integer       :: i, j, k, icol, icx, icn, nel, nc
+      real (kind=8) :: vci, s
 
-      integer   ic(*), ipal(7)
-      real*8    xp(10),yp(10),zp(10),x(3,*),v(4),vc(*)
+      integer       :: ic(*), ipal(7)
+      real (kind=8) :: xp(10),yp(10),zp(10),x(3,*),v(*),vc(*)
 
       save
 
@@ -121,4 +120,4 @@
         call clpan
       end do ! icol
 
-      end
+      end subroutine pltefl

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -24,18 +24,18 @@
 !         ix(nen1,*)- Element nodal connection list
 !         ip(*)     - Nodal number list
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
 
       include  'iofile.h'
 
-      integer   ma,nie,nen,nen1,ndm,numel
+      integer       :: ma,nie,nen,nen1,ndm,numel
 
-      integer   n,m, ii,i1,i2,ij1, j1,j2,ij2, n1,n2,nn, m1,m2
-      real*8    dx,dy, dx1,dx2, dy1,dy2, tol
+      integer       :: n,m, ii,i1,i2,ij1, j1,j2,ij2, n1,n2,nn, m1,m2
+      real (kind=8) :: dx,dy, dx1,dx2, dy1,dy2, tol
 
-      integer   ie(nie,*),ix(nen1,*),ib(*),ip(*),iord1(50),iord2(50)
-      real*8    x(ndm,*)
+      integer       :: ie(nie,*),ix(nen1,*),ib(*),ip(*)
+      integer       :: iord1(50),iord2(50)
+      real (kind=8) :: x(ndm,*)
 
       save
 
@@ -111,4 +111,4 @@
         endif
       end do
 
-      end
+      end subroutine ptiend

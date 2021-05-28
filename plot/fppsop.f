@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -30,10 +30,14 @@
       include  'psdat5.h'
       include  'psdat6.h'
 
-      logical   fexist
-      integer   i, ii, iln(2)
-      real*8    scal
-      character cdate*24, uname*8, string*21, title*68
+      character (len=68) :: title
+      character (len=24) :: cdate
+      character (len=21) :: string
+      character (len=8)  :: uname
+
+      logical       :: fexist
+      integer       :: i, ii, iln(2)
+      real (kind=8) :: scal
 
       save
 
@@ -239,7 +243,7 @@
 
 2000  format(' --> Opening FEAP PostScript file: ',a )
 
-      end
+      end subroutine fppsop
 
       subroutine postname( name )
 
@@ -247,8 +251,8 @@
 
       character  name*(*)
 
-      integer    n, nc
-      logical    add
+      integer       :: n, nc
+      logical       :: add
 
 !     Initialize
 
@@ -285,4 +289,4 @@
         write(*,*) ' *ERROR* - Too many file names'
       endif
 
-      end
+      end subroutine postname

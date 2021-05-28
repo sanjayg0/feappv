@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2017: Regents of the University of California
+!....  Copyright (c) 1984-2020: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -32,10 +32,19 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit none
 
-      integer  nh,istrt,isw, ii
-      real*8   td
-      real*8   eps(*),theta(*),d(*),ud(*),hn(nh),h1(nh), sig(*),dd(6,*)
+      integer       :: nh,istrt,isw, ii
+      real (kind=8) :: td
+      real (kind=8) :: eps(*),theta(*),d(*),ud(*),hn(nh),h1(nh)
+      real (kind=8) :: sig(*),dd(6,*)
+
+!     Set initial values to history values in both hn(*) and h1(*)
+
+      if(isw.eq.14) then
 
 !     Compute and output stress (sig) and (moduli)
 
-      end
+      else
+
+      endif
+
+      end subroutine umatl0

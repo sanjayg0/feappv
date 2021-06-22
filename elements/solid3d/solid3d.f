@@ -92,7 +92,11 @@
 !     Check element for errors
       elseif(isw.eq.2) then
 
-        call ckbrk8 ( n_el, ix, xl, ndm, nel, shp3 )
+        if(n_el.eq.4) then
+          call cktets ( n_el, ix, xl, ndm, nel, shp3 )
+        elseif(n_el.eq.8) then
+          call ckbrk8 ( n_el, ix, xl, ndm, nel, shp3 )
+        endif
 
 !     Compute stress-divergence vector (p) and stiffness matrix (s)
       elseif(isw.eq.3 .or. isw.eq.4  .or. isw.eq.6   .or.

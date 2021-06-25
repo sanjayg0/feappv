@@ -43,7 +43,7 @@
 !     Compute sparse storage for non-zero matrix
       if(isw.gt.0) then
         u1 = max(numnp*neq,neq)
-        setvar = palloc(111,'TEMP1', 1, 1)
+        setvar = palloc(111,'TEMP1',u1, 1)
         call pzeroi(mr(np(111)),u1)
         call elcnt(numnp,numel,nen,nen1,mr(np(33)),mr(np(111)))
         call sumcnt(mr(np(111)),numnp*ndf,kp)

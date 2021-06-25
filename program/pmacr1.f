@@ -802,9 +802,16 @@
 !     [direct,sparse] ! N.B. Users must furnish their own
 
 11    if(pcomp(lct(l),'spar',4)) then
-        ittyp  = -2
-        k1     =  0
-        call iters(k1,1)
+
+        write(iow,3001) ' --> ERROR: FEAPpv does not include SPARse'
+        if(ior.lt.0) then
+          write(*,3001) ' --> ERROR: FEAPpv does not include SPARse'
+        else
+          call plstop(.true.)
+        endif
+!       ittyp  = -2
+!       k1     =  0
+!       call iters(k1,1)
 
 !     Profile solution
 
@@ -859,6 +866,8 @@
 
 3000  format(' *ERROR* Unable to compute starting acceleration,'
      &      ,' Static problem or density zero')
+
+3001  format(a)
 
 3002  format(' *WARNING* Unfactored tangent produced do not try'
      &      ,' normal solution.')

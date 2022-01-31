@@ -704,11 +704,11 @@
         if(ior.lt.0) then
           write(  *,2011) numnp,numel,nummat,neq,npr,nnp,
      &                    ttim,rnmax,dt,aengy,tol,augf,
-     &                    prop,noi,nstep,titer
+     &                    prop,noi,nstep,titer+niter
         else
           write(iow,2011) numnp,numel,nummat,neq,npr,nnp,
      &                    ttim,rnmax,dt,aengy,tol,augf,
-     &                    prop,noi,nstep,titer
+     &                    prop,noi,nstep,titer+niter
         endif
       endif
       return

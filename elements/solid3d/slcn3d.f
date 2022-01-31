@@ -25,7 +25,6 @@
       save
 
 !     Initialize the arrays
-
       do ii = 1,nel
         p(ii)    = 0.0d0
         do jj = 1,6
@@ -34,7 +33,6 @@
       end do ! ii
 
 !     Compute projections: int ( sig * shp(i) * darea )
-
       do l = 1,lint
         do ii = 1,nel
           xj    = jac(l)*shp3(4,ii,l)

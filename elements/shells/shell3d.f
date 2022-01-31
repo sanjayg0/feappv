@@ -71,8 +71,7 @@
         pstyp = 2
 
 !       Set maximum number of stress plots
-
-        istv = 24
+        istv = max(istv,24)
 
 !     Remaining options
 
@@ -1904,6 +1903,7 @@
 
       include  'shpf16.h'
       include  'sstr16.h'
+      include  'strnum.h'
 
       integer       :: ndf,nel,numnp, i,j,k, ii
       real (kind=8) :: xsji, xx,yy,zz
@@ -1970,6 +1970,8 @@
           end if
         end do ! j  }
       end do ! k  }
+
+      iste = 24
 
       end subroutine stcn3sh
 

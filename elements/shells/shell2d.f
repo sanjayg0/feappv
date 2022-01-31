@@ -75,6 +75,8 @@
           ix(i) = 0
         end do
 
+!       This element does not do element projections
+
       else
 
         dtype = nint(d(18))

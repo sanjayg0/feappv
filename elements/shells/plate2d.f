@@ -86,7 +86,7 @@
         ea(1,-iel) = 2
         ea(2,-iel) = 3
 
-        istv = 20
+        istv = max(istv,12)
 
 !       Deactivate dof in element for dof > 3
 
@@ -1376,6 +1376,8 @@
 
       implicit  none
 
+      include  'strnum.h'              ! iste
+
       integer       :: l, j, ll, lint, numnp
       integer       :: ix(*)
       real (kind=8) :: xg, errav
@@ -1408,6 +1410,8 @@
 
         end do
       end do
+
+      iste = 12
 
       end subroutine stcnpt
 

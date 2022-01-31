@@ -25,6 +25,7 @@
       include  'hdata.h'
       include  'iofile.h'
       include  'mdata.h'
+      include  'strnum.h'
 
       include  'comblk.h'
 
@@ -52,6 +53,7 @@
 !       Set plot sequence
 
         pstyp = 2
+        istv  = max(istv,24)
 
 !     Remaining options
 

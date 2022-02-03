@@ -45,14 +45,8 @@
                 exit
               endif
             end do ! i
-            if(ix(nen+7,n).eq.-22) then  ! 2-d VEM
-              call vem_compp(ix(nen+8,n), iplt, nel, iu)
-            elseif(ix(nen+7,n).eq.-23) then
-              write(*,*) ' ERROR: VEM 3D not implemented'
-            else
-              call plftyp(pstyp,nel,ma)
-              call pltord(ix(1,n),ma,iu,iplt)
-            endif
+            call plftyp(pstyp,nel,ma)
+            call pltord(ix(1,n),ma,iu,iplt)
 
             do i = 1,iu-1
               i1 = iplt(i)

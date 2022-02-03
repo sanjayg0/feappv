@@ -333,7 +333,7 @@
 
 !         Plot stress values
           if(isw.eq.8) then
-            call slcn2d(ix, sigp,epsp, r,s,r(nen+1), nel,10)
+            call slcn2d(sigp, r,s,r(nen+1), nel,10)
           endif
         endif ! isw 4 , 8 , 22
       endif ! isw tests

@@ -140,7 +140,7 @@
 
 !     Compute mass or geometric stiffness matrix
       elseif(isw.eq.5 .and. etype.ne.4 .and. etype.ne.5) then
-        call mass2d(d,xl,ul,ix,s,p,ndf,ndm,nst)
+        call mass2d(d,xl,ix,s,p,ndf,ndm,nst)
         return
 
 !     Compute damping matrix

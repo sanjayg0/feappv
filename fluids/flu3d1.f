@@ -164,8 +164,8 @@
             sigp(1,l) = sigp(1,l) + press(l)
 
 !           Form residual
-            call resid3d(jac(l),shp3(1,1,l),sigp(1,l),d,xl,
-     &                   ul(1,1,4),ul(1,1,4),r,ndm,ndf, .false.)
+            call resid3d(jac(l),shp3(1,1,l),sigp(1,l),d,
+     &                   ul(1,1,4),ul(1,1,4),r,ndf,l)
 
 !           Convective term
             rhoj    = d(4)*jac(l)
@@ -297,7 +297,7 @@
 
 !         Plot stress values
           if(isw.eq.8) then
-            call slcn3d(sigp,epsp, r,s, nel)
+            call slcn3d(sigp, r,s, nel, 10)
           endif
         endif ! isw 4 , 8 , 22
       endif ! isw tests

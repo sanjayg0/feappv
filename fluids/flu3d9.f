@@ -82,7 +82,7 @@
         do l = 1,lint
 
 !         Compute strain at point
-          call strn3d(d,xc,ul,tl,shp3(1,1,l),3,ndf,nel, eps,ta)
+          call strn3d(d,ul,tl,shp3(1,1,l),ndf,nel, eps,ta)
           epsv(l) = eps(1,1) + eps(2,1) + eps(3,1)
 
 !         Compute stress at point
@@ -96,8 +96,8 @@
 
 !           Form residual
 
-            call resid3d(jac(l),shp3(1,1,l),sigp(1,l),d,xc,
-     &                   ul(1,1,4),ul(1,1,5),r,ndm,ndf, .false.)
+            call resid3d(jac(l),shp3(1,1,l),sigp(1,l),d,
+     &                   ul(1,1,4),ul(1,1,5),r,ndf,l)
 
 !           Stiffness computations
 
@@ -163,7 +163,7 @@
 
 !         Compute strain at point
 
-          call strn3d(d,xc,ul,tl,shp3(1,1,l),ndm,ndf,nel, eps,ta)
+          call strn3d(d,ul,tl,shp3(1,1,l),ndf,nel, eps,ta)
           epsv(l) = eps(1,1) + eps(2,1) + eps(3,1)
 
 !         Compute stress at point
@@ -221,7 +221,7 @@
 !       Plot stress values
 
         if(isw.eq.8) then
-          call slcn3d(sigp,epsp, r,s, nel)
+          call slcn3d(sigp, r,s, nel, 10)
         endif
       endif
 

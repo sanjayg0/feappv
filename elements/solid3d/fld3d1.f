@@ -34,7 +34,7 @@
       real (kind=8) :: aa(6,6,5),dd(6,6,9)
       real (kind=8) :: sigv(13),sigl(6,9)
       real (kind=8) :: bbd(3,6),r1(3,9)
-c     real (kind=8) :: dvol(9),weng(9),xr(3,9),ur(3,9)
+!     real (kind=8) :: dvol(9),weng(9),xr(3,9),ur(3,9)
       real (kind=8) :: weng(9),xr(3,9),ur(3,9)
 
       save

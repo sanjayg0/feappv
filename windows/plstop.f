@@ -61,7 +61,7 @@
       close(unit=ior, status = 'keep')
       close(unit=iow, status = 'keep')
 
-      vstatus = setexitqq(QWIN$EXITNOPERSIST)
+      p_status = setexitqq(QWIN$EXITNOPERSIST)
 
       stop
 

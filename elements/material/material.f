@@ -315,6 +315,10 @@
             fflag = .true.
             sflag = .false.
           endif
+          if(pcomp(text(2),'volu',4)) then
+            d(170) = max(1,min(4,nint(ev(1))))
+          endif
+
 
 !       Element type: Displacement
         elseif(pcomp(text(1),'disp',4)) then
@@ -911,6 +915,12 @@
               write(*,2010) ' ',e1,nu12,bulk,g12
             endif
             write(iow,2010) ' ',e1,nu12,bulk,g12
+            if(nint(d(170)).lt.5) then
+              if(ior.lt.0) then
+                write(*,2062) nint(d(170))
+              endif
+              write(iow,2062) nint(d(170))
+            endif
 
 !           Compute Lame' parameters
             d(1)  = e1
@@ -1577,6 +1587,12 @@
 2060  format(/8x,'Rayleigh Damping Ratios'/
      &       10x,'Mass  value: a0',1p,1e14.5/
      &       10x,'Stiff value: a1',1p,1e14.5)
+
+2062  format(10x,'Volume Model    ',i2/
+     &       15x,'1: U(J) = 0.25*(J**2 - 1 - 2 * ln J)'/
+     &       15x,'2: U(J) = 0.50*(J - 1)**2'/
+     &       15x,'3: U(J) = 0.50*(ln J)**2'/
+     &       15x,'4: U(J) = 2.00*(J - 1 - ln J)'/1x)
 
 2063  format(/10x,'Augmented Solution for Inextensible Behavior')
 
@@ -3559,42 +3575,35 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
-      integer       :: i
-      real (kind=8) :: detf, press,logj,uppj, mu, mu2, estore, xlamd,ha
-
+      integer       :: i, jsw
+      real (kind=8) :: detf, xlamd, ha
+      real (kind=8) :: u,up,upp, mu, mu2, hp,hpp, logj, estore
       real (kind=8) :: d(*),sig(6),aa(6,6),bb(6)
 
       save
 
 !     Compute pressure and its derivative
-      logj  = log(abs(detf))
-      press = d(21)*logj/detf + xlamd
-      uppj  = d(21)/detf
-
-!     Augment function
-      ha    = detf - 1.0d0
+      jsw = nint(d(170))
+      call fengy3(d,detf,u,up,upp, ha,hp,hpp, jsw)
+      up  =  up  + xlamd * hp
+      upp = (upp + xlamd * hpp) * detf + up
 
 !     Set CAUCHY stresses and elastic tangent moduli
       mu  =  d(22)/detf
       mu2 =  mu + mu
       do i = 1,3
-        sig(i  )    = mu*bb(i) - mu + press
+        sig(i  )    = mu*bb(i) - mu + up
         sig(i+3)    = mu*bb(i+3)
-        aa(i  ,i  ) = mu2 - 2.d0*press + uppj
-        aa(i+3,i+3) = mu  - press
+        aa(i  ,i  ) = mu2 - up - up
+        aa(i+3,i+3) = mu  - up
       end do
 
 !     Add volumetric correction to aa
-      aa(1,2) = aa(1,2) + uppj
-      aa(2,1) = aa(1,2)
-      aa(1,3) = aa(1,3) + uppj
-      aa(3,1) = aa(1,3)
-      aa(2,3) = aa(2,3) + uppj
-      aa(3,2) = aa(2,3)
+      aa(1:3,1:3) = aa(1:3,1:3) + upp
 
 !     Compute stored energy
-      estore = d(21)*logj*logj*0.5d0
-     &       + d(22)*(0.5d0*(bb(1) + bb(2) + bb(3)) - 1.5d0 - logj)
+      logj   = log(abs(detf))
+      estore = u + d(22)*(0.5d0*(bb(1) + bb(2) + bb(3)) - 1.5d0 - logj)
 
       end subroutine stnh3f
 

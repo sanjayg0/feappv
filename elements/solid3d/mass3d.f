@@ -18,6 +18,7 @@
       implicit  none
 
       include  'eldata.h'
+      include  'fdata.h'
       include  'pmod2d.h'
 
       logical       :: quad
@@ -31,8 +32,15 @@
 
       save
 
-!     Compute mass matrix
+!     Set mass type
+      if(fl(1)) then
+        cfac = 1.0d0
+      else
+        cfac = 0.0d0
+      endif
+      lfac = 1.0d0 - cfac
 
+!     Compute mass matrix
       if(nel.eq.4) then
         l    =  2
         quad = .false.
@@ -43,15 +51,10 @@
         call int3d(l,lint,sg)
       endif
 
-!     Set mass interpolation factor between consistent (1) and lumped (0)
-
-      cfac = d(7)
-      lfac = 1.d0 - cfac
-
+!     Comute consistent & lumped mass
       do l = 1,lint
 
 !       Compute shape functions
-
         if(quad) then
           call shp3d(sg(1,l),xsj,shp,xl,ndm)
           dv = sg(4,l)*xsj*d(4)
@@ -61,36 +64,28 @@
         endif
 
 !       For each node j compute db = rho*shape*dv
-
         j1 = 1
         do j = 1,nel
           aj1 = shp(4,j)*dv
 
 !         Compute a lumped mass
-
-          p(j1)    = p(j1)    + aj1
-          s(j1,j1) = s(j1,j1) + aj1*lfac
+          p(j1  )      = p(j1  )    + aj1
+          p(j1+1)      = p(j1+1)    + aj1
+          p(j1+2)      = p(j1+2)    + aj1
+          s(j1  ,j1  ) = s(j1  ,j1  ) + aj1*lfac
+          s(j1+1,j1+1) = s(j1+1,j1+1) + aj1*lfac
+          s(j1+2,j1+2) = s(j1+2,j1+2) + aj1*lfac
           aj1      = aj1*cfac
 
-!         For each node k compute mass matrix (upper triangular part)
-
+!         For each node k compute mass matrix
           k1 = 1
           do k = 1,nel
-            s(j1,k1) = s(j1,k1) + shp(4,k)*aj1
+            s(j1  ,k1  ) = s(j1  ,k1  ) + shp(4,k)*aj1
+            s(j1+1,k1+1) = s(j1+1,k1+1) + shp(4,k)*aj1
+            s(j1+2,k1+2) = s(j1+2,k1+2) + shp(4,k)*aj1
             k1 = k1 + ndf
           end do
           j1 = j1 + ndf
-        end do
-      end do
-
-!     Compute missing parts and lower part by symmetries
-
-      do j = 1,ndf*nel,ndf
-        p(j+1) = p(j)
-        p(j+2) = p(j)
-        do k = 1,ndf*nel,ndf
-          s(j+1,k+1) = s(j,k)
-          s(j+2,k+2) = s(j,k)
         end do
       end do
 

@@ -3,7 +3,7 @@
 !-----[--.----+----.----+----.-----------------------------------------]
 !      * * F E A P p v * * Finite Element Analysis Program
 !                          -      -       -        -
-!....  Copyright (c) 1984-2021: Regents of the University of California
+!....  Copyright (c) 1984-2023: Regents of the University of California
 !                               All rights reserved
 
 !     Finite Element Analysis Program - personal version - (FEAPpv) for

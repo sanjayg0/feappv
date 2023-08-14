@@ -177,9 +177,9 @@
               endif
               mct = 50
             endif
-            write(iow,2003) n_el,ma,xx,flux(1:2,l),gradt
+            write(iow,2003) n_el,ma,xx,flux(1:2,l),gradt(1:2)
             if(ior.lt.0 .and. pfr) then
-              write(*,2003) n_el,ma,xx,flux(1:2,l),gradt
+              write(*,2003) n_el,ma,xx,flux(1:2,l),gradt(1:2)
             endif
           endif
 

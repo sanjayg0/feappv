@@ -1,6 +1,14 @@
 !$Id:$
       subroutine vem_cent2d(xl,ndm,nel)
 
+!      * * F E A P * * A Finite Element Analysis Program
+
+!....  Copyright (c) 1984-2023: Regents of the University of California
+!                               All rights reserved
+
+!-----[--.----+----.----+----.-----------------------------------------]
+!     Modification log                                Date (dd/mm/year)
+!       Original version                                    23/08/2023
 !-----[--+---------+---------+---------+---------+---------+---------+-]
 !     Purpose: Compute volume and centroid for VEM
 

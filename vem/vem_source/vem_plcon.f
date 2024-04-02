@@ -3,14 +3,14 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2023: Regents of the University of California
+!....  Copyright (c) 1984-2024: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
 !     Modification log                                Date (dd/mm/year)
 !       Original version                                    23/08/2023
 !-----[--.----+----.----+----.-----------------------------------------]
-!      Purpose: Plot contours for VEM 2-d elements 
+!      Purpose: Plot contours for VEM 2-d elements
 
 !      Inputs:
 !        k            - Order of VEM element

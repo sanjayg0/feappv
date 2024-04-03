@@ -1,0 +1,34 @@
+\heada{MESH}{SNODes}
+\hspace{1.0cm}{{ snod                  \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ snode1,(x(i,snode1),i=1,ndm) \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ snode2,(x(i,snode2),i=1,ndm) \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ <etc.,terminate with blank record> \hfill}}
+\headb
+
+The {\tt SNOD}e command is used to specify the values for
+nodal coordinates of {\it super nodes}.  Currently, {\sl FEAPpv} uses
+super nodes to generate patches of a mesh using the {\it blending
+function} option and to determine contact surfaces.
+Blending functions are briefly discussed in the
+Zienkiewicz \& Taylor finite element book, volume 1 pp 181 ff.  Each
+super node is defined by an input with the following information:
+
+\begin{center}
+\begin{tabular}{r l}
+\it snode     & - Number of super node to be specified \\
+\it x(1,snode)& - Value of coordinate in 1-direction \\
+\it x(2,snode)& - Value of coordinate in 2-direction \\
+             &\quad etc., to 'ndm' directions \\
+\end{tabular}
+\end{center}
+Super nodes must be numbered from 1 to the number needed to describe
+the {\it sides} and {\it blend patches}.
+The position of each super node is specified in cartesian coordinate components.
+No generation is performed for missing node numbers.
+Location of all super nodes may be graphically displayed using the
+{\tt PLOT,SNOD}e command.
+
+In addition to the supernodes it may be necessay to define the sides of
+blend patches using the mesh command {\tt SIDE}.  Also, the mesh command
+{\tt BLEN}d must be given for each mesh patch to be created.
+\vfil\eject

@@ -1,0 +1,37 @@
+      data wd/'coor','elem','mate','boun','forc','disp','temp','angl',
+     1        'eang','ebou','edis','efor','epro','fpro','mpro','ereg',
+     2        'cang','cbou','cdis','cfor','cpro','csur','regi','rese',
+     3        'bloc','btem','pola','shif','blen','snod','side','tran',
+     4        'para','prin','nopr','pars','nopa','debu','glob','titl',
+     5        'loop','next','*nod','*ele','peri','manu','end',
+     b        'nurb','knot','nsid','nblo','nble','nloa','ndis','npat',
+     u        'mes1','mes2','mes3','mes4','mes5','mes6','mes7','mes8',
+     u        'mes9','me10','me11','me12'/
+
+      data wd/'stre','utan','tang','form','mass','reac','chec','damp',
+     1        'augm','geom','dire','iter','hill',
+
+     2        'tol ','dt  ','loop','next','prop','data','time','prin',
+     2        'nopr','tran','init','iden','newf','back','debu',
+
+     3        'disp','solv','mesh','plot','subs','writ','read','rest',
+     3        'velo','acce','bfgs','arcl','save','eige','epri','eigv',
+     3        'show','tplo','dsol','opti',
+
+     4        'mac1','mac2','mac3','mac4','mac5','mac6','mac7','mac8',
+     4        'mac9','ma10','ma11','ma12',
+
+     5        'outm','comm',
+
+     6        'para',
+
+     8        'elev','inse',
+
+      data wd/'fram','wipe','fact','cent','cart','line','mesh','outl',
+     1        'load','disp','stre','node','boun','elem','zoom','colo',
+     2        'fill','eigv','scal','axis','pers','hide','defo','unde',
+     3        'cont','velo','acce','post','reac','mate','dofs','estr',
+     4        'pstr','prom','defa','rang','nora','snod','prof','manu',
+     5        'uplo',
+     u        'plt1','plt2','plt3','plt4','plt5'/
+

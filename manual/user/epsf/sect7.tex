@@ -1,0 +1,53 @@
+\section{Global Data}
+\label{global}
+
+{\sl FEAP} uses the {\tt GLOB}al command to specify data which is common
+to all elements.  For
+example, in two-dimensional applications it is possible to specify that
+all elements should select a plane stress, a plane strain, or an axisymmetric
+representation.  If the example problem is to be solved as a plane
+strain problem, the global data is specified as:
+\begin{verbatim}
+       GLOBal
+         PLANe STRAin
+                            ! blank termination record
+\end{verbatim}
+\par\noindent
+Thus, by changing the record describing the type of two dimensional
+analysis the system elements will all use the same type of behavior.  If
+it is desired, for some modeling reason, to have one type of element
+use a different formulation the global data can be ignored by specifying
+the particular type of analysis needed as part of the {\tt MATErial} property
+data.
+
+A problem in solid mechanics may be designated as
+{\tt SMALl} or {\tt FINIte} deformation using global commands.
+In addition, the variable used for temperature in a coupled thermo-mechanical
+analysis and the {\tt REFErence} vector or node for three dimensional
+problems using structural frame elements may be defined globally.
+Options also exist for users to add their own global options.
+
+Problems for which {\it ground accelerations} are specified as proportional
+load tables may be solved using a specified pattern of amplification factors,
+$f_i$, for each degree of freedom.  These factors are applied to a discrete
+masss input using the {\tt MASS} command using the command
+\begin{verbatim}
+       GLOBal
+         GROUnd factors f_1 f_2 ... f_ndf
+                            ! blank termination record
+\end{verbatim}
+
+For small deformation transient analysis damping effects may be introduced
+for use by the solid and structural elements as Rayleigh damping.  Each
+material may have different Rayleigh damping parameters (see \ref{raydamp}).
+Alternatively, the Rayleigh parameters may be assigned as global values 
+using the commands
+\begin{verbatim}
+       GLOBal
+         RAYLeigh damping a0 a1
+                            ! blank termination record
+\end{verbatim}
+\par\noindent
+where the parameters {\tt a0} and {\tt a1} are defined in Section \ref{raydamp}.
+The global damping value may also be used for modal solutions as described
+in Section \ref{damping}.

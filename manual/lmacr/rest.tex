@@ -1,0 +1,33 @@
+\heada{SOLUTION}{RESTart}
+\hspace{1.0cm}{{rest,$<$fileext$>$ \hfill}}
+\headb
+
+A restart may be made using the results from previous
+analyses (which are retained in the restart read file specified
+at the start of each analysis).  After entering the
+command language program the restart may be specified.  If the previously
+computed problem was "dynamic", it is necessary to
+specify the {\tt TRAN}sient command prior to issuing a {\tt REST}art
+command in order to restore the velocity and acceleration
+states.  If the previous problem was static and the new
+analysis is to be continued as a dynamic calculation, the
+{\tt REST}art is issued before the {\tt TRAN}sient command (since the
+previous analysis did not write a velocity or acceleration
+state to the restart file.
+
+The {\tt fileext} option is used to restart with files generated
+using the {\tt SAVE} command with the same specified {\tt fileext}.
+
+The use of the restart option requires considerable
+care to ensure that the previous results used are proper.
+At the termination of any analysis which computes a solution
+state a new file is saved on the restart write file specified
+at the start of the analysis.  If the last analysis
+performed is for a different problem than the current one an
+error will result.
+
+If no new solution state is computed during command language execution
+(e.g., only plotting is performed) no restart file is
+written to the specified fileset - the previous restart file
+is retained on the original fileset.
+\vfill\eject

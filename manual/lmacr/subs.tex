@@ -1,0 +1,32 @@
+\heada{SOLUTION}{SUBSpace}
+\hspace{1.0cm}{{ subs,<prin,n1,n2,stol> \hfill}}
+\headb
+
+The {\tt SUBS}pace command requests the solution for {\tt n1}
+eigenpairs of a problem about the current state.  An additional
+{\tt n2} vectors are used to expand the subspace and
+improve convergence (by default, {\tt n2} is set to the minimum of
+{\tt n1} plus 8 or 2 times {\tt n1} or the maximum
+number of eigenvalues in the problem).  The {\tt SUBS}pace command
+must be preceded by the specification of the tangent stiffness
+array using a {\tt TANG}ent command, and a mass array (either
+a lumped mass by {\tt MASS,LUMP} or a consistent mass by {\tt MASS}).
+Note that the smallest {\tt n1} eigenvalues and eigenvectors are
+computed with reference to the current {\tt shift} specified on
+the {\tt TANG}ent command.  If {\tt n2} is larger than the number of
+non-zero mass diagonals it is truncated to the actual number
+that exist.  Whenever {\tt n1} is close to the number of non-zero
+mass diagonals one should compute the entire set since
+convergence will be attained in one iteration (this applies
+primarily to small problems).
+
+Use of the {\tt PRIN}t option produces an output of all subspace
+matrices in addition to the estimates on the reciprocals
+of the {\it shifted} eigenvalues.  For large problems considerable
+output results from a use of this option, and thus it
+is recommended for small problems only.
+
+All eigenvalues are computed until two subsequent
+iterations produce values which are accurate to {\tt stol},
+(default {\tt stol} = max( {\tt tol}, 1.d-12)).
+\vfill\eject

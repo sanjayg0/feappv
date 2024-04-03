@@ -1,0 +1,16 @@
+\heada{SOLUTION}{CHECk mesh}
+\hspace{1.0cm}{{chec \hfill}}
+\headb
+
+The {\tt CHEC}k command requests a check of the mesh
+consistency.  It is necessary for elements to have checking
+capability for the {\tt isw = 2} option in order for {\tt CHEC}k to
+report results.  Typical tests include jacobian tests at
+nodes, tests on node sequencing, etc.
+
+If the jacobian is negative at all nodes the nodal sequencing has been
+in put in reverse order and should be resequenced.  The 4-node solid
+elements contained in {\sl FEAPpv} will attempt the resequencing automatically;
+however, the error is not corrected in the data input file so that it is
+necessary to use the check command each time the problem is executed.
+\vfill\eject

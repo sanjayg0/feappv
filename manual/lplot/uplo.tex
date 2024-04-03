@@ -1,0 +1,23 @@
+\heada{PLOT}{UPLOt}
+\hspace{1.2cm}{{uplot,v1,v2,v3 \hfill}}
+\headb
+
+\index{Plot!UPLOt}
+The {\tt UPLOt} command depends on options added  by users.  To make this
+command operational it is necessary to write a user subprogram
+\begin{verbatim}
+      SUBROUTINE UPLOT(CT)
+
+      IMPLICIT   NONE
+
+      REAL*8     CT(3)
+
+C     Users to add plot commands here
+
+      END
+\end{verbatim}
+and compile with the main program and archives.
+
+See \textsl{FEAP} Programmers Manual for more information on writing the subprogram.
+\vfill
+\eject

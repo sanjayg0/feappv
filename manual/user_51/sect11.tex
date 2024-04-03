@@ -1,0 +1,265 @@
+\section{Nodal Boundary Condition Inputs}
+\label{bc}
+
+The basic {\sl FEAPpv} boundary condition quantities
+are values for non-zero nodal {\it forces} and nodal {\it displacements}.
+For problems in solid mechanics these terms have physical meaning; however,
+for general classes of problems forces and displacements are interpreted
+in a {\it generalized} sense - e.g., as flux and dependent variable pairs.
+Non-zero values for forces and displacements may both be input
+at each node.  It is not necessary to input conditions for
+any node where all the components are zero.  The actual condition
+to be imposed (i.e., force or displacement)
+is determined by the active values of the {\it boundary
+restraint conditions}.  A non-zero value of a boundary restraint
+condition for a degree-of-freedom implies that the value of the
+specified nodal displacement is to be imposed; whereas, a zero
+value implies that the value of the specified nodal force is to be
+applied.  Generally,
+these quantities are specified by components associated with the
+directions in the global Cartesian coordinates describing a mesh.
+It is possible, however, to specify components
+which are associated with directions different than the global coordinate ones.
+At present, the only option is a set of coordinates which are described
+by a rotation angle about the $x_3$ axis with respect to the $x_1$ axis.
+The input of boundary condition quantities associated with nodes may
+be specified based on: Node numbers; Nodal coordinate values; or
+Edge coordinate values.
+
+\subsection{Basic input form.}
+
+The basic options to input the nodal quantities associated with boundary
+conditions is shown in Table 11.1.  The use of a basic form (i.e., {\tt
+BOUNdary, FORCe, DISPlacement, ANGLe}) implies a specification using
+a node number.  The other options do not require node numbers and are
+preferred when possible.
+
+\begin{table}[ht!]
+\begin{center}
+\begin{tabular}{| l | l | l | l | l |} \hline
+Type &  Boundary & Forces & Displacements & Angle \\
+\hline Nodal & {\tt BOUNdary} & {\tt FORCe} & {\tt DISPlacement} & {\tt ANGLe}\\
+Edge    & {\tt EBOUndary} & {\tt EFORce} & {\tt EDISplacement} & {\tt EANGle} \\
+Coordinate & {\tt CBOUndary} & {\tt CFORce} & {\tt CDISplacement} & {\tt CANGle} \\
+\hline
+\end{tabular}
+\end{center}
+\caption{Nodal Boundary Condition Quantity Inputs}
+\label{tab111}
+\end{table}
+An example of the use of the nodal option for input of a force in the
+2-direction on node 19 is given by:
+\begin{verbatim}
+       FORCe
+         19  0    0.0     10.0
+                             ! Termination record
+\end{verbatim}
+The input records for basic {\tt FORC}e, {\tt DISP}\-lacement, {\tt BOUN}d\-ary
+condition and {\tt ANGL}e
+commands are similar to those for {\tt COOR}\-inates
+with the node and generation increment in the first two fields and the list
+of values for each degree-of-freedom in the remaining field.  The values of
+all arrays are set to zero at the start of each problem, hence only non-zero
+values need be specified for forces, displacements, boundary conditions and
+angles.
+
+Similarly, the specification of a non-zero displacement at a node may be given
+using the command
+\begin{verbatim}
+       DISPlacement
+	     19  0  0.0  -0.1
+\end{verbatim}
+The value of a force or displacement will be selected based on the {\it
+boundary restraint code} value.  Non-zero boundary restraint codes imply
+a specified displacement and zero values a specified load.  The boundary
+restraint codes may be set using the command
+\begin{verbatim}
+       BOUNdary codes
+	     19  0  0  1
+\end{verbatim}
+which states the first degree-of-freedom is a specified force (zero by
+default) and the second a specified displacement (again zero by default).
+Thus, if both of the above force and displacement commands are included
+only the non-zero displacement will be used.  During execution it is possible
+to change the boundary restraint codes to then use the non-zero force.
+
+To use the basic input option
+it is a users responsibility to determine the
+correct number for each node - often the graphics capability of {\sl FEAPpv}
+can assist in determining the correct node numbers; however, for a very large
+number of forces this is a tedious method. Accordingly, there are two other
+options available to input the nodal values.
+
+\subsection{Edge input form.}
+
+The second option available to specify the
+nodal quantities is based on coordinates and is
+used to apply a common value to all nodes located
+at some constant coordinate location called the {\it edge} value.
+The options {\tt EBOUndary, EFORce, EDISplacement, EANGle}
+are used for this purpose.  For example, if it is
+required to impose a zero displacement for the first degree of freedom
+of all nodes located at $y = 0.5$.
+The edge boundary conditions may set using
+\begin{verbatim}
+       EBOUndary
+         2    0.5  1   0
+                             ! Termination record
+\end{verbatim}
+In the above the 2 indicates the second coordinate direction (i.e., $x_2$ or $y$
+for Cartesian coordinates) and $0.5$ is the value of the $x_2$ or $y$ coordinate
+to be used to find the nodes.  The last two fields are the boundary condition
+pattern to apply to all the nodes located.  That is, above we are indicating
+the first degree-of-freedom is to have specified displacements and the
+second is to have specified forces.
+{\sl FEAPpv} locates all nodes which are within a small tolerance of
+the specified coordinate {\it after the mesh input is completed}.
+
+By default the edge options will be appended to
+any previously defined data at a
+node by the pattern specified.  If it is desired to {\it replace} the
+conditions edge options are specified as:
+\begin{verbatim}
+       EBOUndary,SET
+         1    0.5  1   0
+         2    0.5  0   1
+                             ! Termination record
+\end{verbatim}
+By the default where no option is set or
+with the inclusion of the {\tt ADD} parameter the boundary  restraint code
+at a node located at (0.5, 0.5) will be fully restrained (i.e., have both
+directions with a unit (1) restrained value).  With the {\tt SET} option
+as shown above
+the node would have only its second degree-of-freedom restrained.
+
+\subsection{Coordinate input form.}
+
+Using the options {\tt
+CBOUndary, CFORce, CDISplacement, CANGle} indicates that the quantities
+are to be input based on the coordinates of a node.
+An example to specify a 10 unit force in the $y$-direction for a two-dimensional
+problem node located at $x = 4.0$ and $y = 5.0$ is given by:
+\begin{verbatim}
+       CFORCe
+         NODE 4.0  5.0    0.0     10.0
+                             ! Termination record
+\end{verbatim}
+This method will place the force on the node nearest the specified point.
+If two nodes have the same or equally close
+coordinate only one will have the force applied.
+While much easier, this method is still somewhat tedious if a large number of
+forces need to be applied.  Options exist to generate the forces automatically
+for some distributed loading types (e.g., see Section \ref{surf}).
+
+Once again, coordinate generated data will replace previously generated values
+unless the {\tt ADD} parameter is added.  Thus the final outcome of the above
+{\tt CFOR}ce command would be to have a force value
+for the first degree-of-freedom of 10.0.
+
+\subsection{Hierarchy of input forms.}
+
+The input of the nodal boundary data is performed by {\sl FEAPpv} in a specific
+order.  Data input in the basic form is interpreted immediately after the
+data records are read.  Values assigned by the basic input replace any
+previously specified values - they are not accumulated.
+
+Data input by the edge option is interpreted before any coordinate specified
+data.  By default the data is added to any previously specified information;
+however, if the data is specified in a {\tt Exxx,SET} option the information is
+replaced.  Multiple edge sets may be input and are interpreted later in
+the order they were encountered in the input file.  Thus, use of the sequence
+of commands
+\begin{verbatim}
+       EBOUndary,SET
+         1 10.0  1 0
+                             ! Termination record
+       EBOUndary,ADD (or blank)
+         1  0.0  1 0
+         2  0.0  0 1
+                             ! Termination record
+\end{verbatim}
+defines two data sets.  The first will replace the boundary code definition
+for any node which has $x_1$ equal to 10.0 by a restrained first dof and
+an unrestrained second dof.  Subsequently, the second set will restrain
+all the first dof at any node with $x_1$ equal to zero
+and also restrain the second dof at any node with $x_2$ equal to zero. 
+Thus, if there is a node with ($x_1$, $x_2$) of (0.0, 0.0) the node will
+be fully restrained
+
+After all edge data sets are processed the data defined by the coordinate
+option is processed.  By default it is also interpreted in a {\tt SET}
+mode unless the data set is defined by a {\tt Cxxx,ADD} command.
+
+When using the coordinate or edge options it is recommended that the graphics
+options in {\sl FEAPpv} be used to check that all desired quantities are located.
+For the coordinate method other options are available to specify
+forces, displacements, and boundary conditions.  These are described further
+in Appendix A.
+
+\subsection{Time dependent load functions}
+
+Each nodal force or displacement may be multiplied by a time dependent,
+{\it proportional} loading function.  By default the sum of all proportional
+loads is used as the multiplying factor.  Each load function is defined
+by the {\tt PROP}ortional command during a solution phase.  Each proportional
+loading record is defined by a number.  Thus, the number for a proportional
+load varies from one ({\tt 1}) to a maximum ({\tt NPLD}). Specific
+proportional loading functions may be assigned to a nodal force or
+displacement using the {\tt FPRO}p, {\tt EPRO}p, and/or {\tt CPRO}p commands. 
+These commands are processed in a set mode in the same basic, edge, and
+coordinate sequence defined above for the other nodal boundary data.
+For example,
+\begin{verbatim}
+       FPROportional
+         m mg pm_1 pm_2 ... pm_ndf
+         n  0 pn_1 pn_2 ... pn_ndf
+                             ! Termination record
+\end{verbatim}
+would generate a pattern of proportional loads between nodes {\tt m} and {\tt n}
+at increments of {\tt mg}.  The patterns {\tt pm\_i pn\_i} should be identical
+to produce predictable results. 
+Each {\tt pm\_i} refers to a specific proportional loading function (see
+section in command language chapter).  If a {\tt pm\_i} is zero the forced
+quantity will be multiplied by the {\it sum} of all proportional loadings
+active at a particular time instant.
+
+
+As a second example, the command sequence
+\begin{verbatim}
+       EPROportional
+         1 10.0  1 0 3
+                             ! Termination record
+\end{verbatim}
+would assign the non-zero force or displacement quantities of
+all nodes where $x_1$ is 10.0 to have their first dof
+multiplied by proportional loading number 1 and the third dof by proportional
+loading number 3.  Any second dof would be multiplied by the {\it sum}
+of all defined proportional loading functions.  For this to work properly
+it is necessary to have at least three proportional loading functions
+defined during the solution phase.
+
+
+Proportional loading functions may also be used to specify acceleration
+effects on lumped masses.  The {\tt MPRO}p command is used to specify
+the mass loading function numbers on nodes which have discrete masses
+specified by the {\tt MASS} mesh command.  The {\tt MPRO}p command is
+input as:
+\begin{verbatim}
+       MPROportional
+         m mg  mp_1 mp_2 ... mp_ndf
+         n ng  np_1 np_2 ... np_ndf
+                             ! Termination record
+\end{verbatim}
+and generation can be performed in a manner similar to the {\tt FPRO}p
+command.
+
+In each momentum equation a discrete mass term associated with
+an {\tt MPRO} command will be computed as:
+\begin{equation}
+\Bf{M}_{nn} \, \left( \ddot{\Bf{x}}_n - \Bf{g}(\Bf{x}_n) \right)
+\end{equation} 
+where $n$ is the node number and the components of $\Bf{g}$ are defined as
+\begin{equation}
+g_i(\Bf{x}_n) = f_i \, prop_k(t) ~~{\rm where} ~ k = np_i(n)  
+\end{equation}
+The factors $f_i$ are specified using the {\tt GROUnd} global command.

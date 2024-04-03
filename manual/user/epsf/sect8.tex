@@ -1,0 +1,47 @@
+\section{Regions and Element Groups}
+\label{regions}
+
+The elements in {\sl FEAP} may be assigned to different groups using the
+{\tt REGI}\-on command.  The command is given as
+\begin{verbatim}
+       REGIon,number
+\end{verbatim}
+where {\tt number} is an integer constant of parameter defining the group
+number for the elements.
+Any elements which are input after a region command is given belong
+to the given group number.
+By default all elements are assigned to region zero.
+
+The use of regions facilitates two aspects in {\sl FEAP}.  The first is
+for use in merging groups of elements whose nodes should be common
+but have different numbers (e.g., those defined using {\tt BLOC}k commands).
+An illustration of this option is used in Example 4 in the {\sl Example Manual}.
+The second use is to activate or deactivate elements to represent excavation
+or construction sequences.  This option uses the {\tt ACTI}vate or
+{\tt DEAC}tivate command language instructions (see Appendix B).
+Elements in Region zero may not be deactivated.
+
+\section{Flexible or Rigid Groups}
+\label{flexrigid}
+
+{\sl FEAP} permits the use of both flexible and rigid finite elements.
+By default all elements are flexible.  If it is desired to designate an
+element as rigid the command
+\begin{verbatim}
+       RIGId,number
+\end{verbatim}
+must be inserted in the mesh data just before the elements belonging to the
+rigid body {\tt number} are input or generated using the {\tt ELEM}ent,
+{\tt BLOC}k, or {\tt BLEN}d commands.
+
+To designate elements as flexible the command
+\begin{verbatim}
+       FLEXible
+\end{verbatim}
+must be inserted immediately before element groups which are to remain
+deformable.
+It is not necessary to include this statement if all elements are flexible.
+
+{\it The current release of} {\sl FEAP} {\it does not fully support
+rigid body options.  Problems may be solved using the energy conserving
+algorithms; however, other algorithms may not converge quickly.}

@@ -1,0 +1,79 @@
+\heada{MESH}{MATErial}
+\hspace{1.0cm}{{ mate,ma,<output label> \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ type,iel,<id,(idf(i),i=1,ndf)> \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ <parameters element type> \hfill}}
+\headb
+
+The {\tt MATE}rial set command is used to specify the parameters
+for each unique material set number {\it ma} in the analysis, as well as to
+specify the element type associated with the material set parameters.
+
+The parameter {\it type} denotes the element formulation to be employed.
+{\sl FEAPpv} includes a library of elements for thermo-mechanical analyses.
+The included types are:
+
+\begin{center}
+\begin{tabular}{l l}
+\it SOLId   & Continuum solid mechanics element (2 or 3-D). \\
+\it THERmal & Continuum thermal element (2 or 3-D). \\
+\it FRAMe   & 2-Node frame element (2 or 3-D). \\
+\it TRUSs   & 2-Node truss element (1, 2, or 3-D). \\
+\it PLATe   & 2-d Plate bending element. \\
+\it SHELl   & 3-d Shell element. \\
+\it MEMBrane & 3-d Membrane element. \\
+\it GAP     & n-d Gap element. \\
+\it PRESsure & 3-d Pressure load element (dead or follower). \\
+\end{tabular}
+\end{center}
+Users
+may also add their own elements and access by setting {\it type} to {\tt USER}
+and the parameter {\it iel} to the number of the element module added (between
+1 and 50).
+
+The parameter {\it id} is the material identifier.  Defined during
+element generation using {\tt ELEM}ent or {\tt BLOC}k commands.  If {\it id}
+is less than or equal to zero it defaults to the value of the {\it ma}
+parameter.  Material sets with the same {\it id} number are associated to each
+element which designate this {\it id} number, thus, an element can be associated
+with more than one material set.
+
+The {\it idf} parameters are used to assign active degrees of
+freedom.  Default: idf(i) = i, i=1,ndf.
+
+The {\it MATE}rial command may also be used to provide a material
+identification label for the {\sl FEAPpv} output file.
+\pagebreak
+
+\noindent{\bf{Example: MATErial}}
+
+\begin{verbatim}
+       MATE,1,Cam shaft material model: Aluminum mechanical
+         SOLId,,1,1,2,3    ! properties for solid analysis
+           ELAStic,,200.0d09,0.3
+                     ! terminate set 1
+       MATE,,2,Cam shaft material model: Aluminum thermal
+         THERmal,,1,3,0,0  ! properties for thermal analysis
+           FOURier,,50
+                     ! terminate set 2}
+\end{verbatim}
+
+The {\it Cam shaft material model: Aluminum mechanical}
+will appear in the output file before the first
+material parameter values printed from the element routine.
+Note, that two material sets have the same
+material identifier, consequently the element connection
+list belonging to this identifier will be processed
+twice - once for the mechanical and once for the
+thermal.  For the mechanical element the local dofs 1, 2,
+and 3 will map to global dofs 1, 2, and 3; for the thermal
+element local dof 1 will map to global dof 3.
+The mechanical element will not form residual or tangent terms for the 3-dof;
+however, it is used to extract the temperature used to calculate the thermal
+strains.  This temperature degree of freedom must be designated for the
+material set using a {\tt TEMP}erature command (or globally, using the
+{\tt GLOB}al,{\tt TEMP}erature command).
+
+The specific parameters to be input are described in the user manual
+for the elements included with {\sl FEAPpv}.  For {\tt USER} elements the
+data is set by the programmer of each module.
+\vfil\eject

@@ -1,0 +1,117 @@
+\heada{SOLUTION}{TRANsient}
+\hspace{1.2cm}{{ tran,name,<v1,v2,v3> \hfill}}\\{\smallskip}
+\hspace{1.0cm}{{ tran,off \hfill}}
+\headb
+
+The use of the command {\tt TRAN}sient indicates that a
+transient solution is to be computed.  Several options are
+implemented:
+\begin{enumerate}
+\item{
+The Newmark-beta step-by-step integration of the equations of motion.
+}
+\item{
+A Generalized Newmark method \texttt{GN11} for
+first order ordinary differential equations such as heat transfer, etc.
+}
+\item{
+A Generalized Newmark method \texttt{GN22} for
+second order ordinary differential equations such as vibration, etc.
+}
+\item{
+An explicit implementation of Newmark.
+}
+\item{
+An \texttt{SS11} method for
+first order ordinary differential equations such as heat transfer, etc.
+}
+\item{
+An \texttt{SS22} method for
+}
+\end{enumerate}
+
+The {\tt OFF} option turns off any active time integration algorithm returning
+{\sl FEAPpv} to its default quasi-static solution mode.
+
+The method used depends on the specified {\tt NAME} in the command.
+\begin{enumerate}
+\item{
+Newmark Method ({\tt name} is {\tt newm} or blank)
+
+The values of the Newmark parameters are  specified  as
+follows:
+\begin{center}
+\begin{tabular}{l l l}
+ v1 &=  beta  - &the Newmark parameter which primarily \\
+    &           &controls stability (default is 0.25). \\
+ v2 &=  gamma - &the Newmark parameter which primarily \\
+    &           &controls numerical damping ( default \\
+    &           &is 0.50)  Note: gamma must be greater \\
+    &           &than or equal to 0.50. \\
+\end{tabular}
+\end{center}
+This option does  not  permit  an  {\it explicit}  solution
+using  beta  =  0.0, only implicit solutions are considered.
+Accordingly, it is recommended that values of beta be set to
+0.25 (the default value) unless there is a compelling reason
+not to use this value.  With gamma set to 0.50 and beta  set
+to  0.25  the  method  becomes the "average" acceleration or
+trapezoidal method.}
+\item{
+Generalized Newmark (GN11) where ({\tt name} is {\tt gn11})
+
+The GN11 method requires  one  parameter  for
+{\tt v1}, be set.  Permissible values are between 0 (explicit) and
+1 (backward Euler). (Default is 1). 
+}
+\item{
+Generalized Newmark (GN22) where ({\tt name} is {\tt gn22})
+
+The GN22 method requires  two  parameters  for
+\texttt{v1} and \texttt{v2}, be set.
+Permissible values are between 0 (explicit) and
+1 (backward Euler). (Default for both is 0.5 - which is equivalent
+to Newmark with $\beta = 0.25$ and $\gamma = 0.5$). 
+}
+\item{
+Explicit Newmark Method ({\tt name} is {\tt expl})
+
+This option permits the explicit form  of  the  Newmark
+method to be implemented.  The input parameter is only
+
+\begin{center}
+\begin{tabular}{l l}
+ v2  =& gamma  (default = 0.5)
+\end{tabular}
+\end{center}
+}
+\item{
+Single Step (SS11) where ({\tt name} is {\tt ss11})
+
+The SS11 method requires  one  parameter  for
+{\tt v1}, be set.  Permissible values are between 0 (explicit) and
+1 (backward Euler). (Default is 1). 
+}
+\item{
+Single Step (SS22) where ({\tt name} is {\tt ss22})
+
+The SS22 method requires  two  parameters  for
+\texttt{v1} and \texttt{v2}, be set.
+Permissible values are between 0 (explicit) and
+1 (backward Euler). (Default for both is 0.5 - which is equivalent
+to Newmark with $\beta = 0.25$ and $\gamma = 0.5$). 
+}
+\end{enumerate}
+
+It is possible to specify nonzero values for  the  initial
+velocity  in second order system integrators using the
+command {\tt INIT}ial ( for initial values).  If the  initial
+state  is  not in equilibrium an initial acceleration may be
+obtained by using a {\tt FORM,ACCE} command before initiating
+any transient state.  It is necessary for the parameters
+to first be set using a {\tt TRAN}sient command.  It is also
+possible to compute self equilibrating static states with
+non-zero displacements and then switch to a dynamic solution.
+Alternatively, a restart mode ({\tt REST}art) may be used to
+start from a previously computed non-zero state.
+\vfill\eject

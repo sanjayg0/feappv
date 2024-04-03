@@ -1,0 +1,78 @@
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}%
+\contentsline {chapter}{\numberline {2}Problem Definition}{3}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Execution of FEAPpv and Input/Output Files.}{4}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Modification of Default Options}{4}{section.2.2}%
+\contentsline {chapter}{\numberline {3}Manual Organization}{6}{chapter.3}%
+\contentsline {chapter}{\numberline {4}Input Records}{7}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Constants}{8}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Parameters}{8}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Expressions}{9}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Functions}{10}{section.4.4}%
+\contentsline {chapter}{\numberline {5}Mesh Input Data}{12}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Start of Problem and Control Information}{12}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Global Data}{14}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Nodal Coordinate and Element Connections}{14}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}The COORdinate Command}{15}{subsection.5.3.1}%
+\contentsline {subsection}{\numberline {5.3.2}The ELEMent Command}{16}{subsection.5.3.2}%
+\contentsline {subsection}{\numberline {5.3.3}The BLOCk Command}{17}{subsection.5.3.3}%
+\contentsline {subsection}{\numberline {5.3.4}The BLENd Command}{20}{subsection.5.3.4}%
+\contentsline {section}{\numberline {5.4}Coordinate and Transformation Systems}{23}{section.5.4}%
+\contentsline {subsection}{\numberline {5.4.1}Coordinate Transformation}{25}{subsection.5.4.1}%
+\contentsline {section}{\numberline {5.5}Regions and Element Groups}{26}{section.5.5}%
+\contentsline {section}{\numberline {5.6}Nodal Boundary Condition Inputs}{26}{section.5.6}%
+\contentsline {subsection}{\numberline {5.6.1}Basic input form.}{26}{subsection.5.6.1}%
+\contentsline {subsection}{\numberline {5.6.2}Edge input form.}{28}{subsection.5.6.2}%
+\contentsline {subsection}{\numberline {5.6.3}Coordinate input form.}{29}{subsection.5.6.3}%
+\contentsline {subsection}{\numberline {5.6.4}Hierarchy of input forms.}{29}{subsection.5.6.4}%
+\contentsline {subsection}{\numberline {5.6.5}Time dependent load functions}{30}{subsection.5.6.5}%
+\contentsline {subsection}{\numberline {5.6.6}Periodic boundary conditions}{31}{subsection.5.6.6}%
+\contentsline {subsubsection}{Specified displacement conditions}{31}{section*.2}%
+\contentsline {subsubsection}{Data input for periodic conditions}{32}{section*.3}%
+\contentsline {section}{\numberline {5.7}Surface Loading}{33}{section.5.7}%
+\contentsline {section}{\numberline {5.8}INCLude and LOOPing: Data reuse}{35}{section.5.8}%
+\contentsline {subsection}{\numberline {5.8.1}Include Commands in Mesh Input}{35}{subsection.5.8.1}%
+\contentsline {subsection}{\numberline {5.8.2}READ and SAVE Commands in Mesh Input}{36}{subsection.5.8.2}%
+\contentsline {subsection}{\numberline {5.8.3}LOOP-NEXT to replicate mesh parts}{37}{subsection.5.8.3}%
+\contentsline {chapter}{\numberline {6}Element Library}{41}{chapter.6}%
+\contentsline {chapter}{\numberline {7}Material Models}{48}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Orthotropic Linear Elastic Models}{48}{section.7.1}%
+\contentsline {section}{\numberline {7.2}Isotropic Linear Elastic Models}{50}{section.7.2}%
+\contentsline {section}{\numberline {7.3}Isotropic Finite Deformation Elastic Models}{51}{section.7.3}%
+\contentsline {subsection}{\numberline {7.3.1}St. Venant-Kirchhoff}{52}{subsection.7.3.1}%
+\contentsline {subsection}{\numberline {7.3.2}Neo-Hookean and Modified Neo-Hookean Models}{52}{subsection.7.3.2}%
+\contentsline {section}{\numberline {7.4}Rayleigh Damping}{54}{section.7.4}%
+\contentsline {section}{\numberline {7.5}Viscoelastic Models}{54}{section.7.5}%
+\contentsline {section}{\numberline {7.6}Plasticity Models}{56}{section.7.6}%
+\contentsline {section}{\numberline {7.7}Heat Conduction Material Models}{57}{section.7.7}%
+\contentsline {section}{\numberline {7.8}Mass Matrix Type Specification}{57}{section.7.8}%
+\contentsline {section}{\numberline {7.9}Element Cross Section and Load Specification}{58}{section.7.9}%
+\contentsline {subsection}{\numberline {7.9.1}Resultant formulations}{58}{subsection.7.9.1}%
+\contentsline {section}{\numberline {7.10}Miscellaneous Material Set Parameter \\ Specifications}{59}{section.7.10}%
+\contentsline {chapter}{\numberline {8}End and Miscellaneous Commands}{61}{chapter.8}%
+\contentsline {chapter}{\numberline {9}Mesh Manipulation Commands}{62}{chapter.9}%
+\contentsline {section}{\numberline {9.1}The TIE Command}{62}{section.9.1}%
+\contentsline {section}{\numberline {9.2}The LINK Command}{63}{section.9.2}%
+\contentsline {chapter}{\numberline {10}Command Language Programs}{64}{chapter.10}%
+\contentsline {section}{\numberline {10.1}Problem Solving}{66}{section.10.1}%
+\contentsline {subsection}{\numberline {10.1.1}Solution of Non-linear Problems}{67}{subsection.10.1.1}%
+\contentsline {subsection}{\numberline {10.1.2}Solution of linear equations}{69}{subsection.10.1.2}%
+\contentsline {section}{\numberline {10.2}Transient Solutions}{70}{section.10.2}%
+\contentsline {subsection}{\numberline {10.2.1}Quasi-static solutions}{70}{subsection.10.2.1}%
+\contentsline {subsection}{\numberline {10.2.2}First order transient solutions}{72}{subsection.10.2.2}%
+\contentsline {subsection}{\numberline {10.2.3}Second order transient solutions}{73}{subsection.10.2.3}%
+\contentsline {section}{\numberline {10.3}Transient Solution of Linear Problems}{74}{section.10.3}%
+\contentsline {section}{\numberline {10.4}Time Dependent Loading}{75}{section.10.4}%
+\contentsline {section}{\numberline {10.5}Continuation Methods: Arclength Solution}{77}{section.10.5}%
+\contentsline {section}{\numberline {10.6}Augmented Solutions}{78}{section.10.6}%
+\contentsline {section}{\numberline {10.7}Time History Plots}{78}{section.10.7}%
+\contentsline {section}{\numberline {10.8}Viewing Solution Data: SHOW Command}{79}{section.10.8}%
+\contentsline {section}{\numberline {10.9}Re-executing Commands: HISTORY Command}{80}{section.10.9}%
+\contentsline {section}{\numberline {10.10}Solutions Using Procedures}{80}{section.10.10}%
+\contentsline {section}{\numberline {10.11}Output of Element Arrays}{82}{section.10.11}%
+\contentsline {chapter}{\numberline {11}Plot Outputs}{83}{chapter.11}%
+\contentsline {section}{\numberline {11.1}Screen Plots}{83}{section.11.1}%
+\contentsline {section}{\numberline {11.2}PostScript Plots}{86}{section.11.2}%
+\contentsline {chapter}{\numberline {A}Mesh Manual}{91}{appendix.A}%
+\contentsline {chapter}{\numberline {B}Mesh Manipulation Manual}{169}{appendix.B}%
+\contentsline {chapter}{\numberline {C}Solution Command Manual}{175}{appendix.C}%
+\contentsline {chapter}{\numberline {D}Plot Manual}{243}{appendix.D}%

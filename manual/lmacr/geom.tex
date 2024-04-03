@@ -1,0 +1,43 @@
+\heada{SOLUTION}{GEOMetric stiffness}
+\hspace{1.2cm}{{geom \hfill}} \\{\smallskip}
+\hspace{1.0cm}{{geom,on \hfill}} \\{\smallskip}
+\hspace{1.0cm}{{geom,off \hfill}}
+\headb
+
+The command {\tt GEOM}etric stiffness command is used in two ways.
+The first is to compute a {\it geometric} stiffness matrix for use
+in linear buckling analysis.  This option is performfed when no
+parameters are appended to the command. A parameter {\tt imtyp} is set
+to 2 and each element then computes a contribution
+to the geometric stiffness in the array {\tt S} when {\tt isw = 5}.
+
+A geometric stiffness matrix may be used for eigen\-computations
+(see solution command {\tt SUBS}pace).  Reported eigenpairs
+correspond to linearized buckling for a loading multiplied
+by the eigenvalue.  Not all elements have this feature.
+
+The second use of the option is to enable and disable the geometric stiffnes
+during {\tt TANG} and {\tt UTAN} computations.  For many problems the inclusion
+of the geometric stiffness during early iterations of a Newton type solution
+can lead to divergent results.  The geometric matrix may be disabled during
+early iterations using the {\tt GEOM,OFF} command and then enabled for later
+iterations using the {\tt GEOM,ON} command.  A typical example is:
+
+\begin{verbatim}
+       LOOP,time,nsteps
+         TIME
+         GEOM,OFF
+         LOOP,newton,3
+           TANG,,1
+         NEXT
+         GEOM,ON
+         LOOP,newton,25
+           TANG,,1
+         NEXT
+       NEXT,time
+\end{verbatim}
+where three iterations are performed with no geometric stiffness and, later,
+additional iterations with the geometric stiffness.  At convergence each
+loop can terminate before the number of specified iterations.  If this occurred
+in the first loop one additional iteration would be made in the second loop.
+\vfill\eject

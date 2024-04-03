@@ -1,0 +1,32 @@
+\heada{SOLUTION}{BFGS}
+\hspace{1.0cm}{{bfgs,$<$xxxx$>$,nits,stol,etol \hfill}}
+\headb
+
+The {\tt BFGS} command computes a solution using a quasi-Newton
+method with BFGS (Broyden-Fletcher-Goldfarb-Shano)
+updates.  The command must be called at the beginning of an
+analysis - prior to the computation of any solutions with a
+tangent matrix.  It is intended for use on problems with
+symmetric tangents.  \textsl{FEAPpv} computes a new tangent at the
+beginning of each time step.  Subsequently, the program will
+compute up to {\tt nits} updates before computing another
+tangent (default nits=15). The value of {\tt stol} is used in
+connection with a line search algorithm to compute a new
+solution (default stol=0.8). And {\tt etol} is the BFGS energy
+tolerance (default etol=tol).
+
+A typical algorithm using BFGS is:
+
+\begin{verbatim}
+       LOOP,,N
+         TANG
+         BFGS,,10,0.8,1.d-10
+       NEXT
+\end{verbatim}
+
+In the above a tangent will be computed and factored.  BFGS
+would then perform 10 iterations, use line search on any
+step in which the energy was greater than 0.8 times a previous
+maximum, and exit when the energy is less than 1.d-10
+times the initial energy in the step.
+\vfill\eject

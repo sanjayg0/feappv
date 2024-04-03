@@ -1,0 +1,95 @@
+\heada{MESH}{BOUNdary}
+\hspace{1.0cm} {{ boun \hfill}} \\{\smallskip}
+\hspace{1.4cm} {{ node1,ngen1,(id(i,node1),i=1,ndf) \hfill}} \\{\smallskip}
+\hspace{1.4cm} {{ node2,ngen2,(id(i,node2),i=1,ndf) \hfill}} \\{\smallskip}
+\hspace{1.4cm} {{ $<$etc.,terminate with blank record$>$ \hfill}}
+\headb
+
+The {\tt BOUN}dary command is used to specify the values for
+the boundary restraint conditions.  For each node to be
+specified a record is entered with the following information:
+
+\begin{center}
+\begin{tabular}{r l}
+\it node      &-- the number of the node to be specified \\
+\it ngen      &-- the increment to the next node, if \\
+              &  \quad generation is used, otherwise 0. \\
+\it id(1,node)&-- value of 1-dof boundary restraint for {\it node} \\
+\it id(2,node)&-- value of 2-dof boundary restraint for {\it node} \\
+              &  \quad etc., to {\it ndf} direction.
+\end{tabular}
+\end{center}
+The boundary restraint codes are interpretted as follows:
+
+\begin{center}
+\begin{tabular}{r l}
+\it id(i,node)$~= ~0$   & a force will be an applied load to dof (default). \\
+\it id(i,node)$~\ne ~0$ & a displacement will be imposed to dof.
+\end{tabular}
+\end{center}
+When generation is performed, the node number sequence
+will be (for {\it node1-node2} sequence shown at top):
+
+\begin{center}
+{\it node1, node1+ngen1, node1+2$\times$ngen1, .... , node2}
+\end{center}
+The values for each boundary restraint will be as follows:
+
+\begin{center}
+\begin{tabular}{rc l}
+\it id(i,node1) =& 0 or positive &$\rightarrow$ id(i,node1+ngen1) =
+\phantom{$-$}0 \\
+\it id(i,node1) =& negative      &$\rightarrow$ id(i,node1+ngen1) = $-1$
+\end{tabular}
+\end{center}
+With this convention the value of a zero {\it id(i,node2)} will be set
+negative whenever the value of {\it id(i,node1)} starts negative.
+Accordingly, it is necessary to assign a positive value for
+the restraint code to terminate a generation sequence (e.g.,
+when it is no longer desired to set a dof to be restrained).
+Alternatively, an i-dof may be eliminated for all nodes by
+using the generation sequence:
+
+\begin{center}
+\begin{tabular}{c|c|ccccc}
+node  & ngen &   &     & dofs &     &  \\
+      &      & 1 & ... &  i   & ... & ndf \\ \hline
+1     & 1    & 0 & ... & -1   & ... & 0 \\
+numnp & 0    & 0 & ... & +1   & ... & 0 
+\end{tabular}
+\end{center}
+Subsequent records may then be used to assign values to
+other degree-of-freedoms.
+
+Boundary condition restraints may also be specified using the {\tt EBOU}nd
+or {\tt CBOU}nd commands.
+
+\noindent{\bf{Example: BOUNdary}}
+
+Consider a problem which has 3 degrees of freedom at each node.  The
+sequence of records:
+\begin{verbatim}
+       BOUNdary conditions
+         1 4 1 -1 0
+        13 0 0  1 1
+
+\end{verbatim}
+will define boundary conditions for nodes 1, 5, 9 and 13 and the restraint
+codes will have the following values
+\begin{center}
+\begin{tabular}{r|ccc}
+node  &    & DOFS & \\
+      &  1 &  2 & 3  \\ \hline
+ 1    &  1 & -1 & 0 \\
+ 5    &  0 & -1 & 0 \\
+ 9    &  0 & -1 & 0 \\
+13    &  0 &  1 & 1 \\
+\end{tabular}
+\end{center}
+
+Any degree of freedom with a non-zero bounday code will be \textit{restrained},
+whereas a degree of freedom with a zero boundary code will be
+\textit{unrestrained}.  Restrained degrees of freedom may have specified
+non-zero (generalized) \textit{displacements} whereas unrestrained ones may
+have specified non-zero (generalized) \textit{forces}.
+\vfil\eject

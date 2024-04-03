@@ -1,0 +1,56 @@
+\heada{SOLUTION}{TOLerance}
+\hspace{1.2cm}{{tol,,v1 \hfill}} \\{\smallskip}
+\hspace{1.0cm}{{tol,ener,v1 \hfill}} \\{\smallskip}
+\hspace{1.0cm}{{tol,emax,v1 \hfill}}
+\headb
+
+The {\tt TOL} command is used to specify the solution tolerance
+values to be used at various stages in the analysis.  Uses include:
+\begin{enumerate}
+\item{
+Convergence of nonlinear problems in terms of the norm
+of  energy in the current iterate (the inner, dot, product
+of the displacement  increment  and  the  solution
+residual vectors).}
+\item{
+Convergence of the subspace eigenpair solution which is
+measured  in  terms  of the change in subsequent eigenvalues computed.}
+\end{enumerate}
+
+The default value of {\tt TOL} is 1.0d-16.
+
+The tol command also permits setting a value for the energy
+below which convergence is assumed to occur.  The command is issued as
+{\tt TOL,ENER}gy,{\tt v1} where {\tt v1} is the value of the converged
+energy (i.e., it is equivalent to the tolerance times the maxiumum energy
+value).  Normally, {\sl FEAPpv} performs nonlinear iterations until the
+value of the energy is less than the {\tt TOL}erance value times the
+value of the energy from the first iteration.  However, for some 
+transient problems the value of the initial energy is approaching
+zero (e.g., for highly damped solutions which are converging to some
+steady state limit).  In this case, it is useful to specify the energy
+for convergence relative to early time steps in the solution.  
+Convergence will be assumed if either the normal convergence criteria
+or the one relative to the specified maximum energy is satisfied.
+
+Finally, the tol command permits resetting the maximum energy value used
+for convergence.  The command is issued as
+{\tt TOL,EMAX}imum,{\tt v1} where {\tt v1} is the value of the maximum
+energy quantity. Since the {\tt TIME} command sets the maximum energy to
+zero, the value of {\tt EMAX}imum must be reset after each time step. Thus,
+a set of commands:
+\begin{verbatim}
+       LOOP,time,n
+         TIME
+         TOL,EMAX,5.e+3
+         LOOP,newton,m
+           TANG,,1
+         NEXT
+         etc.
+       NEXT
+\end{verbatim}
+is necessary to force convergence check against a specified maximum energy.
+The above two forms for setting the convergence are nearly equivalent; however,
+the {\tt ENER}gy tolerance form can be set once whereas the {\tt EMAX}imum
+form must be reset after each time command.
+\vfill\eject

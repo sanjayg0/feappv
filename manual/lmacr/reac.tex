@@ -1,0 +1,55 @@
+\heada{SOLUTION}{REACtions}
+\hspace{1.2cm}{{ reac,,<n1,n2,n3> \hfill}} \\{\smallskip}
+\hspace{1.0cm}{{ reac,coor,idir,xi \hfill}} \\{\smallskip}
+\hspace{1.0cm}{{ reac,all \hfill}} \\{\smallskip}
+\hspace{1.0cm}{{ reac,file \hfill}}
+\headb
+
+Nodal reactions may be computed for all nodes in the
+problem and reported for nodes {\tt n1} to {\tt n2} at increments
+of {\tt n3} (default increment = 1).  If {\tt n2} is not specified then only
+the values for node {\tt n1} are output.  When both {\tt n1} and {\tt n2}
+are not specified only total sum information is reported.
+
+If the command is specified as:
+\begin{verbatim}
+       reac,coor,idir,xi
+\end{verbatim}
+prints all nodal reactions for the coordinate direction
+{\tt idir} with value equal to {\tt xi}.
+This option is useful in finding the nodal values along a particular
+constant coordinate line.
+
+Example:
+\begin{verbatim}
+       reac,coor,1,3.5
+\end{verbatim}
+will print all the nodal reactions which have x-1 = 3.5.
+
+All reactions may be output using the {\tt REAC,ALL} command as:
+\begin{verbatim}
+       reac,all
+\end{verbatim}
+
+In addition to computing the reaction at each degree of freedom
+an equilibrium check is performed by summing the values for
+each degree of freedom over all nodes in the analysis.  The
+sum of the absolute value of the reaction at each degree of
+freedom is also reported to indicate the accuracy to which
+equilibrium is attained.  It should be noted that problems
+with rotational degrees of freedom or in curvilinear coordinates
+may not satisfy an equilibrium check of this type.
+For example, the sum for the radial direction in an axisymmetric
+analysis will not be zero due to the influence of the
+{\it hoop stresses}.
+
+In addition to sums over all the nodes a sum is computed
+for only the nodes output.  This permits the check of
+equilibrium on specified series of nodes, or the computation
+of the applied load on a set of nodes in which motions or
+restraints are specified.
+
+The {\tt FILE} option outputs reactions to the restart save
+file with the extender {\tt .ren} (starting from {\tt re0}).  These
+maybe used as input in Mesh (see Mesh {\tt REAC}tion command).
+\vfill\eject

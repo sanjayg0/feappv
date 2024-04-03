@@ -1,0 +1,149 @@
+\heada{MESH}{CPROp}
+\hspace{1.0cm}{{ cpro                  \hfill}}    \\{\smallskip}
+\hspace{1.4cm}{{ node,(x(i),i=1,ndm),(pnum(i),i=1,ndf) \hfill}}\\{\smallskip}
+\hspace{1.4cm}{{ linear (pnum(i),i=1,ndf) \hfill}} \\{\smallskip}
+\hspace{1.8cm}{{ 1,x1,y1    \hfill}} \\{\smallskip}
+\hspace{1.8cm}{{ 2,x2,y2    \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ quadratic (pnum(i),i=1,ndf) \hfill}} \\{\smallskip}
+\hspace{1.8cm}{{ 1,x1,y1    \hfill}} \\{\smallskip}
+\hspace{1.8cm}{{ 2,x2,y2    \hfill}} \\{\smallskip}
+\hspace{1.8cm}{{ 3,x3,y3    \hfill}} \\{\smallskip}
+\hspace{1.0cm}{{ surface (pnum(i),i=1,ndf) \hfill}} \\{\smallskip}
+\hspace{1.8cm}{{ 1,x1,y1,z1 \hfill}} \\{\smallskip}
+\hspace{1.8cm}{{ 2,x2,y2,z2 \hfill}} \\{\smallskip}
+\hspace{1.8cm}{{ 3,x3,y3,z3 \hfill}} \\{\smallskip}
+\hspace{1.8cm}{{ 4,x4,y4,z4 \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ cartesian  \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ pola,x0,y0 \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ gap,value \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ <etc.,terminate with a blank record> \hfill}}
+\headb
+
+The proportional loading number to be appled to nodal forces and displacments
+may be input using this command.
+The input values are saved in a file(s) and searched
+after the entire mesh is specified.
+The data is order dependent with data
+defined by {\tt FPRO}p processed first, {\tt EPRO}p processed second and
+the {\tt CPRO}p data processed last.  The value defined last is used for
+any analysis.
+
+For a single {\it node}, the data to be supplied during
+the definition of the mesh consists of:
+
+\begin{center}
+\begin{tabular}{r l}
+\it node   &-- Defines inputs to be for a {\it node} \\
+\it x(1)   &-- Value of coordinates to be used during search \\
+\it ...    &\quad (a tolerance of about 1/1000 of mesh size is \\
+\it x(ndm) &\quad used during search, coordinate with smallest \\
+           &\quad distance within tolerance is assumed to have \\
+           &\quad specified value). \\
+\it pnum(1,node) &-- Proportional load number of dof-1 \\
+\it pnum(2,node) &-- Proportional load number of dof-2 \\
+                 &\quad etc., to {\it ndf} directions \\
+\end{tabular}
+\end{center}
+At execution, the node(s) within the tolerance will have
+their values set to the proportional load numbers given.
+
+For two dimensional problems it is possible to
+specify a segment to which the proportional load numbers are to be
+applied.  The segment may be specified as a {\it linear}
+or a {\it quadratic} line. For the {\it linear} segment the angle
+is given together with the coordinates of the ends.
+These are specified as:
+
+\begin{verbatim}
+       LINEar (pnum(i),i=1,ndf)
+         1,x1,y1
+         2,x2,y2}
+\end{verbatim}
+
+For {\it quadratic} segments the ends {\it (x1,y1)} and {\it (x2,y2)}
+together with an intermediate point {\it (x3,y3)} are used.
+The quadratic segment is given as:
+
+\begin{verbatim}
+       QUADratic (pnum(i),i=1,ndf)
+         1,x1,y1
+         2,x2,y2
+         3,x3,y3}
+\end{verbatim}
+
+For three dimensional problems it is possible to
+specify the segment to which the proportional load numbers
+are applied.  The segment is specified as a {\it surface}.
+The data is specified as:
+
+\begin{verbatim}
+       SURFace (pnum(i),i=1,ndf)
+         1,x1,y1,z1
+         2,x2,y2,z2
+         3,x3,y3,z3
+         4,x4,y4,z4}
+\end{verbatim}
+
+The program assigns a search region and attempts to
+find the elements and the nodes to which the specified
+segments are associated.  It is possible that no segment
+is located (an error message will appear in the output file).  To
+expand the search region a {\it gap} can be specified as:
+
+\begin{verbatim}
+       GAP,value}
+\end{verbatim}
+The {\it gap-value} is a coordinate distance within which
+nodes are assumed to lie on the specified segment. The
+value should be less than dimensions of typical elements
+or erroneous nodes will be found by the search.
+It is suggested that the computed boundary conditions
+be checked graphically to ensure that they are
+correctly identified (e.g., use {\tt PLOT,MESH} and {\tt PLOT,BOUN}dary
+to show the locations of conditions).
+
+The {\it polar} option may be used to set the origin {\it (x0,y0)} of a
+polar coordinate system. Coordinates entered after
+{\it polar} will be assumed to be radius and angle.  The
+{\it cartesian} option resets the coordinate system to a
+cartesian frame.
+
+\noindent{\bf{Example: CFORce}}
+
+In a two dimensional problem it is desired to have a time variation for
+the force applied to the node nearest to the coordinates $x_1 = 10$ and
+$x_2 = 5$ which is different in the two directions.  To prescribe the data
+it is necessary to define three different command sets.  The first defines
+the \textit{magnitude} of the two forces at the node.  This may be given
+as:
+\begin{verbatim}
+       CFORce
+         NODE 10 5  8.5  -6.25
+
+\end{verbatim}
+in which $F_1 = 8.5$ and $F_2 = -6.25$.  The second command set describes the
+\textit{numbers} for proportional loading factors which will multiply each of
+the forces.  These may be given as:
+\begin{verbatim}
+       CPROportional
+         NODE 10 5  2  3
+
+\end{verbatim}
+where $2$ is the proportional loading number 2 and $3$ that for 3.  Finally,
+during solution mode the proportional loads must be given.  This is best
+included in a \texttt{BATCh} solution mode as:
+\begin{verbatim}
+       BATCh
+         PROP,,2
+       END
+        data for proportional load 2 (see PROP in solution commands)
+\end{verbatim}
+and
+\begin{verbatim}
+       BATCh
+         PROP,,3
+       END
+        data for proportional load 3 (see PROP in solution commands)
+\end{verbatim}
+Failure to specify correctly any of the above will usually result in an error.
+\vfil\eject

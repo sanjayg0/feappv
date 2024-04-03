@@ -1,0 +1,89 @@
+\section{Coordinate and Transformation Systems}
+\label{transform}
+
+The coordinates in {\sl FEAPpv} must all be given in a Cartesian system.
+Input data, however, may be specified in {\it Cartesian}, {\it polar}
+(which in three dimensions is interpreted as cylindrical coordinates),
+or {\it spherical} coordinate systems.  If polar or spherical coordinates
+are used to define the nodal data using the {\tt COOR}\-dinate command,
+they may be transformed to the required
+Cartesian form using the {\tt POLA}r or {\tt SPHE}rical commands, respectively.
+Nodal coordinates generated with polar or spherical options in the {\tt BLOC}k
+command do not require transformation. 
+The data for a polar command is:
+\begin{verbatim}
+       POLAr
+         NODE,n1,n2,inc
+\end{verbatim}
+\par\noindent
+where {\tt n1} and {\tt n2} define a range of nodes and {\tt inc} is
+the increment to be added to {\tt n1} for each step to {\tt n2}.  Alternatively,
+all currently defined nodes may be transformed using the command
+\begin{verbatim}
+       POLAr
+         ALL
+\end{verbatim}
+\par\noindent
+The transformation is given by
+$$ x_1 ~=~ x_0 \, + \, r \, \cos \, \theta$$
+$$ x_2 ~=~ y_0 \, + \, r \, \sin \, \theta$$
+and
+$$ x_3 ~=~ z_0 \, + \, z$$
+where $x_i$ are the Cartesian coordinates, $r$, $\theta$, $z$ are the
+polar (cylindrical) inputs, and $x_0$, $y_0$, $z_0$ are shifts defined
+by the {\tt SHIF}t command given as
+\begin{verbatim}
+       SHIFt
+         X_0,Y_0,Z_0
+\end{verbatim}
+By default $x_0$, $y_0$, $z_0$ are zero.
+
+The {\tt SPHE}rical command is similar to the {\tt POLA}r command.  The
+input records are specified as:
+\begin{verbatim}
+       COORdinate
+         N NG R THETA PHI
+\end{verbatim}
+Transformations use the relations
+$$ x_1 ~=~ x_0 \, + \, r \, \cos \, \theta \, \sin \, \phi$$
+$$ x_2 ~=~ y_0 \, + \, r \, \sin \, \theta \, \sin \, \phi$$
+and
+$$ x_3 ~=~ z_0 \, + \, r \cos \, \phi$$
+
+\subsection{Coordinate Transformation}
+
+Cartesian systems may be translated, stretched, reflected and/or rotated using
+the {\tt TRAN}\-sform command.
+Any coordinates input after this command are transformed using
+$$\left[
+\begin{matrix} x_1 \\ x_2 \\ x_3 \end{matrix} \right] ~=~
+\left[
+\begin{matrix}
+T_{11} & T_{12} & T_{13} \\
+T_{21} & T_{22} & T_{23} \\
+T_{31} & T_{32} & T_{33} \\
+\end{matrix} \right] \,
+\left[
+\begin{matrix} \hat x_1 \\ \hat x_2 \\ \hat x_3
+\end{matrix} \right] ~+~
+\left[
+\begin{matrix} x_0 \\ y_0 \\ z_0
+\end{matrix} \right]$$
+where $\hat x_i$ are the input values and the transformation parameters are
+defined by the command sequence
+\begin{verbatim}
+       TRANsform
+         T_11  T_12  T_13
+         T_21  T_22  T_23
+         T_31  T_32  T_33
+         X_0   Y_0   Z_0
+\end{verbatim}
+which must appear before any coordinates (i.e., the $\hat x_i$) are specified.
+
+The {\tt TRAN}sform command may be used as many times as needed.  In particular,
+it may be used with a portion of a mesh (substructure) in an include file
+to replicate repeated parts of meshes.  When a reflection is performed,
+{\sl FEAPpv} notes the coordinate transformation does not have a positive
+determinant and resequences the node numbers on elements to maintain
+a positive jacobian (provided the original data is correct in its local
+Cartesian basis - $\hat{x}_i$).

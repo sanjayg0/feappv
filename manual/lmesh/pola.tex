@@ -1,0 +1,36 @@
+\heada{MESH}{POLAr}
+\hspace{1.0cm}{{ pola                  \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ node,node1,node2,inc \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ all \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ <terminate with blank record> \hfill}}
+\headb
+
+The {\tt POLA}r command may be used to convert  any  coordinates
+which have been specified in polar (or cylindrical)
+form, to cartesian coordinates.  The conversion is performed
+using the following relations:
+
+\begin{center}
+\begin{tabular}{l l l}
+radius    & = x(1,node) &  -- input value \\
+theta     & = x(2,node) &  -- input value in degrees \\
+x(1,node) & = $x_0$ + radius $\times$ cos(theta) \\
+x(2,node) & = $y_0$ + radius $\times$ sin(theta) \\
+x(3,node) & = $z_0$ + x(3,node) &  -- 3-D only \\
+\end{tabular}
+\end{center}
+The values for $x_0$, $y_0$, and $z_0$ are specified using the {\tt SHIF}t
+command (default values are zero).
+A sequence of nodes may be converted by specifying  non-zero
+values  for  {\it node1},  {\it node2}, and {\it inc}.  The sequence generated
+will be:
+
+\begin{center}
+{\it node1, node1+inc, node1+2$\times$inc,  ...  , node2}
+\end{center}
+
+Several records may follow the {\tt POLA}r command.   Execution
+terminates with a blank record.
+
+The option {\it all} perform the operation on all currently defined nodes.
+\vfil\eject

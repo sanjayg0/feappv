@@ -1,0 +1,21 @@
+\chapter[End and Miscellaneous Commands]
+{END AND MISCELLANEOUS BASIC MESH COMMANDS}
+\label{end}
+
+The above set of commands are part of the basic mesh input commands
+available in {\sl FEAP} to generate a mesh.  The basic set
+also include the commands {\tt PRINt} and {\tt NOPRint} which turn on
+and off, respectively, the writing of data to the {\sl FEAP} output data file.
+Once a mesh has been generated and checked it is usually not necessary to
+continue writing the input data to the output file.  For large problems
+the writing not only generates large disk files but also requires
+additional processing time.
+
+The final data item for the specification of the mesh data is the {\tt END}
+command.  Once this command is issued {\sl FEAP} stops processing mesh
+input commands, may generate missing data,
+and looks for commands to manipulate the mesh or to solve
+a problem using a {\tt BATCh} or {\tt INTEractive} method of processing
+data.  The options to manipulate the mesh are described in Chapter \ref{manip}
+and procedures to solve and plot results are presented
+in Chapters \ref{command} and \ref{plot}, respectively.

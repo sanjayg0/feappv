@@ -1,0 +1,85 @@
+\heada{MESH}{TRANsformation}
+\hspace{1.0cm}{{ tran,<inc>                  \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ $T_{11}$,$T_{12}$,$T_{13}$  \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ $T_{21}$,$T_{22}$,$T_{23}$  \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ $T_{31}$,$T_{32}$,$T_{33}$  \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ $x_0$,$y_0$,$z_0$           \hfill}}
+\headb
+
+The {\tt TRAN}sformation commmand defines a coordinate transformation
+to be applied to input values. After specification of the command
+the input nodal coordinates $\Bf{x}_{input}$ are transformed to global
+nodal coordinates, $\Bf{x}$ using
+\begin{displaymath}
+\B{x} = \B{T} \, \B{x}_{input} + \B{x}_0
+\end{displaymath}
+Thus the $\Bf{x}$ correspond to the nodal values after applying
+the transformation and become the values used for the analysis.
+
+Two options exist to define the transformation: (a) a direct specification of
+the translation and rotation transformation arrays; (b) an incremental
+specification of the arrays. 
+
+\noindent{\bf{Example: Direct specification TRANsformation}}
+
+A rectangular block of nodes and elements of size $20 \times 20$ units
+is to be generated in two dimensions
+in a rotated coordinate frame ($30^o$ relative to $x_1$ axis).  The commands
+may be given as
+\begin{verbatim}
+       TRANsform
+         cosd(30)  sind(30)  0
+        -sind(30)  cosd(30)  0
+            0         0      1
+            0         0      0
+
+       BLOCk
+         CARTesian n1 n2
+           1  0  0
+           2 20  0
+           3 20 10
+           4  0 10
+\end{verbatim}
+After the generation it is best to enter an identity transformation 
+to prevent any spurrious later effects.  That is enter the set
+\begin{verbatim}
+       TRANsform
+            1  0  0
+            0  1  0
+            0  0  1
+            0  0  0
+\end{verbatim}
+before ending the mesh generations.
+
+\noindent{\bf{Example: Incremental specification TRANsformation}}
+
+Another block of elements may be input in which the transformation
+is given as:
+\begin{eqnarray*}
+  \B{T}_{new} &=& \B{T}_{inc} \, \B{T}_{old} \\
+  \B{x}_{0,new} &=& \B{T}_{inc} \, \B{x}_{0,old} + \B{x}_{inc}
+\end{eqnarray*}
+In this case the new coordinates are given as:
+\begin{displaymath}
+\B{x} = \B{T}_{new} \, \B{x}_{input} + \B{x}_{0,new}
+\end{displaymath}
+Thus specification of a second block of nodes as:
+\begin{verbatim}
+       TRANsform,INCrement
+         cosd(30)  sind(30)  0
+        -sind(30)  cosd(30)  0
+            0         0      1
+            0         0      0
+
+       BLOCk
+         CARTesian n1 n2
+           1  0  0
+           2 20  0
+           3 20 10
+           4  0 10
+\end{verbatim}
+after the first block given above will create a block rotated by $60^o$.
+This option may be used very conveniently with \texttt{LOOP-NEXT} commands to
+replicate a block of nodes and elements, each rotated and/or translated by
+an equal incremental amount.
+\vfil\eject

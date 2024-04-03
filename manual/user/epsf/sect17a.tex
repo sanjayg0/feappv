@@ -1,0 +1,1255 @@
+\chapter[Command Language Programs]{COMMAND LANGUAGE PROGRAMS}
+\label{command}
+
+{\sl FEAP} performs solution steps based upon user specified {\it command
+language statements}.  The program provides commands which can be used to solve
+problems using standard algorithms, such as linear static and transient
+methods and Newton's method to solve non-linear problems.
+Appendix B of the Users Manual describes all the programming
+commands which are included in the current system.  These commands are
+combined to define the solution algorithm desired.
+
+To enter the solution command language part of {\sl FEAP}
+the user issues the command BATCh or for an
+interactive execution mode the command INTEractive.  A solution
+is terminated by the command END (QUIT or just Q
+also may be used in interactive mode).
+
+Thus, the input file must contain at least one set of
+\begin{verbatim}
+       BATCh
+        ....  ! Solution specification steps
+       END
+\end{verbatim}
+or
+\begin{verbatim}
+       INTEractive
+\end{verbatim}
+for any solution process to be possible.
+
+More than one BATCh-END and/or
+INTE\-rac\-tive-END sequence may be used during the solution process.
+
+The set of {\it basic} solution commands is:
+\begin{verbatim}
+       ACCE   CAPT   CHEC   DEBU   DISP   DT     EIGE   EPRI
+       FORM   INIT   LIST   LOOP   MASS   MESH   NEXT   NOPR
+       PARA   PLOT   PRIN   PROP   REAC   SHOW   SOLV   STRE
+       SUBS   TANG   TIME   TOL    TPLO   TRAN   UTAN   VELO
+\end{verbatim}
+Descriptions to use the above commands are contained in Appendix B.
+All commands available in an installed program may be displayed during
+an interactive mode of solution by issuing
+the command {\tt MANUal,,3} followed by a {\tt HELP} command.
+However, with the basic
+set of commands given above quite sophisticated solution algorithms may
+be constructed.  Each of the commands may be issued in a
+lower or upper case mode.  For example, a command which
+always should be issued when first solving a problem
+is the {\tt CHECk} command.  In either a batch or interactive mode,
+the command is issued as:
+\begin{verbatim}
+       CHECk       !perform check of mesh correctness
+\end{verbatim}
+This command instructs {\sl FEAP} to make
+basic checks for correctness of the mesh data prepared by the user{\footnote
+{The check part of user developed elements must be implemented for the
+check command to work properly}}.
+One of the basic checks is an assessment of the element volume (or area)
+at each node based on the specified sequence of
+element nodes.  If the volume Jacobian of an element is negative or zero
+at a node a diagnostic will be written to the output file.  If
+all the volumes (or areas) are negative most of the system element routines
+will perform a resequencing of the nodes and repeat the check.
+If the resequencing gives no negative results the mesh will be
+accepted as correct.
+
+A check
+also may reveal and report element nodes which have {\it zero} volume.
+This may be an error or may result from merging nodes on quadrilaterals
+to form triangles.  This is an acceptable way to make 3-node triangular
+elements from 4-node quadrilateral elements, but in other cases may not
+produce elements preserving the order of interpolation of the quadrilateral.
+{\it It is the responsibility of the analyst to check correctness of finite
+element solution software.} One good procedure is the patch test in which
+basic polynomial solutions, for which the user can compute exactly the correct
+solution (by hand), can be checked (see Chapter 11 in Volume 1 of
+Zienkiewicz and Taylor for a description of the patch test).
+
+The {\tt CHECk} command should always be used in situations where
+either a new mesh
+has been constructed or modifications to the element connection lists have
+been made. {\it No analysis should be attempted for a mesh with}
+{\it negative volumes as incorrect results will result}.  Note,
+however, that if a correct mesh is produced after
+the {\tt CHECk} command resequences nodes,
+the data in the input file is {\it not corrected}, consequently, it
+will be necessary to always use a {\tt CHECk} command when solving a
+problem with this data input file.
+Since the amount of output from a {\tt CHECk} can be quite large, it
+is recommended that the user correct the mesh for subsequent
+solutions.  Alternatively, it is possible to produce a new
+input data file, which is correct, using the {\tt OUTMesh} command.
+The command is given as:
+\begin{verbatim}
+       OUTMesh     !Output current mesh to "Ifile".opt
+\end{verbatim}
+The output is written to a file with the same name as the input file
+but with a {\tt .opt} extender added. The file
+only includes the mesh coordinates, element connections, boundary
+restraint codes, and nodal force and displacement
+values.  It is necessary to append the
+material set data and any solution steps.  It is not necessary to specify
+any {\tt TIE} commands as the results from merges are incorporated
+as part of the mesh produced by the {\tt OUTMesh} command.
+
+\section{Problem Solving}
+
+Each problem is solved by using a set of the command language statements
+which together form the {\it algorithm} defining the particular solution
+method employed.  The commands to solve a linear static problem are:
+\begin{verbatim}
+       BATCh               !initiate batch execution
+         TANG              !form tangent matrix
+         FORM              !form residual
+         SOLVe             !solve equations
+         DISPlacement,ALL  !output all displacements
+         STREss,ALL        !output all element stresses
+         REACtion,ALL      !output all nodal reactions.
+       END                 !end of batch program
+\end{verbatim}
+The command sequence
+\begin{verbatim}
+       TANG
+       FORM
+       SOLVe
+\end{verbatim}
+is the basic solution step in {\sl FEAP} and for simplicity (and efficiency)
+may be replaced by the single command
+\begin{verbatim}
+       TANG,,1
+\end{verbatim}
+This single statement is more efficient in numerical operations
+since it involves only a single
+process to compute all the finite element arrays, whereas the three
+statement form requires one for {\tt TANG} and a second for {\tt FORM}.
+Thus,
+\begin{verbatim}
+       BATCh               !initiate batch execution
+         TANG,,1           !form and solve
+         DISPlacement,ALL  !output all displacements
+         STREss,ALL        !output all element stresses
+         REACtion,ALL      !output all nodal reactions.
+       END                 !end of batch program
+\end{verbatim}
+is the preferred solution form.
+Some problems have tangent matrices which are unsymmetric.  For these situations
+the {\tt TANG}ent command should be replaced by the {\tt UTAN}gent command.
+The statements {\tt DISP}lacement, {\tt STRE}ss, and {\tt REAC}tion control
+information which is written to the output file and to the screen.
+The commands {\tt PRIN}t and {\tt NOPR}int may be used to control or prevent
+information appearing on the screen - information always goes to the
+output file.  Printing to the screen is the default mode.  See Appendix B
+for the options to control the displacement, stress, and reaction outputs.
+
+Additional commands may be added to the program given above.  For example,
+inserting the following command after the solution step (i.e., the
+{\tt TANG,,1} command) will produce a screen plot of the mesh:
+\begin{verbatim}
+       PLOT,MESH           !plot mesh
+\end{verbatim}
+Further discussion for plotting is given in Chapter \ref{plot}.
+
+\subsection{Solution of Non-linear Problems}
+\label{nonlin}
+
+The solution of non-linear problems is often performed using Newton's
+method which solves the problem
+\begin{equation}
+\B{R}(\B{u}) = \B{0}
+\end{equation}
+using the iterative algorithm
+
+\begin{enumerate}
+\item Set initial solution
+\begin{equation}
+\B{u}^0 = \B{0}
+\end{equation}
+\item Solve the set of equations
+\begin{equation}
+\B{K} \, \Delta\B{u}^i = \B{R}(\B{u}^i)
+\end{equation}
+where
+\begin{equation}
+\B{K} = - \, \frac{\partial \B{R}}{\partial \B{u}}
+\end{equation}
+\item
+Update the solution iterate
+\begin{equation}
+\B{u}^{i+1} = \B{u}^i + \Delta\B{u}^i
+\end{equation}
+\end{enumerate}
+The steps are repeated until a norm of the solution is less than some tolerance.
+
+{\sl FEAP} implements the Newton algorithm using the
+following commands:
+\begin{verbatim}
+       LOOP,iter,10     !perform up to 10 Newton iterations
+         TANG,,1        !form tangent, residual and solve
+       NEXT,iter        !proceed to next iteration
+\end{verbatim}
+The tolerance used for controlling the solution is
+\begin{equation}
+E^i = \Delta{\B{u}^i} \cdot \B{R}^i
+\end{equation}
+with convergence assumed when
+\begin{equation}
+E^i < tol \, E^0
+\end{equation}
+The value of the tolerance is set using the {\tt TOL} command (default
+is $10^{-12}$).
+
+While the sample above specifies 10 iterations, fewer will be used if
+convergence is achieved.  Convergence is tested during the {\tt TANG,,1}
+command.  If convergence is achieved, {\sl FEAP} transfers to the
+statement following the {\tt NEXT} command.
+If convergence is not achieved in 10 iterations, {\sl FEAP}
+exits the loop, prints a {\tt NO CONVERGENCE} warning,
+and continues with the next statement.
+For the algorithm given above, the only difference between a converged
+and non-converged exit from the loop is the number of iterations
+used.  However, if there are commands inserted between the {\tt TANG} and
+{\tt NEXT} statements they are not processed for the iteration in which
+convergence is achieved.
+Obviously, solutions which do not converge during a time step may produce
+inaccurate results in the later solution steps.
+Consequently, users should check the output log of non-linear solutions
+for any {\tt NO CONVERGENCE} records.
+
+Remarks:
+\begin{enumerate}
+\item
+Blank characters before the first character in a command are ignored
+by {\sl FEAP}, thus,
+the indenting of statements shown is optional but provides for clarification
+of key parts in the algorithm.
+
+\item
+In the above loop command the {\tt ITER} in the
+second field is given to provide clarity.  This is
+optional; the field may be left blank.
+\end{enumerate}
+
+By replacing the Newton steps
+\begin{verbatim}
+       LOOP,iter,10
+         TANG,,1
+       NEXT,iter
+\end{verbatim}
+with
+\begin{verbatim}
+       TANG             !form tangent only
+       LOOP,iter,10     !perform 10 modified Newton iterations
+         FORM           !form residual
+         SOLVe          !solve linearized equations
+       NEXT,iter        !proceed to next iteration
+\end{verbatim}
+a modified Newton algorithm results.  The modified Newton method
+forms only one tangent
+and each iteration is performed by computing and solving the residual equation
+with the same tangent.  When {\sl FEAP} forms the tangent while in a
+direct solution
+of equations mode the triangular factors are also computed
+so that the {\tt SOLVe} only performs re-solutions during
+each iteration.  While a modified Newton method involves fewer computations
+during each iteration it often
+requires substantially more iterations to achieve a
+converged solution.  Indeed, if the tangent matrix is an accurate linearization
+for the non-linear equations, the asymptotic rate of convergence for a
+Newton method is quadratic, whereas a modified Newton method is often
+only linear (if the residual equation set
+is linear the tangent matrix is constant
+and both the Newton and modified Newton methods should converge after one
+iteration, that is, iteration two should produce a residual which is
+zero to within the computer precision).
+
+The {\sl FEAP} command language is
+capable of defining a large number of standard algorithms.  Each user is urged
+to carefully study the complete set of available commands and the options
+available for each command.
+In order to experiment with the capabilities of the language, it is suggested
+that small problems be set up to test any proposed command language program
+and to ensure that the desired result is obtained.
+
+\subsection{Solution of linear equations}
+\label{eqsoln}
+
+The use of Newton's method results in a set of linear algebraic equations
+which are solved to give the incremental displacements.  {\sl FEAP} includes
+several options for solving linear equations.  The default solution scheme
+is the variable band, profile scheme discussed in
+Chapter 15 of {\it The Finite Element Method, Vol 1}, 4th edition.
+This solution scheme may be used to solve problems where the incremental
+displacements are either in real arithmetic or in complex arithmetic.  The
+coefficient matrix of the linear equations results in large storage requirements
+within the computer memory.  A profile optimization scheme is available to
+renumber the equations in an attempt to minimize this storage.  The solution
+command {\tt OPTI}\-mize may be used to perform the profile minimization.
+A summary of the results is given and may be compared to that without
+optimization.  If necessary, the optimization may be omitted using
+the command {\tt OPTI,OFF}.  The default solution is without optimization.
+
+For problems in which the memory requirements exceed that which is provided
+in the program (i.e., the dimensioned size of the blank common), there are
+alternatives which require reduced amounts of storage.  The alternatives
+are available for problems in real arithmetic only.  For problems with
+symmetric coefficient arrays (i.e., those for which the command {\tt TANG}ent
+is used to form the array), a sparse solver may be used.  The sparse solver
+is activated by issuing the solution command {\tt DIRE}ct,{\tt SPAR}se before
+the first use of the {\tt TANG}ent command.  {\it WARNING: If the sparse
+solver requires more space than dimensioned in blank common the current
+version of the program can crash with no error message printed in a file
+or to the screen}.  Alternatively, the profile solution scheme may be
+employed with a blocking scheme used to retain unneeded parts of the
+coefficient array during the solution process.  This option is may be
+requested using the command {\tt DIRE}ct,{\tt BLOC}k.  There must be
+sufficient free disk capacity on the computer to store the total coefficient
+array.  The speed of solution is reduced using this option by the need
+to write and read data from the hard disk drive.  The blocked solution scheme
+may be used for either symmetric or unsymmetric coefficient arrays.
+
+The final option available is an iterative, preconditioned conjugate
+gradient scheme (PCG method).  The PCG method is applicable to symmetric,
+positive definite coefficient arrays only.  Thus, only the {\tt TANG}ent
+command may be used.  The PCG with diagonal preconditioner is requested
+by the command {\tt ITER}\-a\-tion before the first {\tt TANG}\-ent
+command.  A block nodal preconditioner may be requested using the
+command {\tt ITER,BPCG}.  Experience to date suggests the iteration
+method is effective and efficient only for three dimensional linear
+elastic solids problems.  Success has been achieved when the solids
+are directly connected to shells and beam; however, use with thin
+shells has resulted in very slow convergence - rendering the method
+ineffective.  Use with non-linear material models (e.g., plasticity)
+has not been successful in static problem applications.  Use of the PCG
+method in dynamics improves the situation if a mass term is available for
+each degree of freedom (i.e., lumped mass on frames with no rotational
+mass will probably not be efficient).
+
+\section{Transient Solutions}
+\label{trans}
+
+{\sl FEAP} provides several alternatives to construct transient solutions.
+To solve a non-linear time dependent problem
+using Newton's method with a time integration method
+the following commands may be issued:
+\begin{verbatim}
+       DT,,0.01           !set time increment to 0.01
+       TRANsient,method   !specify "method" for time stepping
+       LOOP,time,12       !perform 12 time steps
+         TIME             !advance time by 'dt' (i.e., 0.01)
+         LOOP,iter,10     !perform up to 10 Newton iterations
+           TANG,,1        !form tangent, residual and solve
+         NEXT,iter        !proceed to next iteration
+         DISP,,1,12       !report displacements at nodes 1-12
+         STRE,NODE,1,12   !report stresses at nodes 1-12
+       NEXT,time          !proceed to next time step
+\end{verbatim}
+In addition to output for {\tt DISP}lacement, transient algorithms permit
+the output of {\tt VELO}\-city and {\tt ACCE}l\-er\-a\-tion (see Appendix B).
+
+{\sl FEAP} provides several alternatives to construct transient solutions.
+A transient solution is performed by giving the solution command language
+statement
+\begin{verbatim}
+       TRANsient,method
+\end{verbatim}
+The type of transient solution to be performed
+depends on the {\it method} option specified.
+{\sl FEAP} solves three basic types of transient formulations:
+
+\subsection{Quasi-static solutions}
+\label{static}
+
+The governing equation to be solved by the quasi-static option is expressed
+as:
+\begin{equation}
+\B{R} (t) ~=~ \B{F}(t) ~-~ \B{P}( \B{u}(t) ) ~=~ {\bf 0}
+\end{equation}
+where, for example, the $\B{P}$ vector is given by the stress divergence
+term of a solid mechanics problem as:
+\begin{equation}
+\B{P}( \B{u}(t) ) ~~=~~ \B{P}_{\sigma} ~=~
+\int_{\Omega} \B{B}^T \, \Bf{\sigma} \, dV
+\end{equation}
+The solution options for this form are:
+
+\begin{enumerate}
+\item
+The default algorithm which solves
+\begin{equation}
+\B{R} (t_{n+1}) ~=~ \B{F}(t_{n+1}) ~-~ \B{P}( \B{u}(t_{n+1}) ) ~=~ {\bf 0}
+\end{equation}
+using the commands
+\begin{verbatim}
+       LOOP,time,nstep
+         TIME
+         LOOP,Newton,niters
+           TANG,,1
+         NEXT
+         ... Outputs
+       NEXT
+\end{verbatim}
+The default option does not require a {\tt TRAN}sient command; however it
+may also be specified using the command
+\begin{verbatim}
+       TRANsient,OFF
+\end{verbatim}
+
+\item
+Quasi-static solutions may also be solved using a generalized
+mid\-point con\-fig\-uration for the residual equation.  This option
+is specified by the command
+\begin{verbatim}
+       TRANsient,STATic,alpha
+\end{verbatim}
+and solves the equation
+\begin{equation}
+\B{R} (t_{n+\alpha}) ~=~ \B{F}(t_{n+\alpha}) ~-~ \B{P}( \B{u}(t_{n+\alpha}) )
+~=~ {\bf 0}
+\end{equation}
+where
+\begin{equation}
+\B{u}(t_{n+\alpha}) ~=~
+\B{u}_{n+\alpha} ~=~ (1 - \alpha) \, \B{u}_n \,+\, \alpha \, \B{u}_{n+1}
+\end{equation}
+and
+\begin{equation}
+\B{F}(t_{n+\alpha}) ~=~
+\B{F}_{n+\alpha} ~=~ (1 - \alpha) \, \B{F}_n \,+\, \alpha \, \B{F}_{n+1}
+\end{equation}
+
+The parameter $\alpha$ must be greater than zero; the default value is 0.5.
+Setting $\alpha$ to 1 should produce answers identical to those from
+option 1.
+The transient option to be used must be given prior to specifying the time loop
+and solution commands shown above.
+\end{enumerate}
+
+\subsection{First order transient solutions}
+\label{trans1}
+
+The governing equation to be solved for first order transient solutions
+is expressed as:
+\begin{equation}
+\B{R} (t) ~=~ \B{F}(t) ~-~ \B{P}( \B{u}(t) , \dot{\B{u}} (t) ) ~=~ {\bf 0}
+\end{equation}
+where, for example, $\B{u}$ are the nodal temperatures $\B{T}$ and the $\B{P}$
+vector is given by:
+\begin{equation}
+\B{P}~~=~~ \int_{\Omega} (\nabla N)^T \, \B{q} \, dV
+~+~ \B{C} \, \dot{\B{T}}
+\end{equation}
+with $\B{C}$ the heat capacity matrix.
+
+The solution options for this form are:
+
+\begin{enumerate}
+\item
+{A backward Euler method which solves the problem
+\begin{equation}
+\B{R} (t_{n+1})
+~=~ \B{F}(t_{n+1}) ~-~ \B{P}( \B{u}(t_{n+1}) , \dot{\B{u}}_{n+1} (t) )
+~=~ {\bf 0}
+\end{equation}
+where
+\begin{equation}
+\dot{\B{u}}_{n+1} ~=~ \frac{1}{\Delta t} [ \B{u}_{n+1} \,-\, \B{u}_n ]
+\end{equation}
+The command:
+\begin{verbatim}
+       TRANsient,BACK
+\end{verbatim}
+is used to specify this solution option.}
+
+\item
+{A generalized midpoint method which solves the problem
+\begin{equation}
+\B{R} (t_{n+\alpha}) ~=~ \B{F}(t_{n+\alpha})
+~-~ \B{P}( \B{u}(t_{n+\alpha}) , \dot{\B{u}}_{n+\alpha} (t) ) ~=~ {\bf 0}
+\end{equation}
+where
+\begin{equation}
+\dot{\B{u}}_{n+\alpha} ~=~ \frac{1}{\Delta t} [ \B{u}_{n+1} \,-\, \B{u}_n ]
+\end{equation}
+This solution option is selected using the command
+\begin{verbatim}
+       TRANsient,GEN1,alpha
+\end{verbatim}
+where $0 < \alpha \le 1$ (default is 0.5); $\alpha = 1$ should produce answers
+identical to those from the backward Euler option.}
+\end{enumerate}
+
+\subsection{Second order transient solutions}
+\label{trans2}
+
+The governing equation to be solved for second order transient solutions
+is expressed as:
+\begin{equation}
+\B{R} (t) ~=~
+\B{F}(t) ~-~ \B{P}( \B{u}(t) , \dot{\B{u}} (t) , \ddot{\B{u}}(t) )
+~=~ {\bf 0}
+\end{equation}
+where, for example, the $\B{P}$ vector is given by:
+\begin{equation}
+\B{P}~~=~~ \B{P}_{\sigma} ~+~ \B{C} \, \dot{\B{u}} ~+~ \B{M} \, \ddot{\B{u}}
+\end{equation}
+with $\B{C}$ the damping and $\B{M}$ the mass matrix.
+
+The solution options for second order problems are:
+
+\begin{enumerate}
+\item
+{A Newmark method \cite{newmark} which solves the problem
+\begin{equation}
+\B{R} (t_{n+1}) ~=~ \B{F}(t_{n+1})
+~-~ \B{P}( \B{u}_{n+1} , \B{v}_{n+1} , \B{a}_{n+1}) ~=~ {\bf 0}
+\end{equation}
+where
+\begin{equation}
+\B{v}_n ~=~ \dot{\B{u}}_n ~~~~~;~~~~~ \B{a}_n ~=~ \ddot{\B{u}}_n
+\end{equation}
+with updates computed as:
+\begin{equation}
+\B{u}_{n+1} ~=~ \B{u}_n \,+\, {\Delta t} \, \B{v}_n \,+\,
+{\Delta t}^2 \, [ \, (0.5 - \beta ) \, \B{a}_n
+\,+\, \beta \, \B{a}_{n+1} ,\ ]
+\end{equation}
+and
+\begin{equation}
+\B{v}_{n+1} ~=~ \B{v}_n \,+\, {\Delta t} \,[\, (1 - \gamma) \, \B{a}_n
+\,+\, \gamma \, \B{a}_{n+1} \, ]
+\end{equation}
+in which $\beta$ and $\gamma$ are parameters controlling stability and
+numerical dissipation.  The command
+\begin{verbatim}
+       TRANsient,NEWMark
+\end{verbatim}
+is used to select this integration scheme.  Optionally, the command
+\begin{verbatim}
+       TRANsient
+\end{verbatim}
+also selects the Newmark algorithm.
+Default values are $\beta = 0.25$ and $\gamma = 0.5$.
+
+The second order problem using the Newmark method may require special
+care in computing the initial state if non-zero initial conditions
+or loading terms exist.  To compute the initial state it is necessary to
+first compute a mass matrix and then the initial accelerations.  The
+commands are
+\begin{verbatim}
+       TRANsient,NEWMark
+       INITial (DISPlacements and/or RATEs)
+       FORM,ACCEleration
+       LOOP,time,nstep
+         TIME
+         LOOP,Newton,niters
+           TANG,,1
+         NEXT
+         ... Outputs
+       NEXT
+\end{verbatim}
+It is also necessary to use this sequence for the following method.
+If $\B{F} (0)$, $\B{u} (0)$, and $\B{v} (0)$ are zero, the
+{\tt FORM}, {\tt ACCE}leration command should be omitted to conserve
+memory resources.}
+
+In the above the setting of any non-zero initial displacements or rates
+may be specified using the {\tt INIT}ial command.  The initial command
+requires additional data which in a {\tt BATC}h solution option appears
+immediately after the {\tt END} command.  In an interactive mode a user
+receives a prompt to specify the data.
+
+\item
+{A Hilber-Hughes-Taylor (HHT) method \cite{hht77} which solves the problem
+\begin{equation}
+\B{R} (t_{n+\alpha}) ~=~ \B{F}(t_{n+\alpha})
+~-~ \B{P}( \B{u}_{n+\alpha} , \B{v}_{n+\alpha} , \B{a}_{n+\alpha}) ~=~ {\bf 0}
+\end{equation}
+where
+\begin{equation}
+\B{u}_{n+\alpha} ~=~ (1 - \alpha) \, \B{u}_n \,+\, \alpha \, \B{u}_{n+1}
+\end{equation}
+\begin{equation}
+\B{v}_{n+\alpha} ~=~ (1 - \alpha) \, \B{v}_n \,+\, \alpha \, \B{v}_{n+1}
+\end{equation}
+\begin{equation}
+\B{a}_{n+\alpha} ~=~ \B{a}_{n+1}
+\end{equation}
+The displacement and velocity quantities at $t_{n+1}$ are updated using
+the Newmark formulas given above.  This solution option is selected
+using the command
+\begin{verbatim}
+       TRANsient,ALPHa,beta,gamma,alpha
+\end{verbatim}
+The alpha parameter should be specified between zero and 1.
+Default values are $\beta = 0.5$, $\gamma = 1$, and $\alpha = 0.5$.}
+
+\item
+{An energy conserving form of the alpha
+method \cite{simoem92a,simoem92b,gonz96} (i.e., similar to the
+HHT method) with the acceleration given as:
+\begin{equation}
+{\B{a}_{n+\alpha}} ~=~
+\frac{1}{\Delta t} \,[\, \B{v}_{n+1} \,-\, \B{v}_n \,]
+\end{equation}
+This solution option is selected using the command
+\begin{verbatim}
+       TRANsient,CONServe,beta,gamma,alpha
+\end{verbatim}
+The alpha parameter should be specified between zero and 1.
+Default values are $\beta = 0.5$, $\gamma = 1$, and $\alpha = 0.5$.
+Note that the conserving form does not involve the accelerations
+in the equations of motion (only displacement and
+velocity); consequently, it is not necessary to compute initial accelerations
+as in the Newmark and HHT methods.  For linear problems the conserving method
+gives identical results (except for accelerations) as the Newmark method;
+however, the parameters to achieve the equality are different.  Default
+parameters should achieve equality provided Newmark is started by accounting
+for any non-zero accelerations at time zero.}
+
+\item
+{An explicit solution to the equations
+\begin{equation}
+\B{R} (t_{n+1}) ~=~ \B{F}(t_{n+1})
+~-~ \B{P}_{\sigma}( \B{u}_{n+1} , \B{v}_{n+1} )
+~-~ \B{M} \, \B{a}_{n+1} ~=~ {\bf 0}
+\end{equation}
+which uses the Newmark formulas with $\beta = 0$ and specifies $gamma$ by
+the command
+\begin{verbatim}
+       TRANsient,EXPLicit,gamma
+\end{verbatim}
+The gamma parameter should
+be greater or equal to 0.5, the default is $\gamma = 0.5$.
+A solution using the explicit option uses the command sequence:
+\begin{verbatim}
+       TRANsient,EXPLicit
+       INITial (DISPlacements and/or RATEs)
+       FORM,ACCElerations (initial acceleration)
+       LOOP,time,nstep
+         TIME
+         FORM
+         EXPLicit
+         ... Outputs
+       NEXT
+\end{verbatim}
+}
+\end{enumerate}
+
+{\sl FEAP} permits the type of transient problem
+to be changed during the solution phase.  Thus, it is possible to
+compute a configuration using a quasi-static option and then change
+to a solution mode which includes the effects of rate terms (e.g.,
+inertial effects).
+
+\section{Transient Solution of Linear Problems}
+\label{tranlin}
+
+The solution of second order linear equations by the finite element method
+leads to the set of equations
+\begin{equation}
+\label{eqm1}
+\B{M} \, \ddot{\B{u}}(t) ~+~ \B{C} \,\dot{\B{u}}(t) ~+~ \B{K} \,\B{u}(t)
+~=~ \B{F}(t)
+\end{equation}
+In structural dynamics,
+the matrices $\B{M}$, $\B{C}$, and $\B{K}$
+denote {\it mass}, {\it damping}, and {\it stiffness}, respectively.  The
+vector $\B{F}$ is a force vector.
+For the case where $\B{M}$, $\B{C}$, and $\B{K}$ are constant {\it symmetric}
+matrices a
+solution to Eq. \ref{eqm1} may be constructed
+by partitioning the solution into the parts
+\begin{equation}
+\label{eqm2}
+\B{u} ~=~ \left[
+\begin{matrix} \B{u}_u \\ \B{u}_s \\ \end{matrix}
+\right]
+\end{equation}
+where $( \cdot )_u$ denotes an unknown part and $( \cdot )_s$ a specified
+part.
+With this division, the equations are then written in the
+form:
+\begin{equation}
+\label{eqm3}
+\left[
+\begin{matrix}
+\B{M}_{uu} & \B{M}_{us} \\
+\B{M}_{su} & \B{M}_{ss} \\
+\end{matrix}
+\right] \, \left[
+\begin{matrix}
+\ddot{\B{u}}_u \\ \ddot{\B{u}}_s \\
+\end{matrix}
+\right] + \left[
+\begin{matrix}
+\B{C}_{uu} & \B{C}_{us} \\
+\B{C}_{su} & \B{C}_{ss} \\
+\end{matrix}
+\right] \, \left[
+\begin{matrix}
+\dot{\B{u}}_u \\ \dot{\B{u}}_s \\
+\end{matrix}
+\right] + \left[
+\begin{matrix}
+\B{K}_{uu} & \B{K}_{us} \\
+\B{K}_{su} & \B{K}_{ss} \\
+\end{matrix}
+\right] \, \left[
+\begin{matrix}
+\B{u}_u \\ \B{u}_s \\
+\end{matrix}
+\right] ~=~ \left[
+\begin{matrix}
+\B{F}_u \\ \B{F}_s \\
+\end{matrix}
+\right]
+\end{equation}
+
+A solution is then constructed by first solving the first row of these
+equations. The value of the reactions (i.e., $\B{F}_s$) associated
+with the known part of the solution $\B{u}_s$ may be computed later if it is
+needed.  The solution of the first row of these equations may be
+constructed by several approaches.  The equations may be integrated in
+time directly using a numerical step-by-step procedure (e.g., the Newmark
+method); the solution may be constructed using normal modes and if necessary
+specified multiple support conditions added; the equations may be solved in
+the frequency domain.  In the next sections we discuss a solution using
+modal methods and in a subsequent section a solution for the a response
+due to periodic excitations is presented.
+
+\subsection{Normal mode solution}
+\label{normal}
+
+The normal modes are obtained
+by assuming the vector $\B{u}_s$ is zero and setting
+\begin{equation}
+\label{eqm4}
+\B{u}_u = \Bf{\phi}_j \,
+\exp ( i \, \omega_j \, t )
+\end{equation}
+where $\Bf{\Phi}_j$ is a {\it mode shape} and $\omega_j$ is its associated
+{\it natural frequency}.
+Differentiating with respect to time leads to the problem
+\begin{equation}
+\label{eqm6}
+\left[
+- \, \omega_j^2 \, \B{M}_{uu} ~+~ i \, \omega_j \, \B{C}_{uu} ~+~ \B{K}_{uu}
+\right] \,
+\Bf{\phi}_j \, \exp ( i \, \omega_j \, t ) ~=~ \ \B{F}_u
+\end{equation}
+in which $i = \sqrt{-1}$.
+The normal modes of free vibration then may be obtained by setting the force
+vector $\B{F}_u$ to zero and, for the present, ignoring the damping matrix
+$\B{C}_{uu}$.  For this case the problem reduces to:
+\begin{equation}
+\label{eqm7}
+\left[
+- \, \omega_j^2 \, \B{M}_{uu} ~+~ \B{K}_{uu} \right] \,
+\Bf{\phi}_j ~=~ \ \B{0}
+\end{equation}
+which may be solved as the
+general linear eigen problem
+\begin{equation}
+\label{eqm8}
+\left[
+\Bf{\Phi} \right]^T \, \left[ \B{K}_{uu} \right] \, \left[ \Bf{\Phi}
+\right] ~=~ \left[
+\Bf{\Phi} \right]^T \, \left[ \B{M}_{uu} \right] \, \left[ \Bf{\Phi}
+\right] \, \left[ \Bf{\Lambda} \right]
+\end{equation}
+where
+\begin{equation}
+\label{eqm9}
+\left[
+\Bf{\Phi} \right]  ~=~
+\left[ \begin{matrix}
+\Bf{\phi}_1 & \Bf{\phi}_2 & \cdots & \Bf{\phi}_n
+\end{matrix} \right]
+\end{equation}
+is the set of {\it normal modes} and
+\begin{equation}
+\label{eqm10}
+\left[
+\Bf{\Lambda} \right]  ~=~
+\left[ \begin{matrix}
+\omega_1^2 & 0 & \cdots & 0 \\
+0 & \omega_2^2 & \cdots & 0 \\
+0 & 0 & \ddots & 0 \\
+0 & \cdots & 0 & \omega_n^2 \\
+\end{matrix} \right]
+\end{equation}
+is a diagonal matrix of the {\it natural frequencies squared}.
+
+The solution for the normal modes are normalized so that
+\begin{equation}
+\label{eqm11}
+\Bf{\Phi}^T \B{M}_{uu} \Bf{\Phi} ~=~ \B{I}
+\end{equation}
+and
+\begin{equation}
+\label{eqm12}
+\Bf{\Phi}^T \B{K}_{uu} \Bf{\Phi} ~=~ \Bf{\Lambda}
+\end{equation}
+
+In {\sl FEAP} the solution for part (and for small problems all)
+of the normal modes may be obtained using
+a {\it subspace iteration} method and the solution commands:
+\begin{verbatim}
+       MASS
+       TANGent
+       SUBSpace,,nf
+\end{verbatim}
+where {\tt nf} is the number of modes to compute.  Additional parameters
+may be given to use a lumped (diagonal) mass, to specify a shift
+on the tangent matrix, and/or to improve the
+convergence properties of the subspace method (See Appendix B for specifying
+additional options).
+
+For example, if the modes for an unsupported structure are desired, the
+tangent matrix is singular and the subspace method will fail to converge
+or an error may result during the construction of the factors of $\B{K}$ matrix.
+In this case a {\it shift} may be used where the frequencies squared are
+given as
+\begin{equation}
+\label{eqm13}
+\omega_j^2 ~=~ \tilde{\omega}_j^2 \, + \, \chi
+\end{equation}
+Now the general linear eigen problem is given by:
+\begin{equation}
+\label{eqm14}
+\left[
+\Bf{\Phi} \right]^T \, \left( \left[ \B{K}_{uu} \right] \, \, - \, \chi
+\, \left[ \B{M}_{uu} \right) \right] \, \left[ \Bf{\Phi}
+\right] ~=~
+\left[ \Bf{\Phi} \right]^T \, \left[ \B{M}_{uu} \right] \,
+\left[ \Bf{\Phi} \right] \, \left[ \tilde{\Bf{\Lambda}} \right]
+\end{equation}
+which may be solved using the command language algorithm
+\begin{verbatim}
+       MASS
+       TANGent,,,chi
+       SUBSpace,,nf
+\end{verbatim}
+in which {\tt chi} denotes the value of $\chi$ in Eq. \ref{eqm13}.
+
+\subsection{Damping effects}
+\label{damping}
+
+The effects of damping may be included in the modal formulation
+and still retain real normal modes by assuming a damping matrix in the form
+\begin{equation}
+\label{eqm15}
+\B{C} ~=~ a_0 \, \B{M} ~+~ a_1 \, \B{K}
+\end{equation}
+This defines a form called {\it Rayleigh Damping}.
+With this form the Damping matrix has the property:
+\begin{eqnarray}
+\label{eqm16}
+\Bf{\Phi}^T \B{C}_{uu} \Bf{\Phi} &=& a_0 \, \B{I} ~+~ a_1 \, \Bf{\Lambda}
+\nonumber \\
+&=& 2 \, \Bf{\zeta} \, \Bf{\Lambda}^\frac{1}{2}
+\end{eqnarray}
+where $\Bf{\zeta}$ is a diagonal matrix of damping ratios.
+The damping ratio may be related to the parameters $a_0$ and $a_1$ as
+\begin{equation}
+\label{eqm16a}
+2 \, \Bf{\zeta} ~=~ a_0 \, \Bf{\Lambda}^{\frac{1}{2}}
+~+~ a_1 \, \Bf{\Lambda}^{- \, \frac{1}{2}}
+\end{equation}
+Values for the parameters $a_0$ and $a_1$ may be computed from two values
+of frequencies where a specified damping ratio $\zeta$ is desired.  If
+the two frequencies are denoted by $\omega_i$ and $\omega_j$ the parameters
+are given by
+\begin{equation}
+\label{eqm16b}
+a_0 ~=~ 2 \, \zeta \frac{\omega_i \, \omega_j}{\omega_i + \omega_j}
+\end{equation}
+and
+\begin{equation}
+\label{eqm16c}
+a_1 ~=~ \frac{2 \, \zeta }{\omega_i + \omega_j}
+\end{equation}
+Other values may also be selected.
+For further information consult "Dynamics of Structures", by A.K. Chopra,
+\cite{chopra}.
+The data input to {\sl FEAP} is given by the command
+\begin{verbatim}
+       RAYLeigh,,a-0,a-1
+\end{verbatim}
+
+Rayleigh damping may also be included in transient problems solved 
+by time integration methods.  In this case the damping matrix may be specified
+independently for each material as global or
+material parameters (see Section \ref{raydamp}).
+
+\subsection{Solution of transient problems}
+\label{modsol}
+
+Using normal modes the solution of the transient problem is constructed
+by substituting the solution
+\begin{equation}
+\label{eqt1}
+\B{u}_u(t) ~=~ \Bf{\Phi} \, \B{v}(t)
+\end{equation}
+into the first row of Eq. \ref{eqm3} and premultiplying by $\Bf{\Phi}^T$.
+Using the orthogonality properties from Eqs. \ref{eqm11}, \ref{eqm12},
+and \ref{eqm16} the result is given by:
+\begin{equation}
+\label{eqt2}
+\ddot{\B{v}} ~+~ 2 \, \Bf{\zeta} \, \Bf{\Lambda}^\frac{1}{2} \, \dot{\B{v}}
+~+~ \Bf{\Lambda} \, \B{v} ~=~ \Bf{\Phi}^T \B{F}_u(t) ~=~ \B{G}(t)
+\end{equation}
+which is a set of uncoupled second order differential equations.  An individual
+equation is given by:
+\begin{equation}
+\label{eqt3}
+\ddot{v}_j ~+~ 2 \, \zeta_j \, \omega_j \, \dot{v}_j ~+~  \omega_j^2 \, v_j
+ ~=~ g_j(t)
+\end{equation}
+Each of the equations may be integrated numerically or, if the loading
+is assumed in some functional form, exactly.  For example, assuming piecewise
+linear variation in a time step {\sl FEAP} performs an exact integral provided
+support solutions all have zero values.  The
+numerical solution using modal methods is given by the command language
+algorithm
+\begin{verbatim}
+       DT,,dt-value
+       LOOP,time,n-steps
+         TIME
+         MODAl
+          .....  ! outputs/plots
+       NEXT,time
+\end{verbatim}
+
+\subsection{Specified multiple support excitation}
+\label{multis}
+
+In the previous sections the modal response was constructed by assuming
+all specified support locations had zero values.
+A solution to Eq. \ref{eqm3} which includes the effects
+of non-zero support excitations may be constructed by expressing the solution
+in the form:
+\begin{equation}
+\label{eqs1}
+\left[ \begin{matrix} \B{u}_u \\ \B{u}_s \end{matrix} \right] ~=~
+\left[ \begin{matrix} \Bf{\Phi} \\ \B{0} \end{matrix} \right] \,
+\left[ \B{v} \right] ~+~
+\left[ \begin{matrix} \Bf{\Psi} \\ \B{I} \end{matrix} \right] \,
+\left[ \B{w} \right]
+\end{equation}
+where the arrays $\Bf{\Phi}$ and $\Bf{\Psi}$ represent the normal modes of
+vibration and {\it static} modes to satisfy non-zero specified boundary
+conditions, respectively.  For the static modes we solve the problem
+\begin{equation}
+\label{eqs2}
+\B{K}_{uu} \, \Bf{\Psi} ~+~ \B{K}_{us} \, \B{I} ~=~ \B{0}
+\end{equation}
+The solution for the normal modes is obtained from Eq. \ref{eqm8}.
+
+Once these modes are known, the first row of Eq. \ref{eqm3} may be premultiplied
+by $\Bf{\Phi}^T$ to give
+\begin{eqnarray}
+\label{eqs3}
+&& \Bf{\Phi}^T \B{M}_{uu} \Bf{\Phi} \, \ddot{\B{v}} ~+~
+\Bf{\Phi}^T \B{M}_{uu} \Bf{\Phi} \, \dot{\B{v}} ~+~
+\Bf{\Phi}^T \B{K}_{uu} \Bf{\Phi} \, \B{v} \nonumber \\
+&& \qquad= \B{G} ~-~
+\Bf{\Phi}^T \left[ \B{M}_{uu} \Bf{\Psi}
++ \B{M}_{us} \right] \, \ddot{\B{w}} ~-~
+\Bf{\Phi}^T \left[ \B{C}_{uu} \Bf{\Psi}
++ \B{C}_{us} \right] \, \ddot{\B{w}}
+\end{eqnarray}
+Invoking the orthogonality conditions Eqs. \ref{eqm11}, \ref{eqm12},
+and \ref{eqm16} leads to the set of decoupled
+equations
+\begin{equation}
+\label{eqs4}
+\ddot{\B{v}} ~+~ 2 \, \Bf{\zeta} \, \Bf{\Lambda}^\frac{1}{2} \, \dot{\B{v}}
+~+~ \Bf{\Lambda} \, \B{v} ~=~ \Bf{\Phi}^T \B{F}_u(t) ~=~ \B{G}(t) ~-~
+\B{A}_1 \, \ddot{\B{w}} ~-~ \B{A}_2 \, \dot{\B{w}}
+\end{equation}
+where
+\begin{equation}
+\label{eqs5}
+\B{A}_1  ~=~
+\Bf{\Phi}^T \left[ \B{M}_{uu} \Bf{\Psi} \, + \, \B{M}_{us} \right]
+\end{equation}
+and
+\begin{equation}
+\label{eqs6}
+\B{A}_2  ~=~
+\Bf{\Phi}^T \left[ \B{C}_{uu} \Bf{\Psi} \, + \, \B{C}_{us} \right]
+\end{equation}
+For Rayleigh damping only one matrix is required since
+\begin{equation}
+\label{eqs6a}
+\B{A}_2  ~=~ a_0 \, \B{A}_2
+\end{equation}
+
+In {\sl FEAP} these equations are integrated using the energy momentum
+method in which the discrete time values are given as
+\begin{equation}
+\label{eqs7}
+\B{v}_n  ~ \approx ~  \B{v}(t_n)
+\end{equation}
+and the solution advanced using the equations:
+\begin{equation}
+\label{eqs8}
+\B{v}_{n+1} ~=~ \B{v}_n + \Delta t \, \dot{\B{v}}_n + \frac{1}{2} \Delta t^2
+\, \ddot{\B{v}}_{n+\frac{1}{2}}
+\end{equation}
+and
+\begin{equation}
+\label{eqs9}
+\dot{\B{v}}_{n+1} ~=~ \dot{\B{v}}_n + \Delta t \, \ddot{\B{v}}_{n+\frac{1}{2}}
+\end{equation}
+Values at the mid time step $t_{n+\frac{1}{2}}$ are computed as:
+\begin{equation}
+\label{eqs10}
+\B{v}_{n+\frac{1}{2}} ~=~
+\frac{1}{2} \left( \B{v}_n + \B{v}_{n+1} \right)
+\end{equation}
+\begin{equation}
+\label{eqs11}
+\dot{\B{v}}_{n+\frac{1}{2}} ~=~
+\frac{1}{2} \left( \dot{\B{v}}_n + \dot{\B{v}}_{n+1} \right)
+\end{equation}
+and
+\begin{equation}
+\label{eqs12}
+\ddot{\B{v}}_{n+\frac{1}{2}} ~=~ \frac{1}{\Delta t} \, \left(
+\dot{\B{v}}_{n+1} ~-~ \dot{\B{v}}_n \right)
+\end{equation}
+Finally, the equations of motion are written at the mid step
+giving:
+\begin{equation}
+\label{eqs13}
+\ddot{\B{v}}_{n+\frac{1}{2}} ~+~ 2 \, \Bf{\zeta} \,
+\Bf{\Lambda}^{\frac{1}{2}} \, \dot{\B{v}}_{n+\frac{1}{2}}
+~+~ \Bf{\Lambda} \, \B{v}_{n+\frac{1}{2}} ~=~ \B{G}_{n+\frac{1}{2}} ~-~
+\B{A}_1 \, \ddot{\B{w}}_{n+\frac{1}{2}}~-~
+\B{A}_2 \, \dot{\B{w}}_{n+\frac{1}{2}}
+\end{equation}
+
+The values of the time derivatives for $\B{w}_{n+\frac{1}{2}}$ are determined
+from the inputs of $\B{w}_n$ using Eqs. \ref{eqs8} to \ref{eqs12}.
+
+The specification of the data for a problem which is to be subjected to
+multiple support excitations requires the following data and solution steps:
+
+\begin{enumerate}
+\item
+During mesh input, specify the base patterns and their associated
+proportional loading factors.  Base patterns are given by the mesh {\tt BASE}
+command with data for each node given as follows
+\begin{verbatim}
+       BASE
+        node1,gen1,(base-set1(i),i=1,ndf)
+        node2,gen2,(base-set2(i),i=1,ndf)
+          etc. for additional nodes
+                                        ! Blank terminator record
+\end{verbatim}
+In the above non-zero {\tt base-setj(i)} values define the individual base
+set numbers.  A zero value indicates the degree-of-freedom
+is assigned to the unknown part of a solution vector.  Base sets
+should be numbered from one (1) to a maximum number.
+
+Recall that it
+is also necessary to assign each node with a non-zero base set to a
+specific proportional load set using the {\tt FPRo}portional mesh command.
+For example, this may be done using the data set:
+\begin{verbatim}
+       FPROportional
+        node1,gen1,(prop-set1(i),i=1,ndf)
+        node2,gen2,(prop-set2(i),i=1,ndf)
+          etc. for additional nodes
+                                        ! Blank terminator record
+\end{verbatim}
+Warning: Degree-of-freedoms with the same base set number {\it must} have
+the same proportional load set number.
+\item
+During the solution process it is necessary to compute the normal modes and
+their associated natural frequencies using the command statements:
+\begin{verbatim}
+       MASS
+       TANGent
+       SUBSpace,,nf
+\end{verbatim}
+Subsequently it is necessary to issue the commands:
+\begin{verbatim}
+       BASE
+       TRANSient,CONServing
+\end{verbatim}
+followed by the modal solution commands:
+\begin{verbatim}
+       DT,,delta-t
+       LOOP,time,n-steps
+         TIME
+         MODAl
+          .... output statements
+       NEXT,time
+       TRANSient,CONServing
+\end{verbatim}
+\end{enumerate}
+
+The solution steps indicated above are order dependent.
+Modes must exist in order to
+perform the {\tt BASE} step.  The base step computes the base modes $\Bf{\Psi}$
+and constructs the array $\B{A}_1$ needed to set up the multiple support
+excitation steps given above.  It also requires a factored stiffness matrix
+constructed by the {\tt TANG}ent command.  Since base supports are provided,
+no {\it shift} should be included on the tangent command.
+
+\section{Periodic inputs on linear equations}
+\label{periodic}
+
+The solution of second order linear equations by the finite element method
+leads to the set of equations given by Eq. \ref{eqm1}.
+If the applied loading is periodic the force may be expressed in the form
+\begin{equation}
+\label{eq2}
+\B{F}(t) ~=~ \hat{\B{F}}(\omega) \exp (i \, \omega \, t)
+\end{equation}
+where $i = \sqrt{-1}$ and $\omega$ is a specified periodic input frequency.
+The notation $\hat{(\cdot)}$ denotes a complex quantity.  Thus,
+the intensity of the force is assumed to be a complex vector.  At present,
+the implementation in {\sl FEAP} restricts the force specified during
+input to be real. Accordingly,
+\begin{eqnarray}
+\label{eq3}
+\B{F}_r &=& \Re ( \hat{\B{F}} ) \\
+\B{F}_i &=& \Im ( \hat{\B{F}} ) = \B{0}
+\end{eqnarray}
+The real part of the force may be input using the mesh commands {\tt FORC}e,
+{\tt CFOR}ce,  {\tt EFOR}ce, and/or {\tt CSUR}face.
+For the case where $\B{M}$, $\B{C}$, and $\B{K}$ are constant matrices a
+solution to Eq. \ref{eqm1} may be constructed by assuming the solution
+in the form:
+\begin{equation}
+\label{eq4}
+\B{u}(t) ~=~ \hat{\B{u}}(\omega) \exp (i \, \omega \, t)
+\end{equation}
+which may be differentiated to define the time derivatives of $\B{u}$.
+This leads to the equation:
+\begin{equation}
+\label{eq5}
+\left[ - \, \omega^2 \, \B{M} ~+~ i \, \omega \, \B{C} ~+~ \B{K} \right] \,
+\hat{\B{u}}(\omega) ~=~ \ \hat{\B{F}} (\omega)
+\end{equation}
+which may be solved for each specified frequency and load to give a
+solution for the $\hat{\B{u}}(\omega)$.
+
+There are some cases where part of the displacement vector $\hat{\B{u}}$ is
+known and non-zero.  For this case we can partition Eq. \ref{eq5} into
+parts.  Let the coefficient matrix be given by
+\begin{equation}
+\label{eq6}
+\hat{\B{A}} ~=~ - \, \omega^2 \, \B{M} ~+~ i \, \omega \, \B{C} ~+~ \B{K}
+\end{equation}
+and partition the solution into
+\begin{equation}
+\label{eq7}
+\hat{\B{u}} ~=~ \left[
+\begin{matrix} \hat{\B{u}}_u \\ \hat{\B{u}}_s \\ \end{matrix}
+\right]
+\end{equation}
+where $( \cdot )_u$ denotes an unknown part and $( \cdot )_s$ a specified
+part.
+With this division, the equations to be solved may be written in the
+form:
+\begin{equation}
+\label{eq8}
+\left[
+\begin{matrix}
+\hat{\B{A}}_{uu} & \hat{\B{A}}_{us} \\
+\hat{\B{A}}_{su} & \hat{\B{A}}_{ss} \\
+\end{matrix}
+\right] \, \left[
+\begin{matrix}
+\hat{\B{u}}_u \\ \hat{\B{u}}_s \\
+\end{matrix}
+\right] ~=~ \left[
+\begin{matrix}
+\hat{\B{F}}_u \\ \hat{\B{F}}_s \\
+\end{matrix}
+\right]
+\end{equation}
+A solution may be achieved by first solving the equation set
+\begin{equation}
+\label{eq9}
+\hat{\B{A}}_{uu} \,  \hat{\B{u}}_u ~=~
+\hat{\B{F}}_u \, - \,  \hat{\B{A}}_{us} \, \hat{\B{u}}_s
+\end{equation}
+for the unknown part of the solution vector.  Again, during mesh input,
+only a real part may currently be specified for $\hat{\B{u}}_s$.  This
+may be done using the mesh command options {\tt DISP}lace\-ment,
+{\tt CDIS}pl, {\tt EDIS}pl, and/or {\tt CSUR}\-face.
+Once the unknown part is
+computed the reaction forces may be determined from the remaining part as:
+\begin{equation}
+\label{eq10}
+\hat{\B{F}}_u ~=~
+\left[
+\begin{matrix}
+\hat{\B{A}}_{uu} & \hat{\B{A}}_{us} \\
+\end{matrix}
+\right] \, \left[
+\begin{matrix}
+\hat{\B{u}}_u \\ \hat{\B{u}}_s \\
+\end{matrix}
+\right]
+\end{equation}
+
+In {\sl FEAP} the above is implemented by first declaring the problem to
+be complex.  This is accomplished by starting a problem as
+\begin{verbatim}
+       *COMPLEX
+       FEAP * * Title information
+           etc.
+\end{verbatim}
+The constant real arrays ${\B{M}}$, ${\B{C}}$, ${\B{K}}$ are then
+formed and stored
+in a sparse matrix format in which only the non-zero terms are retained.
+Then for each specified frequency $\omega$ the array $\hat{\B{A}}_{uu}$
+is formed and stored in an in-core profile form.  This matrix is complex and at present only an in-core
+profile solution scheme is available in {\sl FEAP}.  The solution
+is then performed and the unknown part combined with the known part to
+form the total solution vector $\hat{\B{u}}$.  The command:
+\begin{verbatim}
+       CXSOlve,,omega
+\end{verbatim}
+is used to perform this step.  The first issue of the command will form
+the arrays $\B{M}$, $\B{C}$, and $\B{K}$ which are then used in all subsequent
+specifications of the frequency $\omega$.
+
+After a solution is available the usual {\sl FEAP} commands may be used
+to output or plot the solution.  For example, the command
+\begin{verbatim}
+       DISPlacement,,k1,k2,k3
+\end{verbatim}
+outputs the real part of the displacement for nodes {\tt k1} to {\tt k2} at
+increments of {\tt k3}.  Similarly,
+\begin{verbatim}
+       DISPlacement,IMAGinary,k1,k2,k3
+\end{verbatim}
+outputs the imaginary part of the displacement for nodes {\tt k1} to {\tt k2} at
+increments of {\tt k3}.  Finally,
+\begin{verbatim}
+       DISPlacement,CMPL,k1,k2,k3
+\end{verbatim}
+outputs the real and imaginary parts of the displacement for the nodes.
+
+The plot commands {\tt PLOT,REAL} and {\tt PLOT,IMAG} set the display
+contours to the real and imaginary parts, respectively.  The usual plot
+commands (e.g., {\tt PLOT,CONT,i}) then give the desired solution part. 

@@ -1,0 +1,111 @@
+% FEAP Manual: Version 7.2a - Revised: August 2000
+
+\documentclass[12pt]{report}
+
+\topmargin 0.4in
+\advance \topmargin by -\headheight
+\advance \topmargin by -\headsep
+
+\setlength{\textwidth}{15.5cm}
+\setlength{\oddsidemargin}{+0.4cm}
+\setlength{\evensidemargin}{+0.4cm}
+\setlength{\textheight}{21.7cm}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{3mm}
+
+\usepackage{amsmath}
+%\usepackage{psfig}
+\usepackage{epsf}
+%\usepackage{fullpage}
+\usepackage{graphicx}
+
+\newcommand{\Bf}[1]{\boldsymbol{#1}}
+\newcommand{\B}[1]{\mathbf{#1}}
+\newcommand{\ul}{\underline}
+
+\pagestyle{headings}
+
+\title{\sl{FEAP} - - A Finite Element Analysis Program \\
+\rule{4.5in}{1pt} \\ {\large{Version 7.2 User Manual}} \\}
+
+
+
+\author{Robert L. Taylor \\
+Department of Civil and Environmental Engineering \\
+University of California at Berkeley \\
+Berkeley, California 94720-1710\\
+E-Mail: rlt@ce.berkeley.edu \\}
+
+
+
+
+\date{August 2000}
+
+
+
+\begin{document}
+\bibliographystyle{plain}
+\maketitle
+
+\pagenumbering{roman}
+\tableofcontents
+
+\pagebreak
+\pagenumbering{arabic}
+
+\input sect1.tex  % Introduction
+
+\input sect2.tex  % Problem definition
+
+\input sect4.tex  % Manual organization
+
+\input sect5.tex  % Input records
+
+\input sect6.tex  % Mesh input data
+
+\input sect7.tex  % Global Data
+
+\input sect10.tex % Coord and Element Connect
+
+\input sect9.tex  % Coordinate Transformations
+
+\input sect8.tex  % Regions and Groups; Flexible/Rigid Bodies
+
+\input sect11.tex % Nodal BC
+
+\input sect12.tex % Surface load
+
+\input sect13a.tex % Elements
+
+\input sect13b.tex % Material models
+
+\input sect14.tex % End and miscellaneous commands
+
+\input sect15.tex % Mesh manipulation
+
+\input sect19.tex % Contact
+
+\input sect16.tex % Rigid body activation
+
+\input sect17a.tex % Command language, time solutions
+\input sect17b.tex % Prop,augment,show,hist,eigv etc.
+
+\input sect18.tex % Plot
+
+\input ackn.tex
+
+% Bibliography
+
+\bibliography{/home/rlt/Manual/book/biblio/book}
+
+% Appendices
+
+\appendix
+
+\input ../lmesh/appenda.tex
+\input ../lmani/appendb.tex
+\input ../lcont/appendc.tex
+\input ../lmacr/appendd.tex
+\input ../lplot/appende.tex
+
+\end{document}

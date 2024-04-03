@@ -1,0 +1,416 @@
+\chapter[Element Library]{ELEMENT LIBRARY}
+\label{elmlib}
+
+{\sl FEAP} contains a library of standard elements and material models which may
+be employed to solve a wide range of problems in solid and structural mechanics,
+and heat transfer analysis.
+In addition, users may program and add new elements to the program.
+The type of element to
+be employed in an analysis is specified as part of the \texttt{MATErial} data
+sets.  The first record of each material data set also contains the material
+property number.  Each material property number is an integer ranging from
+one (1) to the maximum number of material sets specified on the control data
+record (which immediately follows the \texttt{FEAP} start/title record); however,
+as noted earlier,
+the maximum number on material sets on the control data may be specified
+as zero and {\sl FEAP} will
+automatically compute the maximum number of material sets from the input data.
+The second record of the material set data defines the type of element to be
+used.  The library of standard elements includes the following types:
+
+\begin{enumerate}
+\item
+SOLId - The solid element is used to solve continuum problems with
+either small or large deformations.
+Options exist to use finite elements based on displacement,
+mixed, and enhanced strain formulations.
+The element contains a library of
+models for elastic, viscoelastic, or elastoplastic constitutive equations.
+For two dimensional problems each element is a quadrilateral
+with between 4 and 9-nodes (enhanced formulation permits only 4-node
+quadrilaterals).  The two dimensional displacement formulation also permits
+use of 3 or 6-node triangular elements.
+The degrees of freedom on each node are displacements,
+$u_i$, in the coordinate directions.
+The degrees of freedom are ordered as:
+2-D Plane problems, $u_x , u_y $, coordinates are $x , y$;
+2-D Axisymmetric problems, $u_r , u_z $, coordinates are $r , z$;
+For three dimensional problems each element is an 8-node hexahedron (brick).
+with degree-of-freedoms $u_x , u_y , u_z$.
+The displacement element may also be a 4-node tetrahedron.
+
+\item
+FRAMe - The frame element is used to model structural members which include
+axial, bending, and shearing deformations only.  The model is formulated in
+terms of force resultants which are computed by integration of stress components
+over the cross-sectional area of the member.
+Each element has 2-nodes and may be used in a two or three dimensional
+problem.  The degrees of freedom on each node are: Displacements, $u_i$, in the
+coordinate directions and; A rotation, $\theta_z$, about the z-axis
+for two dimensions
+and rotations, $\theta_i$, about all axes for three dimensions.
+The degrees of freedom are ordered as:
+2-D $u_x , u_y , \theta_z$;
+3-D $u_x , u_y , u_z , \theta_x , \theta_y , \theta_z$;
+
+\item
+TRUSs - The truss element is used to model structural members which include
+axial deformations and forces only.  The axial
+force resultant is computed by integration of the axial stress component
+over the cross-sectional area of the member.
+Each element has 2-nodes and may be used in any one to three dimensional
+problem.  The degrees of freedom on each node are displacements, $u_i$, in each
+coordinate direction; thus, the number is the same as the spatial dimension
+of the problem.
+The degrees of freedom are ordered as: $u_x , u_y , u_z$
+
+\item
+PLATe - The plate element is used to model structural behavior of planar
+bodies which have one dimension small compared to the two other dimensions.
+The element may be used for small deformation analyses only and
+includes bending and transverse shearing deformations.
+Provisions are also included to permit modeling of plates for which the
+transverse shearing deformations are ignored.  The model is formulated in
+terms of force resultants which are computed by integration of stress components
+over the thickness of the plate.
+Each element may be a triangle with 3-nodes or a quadrilateral
+with 4-nodes and is used in a two dimensional
+problem.  The degrees of freedom on each node are: The transverse displacement,
+$u_3 = w$, and rotations $\theta_x$ and $\theta_y$ about the coordinate axes.
+The degrees of freedom are ordered as: $w , \theta_x , \theta_y$;
+
+\item
+SHELl - The shell element is used to model structural behavior of curved
+bodies which have one dimension small (a thickness normal to
+the remaining surface coordinates) compared to the other dimensions of
+the surface.  The shell for small deformations includes bending and
+in-plane deformations only (no transverse shearing strains).
+The model is formulated in
+terms of force resultants which are computed by integration of stress components
+over the cross-sectional thickness of the shell.
+Each element is a quadrilateral with 4-nodes
+and may be used in a three dimensional
+problem.  The degrees of freedom on each node are: Displacements,
+$u_i$, and rotations, $\theta_i$, about the coordinate axes.
+The degrees of freedom are ordered as:
+$u_x , u_y , u_z , \theta_x , \theta_y , \theta_z$ (6-dof);
+The large displacement shell element includes in-plane, bending, and shearing
+deformations in a 5 degree-of-freedom form.  This element is formulated
+in an energy-momentum conserving form and may not converge quadratically in
+general applications.
+
+\item
+MEMBrane- The membrane element is used to model structural behavior
+of curved bodies which are thin and carry loading by in-plane loading
+only.  These elements are generally unstable unless attached to a
+contiguous solid or otherwise restrained.  The model is formulated in
+terms of the in-plane force resultants and a cross-sectional thickness.
+Each element is a quadrilateral with 4-nodes
+and may be used in a three dimensional
+problem.  The degrees of freedom on each node are: Displacements,
+$u_i$.  The degrees of freedom are ordered as:
+$u_x , u_y , u_z $;
+
+\item
+THERmal -  The thermal element is used to compute temperatures in solid
+bodies or truss elements.  The element solves the Fourier heat conduction
+equation.  For the truss element the problem is one-dimensional.
+For two dimensional problems each element is a quadrilateral
+with between 4 and 9-nodes.  For three dimensional problems each element
+is a brick with 8-nodes or a tetrahedron with 4-nodes.
+The degree of freedom on each node is temperature, $T$, and, by default,
+is placed in the first position in the unknowns (i.e., first degree of freedom).
+If the element is combined with a solid element to perform thermo-mechanical
+analyses it is necessary to relocate the temperature degree of freedom using
+the option on the material set element type record (see the \texttt{MATE}erial
+set command description in the {\sl FEAP} Mesh User Manual in Appendix A).
+Alternatively, the location may be set using a \texttt{GLOB}al command option.
+
+\item
+POINt element - The point element may consist of a mass, linear dashpot, and/or
+linear spring. The dashpot and spring are fixed at one end and added to the
+degrees-of-freedom specified by the node of a 1-node element.
+The dashpot and spring are oriented using a specified direction vector.
+The element may be used in any two or three dimensional problem.
+The degrees of freedom are ordered as: $u_x , u_y , u_z$ (ndm-dof);
+
+\item
+PRESsure loading - The pressure loading element is used to apply normal loading
+to the surface of three dimensional objects.  The loading is associated with
+elements defining the surface on which to apply the load.  Loads may be applied
+with respect to the normals in the reference configuration (dead loads) or
+with repect to the current configuration (follower loads).  For follower
+loads a tangent matrix is computed (unsymmetric) and included during assembly.
+
+\item
+GAP - The gap element is used to model a restraint between nodes
+which permits only compressive loads to be transmitted.  The restraint
+must be in one of the coordinate directions.  This element may
+be used in one, two, or three dimensional problems.
+
+\item
+USER -  Each user element must be developed and added to the program.
+Provisions are included which permit the addition of up to 50 additional
+element modules to the program.
+The shape of the element, the number of degrees of freedom at each node,
+and other parameters may be set by the user.  See the {\sl FEAP}
+Programmers Manual for information on adding a user element.
+\end{enumerate}
+
+Each element requires additional input data to describe the
+specific constitutive model, the finite element formulation to be used,
+loading applied to elements, etc.
+As an example consider an analysis of a two dimensional
+continuum with a single material and constrained to a plane strain
+deformation state.  The problem is to be modeled by an elastic
+material with isotropic properties.
+\begin{verbatim}
+       MATErial,1
+         SOLId
+         ELAStic ISOTropic 30e+06 0.3
+                                  ! blank termination record
+\end{verbatim}
+
+The property \texttt{ELAStic} is required for all types of \texttt{SOLId} elements.
+The {\it solid elements} contain both small and finite deformation options for
+two and three dimensional problems.  For small deformations there are three
+element types: (1) A displacement model; (2) A mixed $\B{u}-p-\theta$ model;
+and (3) An enhanced strain model.  In finite deformations only the displacement
+and the mixed model exist at this time.  The material records for an
+analysis which includes solid elements is shown above.
+
+In two dimensional applications
+the displacement and the mixed formulation may be described by elements
+with between four (4) and nine (9) nodes.  The enhanced strain element
+is limited to four (4) nodes only.  A three (node) triangular element
+may be formed for the displacement model by repeating the number of any
+node or by specifying only three nodes on an element.
+In three dimensional applications the element is described by an eight (8)
+node hexahedron.  The displacement model may also describe wedge
+by coallescing appropriate nodes of a hexahedron and a 4-node tetrahedron.
+
+The material models and other options
+available for use with the solid elements are described in the next chapter.
+
+The {\it frame elements} can treat small and large displacement problems.
+The small displaecment element is restricted to elastic behavior
+and includes effects of bending and axial deformations.  Cubic interpolations
+are used.
+The finite deformation frame elements are based on the exact kinematic
+formulation of Ibrahimbegovic ~~\cite{adnan98a}.
+The element includes elastic resultant and one dimensional
+models and one dimensional inelastic behavior based on integration
+over the cross
+section.  Cross sectional shapes are included for thin tubes, solid circular
+shape, rectangles, angles, channels, and wide flange shapes.
+Interpolations are linear along the beam axis.
+All elements have
+two nodes.  To definie the orientation of the cross section for a three
+dimensional analysis it is necessary to define a \texttt{REFE}r\-ence
+\texttt{VECT}or, \texttt{DIRE}c\-tion, or \texttt{NODE}.
+The frame element is included using the commands:
+\begin{verbatim}
+       MATErial,1
+         FRAMe
+		 ....
+\end{verbatim}
+The required data for frame elements is the material model, cross section
+data, and for three dimensional frames geometric information to orient the
+coordinate axes of the cross section.  Typically, \texttt{ELAStic} models are
+required and can be supplemented by plastic or viscoelastic properties.  The
+cross section data is given either as \texttt{CROSs} section properties or
+\texttt{SECTion} types.  The geometric data for orienting cross section axes
+is given by \texttt{REFErence VECTor} or \texttt{REFErence NODE} options.
+
+The {\it truss elements} include small and large deformation formulations.
+The elements have two nodes and include a number of one dimensional
+constitutive models as indicated in the next chapter.
+The truss element is included using the commands:
+\begin{verbatim}
+       MATErial,1
+         TRUSs
+		 ....
+\end{verbatim}
+Required data is material model (e.g., typically \texttt{ELAStic}) and cross
+section \texttt{CROSs} giving the area of the section.
+
+The {\it plate element} is restricted to small deformation applications
+in which only the bending response of flat slabs is included.  The problem
+is treated as a two-dimensional problem for the mesh (in the $x_1$-$x_2$
+coordinate plane).  At present only
+linear thermo-mechanical response is included for the material models.
+Each element may be a three node triangle or a four node quadrilateral.
+The plate element is included using the commands:
+\begin{verbatim}
+       MATErial,1
+         PLATe
+		 ....
+\end{verbatim}
+Required data is the material model (e.g., \texttt{ELAStic}) and the thickness
+given by the \texttt{THICk} option.
+
+The {\it shell elements} are capable of both small and finite deformation
+analysis. 
+Both resultant and through thickness integration forms are available for the
+small displacement formulation.  For the through thickness formulation
+all the constitutive forms available for the two-dimensional small
+deformation analyses are also available for the shell.
+The resultant formulation is restricted to elastic behavior.
+The large displacement element is also currently
+restricted to an elastic resultant formulation.
+The small deformation model includes bending and membrane strains only -
+no transverse shearing deformation is included - thus restricting application
+to thin shell problems only.  The finite deformation shell is based on the
+energy-momentum conserving development of Simo et. al. ~\cite{simosh92}
+and includes exact
+large displacement deformations for membrane, bending and shearing strains.
+Since the formulation is based on the energy-momentum algorithm it is
+necessary to specify a \texttt{TRAN}sient analysis with either the \texttt{STAT}ic
+or \texttt{CONS}erving options (see chapter on transient solutions).  Also,
+the tangent matrix is non-symmetric, thus to achieve quadratic rates of
+convergence the \texttt{UTAN}gent solution command must also be employed.
+The shell element is included using the commands:
+\begin{verbatim}
+       MATErial,1
+         SHELl
+		 ....
+\end{verbatim}
+Required data is the material model (e.g., \texttt{ELAStic}) and the thickness
+given by the \texttt{THICk} option.
+
+The {\it membrane elements} are derived from the shell elements by deleting
+the bending and shearing deformations, thus leaving only the in-plane
+strain deformation terms.  Elements for small and large displacements
+are included but are restricted in the current release to elastic behavior.
+The membrane element is included using the commands:
+\begin{verbatim}
+       MATErial,1
+         MEMBrane
+		 ....
+\end{verbatim}
+Required data is the material model (e.g., \texttt{ELAStic}) and the thickness
+given by the \texttt{THICk} option.
+
+The {\it point elements} are restricted to linear elastic behavior with
+linear dashpot and point mass.
+The point element material set is included using the commands:
+\begin{verbatim}
+       MATErial,1
+         POINt
+           MASS   m
+           DAMPer c
+           SPRIng k
+           ORIEnt v_1,v_2,v_3 (ndm values)
+\end{verbatim}
+The \texttt{ORIEnt} vector is used to describe the direction cosines for the
+orientation of the dashpot and spring.  The input order for \texttt{MASS, DAMPer,
+SPRIng} and \texttt{ORIEnt} is arbitrary.  Unspecified terms are assumed zero.
+The \texttt{ORIEnt} command is required if a damper or spring is specified.
+
+The {\it thermal elements} are all based on a standard Galerkin (displacement)
+formulation (i.e., no mixed model approximations are available).  The
+element topologies available are identical to those for the displacement
+form of the solid element.
+
+At present the finite deformation material
+models for the solid elements do not permit a coupled thermo-mechanical
+analysis.  The small deformation models for elasticity do permit coupled
+thermo-mechanical analyses to be performed using a partitionied solution
+algorithm.  The material behavior for the thermal analysis is a linear
+Fourier model.  Both isotropic and orthotropic models are available.
+The thermal element is included using the commands:
+\begin{verbatim}
+       MATErial,1
+         THERmal
+		 ....
+\end{verbatim}
+Required data is the material model given by the \texttt{FOURier} option.
+
+The {\it pressure load element} is specified by material set records:
+\begin{verbatim}
+       MATErial,1
+         PRESsure
+		 ....
+\end{verbatim}
+Loading is specified by options \texttt{LOAD} and, for large displacement
+forms, \texttt{FINI}te.  Loading intensity may be associated with a proportional
+loading function.
+
+The {\it gap element} requires very little data to use.  The material
+record is given as:
+\begin{verbatim}
+       MATErial,1
+         GAP
+           DIREction,x-dir
+           DEGRee,n-dof
+           PENAlty,pen-value
+                                  ! blank termination record
+\end{verbatim}
+where \texttt{x-dir} is an integer ranging from 1 to ndm;
+\texttt{n-dof} is the degree-of-freedom to which the gap condition is
+applied and \texttt{pen-value} is a penalty parameter used to enforce
+the constraint.
+The gap element is used with a two node element where, if \texttt{x-dir}
+is positive, the first to second node indicate
+a positive direction to enforce the constraint and if \texttt{x-dir} is
+negative the first to second node are taken in a negative coordinate
+sense.  If \texttt{n-dof} has the same value as the absolute value of
+\texttt{x-dir} the gap is treated in a phsical sense.  However, if
+it is different, a 'gap' condition between the displacements of the
+two nodes is used.  Thus, for the equal sense and a positive \texttt{x-dir}
+a movement of the
+second node in a positive \texttt{x-dir} relative to the first node
+\texttt{opens} the gap without restraint or reduces the restraint force until
+an opening takes place.  A negative motion of the second node relative
+to the first closes the gap, and when the distance between the two is
+negative or zero a penalty restraint is inserted.  If \texttt{x-dir} is
+negative an opposite interpretation to the above is used.  If the penalty is
+too small an overlap of the regions will exist and if it is considered
+to be excessive either the penalty parameter value
+should be increased or an augmented Lagrangian solution should be performed.
+
+A fully Lagrange multiplier form of the gap element may also be used by
+specifying a third node on the element.  One degree of freedom from
+the third node (i.e., the dof \texttt{n-dof}) will be used to store the
+Lagrange multiplier value.  Special care must be used when using any
+Lagrange multiplier solution method as no diagonal results in the tangent
+solution matrix for this equation.  To avoid solution difficulties it is
+usually required to use a direct solution method in which the profile
+(active column)solver is used -- this is the default solver or may be
+specified using either of the commands:
+\begin{verbatim}
+       DIREct         ! In-core solver
+
+       DIREct,BLOCk   ! Out-of-core blocked solver
+\end{verbatim}
+while in \texttt{BATCh} or \texttt{INTEractive} solution mode.
+
+The specification of {\it user elements} must contain a number of an
+element module which has been added to {\sl FEAP}.
+Each user developed element module
+is designated as \texttt{subroutine elmtnn(...)}, where \texttt{nn} ranges
+from \texttt{01} to \texttt{50}.
+Accordingly, a typical set of data for a user element \texttt{elmt12}
+is given as:
+\begin{verbatim}
+       MATErial,1
+         USER     12              ! Use elmt12(...) module
+         xxxxxx                   ! Additional data records
+                                  ! blank termination record
+\end{verbatim}
+
+The first two records of the \texttt{MATE}rial set always must be:
+
+\begin{verbatim}
+       MATErial ma
+         type unum mset doflist
+\end{verbatim}
+where \texttt{ma} is the material set number, \texttt{type} is the element type
+(e.g., solid, truss, etc.), \texttt{unum} is the user element number,
+\texttt{mset} is the material set number given for each element (by default
+it is the material number - this option permits two material types
+to access the same element connection list), and \texttt{doflist} is the
+list of global degree-of-freedoms to assign the internal element order (by
+default this is the order 1,2,3,...,ndf).  For the standard elements contained
+in {\sl FEAP} it is one needs only the \texttt{type} parameter unless
+degrees-of-freedom are to be relocated (e.g., for thermal analysis).

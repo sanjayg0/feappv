@@ -1,0 +1,40 @@
+\heada{PLOT}{PSTRess}
+\hspace{1.0cm}{{pstr,n1,n2,n3 \hfill}}
+\headb
+
+Plot contours of principal stresses, where {\tt n1} is the component
+to be plotted and {\tt n2} is the number of contours (same as
+for the {\tt CONT}our command including shading options).
+The {\tt n1} for 2 and 3 dimensional elasticity problems are:
+
+\begin{center}
+\begin{tabular}{c | l }
+ n1 & Component \\
+  1 & 1-principal stress \\
+  2 & 2-principal stress \\
+  3 & 3-principal stress (3-d) or angle (2-d) \\
+  4 & Maximum shear (2-d) \\
+  5 & $I_1$ Stress invariant \\
+  6 & $J_2$ Stress invariant \\
+  7 & $J_3$ Stress invariant \\
+\end{tabular}
+\end{center}
+
+The {\tt n3} parameter is used for filled (solid color) stress
+plots as follows:
+
+\begin{center}
+\begin{tabular}{c | l }
+ n3 & Action \\ \hline
+  0 & superpose mesh on plot \\
+  1 & suppress showing mesh \\
+ -1 & suppress showing mesh and\\
+    & uses previously set values
+\end{tabular}
+\end{center}
+
+For contour line plots ({\tt n2} $>$ 0), a zero {\tt n3} value will
+suppress numbers near each contour line (same as
+{\tt CONT}ours). Default: n3 = 0.
+\vfill
+\eject

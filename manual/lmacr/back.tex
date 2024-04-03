@@ -1,0 +1,21 @@
+\heada{SOLUTION}{BACK}
+\hspace{1cm}{{back,,$<$dtnew$>$ \hfill}}
+\headb
+
+The use of the {\tt BACK} command will decrement the
+current time by {\tt dt}, the current time increment.  In addition,
+the previous value of the proportional loading will be
+recomputed, if necessary.  The value of the current time and
+proportional loading are reported in the output (or to the
+screen).  The back command also will recompute the dynamic
+state at the old time for time integration of the equations
+of motion, as well as, restore the stress data base for any
+elements with non-linear constitutive equations which
+require variables other than the displacement state to compute a solution.
+
+As an option, it is possible to specify a new time
+increment for integrations to be continued. The value of
+{\tt dtnew} is then used to perform the updates on the solutions
+in the same way as if the command {\tt DT,,dtnew} were given.
+See manual on {\tt DT} command for additional details.
+\vfill\eject

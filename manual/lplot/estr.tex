@@ -1,0 +1,46 @@
+\heada{PLOT}{ESTRess}
+\hspace{1.0cm}{{estr,n1,n2,n3 \hfill}}
+\headb
+
+This command functions exactly like {\tt STRE}ss, except
+that the quantities plotted are done without inter-element smoothing.
+
+The command plots contours
+of stresses (or other element variables), where {\tt n1} is the component to be
+plotted and {\tt n2} is the number of contours (same as for {\tt CONT}our
+including shading options).  The definitions of {\tt n1} for 2 and 3
+dimensional elasticity problems are:
+
+\begin{center}
+\begin{tabular}{c | l}
+  n1 & Component \\ \hline
+   1 & 11-stress \\
+   2 & 22-stress \\
+   3 & 33-stress \\
+   4 & 12-stress \\
+   5 & 23-stress \\
+   6 & 31-stress \\
+   7 & 1-heat flux \\
+   8 & 2-heat flux \\
+   9 & 3-heat flux
+\end{tabular}
+\end{center}
+
+The {\tt n3} parameter is used for filled (solid color) stress
+plots as follows:
+
+\begin{center}
+\begin{tabular}{r | l}
+    n3 & Action \\ \hline
+     0 & superpose mesh on plot \\
+     1 & suppress showing mesh \\
+    -1 & suppress showing mesh and \\
+       & uses previously set contour values
+\end{tabular}
+\end{center}
+
+For contour line plots ({\tt n2} $>$ 0), a zero {\tt n3} value will
+suppress numbers near each contour line (same as
+{\tt CONT}our). Default: n3 = 0.
+\vfill
+\eject

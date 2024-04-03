@@ -1,0 +1,165 @@
+% FEAPpv Manual: Version 5.1 - Revised: April 2024
+
+\documentclass[12pt]{report}
+
+\topmargin 0.4in
+\advance \topmargin by -\headheight
+\advance \topmargin by -\headsep
+
+\setlength{\textwidth}{15.5cm}
+\setlength{\oddsidemargin}{+0.4cm}
+\setlength{\evensidemargin}{+0.4cm}
+\setlength{\textheight}{21.7cm}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{3mm}
+
+\usepackage{amsmath,amsfonts,graphicx,latexsym,overcite}
+
+\usepackage[colorlinks=true,citecolor=blue,linkcolor=blue,bookmarksnumbered=true,pdfstartview={FitH},hyperindex=true,linktoc=all,linktocpage=true]{hyperref}
+
+\newcommand{\Bf}[1]{\boldsymbol{#1}}
+\newcommand{\B}[1]{\mathbf{#1}}
+\newcommand{\ul}{\underline}
+\newcommand{\scite}[1]{\textsuperscript{\cite{#1}}}
+\newcommand{\q}{\quad}
+\newcommand{\qq}{\qquad}
+\newcommand{\pdif}[2]{\frac{\partial {#1}}{\partial {#2}}}
+\newcommand{\odif}[2]{\frac{\dif {#1}}{\dif {#2}}}
+\newcommand{\dpdif}[2]{\dfrac{\partial {#1}}{\partial {#2}}}
+\newcommand{\dodif}[2]{\dfrac{\dif {#1}}{\dif {#2}}}
+\newcommand{\ph}{\phantom}
+\font\babc=cmmib10 at 10.5pt\def\balpha{\hbox{\babc\char'013}}
+\font\baabc=cmmib10 at 10.5pt\def\bbeta{\hbox{\baabc\char'014}}
+\font\babbc=cmmib10 at 10.5pt\def\bgamma{\hbox{\babbc\char'015}}
+\font\babcc=cmmib10 at 10.5pt\def\bdelta{\hbox{\babcc\char'016}}
+\font\bacd=cmmib10 at 10.5pt\def\bepsilon{\hbox{\bacd\char'42}}
+\font\bacdd=cmmib10 at 10.5pt\def\bomega{\hbox{\bacdd\char'41}}
+\font\bacdf=cmmib10 at 10.5pt\def\bzeta{\hbox{\bacdf\char'20}}
+\font\bafa=cmmib10 at 10.5pt\def\bfeta{\hbox{\bafa\char'21}}
+\font\bamn=cmmib10 at 10.5pt\def\btheta{\hbox{\bamn\char'22}}
+\font\banm=cmmib10 at 10.5pt\def\bkappa{\hbox{\banm\char'24}}
+\font\bapk=cmmib10 at 10.5pt\def\blambda{\hbox{\bapk\char'25}}
+\font\bappk=cmmib10 at 10.5pt\def\bmu{\hbox{\bappk\char'023}}
+\font\balk=cmmib10 at 10.5pt\def\bnu{\hbox{\balk\char'27}}
+\font\bauk=cmmib10 at 10.5pt\def\bxi{\hbox{\bauk\char'30}}
+\font\bauj=cmmib10 at 10.5pt\def\bmu{\hbox{\bauj\char'26}}
+\font\baty=cmmib10 at 10.5pt\def\brho{\hbox{\baty\char'32}}
+\font\bayh=cmmib10 at 10.5pt\def\bsigma{\hbox{\bayh\char'33}}
+\font\bakh=cmmib10 at 10.5pt\def\btau{\hbox{\bakh\char'34}}
+\font\baik=cmmib10 at 10.5pt\def\bupsilon{\hbox{\baik\char'35}}
+\font\bati=cmmib10 at 10.5pt\def\bphi{\hbox{\bati\char'36}}
+\font\baio=cmmib10 at 10.5pt\def\bchi{\hbox{\baio\char'37}}
+\font\blpi=cmmib10 at 10.5pt\def\bpsi{\hbox{\blpi\char'40}}
+\font\bpaabc=cmmib10 at 10.5pt\def\bpi{\hbox{\bpaabc\char'31}}
+
+\font\sabc=cmmi10 at 7pt\def\salpha{\hbox{\sabc\char'013}}
+\font\saabc=cmmi10 at 7pt\def\sbeta{\hbox{\saabc\char'014}}
+\font\sabbc=cmmi10 at 7pt\def\sgamma{\hbox{\sabbc\char'015}}
+\font\sabcc=cmmi10 at 7pt\def\sdelta{\hbox{\sabcc\char'016}}
+\font\sacd=cmmi10 at 7pt\def\sepsilon{\hbox{\sacd\char'42}}
+\font\sacdd=cmmi10 at 7pt\def\somega{\hbox{\sacdd\char'41}}
+\font\sacdf=cmmi10 at 7pt\def\szeta{\hbox{\sacdf\char'20}}
+\font\safa=cmmi10 at 7pt\def\seta{\hbox{\safa\char'21}}
+\font\samn=cmmi10 at 7pt\def\stheta{\hbox{\samn\char'22}}
+\font\sanm=cmmi10 at 7pt\def\skappa{\hbox{\sanm\char'24}}
+\font\sapk=cmmi10 at 7pt\def\slambda{\hbox{\sapk\char'25}}
+\font\sappk=cmmi10 at 7pt\def\smu{\hbox{\sappk\char'023}}
+\font\salk=cmmi10 at 7pt\def\snu{\hbox{\salk\char'27}}
+\font\sauk=cmmi10 at 7pt\def\sxi{\hbox{\sauk\char'30}}
+\font\sauj=cmmi10 at 7pt\def\smu{\hbox{\sauj\char'26}}
+\font\saty=cmmi10 at 7pt\def\srho{\hbox{\saty\char'32}}
+\font\sayh=cmmi10 at 7pt\def\ssigma{\hbox{\sayh\char'33}}
+\font\sakh=cmmi10 at 7pt\def\stau{\hbox{\sakh\char'34}}
+\font\saik=cmmi10 at 7pt\def\supsilon{\hbox{\saik\char'35}}
+\font\sati=cmmi10 at 7pt\def\sphi{\hbox{\sati\char'36}}
+\font\saio=cmmi10 at 7pt\def\schi{\hbox{\saio\char'37}}
+\font\slpi=cmmi10 at 7pt\def\spsi{\hbox{\slpi\char'40}}
+\font\spaabc=cmmi10 at 7pt\def\spi{\hbox{\spaabc\char'31}}
+
+
+
+\pagestyle{headings}
+
+\title{\sl{FEAPpv} - - A Finite Element Analysis Program \\
+\rule{4.5in}{1pt} \\ {\large{Personal Version 5.1 User Manual}} \\}
+
+
+
+\author{Robert L. Taylor \\
+Department of Civil and Environmental Engineering \\
+University of California at Berkeley \\
+Berkeley, California 94720-1710\\
+E-Mail: rlt@berkeley.edu \\}
+
+
+
+
+\date{April 2024}
+
+
+
+\begin{document}
+\bibliographystyle{unsrt}
+\maketitle
+
+\pagenumbering{roman}
+\setlength{\parskip}{0mm}
+\tableofcontents
+\setlength{\parskip}{3mm}
+
+\pagebreak
+\pagenumbering{arabic}
+
+\input sect1.tex  % Introduction
+
+\input sect2.tex  % Problem definition
+
+\input sect4.tex  % Manual organization
+
+\input sect5.tex  % Input records
+
+\input sect6.tex  % Mesh input data
+
+\input sect7.tex  % Global Data
+
+\input sect10.tex % Coord and Element Connect
+
+\input sect9.tex  % Coordinate Transformations
+
+\input sect8.tex  % Regions and Groups;
+
+\input sect11.tex % Nodal BC
+\input sect11p.tex % Periodic BC
+
+\input sect12.tex % Surface load
+
+\input sect5il.tex % Include and loop-next
+
+\input sect13a.tex % Elements
+
+\input sect13b.tex % Material models
+
+\input sect14.tex % End and miscellaneous commands
+
+\input sect15.tex % Mesh manipulation
+
+\input sect17a.tex % Command language, time solutions
+\input sect17b.tex % Prop,augment,show,hist,eigv etc.
+
+\input sect18.tex % Plot
+
+% Bibliography
+
+%\bibliography{/home/rlt/Feap7/Manual/biblio/book}
+\bibliography{/Users/rlt/Feap/biblio/book}
+
+% Appendices
+
+\appendix
+
+\input ../lmesh/appenda.tex
+\input ../lmani/appendb.tex
+\input ../lmacr/appendc.tex
+\input ../lplot/appendd.tex
+
+\end{document}

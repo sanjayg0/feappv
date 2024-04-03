@@ -1,0 +1,33 @@
+\heada{PLOT}{EIGVector}
+\hspace{1.0cm}{{eigv,n1,n2,n3 \hfill}}
+\headb
+
+Plot information related to eigenvector {\tt n1} (an eigensolution
+must be performed (see {\tt SUBS}pace command in Appendix B).
+before attempting an eigenvector plot.  The plot mode must also be
+set as {\tt DEFO}rmed.
+
+If {\tt n3} is zero a deformed plot for the superposed eigenvector
+will be given.
+
+If {\tt n3} is nonzero contours for the {\tt n3} degree of
+freedom for eigenvector {\tt n1} will be constructed according
+to the value specified in {\tt n2}.
+
+For {\tt n2} positive, {\tt n2} contour values will be constructed.
+The values for each contour must be specified
+after the command language program for batch execution or at
+the prompt for interactive execution.  Eight values per
+record are input.  The number for the first contour is
+specified on the record (or prompt) immediately following
+the values.
+
+For {\tt n2} non-positive, a fill-type plot will be constructed.
+The maximum and minimum value of the quantity to
+be plotted must be given.  The program will compute equally
+spaced intervals between these values for the plot.  Alternatively
+a blank record may be input and the program will
+select values to be plotted based on maximum and minimum values of
+the component.
+\vfill
+\eject

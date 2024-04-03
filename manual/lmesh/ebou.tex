@@ -1,0 +1,52 @@
+\heada{MESH}{EBOUndary}
+\hspace{1.0cm}{{ ebou,[set,add]        \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ i-coor,xi-value,(ibc(j),j=1,ndf) \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ <etc.,terminate with a blank record> \hfill}}
+\headb
+
+The boundary restraint conditions may be set along any
+set of nodes which has a constant value of the {\it i-coordinate
+direction} (e.g., 1-direction (or x), 2-direction (or y),
+etc.).  The data to be supplied during the definition of the
+mesh consists of:
+
+\begin{center}
+\begin{tabular}{r l}
+\it i-coor   &-- Direction of coordinate (i.e., 1 = x, 2 = y, etc.) \\
+\it xi-value &-- Value of i-direction coordinate to be used during  \\
+             &\quad search (a tolerance of 1/1000 of mesh size is used  \\
+             &\quad during search, any coordinate within the gap is  \\
+             &\quad assumed to have the specified value).  \\
+\it ibc(1)   &-- Restraint conditions for all nodes with value of \\
+\it ibc(2)   &\quad search.(0 = boundary code remains as previously set \\
+\it ...      &\quad $>0$ denotes a fixed dof, $<0$ resets previously \\
+\it ibc(ndf) &\quad defined boundary codes to 0.) \\
+\end{tabular}
+\end{center}
+
+The {\tt EBOU} command may be used with two options.  Using the {\tt EBOU,SET}
+option replaces previously defined conditions at any node by the
+pattern specified.  Using the {\tt EBOU,ADD} option
+accumulates the specified boundary conditions with previously defined
+restraints.  The default mode is {\tt ADD}.
+Boundary restraint conditions may also be specified using the {\tt BOUN}
+and {\tt CBOU} commands.
+The data is order dependent with data
+defined by {\tt DISP} processed first, {\tt EDIS} processed second and
+the {\tt CDIS} data processed last.  The value defined last is used for
+any analysis.
+
+\noindent{\bf{Example: EBOUndary}}
+
+All the nodes located on the $x_3 = z = 0$ plane are to have
+restraints on the $3^{rd}$ and $6^{th}$ degrees of freedom.
+This may be specified using the command set:
+\begin{verbatim}
+       EBOUndaray
+         3 0.0 0 0 1 0 0 1
+\end{verbatim}
+where non-zero values indicate a \textit{restrained} degree of freedom and
+a \textit{zero} an unrestrained degree of freedom.  Non-zero displacements
+may be specified for restrained dof's and non-zero forces for unrestrained
+dof's.
+\vfil\eject

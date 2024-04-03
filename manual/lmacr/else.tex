@@ -1,0 +1,35 @@
+\heada{SOLUTION}{ELSE}
+\hspace{1.0cm}{{else expression \hfill}}
+\headb
+
+\index{Solution command!ELSE}
+\index{IF-ELSE-ENDIf control}
+The {\tt ELSE} command may be used with a matching pair of
+{\tt IF-ENDI}f commands.
+The {\tt expression} is optional and
+is used to control the actions taken during the
+solution.
+If the expression is absent the commands between the {\tt ELSE} and
+{\tt ENDI}f are executed.
+If the expression evaluates to be positive then the commands
+contained between the {\tt IF} and the {\tt ELSE} or {\tt ENDI} are 
+executed, otherwise solution continues with a check of the next {\tt ELSE}
+For example, the sequence
+\begin{verbatim}
+        ...
+       IF  10-a
+         tang,,1
+         param a 0
+       ELSE b
+         pause
+       ELSE
+         form
+         solv
+       ENDIf
+       param a = a+1
+        ...
+\end{verbatim}
+would compute a tangent, residual, and solution increment if {\tt 10-a}
+is positive; otherwise the solution increment is computed using a
+previous tangent.
+\vfill\eject

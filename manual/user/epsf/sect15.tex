@@ -1,0 +1,146 @@
+\chapter[Mesh Manipulation Commands]{MESH MANIPULATION COMMANDS}
+\label{manip}
+
+Once an initial mesh is completely defined it may be further processed
+to merge nodes with the same coordinates using the {\tt TIE} command, or
+force a sharing of degrees-of-freedom using the {\tt LINK} and/or {\tt ELINk}
+commands.  These commands may be given in any order immediately following
+the mesh {\tt END} command.  While they may be in any order the data is
+first saved in temporary files and {\sl FEAP} later executes the commands in
+a definite order.  Thus if data printing is on information may appear in
+a different order than given in the input file.
+
+\section{The TIE Command}
+\label{tie}
+
+The ability to merge nodes which have the same coordinates permits
+the generation of a mesh in separate parts without having to consider
+a common node numbering system between the individual parts.
+The {\tt TIE} command permits merging
+based on material set numbers, region numbers, a range of node numbers,
+or on all the defined node numbers.
+The latter is achieved by entering the command as:
+\begin{verbatim}
+       TIE
+\end{verbatim}
+without any parameters.  A range of node numbers to search may be
+specified also.  For example, if the merge is to be done only for
+nodes numbered between 34 and 65 the command is issued as:
+\begin{verbatim}
+       TIE,, 34, 65
+\end{verbatim}
+It is however, not possible to merge nodes from two different ranges of
+numbers.
+
+It is also possible to merge parts based on material numbers.  For example,
+if a problem with two bodies is generated using material set 1
+for body one and material set 2 for body two,
+a merge may be achieved for the parts of each body
+without any possibility of merging nodes in body one to those in
+body two.  This is achieved using the commands:
+\begin{verbatim}
+       TIE MATErial 1  1
+       TIE MATErial 2  2
+\end{verbatim}
+If it is desired to tie nodes for materials 1 and 2 together, the command
+\begin{verbatim}
+       TIE MATErial 1  2
+\end{verbatim}
+may be used.
+
+Alternatively, the nodes to be merged may be associated with a region.  In
+this option it is necessary to include {\tt REGIon} commands as part of the
+element generation process (i.e., using either {\tt ELEMent} or {\tt BLOCk}).
+An example of this option is explained as part of Example 4 in
+the {\sl Example Manual}.
+The basic command to merge parts in {\it Region m} to those in {\it Region n}
+is
+\begin{verbatim}
+       TIE REGIon m  n
+\end{verbatim}
+The parameters {\tt m} and {\tt n} may have the same or different values.
+
+When the tie option is used one node from a merged pair is deleted from
+the mesh and its number on the element connections replaced by the retained
+number.  It is not possible to display or output values for the
+deleted node.  If printing is in effect at the end of the mesh
+generation process, the nodes deleted are listed in the {\sl FEAP} data output
+file.  For plots, the projections will also be performed assuming the deleted
+node does not exist.
+This is different than creating common solution
+values for degree of freedoms associated with two nodes
+using the {\tt LINK} and {\tt ELINk} options described below.  In a link
+option the node is not deleted, and thus projections may create a
+different solution at the two nodes.
+
+\section{The LINK and ELINk Commands}
+\label{link}
+
+The link options may be used to make the solution of one or more of
+the degrees-of-freedom associated with two nodes have the same value.
+This option is useful in creating repeating type solutions, that is, those
+in which the solution on a surface is repeated on an identical surface
+with a different location.
+The link may be performed based on node numbers using the {\tt LINK}
+command, or for all nodes on an edge using the {\tt ELINk} command.
+
+\section{The PARTition Command}
+\label{part}
+
+The solution of coupled problems may be performed by {\sl FEAP} either
+as a total problem or by partitioning the problem into separate smaller
+problems.  For example, the solution of a coupled thermo-mechanical problem
+may be performed by solving the thermal and the mechanical parts of the
+problem separately for each solution time.
+
+By default all the 
+degree-of-freedoms in a problem are assigned to the first partition.
+To assign individual degree-of-freedoms to different partitions
+the command
+\begin{verbatim}
+       PARTition
+         P1,P2,P3,...
+\end{verbatim}
+is inserted after the mesh {\tt END} command and before the first solution
+command.  Values for {\tt P-i} must be between 1 and 4
+and must be specified for all active
+degree-of-freedoms (i.e., the total number specified on the control 
+record described in Section \ref{start}).
+
+The use of partitions can significantly reduce the cost of solving some
+coupled problems since the size of the coefficient matrix for each of the
+parts is much smaller than that of the total problem.  Furthermore, in
+{\sl FEAP} the type of algorithm to solve each part can be set individually.
+Thus, it is possible to set a static option for the mechanical part and a
+transient algorithm for the thermal part.  The individual parts may also
+be symmetric whereas the fully coupled problem is often unsymmetric.
+Such is not the case for the fully coupled solution algorithm where some
+care must be given to prevent numerical problems.  One is the different
+order of the equations which may be treated as described next.
+
+\section{The ORDEr Command}
+\label{order}
+
+In the solution of coupled problems the individual parts often involve
+solution of transient problems with different orders.
+For example, in the solution of coupled thermo-mechanical problems a
+transient heat problem is of first order while a transient mechanical
+problem is of second order.  Solution of these problems in a fully
+coupled mode requires use of a single transient algorithm.  Thus, for
+example to solve the fully coupled transient thermo-mechanical problem
+can be performed using any of the algorithms defined in Section \ref{trans2}.
+There can be numerical problems in solving the thermal problem
+if large numbers of time steps are used.  The problems originate from the
+missing second order rate term in the thermal problem which may cause the
+numerical acceleration to generate an overflow and thus terminate an
+analysis.  To avoid this difficulty the {\tt ORDE}r command may be inserted
+as
+\begin{verbatim}
+       ORDEr
+         O1,O2,O3,....
+\end{verbatim}
+where the {\tt Oi} define the order of the transient term for each
+degree-of-freedom and for {\sl FEAP} must be defined between 0 (static)
+and 2 (second order).  Thus, for a coupled thermo-mechanical problem
+the temperature degree-of-freedom should be set to one (1) and the
+displacement degree-of-freedoms to two (2).

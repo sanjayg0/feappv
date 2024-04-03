@@ -1,0 +1,143 @@
+\chapter[Rigid Body Analysis]{RIGID BODY ANALYSIS}
+\label{rigid}
+
+The rigid body capabilities are split into two classes.  One for small
+displacement problems where translation and rotation parameters are
+linear and one for the large displacement case where the rotational parameters
+appear in a non-linear form.
+
+\section{Small Displacement Analyses}
+
+For the small displacement case the treatment of rigidity may be performed
+using a {\it master-slave} concept for prescribed degrees-of-freedom.  A simple
+implementation is included in the current version which permits
+degrees-of-freedom for a slave node or a constant coordinate value to be
+represented
+in terms of degrees-of-freedom at a master point.  It is possible to have
+some degrees-of-freedom rigid while others remain flexible.  For example,
+a floor slab of a building may be constrained to be rigid for in-plane
+deformations but flexible in transverse (plate bending) motions.  The commands
+for specifying the master-slave set are inserted after the mesh {\tt END}
+command and before the first solution data set.  The basic structure is:
+\begin{verbatim}
+       MASTer
+         TYPE (EV(i),i=1,n)
+
+\end{verbatim}
+The {\tt TYPE} options are : {\tt NODE}, {\tt SURF}ace, and {\tt GAP}.  For
+{\tt NODE} the input record is:
+\begin{verbatim}
+         NODE (Xm(i),i=1,ndm) (Xs(i),i=1,ndm) (RLINK(i),i=1,ndf)
+\end{verbatim}
+The nodes closest to the specified coordinates will be selected as the
+master ({\tt Xm}) and slave ({\tt Xs}) nodes.  Zero values in
+the {\tt RLINK} pattern define the degrees-of-freedom to be considered during
+the slave phase.  The pattern must be consistent for proper behavior.  Thus,
+if the $x_1$ and $x_2$ displacements are slaved so must the $\theta_3$
+rotation parameter.  Similarly, for other patterns.
+
+The record for {\tt SURF}ace is input as:
+\begin{verbatim}
+         SURFace (Xm(i),i=1,ndm) dir (RLINK(i),i=1,ndf)
+\end{verbatim}
+Here in addition to the master node coordinates, the direction of a normal
+to the plane passing through the master node must be given.  Thus if
+{\tt Xm} is given as (0 0 5) and {\tt dir} as 3 then all other nodes
+within the gap value with coordinates ($x_1$ $x_2$ and 5) will be treated
+as slave nodes.  The value of the gap may be reset from its default value
+of $10^{-8}$ using the {\tt GAP EV(1)} command.
+
+\section{Large Displacement Analyses}
+
+As noted in Section \ref{flexrigid}
+{\sl FEAP} permits groups of finite elements to be declared as rigid
+or flexible.  The commands {\tt RIGI}d and, optionally, {\tt FLEX}ible
+are required in the mesh data (i.e., between the {\sl FEAP} problem
+initiation record and the {\tt END} of mesh record); however,
+in order to activate the rigid option, it is necessary to also define
+the type of integrations to perform for the rigid bodies and to define
+any interconnections ({\it joints}) that exist between different rigid
+bodies or a rigid body and a flexible body node.  The activation is
+achieved by inserting a {\tt RIGI}d command {\it after} the {\tt END}
+of mesh record and {\it before} the first solution {\tt BATC}h
+or {\tt INTE}ractive command.  Similarly, to define joint interconnections
+the {\tt JOIN}t command is placed in the same location.
+
+{\sl FEAP} will automatically constrain groups of rigid elements 
+which are contiguous to flexible elements 
+to perform a combined flexible-rigid body analysis.
+At present the rigid body options are limited to solid (continuum)
+elements only.
+Both explicit and implicit transient solutions are possible; however, for
+the explicit option only the Spherical (Ball and Socket) Joint described
+below is permitted.
+The implicit formulation is available for the energy-momentum formulation
+only and permits the use of several types of joints and
+the constraints are formulated using a Lagrange multiplier method.
+It is not possible to consider closed loops
+consisting of only rigid bodies since redundant Lagrange multiplier
+constraints will exist.
+
+\section{Activation of Rigid Bodies}
+
+To activate the rigid body options and to
+define the integration method the single record
+
+\begin{verbatim}
+       RIGId,Nrbdof,Npart,Ntype
+\end{verbatim}
+is inserted between the {\tt END} mesh command and the {\it first}
+solution command ({\tt BATC}h or {\tt INTE}ractive).
+In this statement {\tt Nrbdof} is the number of rigid body degree-of-freedoms,
+{\tt Npart} is the partition number of the rigid body, and {\tt Ntype} is
+the integration type.  For most analyses the parameters may be omitted and
+{\sl FEAP} will insert correct default values.  The default values for
+{\tt Nrbdof} are:
+\begin{center}
+\begin{tabular}{c | c}
+Mesh Dimension & Value \\ \hline
+  1 & 1 \\
+  2 & 3 \\
+  3 & 6 \\
+\end{tabular}
+\end{center}
+By default {\tt Npart} is assigned to partition 1 and {\tt Ntype} is set
+to the energy-conserving algorithm which is number 5. (N.B. Other options
+have not been tested and, thus may not be operational).
+
+\section{Joints}
+\label{joint}
+
+Rigid bodies may be interconnected using {\it joints}.
+The specification of the joints is initiated using a {\tt JOIN}t command
+which also is located after the {\tt END} mesh command and before the first
+{\tt BATC}h or {\tt INTE}ractive solution command.  Two of the selections from
+the library of joints are:
+\begin{enumerate}
+\item
+Ball and Socket:  Two rigid bodies may rotate freely about a specified
+point.  A ball and socket joint is specified by a record
+\begin{verbatim}
+       BALL,RB_1,RB_2,X,Y,Z
+\end{verbatim}
+where {\tt RB-1} and {\tt RB-2} are the rigid body numbers associated
+with the ball and socket, and {\tt X}, {\tt Y}, and {\tt Z} are the reference
+system coordinates for the location of the ball and socket.
+
+\item
+Revolute:  Two rigid bodies may be constrained to rotate relative to
+a specified direction in the reference coordinate system.  A classical
+revolute is formed by combining the {\sl FEAP} {\tt REVO}lute with a
+{\tt BALL} joint. The revolute is specified as:
+\begin{verbatim}
+       REVOlute,RB_1,RB_2,X_1,Y_1,Z_1, X_2,Y_2,Z_2
+\end{verbatim}
+where now the two coordinate points identify the direction of the
+rotational axis in the reference state.  This axis is free to rotate
+in space unless constrained by other restraints.
+\end{enumerate}
+
+Other types of joints are described in Appendix A.
+
+N.B. The rigid body options are in a development mode and are not
+operational for all types of solution methods.

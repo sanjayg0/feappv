@@ -1,0 +1,43 @@
+\heada{MESH}{GLOBal}
+\hspace{1.0cm}{{ glob         \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ plane stress \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ plane strain \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ axisymmetric \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ small \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ finite \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ temp,dof,value \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ refe,node,(x(i),i=1,ndm) \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ refe,vect,(v(i),i=1,ndm) \hfill}}
+\headb
+
+The {\tt GLOB}al command is used to set parameters which apply to
+all elements.  Use of {\it plane stress} sets all 2-d elements
+to compute properties based on the plane stress assumption; use
+of {\it plain strain} sets the properties for plane strain condition;
+and {\it axisymmetric} sets the geometry to an axisymmetric condition.
+
+The option {\it small} designates a small deformation solution option
+for all elements (this is the default mode); whereas, the option {\it finite}
+designates a finite deformation solution mode (at present only the
+two dimensional solid element supports this option - in displacement mode).
+
+The {\it temperature dof} option designates the global degree of
+freedom (i.e., the {\it value} dof) which is to be used by the solid and
+structural element to extract the temperatures for use in
+computing thermal strains.  This is used for coupled thermo-mechanical
+solutions in which the temperatures are computed using a thermal element
+(e.g., the {\it thermal} element type specified by the {\tt MATE}rial set
+command).
+
+The {\it reference node} option defines a coordinate location to be
+used to orient the cross section of three dimensional {\tt FRAM}e elements.
+The 2-axis is directed from the center of the beam toward the node location.
+The {\it reference vecto} option defines a vector to be
+used to orient the cross section of three dimensional {\tt FRAM}e elements.
+A cross product of the vector with the axis of the frame element defines
+the 1-axis of the cross section.  The 2-axis is then constructed by another
+cross product between the 1-axis and the frame element axis.
+
+Global parameters may be superceded by specifying a different condition
+during input of {\tt MATE}rial commands.
+\vfil\eject

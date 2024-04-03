@@ -1,0 +1,57 @@
+\heada{SOLUTION}{TIME}
+\hspace{1.2cm}{{time,,$<$t\_max$>$ \hfill}} \\{\smallskip}
+\hspace{1.0cm}{{time,$<$set,t$>$ \hfill}}
+\headb
+
+The use of the {\tt TIME} command will increment the
+current time by {\tt DT}, the current time increment.  In addition,
+a new value of the proportional loading will be computed,
+if necessary.  The value of the current time and proportional
+loading are reported in the output (or to the
+screen).  The time command also will perform the first
+update for an active time integration algorithm of the equations
+of motion (e.g., the Newmark-beta method) , as well
+as, update the history data base for any elements with non-linear
+constitutive equations (e.g., those which require
+variables other than the displacement state to compute a
+solution).  Accordingly, it is imperative to include a time
+command for this class of problems.  Example: Time
+dependent solution with loop control
+\begin{verbatim}
+       DT,,1.
+       LOOP,,10
+         TIME
+          ..
+         etc.
+          ..
+       NEXT
+\end{verbatim}
+Performs 10 time steps of a solution.
+
+As an option, it is possible to specify the maximum
+time that integration is to be performed.  Accordingly, when
+a variable time step is employed the {\tt TMAX} parameter value may be
+used as a convenient stop marker.  This also is essential if
+an automatic time stepping algorithm is implemented. Example:
+Time dependent solution  with  loop  control, terminate at specified time.
+\begin{verbatim}
+       DT,,1.
+       LOOP,,10
+         TIME,,5.0
+          ..
+         etc.
+          ..
+       NEXT
+\end{verbatim}
+Performs 10 time steps of a solution; however, if
+the time reaches the value of 5.0 before the 10
+steps terminate the execution.  This may happen if
+the {\tt DT} value is automatically adjusted by 
+another step in the solution process.
+
+The current time may be set to a specified value, {\tt T},
+using the command {\tt TIME,\-SET,\-T} (where {\tt T} is the value
+desired).  No other action is taken.  This may be helpful in
+certain steady state problems where solutions are desired
+for certain specified times.
+\vfill\eject

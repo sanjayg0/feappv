@@ -551,17 +551,22 @@
      &      //3x,'Local',3x,'Global'/
      &        4x,'Node',4x,'Node     DOF Displacement')
 
-2009  format(3i8,1p,e13.4)
+2009  format(3i8,1p,2e13.4)
+
 2010  format(/6x,'Node',3(i5,' Coord'),5x,'Displ.')
 
 2011  format(/6x,'Node',3(i5,' Coord'),6x,'Angle')
+
 2012  format(/7x,'N o d a l    A n g l e s'//
      &       10x,'Global Node    Angle'/)
+
 2013  format(i20,1p,5e11.3)
 
-2015  format(/7x,'N o d a l    F l u x e s'//3x,'Local',5x,'Global'/
-     &       4x,'Node',6x,'Node',5x,' Force',7x,'flux')
-2016  format(/6x,'Node',3(i5,' Coord'),6x,'Flux')
+2015  format(/7x,'N o d a l    F l u x    F o r c e s'/
+     &       /3x,'Local',3x,'Global'/
+     &        4x,'Node',4x,'Node',5x,'DOF   Flux Force     Flux q_n')
+
+2016  format(/6x,'Node',3(i5,' Coord'),7x,'Flux')
 
 3000  format(/'  *ERROR* ',a)
 

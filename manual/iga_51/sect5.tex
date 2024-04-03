@@ -1,0 +1,42 @@
+\section{Solutions using T-splines}
+
+\textsl{FEAP} permits the calculation of isogeometric objects represented by
+\textit{T-splines}.  The solution is obtained using an \textit{extraction
+operator} form in which the element shape functions are expressed in terms
+of shape functions given as
+\begin{displaymath}
+\B{N}^e = \B{C}^e \, \B{R}^e
+\end{displaymath}
+where $\B{R}^e$ are a Bezier representation of NURBS, $\B{C}^e$ is the element
+extraction operator and $\B{N}^e$ are the T-spline shape functions.
+
+The data input is provided by an output from the refinement program
+developed at The University of Texas by Mike Scott\scite{scott10a}
+and included as an extension
+of the T-Splines\scite{tsplines} plug-in to Rhino\scite{rhino}.  
+
+Only surface data is provided and thus analyses are restricted to bodies that
+are represented by surfaces (e.g., 2-d solid bodies, membranes and shells).  A
+typical input file is given as:
+\begin{verbatim}
+       FEAP * * Title information
+         ndm = <2,3>     ! 2-d solids or 3-d surfaces, respectively
+         ndf = <1,2,...> ! Describes number of dof at a control point
+
+       MATErial
+         <SOLId, MEMBrane, SHELl>
+         elastic isotropic E nu
+         NURBs,TSPLine,q1,q2,q3
+
+       T-SPline
+         PLOT INTErval <1 to 7>    ! Number of subdivision of surface
+         FILE = "filename of data"
+
+       .... ! Loads, B.C., etc.
+       END              ! End of data inputs
+       INTEractive      ! Interactive solution commands
+       STOP             ! End of data file
+\end{verbatim}
+
+Standard solution commands may be used.  Graphics is available in a manner
+similar to that for NURBS problems.

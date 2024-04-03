@@ -1,0 +1,121 @@
+\section{User modules}
+
+The capability to perform isogeometric analysis has largely been incorporated
+into \textsl{FEAP} through user modules.  These modules permit the refinement
+of original model descriptions into analysis suitable form.  This is accomplished
+by degree elevation of the NURBS and by knot insertion to create additional
+subdivisions that are used to describe \textit{elements}.  The various
+options that have been developed to date are described in Table \ref{tab1iga}.
+In addition to the solution commands a number of user elements have been
+added as described in Table \ref{tab2iga}.
+
+\input{iga_table.tex}
+
+\section{Elevation of order and adding knot values}
+
+Generally, the initial input data defining the geometry of the problem is not
+sufficient for an accurate analysis.  It may be necessary to \textit{elevate}
+the order of the NURBS approximation for the patches or to \textit{insert}
+additional knot values in the knot vectors.  To perform these steps by hand
+is a tedious and error prone process.  The current implementation in
+\textsl{FEAP} permits both steps to be performed using solution `Command
+Language' statements.
+
+\subsection{Degree ELEVation}
+
+To raise the polynomial order of one B-spline defining a NURBS the
+solution command set
+\begin{verbatim}
+       ELEVate BLOCk blk dir incr
+\end{verbatim}
+may be used.  The parameters are: \texttt{blk} is the block number;
+\texttt{dir} is the direction in the block to elevate; and \texttt{incr} is
+the order increment to increase.  Execution of these commands creates a
+file named: \texttt{NURB\_mesh} that contains the new set of control points,
+side lists, knot vectors and nurb blocks.  At this stage only one direction
+in one block has been elevated and it is necessary to repeat the process for
+other blocks and directions.  The process of repeating the process can be
+performed using the \textsl{FEAP} input \texttt{LOOP-NEXT} commands.
+
+\subsubsection{Multiple elevations}
+
+The process of performing several elevations can be accommodated easily by
+preparing a mesh input file with the structure
+\begin{verbatim}
+       FEAP <optional title information>
+         0 0 0 ndm ndf nel
+
+       MATE <all material properties included in original mesh
+
+       INCLude NURB_mesh
+
+       END
+       STOP
+\end{verbatim}
+Then prepare a second input file that has the form:
+\begin{verbatim}
+       INCLude I<original mesh>
+       BATCH
+         ELEVate BLOCk blk1 dir1 incr1
+       END
+
+       INCLude I<NURB_mesh>
+       BATCh
+         ELEVate BLOCk blk2 dir2 incr2
+       END
+
+       etc.
+\end{verbatim}
+where \texttt{I<NURB\_mesh>} is the name of the input file containing the
+\texttt{INCLude NURB\_mesh} statement.
+After the processing of the original mesh the subsequent processes may all
+use the file containing the \texttt{NURB\_mesh} include.  Using parameters
+and looping structures such as
+\begin{verbatim}
+       PARAmeter
+         d = 1
+
+       LOOP,2
+         PARAmeter
+           d = d + 1
+
+         INCLude I<NURB_mesh>
+         BATCh
+           ELEVate BLOCk 1 d 2
+         END
+       NEXT
+\end{verbatim}
+would elevate the second and third directions of block 1 by two orders.
+
+\subsection{KNOT insertion}
+
+To insert knots the command set
+\begin{verbatim}
+       INSErt BLOCk blk dir value rr
+\end{verbatim}
+may be use.  The parameters are: \texttt{blk} is the block number;
+\texttt{dir} the knot direction in the block; \texttt{value} the location
+in the knot vector to perform an insertion; and \texttt{rr} the number of
+times to repeat the insertion.
+Alternatively, knot insertions may be specified by the knot number using the
+command set
+\begin{verbatim}
+       INSErt KNOT knum value rr
+\end{verbatim}
+where \texttt{knum} is the knot number and \texttt{value} and \texttt{rr} are
+as described above.
+
+Each use of an \texttt{INSErt} set again
+results in a new \texttt{NURB\_mesh}.  Multiple insertions can again be 
+performed using the above loop structure.  For meshes that perform several
+knot insertions it may take several seconds before the final \texttt{NURB\_mesh}
+file is created.
+
+After several elevations and insertions, the final \texttt{NURB\_mesh} file
+contains the isogeometric problem description suitable for analysis.  The
+analysis can be performed using an input file containing the
+\texttt{INCLude NURB\_mesh} along with boundary conditions and loading
+specification.  This is now a standard \textsl{FEAP} solution process and
+any of the solution options described in the User Manual may be used.
+Recall that the activation of a NURBS analysis is controlled by a statement
+in the \texttt{MATErial} set data.

@@ -1,0 +1,24 @@
+
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{| c | r | p{11cm}|} \hline
+\texttt{UMACR} & uct & Description \\ \hline
+ 2 & \texttt{exkn} & Compute extraction matrix for a knot vector \\
+ 3 & \texttt{bdis} & Calls  \texttt{pdblock(3)} \\
+ 5 & \texttt{bezi} & Bezier extraction from NURBS curve to generate power matrix form\\
+& & \texttt{BEZIer,, x, y, z} \\
+ 6 & \texttt{extr} & Compute extraction operator for 1-d forms. \\
+& & \texttt{EXTRact BEZIer n\_side} \\
+ 7 & \texttt{curv} & Elevation and knot insertion of curve \\
+& & \texttt{CURVe,, no, deg, ord }\\
+19 & \texttt{n\_di} &  Nodal director projection by least-squares algorithm. \\
+   &  & For use with Reissner-Mindlin shell elements. \\
+20 & \texttt{o\_li} &  Output finite element mesh of linear quadrilateral or
+bricks from IGA mesh. \\
+& & Requires plot of mesh before use. \\
+\hline
+\end{tabular}
+\caption{Commands for NURBS/T-spline solutions. \label{tab1iga} }
+\end{center}
+\end{table}
+

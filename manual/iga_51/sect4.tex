@@ -1,0 +1,152 @@
+\section{Multiple NURBS blocks}
+
+Problems may be solved using multiple NURBS blocks.  However, the edge or
+boundary of contiguous blocks must have the same control point topology --
+the topology in other directions may be different.
+
+If multiple blocks are used, prior to any solution commands  it is
+necessary to merge the blocks into a single
+problem using the \texttt{TIE} command.
+This command appears after the \texttt{END} of mesh command, thus,
+the general form is:
+\begin{verbatim}
+       FEAP * * <title information
+         0 0 ....
+        <mesh data>
+       END ! End of mesh
+       TIE
+       <solution commands>
+\end{verbatim}
+
+\subsection{Slope compatibility enforcement for thin shells: NTIE}
+\label{ntie}
+
+For the thin shell element use of the \texttt{TIE} command results in
+a moment-less hinge between the patches.  In order to restore slope
+compatibility between patches it is necessary to add the command
+\texttt{NTIE} after the \texttt{TIE} command.
+It is possible enforce slope compatibility between specific patches or
+to enforce it between all shell patches.
+To enforce a compatibility between individual patches the command is
+given as
+\begin{verbatim}
+       TIE
+       NTIE
+         PATCh p1 p2 ma
+\end{verbatim}
+where \texttt{p1} and \texttt{p2} are the two patches and
+\texttt{ma} is the material set number for the
+\texttt{NURB\_SLOPE} material set (see Section \ref{nmaterial}).
+
+To enforce compatibility between all patches the command 
+is given as
+\begin{verbatim}
+       TIE
+       NTIE
+         ALL ma
+\end{verbatim}
+where \texttt{ma} is the material set number for the
+\texttt{NURB\_SLOPE} material set (see Section \ref{nmaterial}).
+
+\section{OUTMesh: Output of IgA mesh}
+
+Once a final mesh for a problem is created the data sets may be 
+saved to a file using the command:
+\begin{verbatim}
+       OUTMesh
+\end{verbatim}
+The output is written to either a file \texttt{Ixxxx.rev} if no profile 
+oprimization was specified or \texttt{Ixxxx.opt} if profile optimization was
+specified prior tothe \texttt{OUTMesh} command.  The character string
+\texttt{xxxx} contains the name of the file initially specified in the
+IgA \textsl{FEAP} run.  The written file contains the following input data sets:
+\begin{verbatim}
+       MATErials  ! any material sets specified
+       NURBS ALL  ! with coordinates and weights for each node
+       ELEMents   ! with nodal connections for each element
+       ENURBs     ! a data set defining location and number of knots
+       KNOTs      ! with list of knot vector data
+        ....      ! any specified loads, displacements, and/or b.c.
+\end{verbatim}
+The only solution command contained in the file is \texttt{INTEractive}.
+
+\section{Surface extraction}
+
+In many problems it is necessary to define segments of surfaces from the
+NURBS patches. These may be found using the solution command \texttt{N\_EXtract}.
+This should be performed in an \textit{interactive mode of solutions}.
+To initiate the extraction it is necessary to first display a plot of the
+problem in graphics mode.  For two dimensional problems one should first
+give the command
+\begin{verbatim}
+       PLOT MESH
+\end{verbatim}
+this is then followed with the command
+\begin{verbatim}
+       N_EXtract
+\end{verbatim}
+The program will then display each of the boundary segments for each NURBS
+patch and the user may select to output a file or reject it.
+
+In a three dimensional problem the graphics commands
+\begin{verbatim}
+       PLOT PERSpecitive
+       PLOT HIDE
+       PLOT MESH
+\end{verbatim}
+should be issued prior to giving the
+\begin{verbatim}
+       N_EXtract
+\end{verbatim}
+command.
+
+After completing the selection of any boundary segments a set of files containing the \texttt{ELEMents} and \texttt{ENURbs} data will be created.  A single
+file
+\begin{verbatim}
+       Bxxx_m
+\end{verbatim}
+where \texttt{xxx} are the characters (3:5) of the input file name, contains
+a record
+\begin{verbatim}
+       *auto
+\end{verbatim}
+and a list of the files containing the surface segment extractions.
+These should be reviewed to ensure the created mesh data is correct.
+In particular the material set number for each segment.
+The basic header to change is
+\begin{verbatim}
+       ELEMent NODE=no_nd MATE=ma TYPE ....
+\end{verbatim}
+The material number for the entire set can be changed by setting the value of
+\texttt{ma} desired.  \textit{It is not necessary to change the number on
+each element data record}.  Do not edit any data in the date part
+\texttt{ENURbs}.  This is used to select the correct extraction operator
+for each element.
+
+The file \texttt{Bxxx\_m} should be added to the mesh part of the input
+file \textit{that created the boundary segments} as
+\begin{verbatim}
+       include Bxxx_m
+\end{verbatim}
+
+\section{Problem solution}
+
+After the problem is formed, standard \textsl{FEAP} solution commands are
+used to solve each problem.
+
+\section{Graphics outputs}
+
+Standard \textsl{FEAP} plot commands may be used to display the location of the
+control points (\texttt{PLOT NODE} command) and boundary restraints on the
+control points (\texttt{PLOT BOUNdary}).  Use of any contouring
+commands (\texttt{PLOT CONT}, \texttt{PLOT STRE}) is performed by projection
+onto 4-node quadrilateral sub-elements of the surface.  Most plot commands may be
+used but there remain some delicate transformations between the various representation of the data to be plotted.  For 3-d objects plots should be given
+in perspective mode.  Thus, the data for each plot sequence should begin with
+\begin{verbatim}
+       PLOT PERSpective  ! Required for 3-d only
+       PLOT HIDE         ! Required for 3-d only
+\end{verbatim}
+
+If a problem requires long solution times it is advisable to use \texttt{SAVE}
+commands to preserve solution values prior to attempting plot outputs.

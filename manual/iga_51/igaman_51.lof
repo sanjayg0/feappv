@@ -1,0 +1,21 @@
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {1.1}{\ignorespaces Lagrange interpolation of a parabola }}{4}{figure.1.1}
+\contentsline {figure}{\numberline {1.2}{\ignorespaces Quadratic B-spline for quadratic knot with three elements. Generates 5-functions. }}{5}{figure.1.2}
+\contentsline {figure}{\numberline {1.3}{\ignorespaces B-spline curve for parabola. }}{5}{figure.1.3}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Close ring using clamped and unclamped knot vector. The \textit {red} control point of (a) is $C_0$ and the \textit {red} overlap of (b) maintains the $C_2$ continuity of the cubic curve. }}{16}{figure.2.1}
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Close ring B-splines for clamped and unclamped knot vector. }}{17}{figure.2.2}
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Two dimensional NURBS surface patch }}{18}{figure.2.3}
+\contentsline {figure}{\numberline {2.4}{\ignorespaces Three dimensional NURBS solid patch }}{20}{figure.2.4}
+\contentsline {figure}{\numberline {2.5}{\ignorespaces Curved beam mesh description. }}{22}{figure.2.5}
+\contentsline {figure}{\numberline {2.6}{\ignorespaces Side designation for a two dimensional NURBS patch. }}{24}{figure.2.6}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Two dimensional NURBS patch of quadratic elements. }}{33}{figure.3.1}
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Individual elements for 2-d NURBS patch of quadratic elements. }}{34}{figure.3.2}
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Two dimensional NURBS patch of cubic elements. }}{35}{figure.3.3}
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Individual elements for 2-d NURBS patch of cubic elements. }}{35}{figure.3.4}
+\contentsline {figure}{\numberline {3.5}{\ignorespaces Two dimensional NURBS patch of quartic elements. }}{36}{figure.3.5}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {A.1}{\ignorespaces Two dimensional NURBS block data }}{41}{figure.A.1}
+\contentsline {figure}{\numberline {A.2}{\ignorespaces Three dimensional NURBS block data }}{43}{figure.A.2}
+\addvspace {10\p@ }

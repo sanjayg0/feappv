@@ -1,0 +1,6 @@
+Alternatively, the above statments now may be given as
+\begin{verbatim}
+       FEAP * * <title information for mixed analysis>
+         ndm = 3
+         ndf = 4
+\end{verbatim}

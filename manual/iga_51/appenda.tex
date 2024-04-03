@@ -1,0 +1,84 @@
+\chapter[Patch storage arrays]{Patch storage arrays}
+\label{appxa}
+
+The definition of NURBS patches utilizes several arrays to facilitate
+the description of shape, element definition and knot intervals.
+The basic description is given in the following tables.
+
+\begin{table}[!hb]
+\begin{center}
+\begin{tabular}{| l || l | l | l || p{2.5in} | |} \hline
+NAME & {\tt line} & {\tt surf} & {\tt soli} & Description \\ \hline
+{\tt NBLK(1,ib)}  & 1     & 2        & 3 & Dimension of patch \\ 
+{\tt NBLK(2,ib)}  & ma    & ma       & ma & Material number \\ 
+{\tt NBLK(3,ib)}  & nreg  & nreg     & nreg & Region number \\ 
+{\tt NBLK(4,ib)}  & pn1   & pn2      & pn1*pn2 & Length of patch \\ 
+{\tt NBLK(5,ib)}  & ipart & ipart    & ipart & Part number \\ 
+{\tt NBLK(6,ib)}  & is    & pn2+1    & k1 & Knot 1 \\ 
+{\tt NBLK(7,ib)}  & 0     & 0        & k2 & Knot 2 \\ 
+{\tt NBLK(8,ib)}  & -     & eside(1) & k3 & Edge 1/Knot 3 \\ 
+{\tt NBLK(9,ib)}  & -     & eside(2) & p1 & Edge 2/Length 1 \\ 
+{\tt NBLK(10,ib)} & -     & eside(3) & p2 & Edge 3/Length 2 \\ 
+{\tt NBLK(11,ib)} & -     & eside(4) & p3 & Edge 4/Length 3 \\ \hline
+\end{tabular}
+\caption{NURBS patch array \texttt{NBLK} parameters for block \texttt{ib}.
+\label{tabin1} }
+\end{center}
+\end{table}
+
+\begin{table}[!t]
+\begin{center}
+\begin{tabular}{| l || l | l | l || p{2.5in} | |} \hline
+NAME & {\tt line} & {\tt surf} & {\tt soli} & Description \\ \hline
+{\tt NBLKSD(1,ib)}  & is  & is        & is & Side 1 number \\ 
+ to & & & & \\
+{\tt NBLKSD(L,ib)}  & - & \texttt{l=pn2} & \texttt{l=pn1*pn2} & Side
+{\tt L} number from \texttt{NBLK}\\ \hline 
+\end{tabular}
+\caption{NURBS patch array \texttt{NBLKSD} parameters for block \texttt{ib}.
+\label{tabin2} }
+\end{center}
+\end{table}
+
+
+\begin{table}[!h]
+\begin{center}
+\begin{tabular}{| l || p{4in} | |} \hline
+NAME & Description \\ \hline
+{\tt LSIDE(1,is)}  & Number of control points. \\ 
+{\tt LSIDE(2,is)}  & Knot number \\ \hline 
+\end{tabular}
+\caption{NURBS patch array \texttt{LSIDE} parameters for side \texttt{is}.
+\label{tabin3} }
+\end{center}
+\end{table}
+
+\begin{table}[!h]
+\begin{center}
+\begin{tabular}{| l || p{4in} | |} \hline
+NAME & Description \\ \hline
+{\tt NSIDES(1,is)}  & Control point 1. \\ 
+{\tt NSIDES(2,is)}  & Control point 2.\\
+etc. &  \\
+{\tt NSIDES(dsideig,is)} & Last control point. \\ \hline
+\end{tabular}
+\caption{NURBS patch array \texttt{NSIDES} parameters for side \texttt{is}.
+\label{tabin4} }
+\end{center}
+\end{table}
+
+\begin{table}
+\begin{center}
+\begin{tabular}{| l || p{4in} | |} \hline
+NAME & Description \\ \hline
+{\tt LKNOT(0,kn)}  & Knot type: Open = 1; \\
+{\tt LKNOT(1,kn)}  & Number of knots. \\ 
+{\tt LKNOT(2,kn)}  & Order of knots. \\
+{\tt LKNOT(3,kn)}  & Number control points. \\ 
+{\tt LKNOT(4,kn)}  & Used to elevate order. \\ \hline 
+\end{tabular}
+\caption{NURBS knot array \texttt{LKNOT} for knot \texttt{kn}.
+\label{tabin5} }
+\end{center}
+\end{table}
+

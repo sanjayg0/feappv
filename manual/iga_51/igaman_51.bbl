@@ -1,0 +1,187 @@
+\begin{thebibliography}{10}
+
+\bibitem{hughes05a}
+T.J.R. Hughes, J.A. Cottrell, and Y.~Bazilevs.
+\newblock Isogeometric analysis: {CAD}, finite elements, {NURBS}, exact
+  geometry, and mesh refinement.
+\newblock {\em Computer Methods in Applied Mechanics and Engineering},
+  194:4135--4195, 2005.
+
+\bibitem{piegl97}
+L.~Piegl and W.~Tiller.
+\newblock {\em The {NURBS} Book (Monographs in Visual Communication)}.
+\newblock Springer-Verlag, New York, $2^{nd}$ edition, 1997.
+
+\bibitem{cottrell09a}
+J.A. Cottrell, T.J.R. Hughes, and Y.~Bazilevs.
+\newblock {\em Isogeometric Analysis: Toward Integration of CAD and FEA}.
+\newblock John Wiley \& Sons, New York, 2009.
+
+\bibitem{bazilevs06a}
+Y.~Bazilevs, L.~Beirao de~Veiga, J.A. Cottrell, T.J.R. Hughes, and G.~Sangalli.
+\newblock Isogeometric analysis: {Approximation}, stability and error estimates
+  for $h$-refined meshes.
+\newblock {\em Mathematical Models and Methods in Applied Sciences},
+  16:1031--1090, 2006.
+
+\bibitem{cottrell06a}
+J.A. Cottrell, A.~Reali, Y.~Bazilevs, and T.J.R. Hughes.
+\newblock Isogeometric analysis of structural vibrations.
+\newblock {\em Computer Methods in Applied Mechanics and Engineering},
+  195:5257--5296, 2007.
+
+\bibitem{bazilevs06b}
+Y.~Bazilevs, V.M. Calo, Y.~Zhang, and T.J.R. Hughes.
+\newblock Isogeometric fluid-structure interaction analysis with applications
+  to arterial blood flow.
+\newblock {\em Computational Mechanics}, 38:310--322, 2006.
+
+\bibitem{cottrell07a}
+J.A. Cottrell, T.J.R. Hughes, and A.~Reali.
+\newblock Studies of refinement and continuity in isogeometric structural
+  analysis.
+\newblock {\em Computer Methods in Applied Mechanics and Engineering},
+  196:4160--4183, 2008.
+
+\bibitem{zhang07a}
+Y.~Zhang, Y.~Bazilevs, S.~Goswami, C.~Bajaj, and T.J.R. Hughes.
+\newblock Patient-specific vascular {NURBS} modeling for isogeometric analysis
+  of blood flow.
+\newblock {\em Computer Methods in Applied Mechanics and Engineering},
+  196:2943--2959, 2007.
+
+\bibitem{bazilevs08a}
+Y.~Bazilevs, V.M. Calo, T.J.R. Hughes, and Y.~Zhang.
+\newblock Isogeometric fluid-structure interaction: {Theory}, algorithms and
+  computations.
+\newblock {\em Computational Mechanics}, 43:143--150, 2008.
+
+\bibitem{elguedj08a}
+T.~Elguedj, Y.~Bazilevs, V.M. Calo, and T.J.R. Hughes.
+\newblock $\bar{B}$ and $\bar{F}$ projection methods for nearly incompressible
+  linear and non-linear elasticity and plasticiy using higher-order {NURBS}
+  elements.
+\newblock {\em Computer Methods in Applied Mechanics and Engineering},
+  197:2732--2762, 2008.
+
+\bibitem{gomez08a}
+H.~Gomez, V.M. Calo, Y.~Bazilevs, and T.J.R. Hughes.
+\newblock Isogeometric analysis of the {Cahn}-{Hilliard} phase-field model.
+\newblock {\em Computer Methods in Applied Mechanics and Engineering},
+  197:4333--4352, 2008.
+
+\bibitem{hughes08a}
+T.J.R. Hughes, A.~Reali, and G.~Sangalli.
+\newblock Duality and unified analysis of discrete approximations in structural
+  dynamics and wave propagation: {Comparison} of $p$-method finite elements
+  with $k$-method {NURBS}.
+\newblock {\em Computer Methods in Applied Mechanics and Engineering},
+  197:4104--4124, 2008.
+
+\bibitem{wall08a}
+W.A.. Wall, M.A. Frenzel, and C.~Cyron.
+\newblock Isogeometric structural shape optimization.
+\newblock {\em Computer Methods in Applied Mechanics and Engineering},
+  197:2976--2988, 2008.
+
+\bibitem{evans09a}
+J.A. Evans, Y.~Bazilevs, I.~Babu{\v{s}}ka, and T.J.R. Hughes.
+\newblock $n$-widths, sup-infs, and optimality ratios for the $k$-version of
+  the isogeometric finite element method.
+\newblock {\em Computer Methods in Applied Mechanics and Engineering},
+  198:1726--1741, 2009.
+
+\bibitem{lu09a}
+J.~Lu.
+\newblock Circular element: {Isogeometric} elements of smooth boundary.
+\newblock {\em Computer Methods in Applied Mechanics and Engineering},
+  198:2391--2402, 2009.
+
+\bibitem{kiendl09a}
+J.~Kiendl, K.-U. Bletzinger, J.~Linhard, and R.~W\"{u}chner.
+\newblock Isogeometric shell analysis with {Kirchhoff}-{Love} elements.
+\newblock {\em Computer Methods in Applied Mechanics and Engineering},
+  198:3902--3914, 2009.
+
+\bibitem{kiendl10a}
+Josef~M. Kiendl.
+\newblock {\em Isogeometric Analysis and Shape Optimal Design of Shell
+  Structures}.
+\newblock Doktor-ingenieurs dissertation, Lehrstuhl f{\"{u}}r Statik,
+  Technische Universit{\"{a}}t M{\"{u}}nchen, Munich, Germany, 2010.
+
+\bibitem{bazilevs10a}
+Y.~Bazilevs, V.M. Calo, J.A. Cottrell, J.A. Evans, T.J.R. Hughes, S.~Lipton,
+  M.A. Scott, and T.W. Sederberg.
+\newblock Isogeometric analysis using {T}-splines.
+\newblock {\em Computer Methods in Applied Mechanics and Engineering},
+  199:229--263, 2010.
+
+\bibitem{echter10a}
+R.~Echter and M.~Bischoff.
+\newblock Numerical efficiency, locking and unlocking of {NURBS} finite
+  elements.
+\newblock {\em Computer Methods in Applied Mechanics and Engineering},
+  199:374--382, 2010.
+
+\bibitem{benson10a}
+D.J. Benson, Y.~Bazilevs, M.C. Hsu, and T.J.R. Hughes.
+\newblock Isogeometric shell analysis: {The} {Reissner}-{Mindlin} shell.
+\newblock {\em Computer Methods in Applied Mechanics and Engineering},
+  199:276--289, 2010.
+
+\bibitem{benson10b}
+D.J. Benson, Y.~Bazilevs, E.~De Luycker, M.-C. Hsu, M.~Scott, T.J.R. Hughes,
+  and T.~Belytschko.
+\newblock A generalized finite element formulation for arbitrary basis
+  functions: From isogeometric analysis to {XFEM}.
+\newblock {\em International Journal for Numerical Methods in Engineering},
+  83:765--785, 2010.
+
+\bibitem{benson11b}
+D.J. Benson, Y.~Bazilevs, M.-C. Hsu, and T.J.R. Hughes.
+\newblock A large deformation, rotation-free, isogeometric shell.
+\newblock {\em Computer Methods in Applied Mechanics and Engineering},
+  200:1367--1378, 2011.
+
+\bibitem{taylor11a}
+R.L. Taylor.
+\newblock Isogeometric analysis of nearly incompressible solids.
+\newblock {\em International Journal for Numerical Methods in Engineering},
+  87(1--5):273--288, 2011.
+
+\bibitem{feapu}
+R.L. Taylor and S.~Govindjee.
+\newblock {\em FEAP - {A} {Finite} {Element} {Analysis} {Program}, {User}
+  {Manual}}.
+\newblock University of California, Berkeley.
+\newblock \url{projects.ce.berkeley.edu/feap}.
+
+\bibitem{zt1n7}
+O.C. Zienkiewicz, R.L. Taylor, and J.Z. Zhu.
+\newblock {\em The Finite Element Method: Its Basis and Fundamentals}.
+\newblock Elsevier, Oxford, $7^{th}$ edition, 2013.
+
+\bibitem{borden11a}
+M.J. Borden, M.A. Scott, J.A. Evans, and T.J.R. Hughes.
+\newblock Isogeometric finite element data structures based on {B{\'{e}}zier}
+  extraction of {NURBS}.
+\newblock {\em International Journal for Numerical Methods in Engineering},
+  87(1--5):15--47, 2011.
+
+\bibitem{scott10a}
+M.A. Scott, M.J. Borden, C.V. Verhoosel, T.W. Sederberg, and T.J.R. Hughes.
+\newblock Isogeometric finite element data structures based on {B}{\'{e}}zier
+  extraction of {T}-splines.
+\newblock Technical Report ICES Report 10-45, The Institute for Computational
+  Engineering and Sciences, The University of Texas at Austin, November 2010.
+
+\bibitem{tsplines}
+T-{Splines}, {Inc}.
+\newblock http://www.tsplines.com/products/tsplines-for-rhino.html.
+
+\bibitem{rhino}
+Rhinoceros: {NURBS} modeling for {Windows}.
+\newblock http://www.rhino3d.com.
+
+\end{thebibliography}

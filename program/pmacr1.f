@@ -421,10 +421,19 @@
 !     Compute residual for time step/iteration
 
 !     [form]       - form rhs residual
+!     [form,long]  - format long
+!     [form,shor]  - format short
 !     [form,acce]  -    " + get initial acceleration if needed
 !     [form,expl]  -    " + do explicit solution with lumped mass
 
-4     if(fl(8)) return
+4     if(pcomp(lct(l),'long',4)) then
+        fmt_long = .true.
+        return
+      elseif(pcomp(lct(l),'shor',4)) then
+        fmt_long = .false.
+        return
+      endif
+      if(fl(8)) return
       rfl = .false.
       call ploa1(ttim,dt)
       call pload(mr(np(31)),hr(np(30)),hr(np(26)),prop*rlnew,tr)

@@ -113,6 +113,7 @@
       call fdate( cdate )
       ctext   = 'start'
       contrfl = .true.
+      fmt_long = .false.
       do while(.not.pcomp(ctext,'    ',4))
         errck  = tinput(ctext,1,td(2),8)
         if(pcomp(ctext,'feap',4)) then

@@ -2,6 +2,6 @@
       integer         ior,iow
       common /iofile/ ior,iow
 
-      logical         keepfl
-      common /iofile/ keepfl
+      logical         keepfl,fmt_long
+      common /iofile/ keepfl,fmt_long
 

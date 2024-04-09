@@ -92,9 +92,16 @@
             n_count = 48
           endif
           if(tot) then
-            write(iow,2003) n,(x(i,n),i=1,ndm),(b(i,n),i=1,ndf)
-            if(ior.lt.0.and.pfr) then
-              write(*,2003) n,(x(i,n),i=1,ndm),(b(i,n),i=1,ndf)
+            if(fmt_long) then
+              write(iow,2004) n,(x(i,n),i=1,ndm),(b(i,n),i=1,ndf)
+              if(ior.lt.0.and.pfr) then
+                write(*,2004) n,(x(i,n),i=1,ndm),(b(i,n),i=1,ndf)
+              endif
+            else
+              write(iow,2003) n,(x(i,n),i=1,ndm),(b(i,n),i=1,ndf)
+              if(ior.lt.0.and.pfr) then
+                write(*,2003) n,(x(i,n),i=1,ndm),(b(i,n),i=1,ndf)
+              endif
             endif
           else
             if(fmt_long) then
@@ -123,5 +130,7 @@
 2002  format('   Node',6(i6,a6):/(7x,6(i6,a6)))
 
 2003  format(i7,1p,6e12.4/(7x,1p,6e12.4))
+
+2004  format(i7,1p,6e17.9/(7x,1p,6e17.9))
 
       end subroutine prtdis

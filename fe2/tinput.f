@@ -23,6 +23,8 @@
 !         d(*)      - Values of real data input
 !         tinput    - Flag, returns true if error occurs during input
 !-----[--.----+----.----+----.-----------------------------------------]
+      use        mpi
+
       implicit    none
 
       include    'chdata.h'
@@ -33,7 +35,7 @@
       include    'iosave.h'
       include    'setups.h'
 
-      include    'mpif.h'
+!     include    'mpif.h'
 
       logical            :: cinput, vinput, pcomp, cksep, first
 

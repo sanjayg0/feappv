@@ -31,6 +31,8 @@
 !                  91 = stresses
 !                  92 = tangent moduli
 !-----[--.----+----.----+----.-----------------------------------------]
+      use        mpi
+
       implicit   none
 
       include   'iofile.h'
@@ -42,7 +44,7 @@
       include   'pointer.h'
       include   'comblk.h'
 
-      include   'mpif.h'
+!     include   'mpif.h'
 
       character  (len=15) :: lct
       character (len=132) :: sbuf

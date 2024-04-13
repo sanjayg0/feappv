@@ -26,6 +26,8 @@
 !          dd(6,*) -  Current material tangent moduli
 !                     N.B. 1-d models use only dd(1,1) and dd(2,1)
 !-----[--.----+----.----+----.-----------------------------------------]
+      use        mpi
+
       implicit   none
 
       include   'cdata.h'
@@ -39,7 +41,7 @@
       include   'setups.h'
       include   'tdata.h'
 
-      include   'mpif.h'
+!     include   'mpif.h'
 
       include   'pointer.h'
       include   'comblk.h'

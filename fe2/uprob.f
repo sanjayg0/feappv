@@ -21,6 +21,8 @@
 !      Outputs:
 !         none   - Users are responsible for generating problems
 !-----[--.----+----.----+----.-----------------------------------------]
+      use        mpi
+
       implicit   none
 
       include   'cblktr.h'
@@ -36,7 +38,7 @@
       include   'pointer.h'
       include   'comblk.h'
 
-      include   'mpif.h'
+!     include   'mpif.h'
 
       logical             :: setvar, pcomp, vinput
       character (len=132) :: sbuf

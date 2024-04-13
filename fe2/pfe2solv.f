@@ -25,6 +25,8 @@
 !      Outputs:
 !         N.B.  Interprocessor communications
 !-----[--.----+----.----+----.-----------------------------------------]
+      use        mpi
+
       implicit   none
 
       include   'cdata.h'
@@ -49,7 +51,7 @@
       include   'tdata.h'
       include   'tdato.h'
 
-      include   'mpif.h'
+!     include   'mpif.h'
 
       include   'p_int.h'
       include   'pointer.h'

@@ -18,12 +18,14 @@
 !     Outputs
 !       Starts of all files
 !-----[--.----+----.----+----.-----------------------------------------]
+      use        mpi
+
       implicit   none
 
       include   'comfil.h'
       include   'elpers.h'
       include   'setups.h'
-      include   'mpif.h'           ! MPI common block
+!     include   'mpif.h'           ! MPI common block
 
       character (len=128) :: sfinp,sfout,sfres,sfsav,sfplt
       character (len=3)   :: fext

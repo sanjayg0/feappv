@@ -718,6 +718,7 @@
             tdof = ndm + 1
 
           endif
+          t1 = d(61)
 
 !       Ground motion acceleration factors/proportional load numbers
         elseif(ietype.ne.6 .and. pcomp(text(1),'grou',4)) then
@@ -1455,10 +1456,10 @@
           endif
         endif
       elseif (ietype.eq.6) then
-        if(d(61).eq.0.0d0) then
-          write(iow,4006) e1,d(61)
+        if(t1.eq.0.0d0) then
+          write(iow,4006)
           if(ior.lt.0) then
-            write(*,4006) e1,d(61)
+            write(*,4006)
           endif
         endif
       endif

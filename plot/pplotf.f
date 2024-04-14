@@ -71,7 +71,7 @@
 !     Dictionary storage
 
       integer           :: list
-      parameter         (  list = 47)
+      parameter         (  list = 48)
       character (len=4) :: wd(list)
       integer           :: ed(list)
 
@@ -84,7 +84,7 @@
      2        'fill','eigv','scal','axis','pers','hide','defo','unde',
      3        'cont','velo','acce','post','reac','mate','dofs','estr',
      4        'pstr','prom','defa','rang','nora','snod','prof','manu',
-     5        'uplo','utot',
+     5        'flux','uplo','utot',
      u        'plt1','plt2','plt3','plt4','plt5'/
 
       data ed/    1,     0,     1,     2,     0,     1,     0,     0,
@@ -92,7 +92,7 @@
      2            0,     0,     1,     0,     0,     0,     0,     0,
      3            0,     0,     0,     0,     0,     0,     1,     0,
      4            0,     2,     2,     1,     1,     0,     0,     4,
-     5            3,     0,
+     5            0,     3,     0,
      u            4,     4,     4,     4,     4/
 
       data ss/.25d0,.75d0,.25d0,.75d0/,tt/.75d0,.75d0,.25d0,.25d0/
@@ -306,12 +306,12 @@
 !            r  d  f  d  n  l  c  s  a  t  f  t  t  o  f  n  r  o  o  n
 !            s  e  o  e  t  o  e  t  c  e  s  r  r  m  a  g  a  d  f  u
 
-     &      41, 25,800,800,800,800,800), l
+     &      11, 41, 25,800,800,800,800,800), l
 
-!            u   u   p   p   p   p   p
-!            p   t   l   l   l   l   l
-!            l   o   t   t   t   t   t
-!            o   t   1   2   3   4   5
+!            f   u   u   p   p   p   p   p
+!            l   p   t   l   l   l   l   l
+!            u   l   o   t   t   t   t   t
+!            x   o   t   1   2   3   4   5
 
       go to 200
 
@@ -486,6 +486,7 @@
       go to 200
 
 !     Stress contours
+!     [flux,k1,k2,k3] - k1 = component number (1-ndf) - Projected values
 !     [stre,k1,k2,k3] - k1 = component number (1-ndf) - Projected values
 !     [pstr,k1,k2,k3] - k1 = component number (1-4)   - Principal values
 !     [estr,k1,k2,k3] - k1 = component number (1-ndf)
@@ -509,7 +510,7 @@
 !     if(.not.fl(11)) then
         call pjstrs(trifl)
 !     endif
-      if(l.eq.11) then
+      if(l.eq.11 .or. l.eq.41) then
         k1 = min(npstr-1,max(k1,1))
         fp(2)= fp(1) + numnp*(k1 - 1)
         k5 = 1

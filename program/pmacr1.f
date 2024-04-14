@@ -99,11 +99,11 @@
       end do
 
 !     Transfer to correct process
-
-      go to (1,2,2,4,5,6,7,8,9,10,11,12,13), j
+      go to (1,2,2,4,5,6,7,8,9,10,11,12,13,1), j
 
 !     Print stress values
 
+!     [flux,,k1,k2,k3]        - output elmt values for k1 to k2 inc k3
 !     [stre,,k1,k2,k3]        - output elmt values for k1 to k2 inc k3
 !     [stre,all]              - output all element values
 !     [stre,node,k1,k2,k3]    - output nodal stresses k1 to k3 inc k3

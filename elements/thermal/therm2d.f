@@ -107,8 +107,8 @@
           call thfx2d(xl,ul, xx,shp2(1,1,l),temp,gradt,ndm,ndf,nel)
 
 !         Compute thermal flux and conductivity
-          call modltd(d, temp,gradt,hr(nh1+nn),hr(nh1+nn),nhv,
-     &                dd,flux,rhoc, isw)
+          call modltd(d, temp,gradt,hr(nh1+nn),hr(nh2+nn),nhv,
+     &                dd,flux(1,l),rhoc, isw)
           nn = nn + nhv
 
           if(isw.eq.3 .or. isw.eq.6) then
@@ -123,20 +123,23 @@
               jac(l) = jac(l)*xx(1)
             endif
 
+!           Multiply by Jacobian
+            flux(:,l) = flux(:,l)*jac(l)
+            dd(:,:)   = dd(:,:)  *jac(l)
+
             j1 = 1
             do j = 1,nel
 
-              a1 = (dd(1,1)*shp2(1,j,l) + dd(1,2)*shp2(2,j,l))*jac(l)
-              a2 = (dd(2,1)*shp2(1,j,l) + dd(2,2)*shp2(2,j,l))*jac(l)
               a3 = rhoc*shp2(3,j,l)*jac(l)
 
 !             Compute residual
-              p(j1) = p(j1) - a1*gradt(1) - a2*gradt(2)
+              p(j1) = p(j1) - (shp2(1,j,l)*flux(1,l)
+     &                      +  shp2(2,j,l)*flux(2,l))
      &                      - a3*(cfac*tdot + lfac*ul(1,j,4))
 
 !             Compute tangent
-              a1 = a1*ctan(1)
-              a2 = a2*ctan(1)
+              a1 = (dd(1,1)*shp2(1,j,l) + dd(1,2)*shp2(2,j,l))*ctan(l)
+              a2 = (dd(2,1)*shp2(1,j,l) + dd(2,2)*shp2(2,j,l))*ctan(l)
               a3 = a3*ctan(2)
 
 !             Lumped rate terms
@@ -216,16 +219,11 @@
         nn   = 0
         do l = 1,lint
 
-c         call interp2d(l, xl,ix, ndm,nel, .false.)
-
-!         Compute gradient and temperature
-c         call thfx2d(xl,ul, xx,shp2(1,1,l),temp,gradt,ndm,ndf,nel)
-
 !         Compute thermal flux and conductivity
           temp = 0.0d0
           gradt(:) = 0.0d0
-          call modltd(d, temp,gradt,hr(nh1+nn),hr(nh1+nn),nhv,
-     &                dd,flux,rhoc, isw)
+          call modltd(d, temp,gradt,hr(nh1+nn),hr(nh2+nn),nhv,
+     &                dd,flux(1,l),rhoc, isw)
           nn = nn + nhv
         end do ! l
 

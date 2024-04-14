@@ -1391,7 +1391,7 @@
       d(20)  = imat
       d(31)  = d(31)*rad
       d(193) = tmat
-      if(ietype.eq.1 .or. ietype.eq.5) then
+      if(ietype.eq.1 .or. ietype.eq.5 .or. ietype.eq.6) then
         i     = int(nh1)
         if(ndm.eq.2) then
           nh1   = nh1*ii*ii

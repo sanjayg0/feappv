@@ -39,7 +39,7 @@
 
       integer       :: ix(*)
       real (kind=8) :: d(*),ul(ndf,nen,*),xl(ndm,*),s(nst,*),p(*)
-      real (kind=8) :: xx(3),gradt(3),flux(3,8),dd(3,3)
+      real (kind=8) :: xx(3),gradt(3),flux(3,27),dd(3,3)
 
       save
 
@@ -91,8 +91,8 @@
           call thfx3d(xl,ul, xx,shp3(1,1,l),temp,gradt,ndm,ndf,nel)
 
 !         Compute thermal flux and conductivity
-          call modltd(d, temp,gradt,hr(nh1+nn),hr(nh1+nn),nhv,
-     &                dd,flux,rhoc, isw)
+          call modltd(d, temp,gradt,hr(nh1+nn),hr(nh2+nn),nhv,
+     &                dd,flux(1,l),rhoc, isw)
           nn = nn + nhv
 
           if(isw.eq.3 .or. isw.eq.6) then
@@ -103,27 +103,29 @@
               tdot = tdot + shp3(4,j,l)*ul(1,j,4)
             end do
 
+            flux(:,l) = flux(:,l)*jac(l)
+            dd(:,:)   = dd(:,:)*jac(l)
+
             j1 = 1
             do j = 1,nel
 
-              a1 = (dd(1,1)*shp3(1,j,l) + dd(1,2)*shp3(2,j,l)
-     &           +  dd(1,3)*shp3(3,j,l))*jac(l)
-              a2 = (dd(2,1)*shp3(1,j,l) + dd(2,2)*shp3(2,j,l)
-     &           +  dd(2,3)*shp3(3,j,l))*jac(l)
-              a3 = (dd(3,1)*shp3(1,j,l) + dd(3,2)*shp3(2,j,l)
-     &           +  dd(3,3)*shp3(3,j,l))*jac(l)
-
+!             Transient factor
               a0 = rhoc*shp3(4,j,l)*jac(l)
 
 !             Compute residual
-              p(j1) = p(j1) - a1*gradt(1) - a2*gradt(2) - a3*gradt(3)
+              p(j1) = p(j1) - shp3(1,j,l)*flux(1,l)
+     &                      - shp3(2,j,l)*flux(2,l)
+     &                      - shp3(3,j,l)*flux(3,l)
      &                      - a0*(cfac*tdot + lfac*ul(1,j,4))
 
 !             Compute tangent
               a0 = a0*ctan(2)
-              a1 = a1*ctan(1)
-              a2 = a2*ctan(1)
-              a3 = a3*ctan(1)
+              a1 = (dd(1,1)*shp3(1,j,l) + dd(1,2)*shp3(2,j,l)
+     &           +  dd(1,3)*shp3(3,j,l))*ctan(1)
+              a2 = (dd(2,1)*shp3(1,j,l) + dd(2,2)*shp3(2,j,l)
+     &           +  dd(2,3)*shp3(3,j,l))*ctan(1)
+              a3 = (dd(3,1)*shp3(1,j,l) + dd(3,2)*shp3(2,j,l)
+     &           +  dd(3,3)*shp3(3,j,l))*ctan(1)
 
 !             Lumped rate terms
               s(j1,j1) = s(j1,j1) + a0*lfac
@@ -202,12 +204,11 @@
 
           call interp3d(l, xl, ndm,nel)
 
-!         Compute flux
-          call thfx3d(xl,ul, xx,shp3(1,1,l),temp,gradt,ndm,ndf,nel)
-
-!         Compute thermal flux and conductivity
-          call modltd(d, temp,gradt,hr(nh1+nn),hr(nh1+nn),nhv,
-     &                dd,flux,rhoc, isw)
+!         Initialize thermal flux and conductivity
+          temp     = 0.0d0
+          gradt(:) = 0.0d0
+          call modltd(d, temp,gradt,hr(nh1+nn),hr(nh2+nn),nhv,
+     &                dd,flux(1,l),rhoc, isw)
           nn = nn + nhv
 
         end do ! l

@@ -25,7 +25,7 @@
       include  'strnum.h'
 
       integer       :: nel, i,l
-      real (kind=8) :: flux(2,*),p(*),s(nen,*), xg
+      real (kind=8) :: flux(3,*),p(*),s(nen,*), xg
 
       save
 

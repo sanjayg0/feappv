@@ -568,7 +568,8 @@
           endif
 
 !       Thermal Representative Volume Material behavior
-        elseif(ietype.eq.6 .and. pcomp(text(1),'rve' ,3)) then
+        elseif(ietype.eq.6 .and. (pcomp(text(1),'trve',4)   .or.
+     &                            pcomp(text(1),'rve' ,3))) then
 
           if(ntasks.le.1) then
             write(iow,*) ' *ERROR* Use RVE material only for np > 1'
@@ -776,7 +777,7 @@
       if(ietype.ne.6) then
 
 !       Small deformation options
-        if(sflag) then
+        if(sflag .and. imat.ne.13) then
           d(1)    = e1
           d(2)    = nu12
           d(3)    = alp(1)
@@ -905,7 +906,7 @@
           endif
 
 !       Finite deformation options
-        elseif(fflag)then
+        elseif(fflag .and. imat.ne.13)then
 
 !         Output Regular NeoHookean
           if(imat.eq.1) then

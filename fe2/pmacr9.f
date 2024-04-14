@@ -35,11 +35,11 @@
       text = lct
 
 !     [FE^2 <'start','get','send'>
-
       if(j.eq.1) then
         if(debug) write(*,2000) ' FE^2 ',lct
         call pfe2solv(lct)
 
+!     [RVE  <'set'>
       elseif(j.eq.2) then
 
         if(debug) write(*,2000) ' RVE    ',lct

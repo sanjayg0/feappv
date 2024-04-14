@@ -9,9 +9,6 @@
 !-----[--.----+----.----+----.-----------------------------------------]
 !     Modification log                                Date (dd/mm/year)
 !       Original version                                    28/01/2016
-!       1. Correct distribution of RVE's onto ums(*,*)      23/01/2018
-!       2. Add 'nsbuf',print of MPI_SSend infor             24/01/2018
-!       3. Add 'rveflg' to limit use of RVE to one time     27/01/2018
 !-----[--.----+----.----+----.-----------------------------------------]
 !      Purpose: MPI - Manipulation command to select mesh for micro
 !                     RVE problems.  Sets problem type.
@@ -68,13 +65,11 @@
               ii = ii + 1
 
 !             Set problem file, type and deformation state
-
               sbuf(1:128) = matfile(n)
               write(sbuf(129:130),'(i2)') prtyp(1,n)
               write(sbuf(131:132),'(i2)') prtyp(2,n)
 
 !             Send a file name
-
               if(sbuf(1:1).ne.' ') then
                 if(debug) then
                  write(*,*) 'PFE2RVE:MPI_SSend:NSBUF,MSG:',nsbuf,usr_msg
@@ -130,14 +125,12 @@
       end do ! n
 
 !     Error on number of processors
-
       if(err) then
         write(iow,3000)
         call plstop(.true.)
       endif
 
 !     Check for correct number of sends
-
       totsend = 0
       do n = 1,nsmax
         totsend = totsend + umproc(n)
@@ -149,7 +142,6 @@
       endif
 
 !     Allocate number of processors for each material
-
       minp = 64
       minn = 0
       maxp = 0
@@ -171,7 +163,6 @@
       end do ! n
 
 !     Check that number of processors is correct
-
       do while (totp.ne.ntasks - 1)
         if(totp .gt. ntasks - 1) then
           unproc(maxn) = unproc(maxn) - 1
@@ -201,7 +192,6 @@
       endif
 
 !     Set up order to send data to each processor
-
       nrow = 0
       do n = 1,nsmax
         if(unproc(n).gt.0) then
@@ -211,7 +201,6 @@
       ncol = ntasks - 1
 
 !     Allocate array to store send list
-
       setval = palloc( 270,'RVESD',nrow*ncol, 1)
 
       call psetrvsd(mr(np(269)),mr(np(270)),nsmax)
@@ -260,7 +249,6 @@
       end do ! n
 
 !     Tag last send to each processor
-
       do n = 1,ncol
         do nr = nrow,1,-1
           if(ums(n,nr).gt.0) then

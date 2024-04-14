@@ -216,12 +216,14 @@
         nn   = 0
         do l = 1,lint
 
-          call interp2d(l, xl,ix, ndm,nel, .false.)
+c         call interp2d(l, xl,ix, ndm,nel, .false.)
 
 !         Compute gradient and temperature
-          call thfx2d(xl,ul, xx,shp2(1,1,l),temp,gradt,ndm,ndf,nel)
+c         call thfx2d(xl,ul, xx,shp2(1,1,l),temp,gradt,ndm,ndf,nel)
 
 !         Compute thermal flux and conductivity
+          temp = 0.0d0
+          gradt(:) = 0.0d0
           call modltd(d, temp,gradt,hr(nh1+nn),hr(nh1+nn),nhv,
      &                dd,flux,rhoc, isw)
           nn = nn + nhv

@@ -739,7 +739,8 @@
           endif
 
 !       User Material Model interface
-        elseif(pcomp(text(1),'ucon',4)) then
+        elseif(pcomp(text(1),'ucon',4) .or.
+     &         pcomp(text(1),'umat',4)) then
 
 !         Default user constitutive equation number
           umat    = 1

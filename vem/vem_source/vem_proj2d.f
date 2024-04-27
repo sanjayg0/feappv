@@ -1,4 +1,4 @@
-!$Id:$
+ !$Id:$
       subroutine vem_proj2d(xl, isw)
 
 !      * * F E A P * * A Finite Element Analysis Program
@@ -21,7 +21,6 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit   none
 
-      include   'debugs.h'
       include   'iofile.h'
       include   'cdata.h'
       include   'eldata.h'
@@ -41,11 +40,9 @@
       save
 
 !     Linear order solution
-
       if(k_order.eq.1) then
 
 !       Set quadrature on triangles
-
         if(isw.eq.5) then
           ll = -3     ! Interior
         else
@@ -60,11 +57,9 @@
         nvn = nel
 
 !     Quadratic order solution
-
       elseif(k_order.eq.2) then
 
 !       Set quadrature on triangles
-
         if(isw.eq.5) then
           ll =  7    ! Interior
         else
@@ -96,19 +91,16 @@
 !     -------------------------------------------------------
 
 !     Compute area and centroid for 2-d element
-
       call vem_cent2d(xl,ndm,nel)
       hVm1  = sqrt(acos(-1.0d0)/vol)
       hVm1  = 1.0d0
       volhm = vol*hVm1
 
 !     This is common to all derivative forms
-
       call vem_pmat2d(xl, nel)
 
       if(k_order.eq.1 .and. isw.eq.3 .and. stype.ne.3) then
         ltot = 1
-        if(debug) write(*,*) ' LTOT_stif =',ltot
       endif
 
       end subroutine vem_proj2d

@@ -1266,6 +1266,11 @@
         if(ior.lt.0) then
           write(*,2090) 'Global NURBS',(i,nint(d(189+i)),i=1,ndm)
         endif
+      elseif(nint(d(189)).eq.8) then
+        write(iow,2090) 'VEM - Virtual Elements'
+        if(ior.lt.0) then
+          write(*,2090) 'VEM - Virtual Elements'
+        endif
       endif
 
 !     Mass type
@@ -1608,7 +1613,7 @@
 
 2084  format( 10x,'Augmenting   : ',a)
 
-2090  format(10x,'Interpolation: ',a/(15x,'Quadrature ',i1,' = ',i5:))
+2090  format(10x,'Interpolation: ',a:/(15x,'Quadrature ',i1,' = ',i5:))
 
 2091  format( 5x,'M e c h a n i c a l   P r o p e r t i e s'//
      &        4x,a,'Representative Volume Element Model'//

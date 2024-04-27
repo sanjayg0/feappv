@@ -36,7 +36,6 @@
       save
 
 !     Compute Gauss quadrature points and weights for 2-d elements
-
       quad   = .false.
       vemfl  = .false.
 
@@ -101,6 +100,7 @@
           call int2d(l,lint,sg2)
         endif
         quad = .true.
+
       endif
 
       end subroutine quadr2d

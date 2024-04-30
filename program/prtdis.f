@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2021: Regents of the University of California
+!....  Copyright (c) 1984-2024: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -34,7 +34,7 @@
       include  'pointer.h'
       include  'comblk.h'
 
-      character (len=30) :: fmt1,fmt2
+      character (len=30) :: fmt1,fmt2,fmt4
       character (len=6)  :: cd,di(4)
       character (len=4)  :: nd
 
@@ -49,12 +49,14 @@
       data      nd   /'Node'/,cd /' Coord'/
       data      di   /' Displ',' Veloc',' Accel',' EigV.'/
       data      fmt1 /'(3x,a4,3(i6,a6)/(7x,6(i6,a6)))'/
-      data      fmt2 /'(i7,1p,3e12.4/(7x,1p,6e12.4))'/
+      data      fmt2 /'(i7,1p,3e12.4:/(7x,1p,6e12.4))'/
+      data      fmt4 /'(i7,1p,3e17.9:/(7x,1p,6e17.9))'/  ! Longer data
 
       tot   = (ndf+ndm).le.6
       if(.not.tot) then
         write(fmt1(8:8),'(i1)') ndm
         write(fmt2(8:8),'(i1)') ndm
+        write(fmt4(8:8),'(i1)') ndm
       endif
 
       n_count = 0
@@ -90,14 +92,28 @@
             n_count = 48
           endif
           if(tot) then
-            write(iow,2003) n,(x(i,n),i=1,ndm),(b(i,n),i=1,ndf)
-            if(ior.lt.0.and.pfr) then
-              write(*,2003) n,(x(i,n),i=1,ndm),(b(i,n),i=1,ndf)
+            if(fmt_long) then
+              write(iow,2004) n,(x(i,n),i=1,ndm),(b(i,n),i=1,ndf)
+              if(ior.lt.0.and.pfr) then
+                write(*,2004) n,(x(i,n),i=1,ndm),(b(i,n),i=1,ndf)
+              endif
+            else
+              write(iow,2003) n,(x(i,n),i=1,ndm),(b(i,n),i=1,ndf)
+              if(ior.lt.0.and.pfr) then
+                write(*,2003) n,(x(i,n),i=1,ndm),(b(i,n),i=1,ndf)
+              endif
             endif
           else
-            write(iow,fmt2) n,(x(i,n),i=1,ndm),(b(i,n),i=1,ndf)
-            if(ior.lt.0.and.pfr) then
-              write(*,fmt2) n,(x(i,n),i=1,ndm),(b(i,n),i=1,ndf)
+            if(fmt_long) then
+              write(iow,fmt4) n,(x(i,n),i=1,ndm),(b(i,n),i=1,ndf)
+              if(ior.lt.0.and.pfr) then
+                write(*,fmt4) n,(x(i,n),i=1,ndm),(b(i,n),i=1,ndf)
+              endif
+            else
+              write(iow,fmt2) n,(x(i,n),i=1,ndm),(b(i,n),i=1,ndf)
+              if(ior.lt.0.and.pfr) then
+                write(*,fmt2) n,(x(i,n),i=1,ndm),(b(i,n),i=1,ndf)
+              endif
             endif
           endif
         endif
@@ -114,5 +130,7 @@
 2002  format('   Node',6(i6,a6):/(7x,6(i6,a6)))
 
 2003  format(i7,1p,6e12.4/(7x,1p,6e12.4))
+
+2004  format(i7,1p,6e17.9/(7x,1p,6e17.9))
 
       end subroutine prtdis

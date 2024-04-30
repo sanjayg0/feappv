@@ -1,0 +1,89 @@
+\heada{MESH}{CDISplacement}
+\hspace{1.0cm}{{ cdis,[set,add]        \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ gap,value \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ node,(x(i),i=1,ndm),(d(j),j=1,ndf) \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ <etc.,terminate with a blank record> \hfill}}
+\headb
+
+The specified displacement boundary conditions may be set
+using the reference coordinates for a {\it node}.  The input values are
+saved in files and searched after the entire mesh is
+specified.  After use files are deleted.
+The data is order dependent with data
+defined by {\tt DISP} processed first, {\tt EDIS} processed second and
+the {\tt CDIS} data processed third and data specified by the {\tt CSUR}f
+processed last.  The value defined last is used for any analysis.
+
+The {\tt CDIS} command may be used with two options.  Using the {\tt CDIS,SET}
+option replaces all previously defined values at any node by the
+pattern specified. This is the default mode.  Using the {\tt CDIS,ADD} option
+accumulates the specified value with previously defined values.
+
+For a {\it node}, the data to be supplied during
+the definition of the mesh consists of:
+
+\begin{center}
+\begin{tabular}{r l}
+\it node   &-- Defines inputs to be for a {\it node}. \\
+\it x(1)   &-- value of coordinates to be used during search \\
+\it ...    &\quad (a gap of 1/1000 of mesh size is used during \\
+\it x(ndm) &\quad search, coordinate with smallest distance within \\
+           &\quad gap is assumed to have specified value). \\
+\it d(1)   &-- displacement on 1-dof \\
+\it d(2)   &-- displacement on 2-dof \\
+\it ...    & \\
+\it d(ndf) &
+\end{tabular}
+\end{center}
+To expand the search region a {\it gap-value} can be specified as:
+
+\begin{verbatim}
+       GAP,value}
+\end{verbatim}
+The {\it gap-value} is a coordinate distance within which
+nodes are assumed to lie on the specified segment.  The
+value should be less than dimensions of typical elements
+or erroneous nodes will be found by the search.
+It is suggested that the computed boundary conditions
+be checked graphically to ensure that they are
+correctly identified (e.g., use {\tt PLOT,MESH} and {\tt PLOT,BOUN}
+to show the locations of conditions).
+
+While it is possible to specify both the force and the displacement applied
+to a node, only one can be active during a solution step.  The determination
+of the active value is determined from the boundary
+restraint condition value.  If the boundary restraint value is zero
+and you use one of the force-commands a force
+value is imposed, whereas, if the boundary restraint value is non-zero
+and you use one of the displacement-commands a
+displacement value is imposed. (See {\tt BOUN}dary, {\tt CBOU}ndary,
+or {\tt EBOU}ndary pages for setting boundary
+conditions.).  It is possible to change the type of boundary restraint
+during execution by resetting the boundary restraint value. It is not
+possible, to specify a displacement by using the combination of a 
+force-command with a non-zero boundary restraint value, as it was
+in the last releases of FEAPpv.
+
+Only those values of the {\tt CDIS}placement-command are regarded whose
+directions have a non-zero boundary restraint value. All other displacement
+values are variable.
+
+For Example:
+
+\begin{verbatim}
+       cang
+         node,1.0,1.0,30.0
+                  ! end with blank record
+       cbou
+         node,1.0,1.0,0,1
+                  ! end with blank record
+       cdis
+         node,1.0,1.0,0.1,0.1
+                  ! end with blank record
+\end{verbatim}
+Here the first displacement value is not considered. There is a
+displacement of the node with the coordinates (1.0,1.0). The direction
+of the displacement is 120 degrees and the value is 0.1. The displacement
+in the 30 degree direction is variable.
+\vfil\eject
+

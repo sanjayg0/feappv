@@ -1,0 +1,40 @@
+\heada{MESH}{*ELEment}
+\hspace{1.2cm}{{*ele = number \hfill}}
+\headb
+
+\index{Mesh command!*ELEment}
+The \texttt{*ELEment} command is used to specify a base value for all
+subsequently input element quantities.  The value may be reset as many
+times as needed to define a complete mesh.  The default value is zero (0).
+The command usually will be used in conjunction with a \texttt{*NODe}
+command.
+
+It is sometimes necessary to combine mesh data generated in two parts,
+each of which may number nodes and elements starting with 1,2,3, etc.
+In this case it will be necessary to use the \texttt{*ELEment} command
+to increment the values related to element numbers on each record.
+
+Consider two parts of a mesh which have been created with element
+numbers \texttt{1} to \texttt{E1} for mesh 1 and 
+numbers \texttt{1} to \texttt{E2} for mesh 2.  These are to be combined
+to form a mesh containing \texttt{E1 + E2} elements.  The structure for
+the mesh input would be
+\begin{verbatim}
+       FEAP * * COMBINE
+         ...
+       INCLude MESH-1 (file with mesh data)
+
+       *NODe    = N1 (value for max node    in MESH-1) 
+       *ELEment = E1 (value for max element in MESH-1) 
+
+       INCLude MESH-2 (file with mesh data)
+         ...
+\end{verbatim}
+
+During the input of the second mesh \textsl{FEAP} will add the
+value of \texttt{*ELEment} to each value corresponding to a element number.
+This generally will be the element connection records; however, it also
+affects the specification of element region numbers.
+Note that the \texttt{*NODe} command is necessary to
+add offsets to nodal related numbers.
+\vfill\eject

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2021: Regents of the University of California
+!....  Copyright (c) 1984-2024: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -36,19 +36,16 @@
 
       save
 
-!     Set file name for output of time history data (Get from 'feapname')
-
+!     Set filename to output time history data (Get from 'feappvname')
       fnamr = fplt
 
 !     Extract name for file
-
       n = index(fnamr,'.')
       if(n.gt.0) then
         fnamr(n:128) = ' '
       endif
 
 !     Locate character where added letter 'A' to 'J' to be added
-
 !     n = 128
 !     do while(fnamr(n:n).eq.' ' .and. n.gt.0)
 !       n = n - 1
@@ -62,12 +59,10 @@
         ntl            = min(ntp+19,ntplts)
 
 !       Add extender
-
         fext  =  ftyp
         call addext(fnamr,fext,128,8)
 
 !       Check if file exists, if it does delete it
-
         inquire(file=fnamr,exist=exst)
         if(exst.and.ntstep.eq.1) then
           open(unit=24, file = fnamr, form = 'formatted',
@@ -76,14 +71,12 @@
         end if
 
 !       Open file and find end: F77 version
-
         open(unit=24, file = fnamr, form = 'formatted',
      &       access = 'sequential', status = 'unknown')
   10    read(24,2000,end=11) tdum
         go to 10
 
 !       Add line of data
-
   11    backspace(24)
         write(24,2000) ttim,(tpl(m),m=ntp,ntl)
         close(24)

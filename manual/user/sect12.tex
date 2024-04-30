@@ -1,0 +1,116 @@
+\section{Surface Loading}
+\label{surf}
+
+{\sl FEAPpv} uses the {\tt CSUR}face command to specify distributed tractions
+and displacements on portions of two or three dimensional
+surfaces defined by interpolation patches.
+For two dimensional problems the command has the structure
+\begin{verbatim}
+       CSURface
+         type, data
+         LINEar
+         1,X_1,Y_1,P_1
+         2,X_2,Y_2,P_2
+                             ! blank termination record
+\end{verbatim}
+or
+\begin{verbatim}
+       CSURface
+         type, data
+         QUADratic
+         1,X_1,Y_1,P_1
+         2,X_2,Y_2,P_2
+         3,X_3,Y_3,P_3
+                             ! blank termination record
+\end{verbatim}
+where {\tt type} is an optional data type selected from:
+{\tt CART}esian; {\tt POLA}r; {\tt GAP};
+{\tt NORM}al traction;
+{\tt TANG}ential traction; or {\tt DISP}lacement pattern (default is normal
+traction).
+If the data type is {\tt DISP}lacement the parameter {\tt data} specifies
+the coordinate direction for the specified values.
+Multiple records of {\tt type} may exist before input of interpolation
+patches and patterns.
+
+The parameters {\tt LINE}ar or {\tt QUAD}ratic define the order of the
+interpolation patch.  The values of $x_1$, $y_1$ and $x_2$,$y_2$ define
+coordinate end points on the patch and,
+for quadratic surfaces, $x_3$, $y_3$ define
+the middle point coordinates for the patch.
+The parameters $p_1$, $p_2$, and $p_3$ define the values of the traction
+or the displacement at the corresponding coordinates on the patch.
+
+{\sl FEAPpv} will search for all nodes which are closer to the interpolation
+patch than {\tt GAP} (default is $10^{-3}$).  Using the element boundary
+segments which have outward normals to the patch (by right hand coordinate
+rule as shown for a two-dimensional problem in Figure \ref{figsurf})
+will be located and the values interpolated to nodes.  For tractions
+the equivalent nodal loads will be computed.  In two dimensions it is
+not necessary for the interpolation patch to exactly match the element
+boundary segments.
+
+\begin{figure}
+\unitlength=1mm
+\special{em:linewidth 0.4pt}
+\linethickness{0.4pt}
+\begin{picture}(123.67,90.33)
+\put(121.33,42.00){\line(-2,5){6.67}}
+\put(114.67,58.33){\line(-5,6){9.67}}
+\put(105.00,70.00){\line(-2,1){15.33}}
+\put(89.67,77.67){\line(-6,1){19.67}}
+\bezier{316}(122.00,42.00)(109.00,79.67)(70.33,82.33)
+\put(70.67,80.67){\line(0,-1){16.00}}
+\put(88.33,77.33){\line(-1,-5){3.00}}
+\put(103.00,70.33){\line(-1,-2){5.33}}
+\put(114.33,58.33){\line(-5,-4){8.67}}
+\put(121.00,42.00){\line(-4,-1){11.00}}
+\put(110.00,39.00){\line(-1,3){4.00}}
+\put(106.00,51.00){\line(-1,1){8.33}}
+\put(97.67,59.33){\line(-4,1){12.67}}
+\put(85.00,62.33){\line(-6,1){14.00}}
+\put(122.33,41.67){\circle*{2.67}}
+\put(104.33,69.67){\circle*{2.67}}
+\put(70.67,82.67){\circle*{2.67}}
+\put(83.00,80.33){\vector(1,4){2.67}}
+\put(87.67,88.67){\makebox(0,0)[cc]{ n}}
+\end{picture}
+\caption{Two-Dimensional Surface Loading}
+\label{figsurf}
+\end{figure}
+
+Use of the {\tt POLA}r option permits the coordinates $x_1$ and $x_2$ to
+be given as a radius and angle (in degrees) and internally converted to
+Cartesian form.
+
+A common error is to have an incorrect sequence for the boundary segments
+so that the outward normal points in the wrong direction.  When no
+loads are computed it is necessary to carefully check the normal direction
+to a patch.
+Also check that the value of the proportional loading factor is non-zero.
+If none of these errors are identified then the value of the search gap
+can be increased by inserting the command
+\begin{verbatim}
+       GAP,value
+\end{verbatim}
+before the interpolation patch data.
+
+For three dimensional problems the command has the structure
+\begin{verbatim}
+       CSURface
+         type, data
+         SURFace
+         1,X_1,Y_1,P_1
+         2,X_2,Y_2,P_2
+         3,X_3,Y_3,P_3
+         4,X_4,Y_4,P_4
+                             ! blank termination record
+\end{verbatim}
+where {\tt type} is the data type selected from: {\tt GAP};
+{\tt NORM}al traction or
+{\tt DISP}lacement pattern.  No tangential option currently exists.
+Also, only those element surface facets which lie on or within the
+interpolation patch are selected.  No partial facets are permitted.
+
+The surface option may be used only for elements whose surface facets
+are either 3-node triangles or 4-node quadrilaterals.

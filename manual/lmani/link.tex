@@ -1,0 +1,67 @@
+\headm{MESH}{LINK}
+\hspace{1.0cm}{{ link \hfill}}\\{\smallskip}
+\hspace{1.4cm}{{ node1,node2,inc1,inc2,(idl(i),i=1,ndf) \hfill}}\\{\smallskip}
+\hspace{1.4cm}{{ <terminate with a blank record> \hfill}}
+\headb
+
+A mesh may be generated in {\sl FEAPpv} in which it is desired
+to let the some or all of the degree of freedom values at
+more than one node share the same displacement unknown.
+For example, in repeating structures the value of the dependent
+variable will be the same at each repeating interval.
+In a finite element model it is necessary to specify the
+repeating condition by linking the degree of freedoms at
+theses nodes to the same unknown in the equations.  The
+{\tt LINK} command is used for this purpose.
+
+To use the {\tt LINK} option the complete mesh must first
+be defined.  After the {\tt END} command for the mesh definition
+and before the {\tt BATC}h or {\tt INTE}ractive command
+for defining a solution algorithm, the use of a {\tt LINK}
+statement together with the list of affected nodes and
+degree of freedoms will cause the program to search for all
+conditions that are to be connected together.
+
+The input data is interpretted as follows:
+
+\begin{center}
+\begin{tabular}{r l}
+\it  node1   &-- Node on one body to be linked           \\
+\it  node2   &-- Node on other body to be linked           \\
+\it  inc1    &-- Increment to generate additional nodes     \\
+             &\quad for node1           \\
+\it  inc2    &-- Increment to generate additional nodes     \\
+             &\quad for node2           \\
+\it  idl(1)  &-- Linking condition, 0 = link, non-zero do   \\
+             &\quad not link dof 1.           \\
+\it  idl(2)  &-- Linking condition, 0 = link, non-zero do   \\
+             &\quad not link dof 2.           \\
+             &\quad etc. for {\it ndf} degree of freedoms      \\
+\end{tabular}
+\end{center}
+Generation is accomplished by giving a pair of  records.   A
+generation  terminates  whenever  one  of  the  sequences is
+reached.  For example:
+
+\begin{verbatim}
+       LINK
+         5,105,3,5,1,0,1
+         15,140,,,1,1,0}
+\end{verbatim}
+will generate the sequence of links
+\begin{center}
+\begin{tabular}{r|r|c}
+Node 1& Node 2& Link Codes \\ \hline
+ 5& 105& 1 0 1 \\
+ 8& 110& 1 0 1 \\
+11& 115& 1 0 1 \\
+14& 120& 1 0 1 \\
+15& 140& 1 1 0
+\end{tabular}
+\end{center}
+Termination of input occurs with a blank record.
+
+Whenever it is desired to only connect {\it node1} to
+{\it node2}, {\it inc1} and {\it inc2} need not be specified (they may
+be blank or zero).
+\vfil\eject

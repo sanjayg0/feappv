@@ -1,0 +1,68 @@
+\subsection{Periodic boundary conditions}
+\label{periodicbc}
+
+\subsubsection{Specified displacement conditions}
+
+For some problems in stress and/or thermal analysis of solids
+it is desirable to specify non-zero nodal displacements
+that result from applying a homogenious non-zero displacement or
+thermal gradient.  For such situations
+the displacement of the node is computed from 
+\begin{displaymath}
+\B{u}_a = \B{G} \, \B{x}_a
+\end{displaymath}
+where $\B{u}_a$ and $\B{x}_a$ are the displacement and coordinate of node $a$;
+and $\B{G}$ is a \textit{specified} displacement gradient computed from
+\begin{displaymath}
+\B{G} = \begin{bmatrix}
+\dpdif{u_1}{x_1} & \dpdif{u_1}{x_2} & \dpdif{u_1}{x_3} \\
+\dpdif{u_2}{x_1} & \dpdif{u_2}{x_2} & \dpdif{u_2}{x_3} \\
+\dpdif{u_3}{x_1} & \dpdif{u_3}{x_2} & \dpdif{u_3}{x_3} \end{bmatrix}
+= \begin{bmatrix}
+G_{11} & G_{12} & G_{13} \\[+6pt]
+G_{21} & G_{22} & G_{23} \\[+6pt]
+G_{31} & G_{32} & G_{33} \end{bmatrix}
+\end{displaymath}
+and the thermal gradient from
+\begin{displaymath}
+T_a = \B{G} \, \B{x}_a
+\end{displaymath}
+where $T_a$ are nodal temperatures and $\B{G}$ is a \textit{specified}
+thermal gradient computed from
+\begin{displaymath}
+\B{G} = \begin{bmatrix}
+\dpdif{T}{x_1} & \dpdif{T}{x_2} & \dpdif{T}{x_3} \end{bmatrix} 
+\end{displaymath}
+
+\subsubsection{Data input for periodic conditions}
+
+\textsl{FEAPpv} provides for a treatment for periodic behavior on
+a representative volume element (RVE) using an energy balance based on
+Hill-Mandel theory\scite{kouznetsova01a,kouznetsova02a,zt2n7}.
+For small strain problems the data input is given as
+\begin{verbatim}
+       PERIODIC HILL
+         MECHanical <PROP n_u>
+           eps_11 eps_12 eps_13
+           eps_21 eps_22 eps_23
+           eps_31 eps_32 eps_33
+\end{verbatim}
+which are components of the \textit{tensor} strains, i.e. $\epsilon_{ij} = 
+\gamma_{ij}/2$;
+and for finite deformation by
+a \textit{displacement gradient} specified by
+\begin{verbatim}
+       PERIODIC HILL
+         MECHanical <PROP n>
+           G_11 G_12 G_13
+           G_21 G_22 G_23
+           G_31 G_32 G_33
+\end{verbatim}
+and for the thermal problem by
+\begin{verbatim}
+       PERIODIC HILL
+         THERmal <PROP n>
+           G_1 G_2 G_3
+\end{verbatim}
+In the above the \texttt{PROP n} permits subjecting the boundaries
+to a time dependent behavior, but at the same spatial gradient distribution.

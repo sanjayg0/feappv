@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2021: Regents of the University of California
+!....  Copyright (c) 1984-2024: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -45,14 +45,8 @@
                 exit
               endif
             end do ! i
-            if(ix(nen+7,n).eq.-22) then  ! 2-d VEM
-              call vem_compp(ix(nen+8,n), iplt, nel, iu)
-            elseif(ix(nen+7,n).eq.-23) then
-              write(*,*) ' ERROR: VEM 3D not implemented'
-            else
-              call plftyp(pstyp,nel,ma)
-              call pltord(ix(1,n),ma,iu,iplt)
-            endif
+            call plftyp(pstyp,nel,ma)
+            call pltord(ix(1,n),ma,iu,iplt)
 
             do i = 1,iu-1
               i1 = iplt(i)

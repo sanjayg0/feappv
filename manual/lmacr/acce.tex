@@ -1,0 +1,50 @@
+\heada{SOLUTION}{ACCElerations}
+\hspace{1.2cm}{{ acce,,n1,n2,n3    \hfill}}\\{\smallskip}
+\hspace{1.0cm}{{ acce,coor,idir,xi \hfill}}\\{\smallskip}
+\hspace{1.0cm}{{ acce,all          \hfill}}
+\headb
+
+The command {\tt ACCE}leration may be used to print the
+current values of the acceleration vector as follows:
+
+\begin{enumerate}
+\item{
+Using the command:
+\begin{verbatim}
+       acce,,n1,n2,n3
+\end{verbatim}
+prints out the current acceleration vector for nodes
+{\tt n1} to {\tt n2} at increments of {\tt n3} (default increment = 1).  If
+{\tt n2} is not specified only the value of node {\tt n1} is
+output.  If both {\tt n1} and {\tt n2} are not specified only
+the first nodal acceleration is reported.}
+
+\item{
+If the command is specified as:
+
+\begin{verbatim}
+       acce,coor,idir,xi
+\end{verbatim}
+prints all nodal quantities for the coordinate direction {\tt idir}
+
+Example:
+\begin{verbatim}
+       acce,coor,1,3.5
+\end{verbatim}
+prints all the nodal accelerations which have $x_1$ = 3.5.
+
+This is useful to find the nodal values along a particular
+constant coordinate line.}
+
+\item{
+If the command is specified as:
+\begin{verbatim}
+       acce,all
+\end{verbatim}
+all nodal accelerations are output.}
+\end{enumerate}
+
+In order to output a acceleration vector it is first necessary to
+specify commands language instructions to compute the desired
+values, e.g., for accelerations perform a dynamic analysis.
+\vfill\eject

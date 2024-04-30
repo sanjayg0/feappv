@@ -1,0 +1,122 @@
+\heada{MESH}{CSURface}
+\hspace{1.0cm}{{ csur       \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ linear     \hfill}} \\{\smallskip}
+\hspace{1.8cm}{{ 1,x1,y1,p1 \hfill}} \\{\smallskip}
+\hspace{1.8cm}{{ 2,x2,y2,p2 \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ quadratic  \hfill}} \\{\smallskip}
+\hspace{1.8cm}{{ 1,x1,y1,p1 \hfill}} \\{\smallskip}
+\hspace{1.8cm}{{ 2,x2,y2,p2 \hfill}} \\{\smallskip}
+\hspace{1.8cm}{{ 3,x3,y3,p3 \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ surface    \hfill}}     \\{\smallskip}
+\hspace{1.8cm}{{ 1,x1,y1,z1,p1  \hfill}} \\{\smallskip}
+\hspace{1.8cm}{{ 2,x2,y2,z2,p2  \hfill}} \\{\smallskip}
+\hspace{1.8cm}{{ 3,x3,y3,z3,p3  \hfill}} \\{\smallskip}
+\hspace{1.8cm}{{ 4,x4,y4,z4,p4  \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ disp,component \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ normal      \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ tangential  \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ flux        \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ polar,x0,y0 \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ cartesian   \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ gap,value   \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ axisymetric \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ plane       \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ <terminate with a blank record> \hfill}}
+\headb
+
+A mesh may be generated in {\sl FEAPpv} in which it is
+desired to specify distributed loading or displacements on parts of the
+body. Distributed loading may be  \textit{traction} for solid mechanics
+problems or \textit{flux} for thermal problema.
+
+For two dimensional problems it is possible to
+specify the surface to which the boundary condition is applied
+using the {\tt CSUR}face command (The command is for Coordinate
+specified SURfaces.).
+The input values are saved in files and searched
+after the entire mesh is input (i.e., after the {\tt END} mesh command.
+After use the temporary files are deleted.
+The data is order dependent with data
+defined by other input options.  Surface data is always generated last.
+
+The type of input to be generated is set using the \textit{displacement},
+\textit{normal}, \textit{tangential}, or \textit{flux}  options.  These specify that inputs
+will be a specific
+displacement component, normal tractions (pressures), tangential
+tractions (shears), or thermal fluxes, respectively.  The default is \textit{normal} loadings.
+For displacement inputs the component to be generated is specified
+immediately after the {\it displacement} command.
+
+A two-dimensional surface may be specified as a
+{\it linear} or a {\it quadratic} line.  For the linear surface the
+values at the ends {\it p1}, {\it p2} are given together with 
+the end coordinates {\it (x1,y1)} and {\it (x2,y2)}.
+These are specified as:
+
+\begin{verbatim}
+       type data
+       LINEar
+         1,x1,y1,p1
+         2,x2,y2,p2}
+\end{verbatim}
+For traction data of 2-dimensional axisymmetric problems the \texttt{type data} should use
+the \texttt{AXiSYmmetric} option to ensure the specified traction 
+is multiplied by the radius.
+`
+
+For quadratic line surfaces the ends (nodes 1 and 2)
+together with an intermediate point are used.  Thus it
+is possible to have quadratic variation of the values.
+The quadratic surface is given as:
+
+\begin{verbatim}
+       type data
+       QUADratic
+         1,x1,y1,p1
+         2,x2,y2,p2
+         3,x3,y3,p3
+\end{verbatim}
+
+For three dimensional problems it is possible to
+specify the segment to which the quantities
+are applied.  The segment is specified as a {\it surface}.
+The data is specified as:
+
+\begin{verbatim}
+       type data
+       SURFace
+         1,x1,y1,z1,p1
+         2,x2,y2,z2,p2
+         3,x3,y3,z3,p3
+         4,x4,y4,z4,p4
+\end{verbatim}
+
+The program assigns a search region and attempts to
+find the elements and the nodes to which the specified
+surfaces are associated.  It is possible that no surface
+is located (an error message will appear in the output file).  To
+expand the search region a {\it gap} can be specified as:
+
+\begin{verbatim}
+       GAP,value
+\end{verbatim}
+
+The {\it gap-value} is a coordinate distance within which
+nodes are assumed to lie on the specified surface.  The
+value should be less than dimensions of typical element
+or erroneous surfaces will be found by the
+search.  It is suggested that the computed loads be
+checked graphically to ensure that they are correctly
+identified (e.g., use {\tt PLOT,MESH} and {\tt PLOT,LOAD} to show
+the locations of computed loads).
+
+The {\it polar} option may be used to set the origin of a
+polar coordinate system.  Coordinates entered after
+{\it polar} will be assumed to be radius and angle.  The
+{\it cartesian} option resets the coordinate system to a
+cartesian frame.  The default mode is {\it cartesian}.
+
+The nodes 1, 2 (and 3 and 4 if required) must be input in the right order. The
+normal vector of the surface has to point outward from the surface as defined
+by a right-hand rule.
+\vfil\eject

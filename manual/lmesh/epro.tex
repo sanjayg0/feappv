@@ -1,0 +1,37 @@
+\heada{MESH}{EPROp}
+\hspace{1.0cm}{{ epro                  \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ i-coor,xi-value,(pnum(i),i=1,ndf) \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ <etc.,terminate with a blank record> \hfill}}
+\headb
+
+The proportional loading number to be appled to nodal forces and displacments
+may be input using this command.
+The number may be set along
+any set of nodes which has a constant value of the {\it i-coordinate
+direction} (e.g., 1-direction (or x), 2-direction
+(or  y),  etc.).  The data to be supplied during the definition of
+the mesh consists of:
+
+\begin{center}
+\begin{tabular}{r l}
+\it i-coor   &-- Direction of coordinate (i.e., 1 = x, 2 = y, etc.) \\
+\it xi-value &-- Value of i-direction coordinate to be used during  \\
+             &\quad search (a tolerance of 1/1000 of mesh size is used  \\
+             &\quad during search, any coordinate within the gap is  \\
+             &\quad assumed to have the specified value).  \\
+\it pnum(1,node) &-- Proportional load number of dof-1 \\
+\it pnum(2,node) &-- Proportional load number of dof-2 \\
+                 &\quad etc., to {\it ndf} directions \\
+\end{tabular}
+\end{center}
+For nodes with sloping conditions, the degrees-of-freedom
+are expressed with respect to the rotated frame 1-2 instead
+of the global frame x1-x2 (x-y).  For three dimensional problem
+the 3-direction coincides with the x3-direction (z).
+
+Proportional load numbers may also be specified using the {\tt FPRO}p
+and {\tt CPRO}p commands.  The data is order dependent with data
+defined by {\tt FPRO}p processed first, {\tt EPRO}p processed second and
+the {\tt CPRO}p data processed last.  The value defined last is used for
+any analysis.
+\vfil\eject

@@ -1,0 +1,63 @@
+\heada{MESH}{EFORce}
+\hspace{1.0cm}{{ efor,[set,add]                 \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ i-coor,xi-value,(f(j),j=1,ndf) \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ <etc.,terminate with a blank record> \hfill}}
+\headb
+
+The values of boundary force conditions may be set
+along any set of nodes which has a constant value of the
+{\it i-coordinate direction} (e.g., 1-direction (or x), 2-direction
+(or y), etc.).  The data to be supplied during the
+definition of the mesh consists of:
+
+\begin{center}
+\begin{tabular}{r l}
+\it i-coor   &-- Direction of coordinate (i.e., 1 = x, 2 = y, etc.) \\
+\it xi-value &-- Value of i-direction coordinate to be used during  \\
+             &\quad search (a tolerance of 1/1000 of mesh size is used  \\
+             &\quad during search, any coordinate within the gap is  \\
+             &\quad assumed to have the specified value).  \\
+\it f(1)     &-- Value of force for dof's   \\
+\it f(2)     &   \\
+\it ...      &   \\
+\it f(ndf)   &   \\
+\end{tabular}
+\end{center}
+While it is possible to specify both the force and the displacement applied
+to a node, only one can be active during a solution step.  The determination
+of the active value is determined from the boundary
+restraint condition value.  If the boundary restraint value is zero
+and you use one of the force-commands a force
+value is imposed, whereas, if the boundary restraint value is non-zero
+and you use one of the displacement-commands a
+displacement value is imposed. (See {\tt BOUN}dary, {\tt CBOU}ndary,
+or {\tt EBOU}ndary pages for setting boundary
+conditions.).  It is possible to change the type of boundary restraint
+during execution by resetting the boundary restraint value.
+
+The {\tt EFOR} command may be used with two options.  Using the {\tt EFOR,SET}
+option replaces previously defined forces at a node by the
+pattern specified.  Using the {\tt EFOR,ADD} option
+accumulates the forces with previously defined values.
+The default mode is {\tt ADD}.
+
+Force conditions may also be specified using the {\tt FORC}e and {\tt CFOR}ce
+commands.  The data is order dependent with data
+defined by {\tt FORC}e processed first, {\tt EFOR}ce processed second and
+the {\tt CFOR}ce data processed last.  The value defined last is used for
+any analysis.
+\pagebreak
+
+\noindent{\bf{Example: EFORce}}
+
+All the nodes located on the $x_3 = z = 10$ plane are to have a common specified
+horizontal
+force value. (Note that this is not a common case as end nodes on equally
+spaced intervals would have different values from other nodes.)
+This may be specified using the command set:
+\begin{verbatim}
+       EFORce
+         3 10.0 -12.5
+\end{verbatim}
+where -12.5 is the value of each force
+\vfil\eject

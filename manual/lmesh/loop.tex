@@ -1,0 +1,27 @@
+\heada{MESH}{LOOP}
+\hspace{1.0cm}{{loop,$<$xxxx$>$,n1 \hfill}}
+\headb
+
+The {\tt LOOP} command {\tt must} be used in conjunction
+with a matching {\tt NEXT} command.
+
+A {\tt LOOP-NEXT} pair is used to
+repeat the execution of a set of input statements.  The {\tt LOOP}
+appears first, followed by one or more input statements then
+a {\tt NEXT} command.  The loop-next commands may be
+nested to a depth of 8.  That is,
+\begin{verbatim}
+       LOOP,level\_1,n1
+         LOOP,level\_2,n1
+           LOOP,level\_3,n1
+              etc. to 8-levels
+           NEXT,level\_3
+         NEXT,level\_2
+       NEXT,level\_1
+\end{verbatim}
+is permitted.
+If desired, the {\tt xxxx} may be used (as above)
+to describe the type of next which is being closed, i.e.,
+{\tt NEXT,block} would indicate the end of a sequence of block generations.
+
+\vfill\eject

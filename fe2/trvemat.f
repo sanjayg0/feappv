@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2021: Regents of the University of California
+!....  Copyright (c) 1984-2024: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -26,6 +26,8 @@
 !          dd(3,3)  -  Current material conductivity tangent moduli
 !          rhoc     -  Density times specific heat
 !-----[--.----+----.----+----.-----------------------------------------]
+      use        mpi
+
       implicit   none
 
       include   'cdata.h'
@@ -40,7 +42,7 @@
       include   'setups.h'
       include   'tdata.h'
 
-      include   'mpif.h'
+!     include   'mpif.h'
 
       include   'pointer.h'
       include   'comblk.h'
@@ -60,38 +62,33 @@
       endif
 
 !     Set values of isw to send information to micro-scale problem
-
       if(isw.eq.14) then
 
 !       Store material number for each send
-
         setval = palloc(269,'RVEMA',nsend+1, 1)
         mr(np(269)+nsend) = ma
 
 !       Count number of sends
-
         sendfl = .true.
         nsend  = nsend + 1
 
 !       Set send receive sizes
-
         dsend = max(dsend,8)
         drecv = max(drecv,17)
 
       elseif(isw.eq.4 .or. isw.eq.8) then
 
         tflux(1:3) = hn1(1:3)
+        dd(:,:)    = 0.0d0
 
       elseif(isw.eq.3 .or. isw.eq.6 .or. isw.eq.12) then
 
-!       Use current value of stress from array
-
+!       Use current value of flux from array
         if(pltmfl) then
 
           tflux(1:3) = hn1(1:3)
 
-!       Move deformation gradient to send buffer
-
+!       Move gradient to send buffer
         elseif(sendfl) then
 
           rvetyp = max(1,nint(d(297)))
@@ -103,19 +100,16 @@
           endif
 
 !         This is a set to prevent adding non-zeros to tangent/residual
-
           thgrad(:) = 0.0d0
           dd(:,:)   = 0.0d0
           rhoc      = 0.0d0
 
 !       Put thermal flux and moduli in arrays
-
         elseif(recvfl) then
 
           call utrecv(d, hr(np(261)), drecv,nrecv, tflux,dd, rhoc)
 
 !         Save flux for outputs
-
           if(hflgu) then
             hn1(1:3) = tflux(1:3)
           endif
@@ -159,6 +153,7 @@
       implicit   none
 
       include   'eldata.h'
+      include   'sdata.h'
 
       integer    drecv,nsend,a,b,k
       real*8     d(*), srvel(drecv,*), tflux(*),dd(3,3), rhoc
@@ -166,21 +161,19 @@
       save
 
 !     Set flux and tangent values from RVE
-
       nsend = nsend + 1
-      do a = 1,3
-        tflux(a) = -srvel(a+1,nsend)
-      end do ! i
+      tflux(1:3) = -srvel(2:4,nsend)
+
+!     Thermal tangent
       k = 7
-      do a = 1,3
-        do b = 1,3
+      do a = 1,ndm
+        do b = 1,ndm
           k = k + 1
           dd(b,a) = srvel(k,nsend)
         end do ! b
       end do ! a
 
 !     Set density and specific heat values from RVE
-
       d( 4) = srvel(5,nsend)
       d(64) = srvel(6,nsend)
       rhoc  = d(4)*d(64)

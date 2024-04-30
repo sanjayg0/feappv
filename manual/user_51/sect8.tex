@@ -1,0 +1,18 @@
+\section{Regions and Element Groups}
+\label{regions}
+
+The elements in {\sl FEAPpv} may be assigned to different groups using the
+{\tt REGI}\-on command.  The command is given as
+\begin{verbatim}
+       REGIon,number
+\end{verbatim}
+where {\tt number} is an integer constant of parameter defining the group
+number for the elements.
+Any elements which are input after a region command is given belong
+to the given group number.
+By default all elements are assigned to region zero.
+
+The use of regions facilitates
+merging groups of elements whose nodes should be common
+but have different numbers (e.g., those defined using {\tt BLOC}k commands).
+An illustration of this option is used in Example 4 above.

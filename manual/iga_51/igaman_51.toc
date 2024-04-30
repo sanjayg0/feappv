@@ -1,0 +1,47 @@
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}
+\contentsline {section}{\numberline {1.1}NURBS interpolation on a line}{2}{section.1.1}
+\contentsline {subsubsection}{Example 1:}{3}{section*.4}
+\contentsline {subsubsection}{Example 2:}{3}{section*.5}
+\contentsline {subsection}{\numberline {1.1.1}NURBS functions and B\'{e}zier extraction}{6}{subsection.1.1.1}
+\contentsline {chapter}{\numberline {2}\texttt {NURBS} mesh description}{7}{chapter.2}
+\contentsline {section}{\numberline {2.1}Control information: Start of problem}{7}{section.2.1}
+\contentsline {section}{\numberline {2.2}MATERIAL set description}{9}{section.2.2}
+\contentsline {subsection}{\numberline {2.2.1}Activation of NURBS interpolations}{9}{subsection.2.2.1}
+\contentsline {subsection}{\numberline {2.2.2}SOLId element material sets}{9}{subsection.2.2.2}
+\contentsline {subsection}{\numberline {2.2.3}THERmal element material sets}{10}{subsection.2.2.3}
+\contentsline {subsection}{\numberline {2.2.4}NURB\_THIN\_SHELL element material sets}{10}{subsection.2.2.4}
+\contentsline {subsection}{\numberline {2.2.5}NURB\_SLOPE element material sets}{11}{subsection.2.2.5}
+\contentsline {subsection}{\numberline {2.2.6}PRESsure: Dead and Follower loads}{11}{subsection.2.2.6}
+\contentsline {subsection}{\numberline {2.2.7}USER element material sets}{12}{subsection.2.2.7}
+\contentsline {section}{\numberline {2.3}NURBS patch input}{13}{section.2.3}
+\contentsline {subsection}{\numberline {2.3.1}\texttt {NURBS} control point specification}{13}{subsection.2.3.1}
+\contentsline {subsection}{\numberline {2.3.2}\texttt {KNOT} vector specification}{14}{subsection.2.3.2}
+\contentsline {subsubsection}{CLAMped (OPEN) knot vectors}{14}{section*.6}
+\contentsline {subsubsection}{UNCLamped (periodic) knot vectors}{14}{section*.7}
+\contentsline {subsection}{\numberline {2.3.3}\texttt {NPATch} specification}{17}{subsection.2.3.3}
+\contentsline {subsubsection}{\relax $\@@underline {\hbox {One dimensional patch}}\mathsurround \z@ $\relax }{17}{section*.8}
+\contentsline {subsubsection}{\relax $\@@underline {\hbox {Surface patch}}\mathsurround \z@ $\relax }{19}{section*.9}
+\contentsline {subsubsection}{\relax $\@@underline {\hbox {Solid patch}}\mathsurround \z@ $\relax }{19}{section*.10}
+\contentsline {subsection}{\numberline {2.3.4}Example: Two dimensional curved beam}{21}{subsection.2.3.4}
+\contentsline {section}{\numberline {2.4}Traction surface loading}{21}{section.2.4}
+\contentsline {subsection}{\numberline {2.4.1}\texttt {NSURface} loading}{22}{subsection.2.4.1}
+\contentsline {subsection}{\numberline {2.4.2}\texttt {NLOAd} patch loading}{24}{subsection.2.4.2}
+\contentsline {section}{\numberline {2.5}NURBS mesh refinement}{25}{section.2.5}
+\contentsline {subsection}{\numberline {2.5.1}Degree ELEVation}{25}{subsection.2.5.1}
+\contentsline {subsubsection}{\relax $\@@underline {\hbox {Multiple elevations}}\mathsurround \z@ $\relax }{26}{section*.11}
+\contentsline {subsection}{\numberline {2.5.2}KNOT insertion}{27}{subsection.2.5.2}
+\contentsline {section}{\numberline {2.6}Multiple NURBS blocks}{28}{section.2.6}
+\contentsline {subsection}{\numberline {2.6.1}Slope compatibility enforcement for thin shells: NTIE}{28}{subsection.2.6.1}
+\contentsline {section}{\numberline {2.7}OUTMesh: Output of IgA mesh}{29}{section.2.7}
+\contentsline {section}{\numberline {2.8}Surface extraction}{29}{section.2.8}
+\contentsline {section}{\numberline {2.9}Problem solution}{31}{section.2.9}
+\contentsline {section}{\numberline {2.10}Graphics outputs}{31}{section.2.10}
+\contentsline {section}{\numberline {2.11}Solutions using T-splines}{31}{section.2.11}
+\contentsline {chapter}{\numberline {3}Example mesh and elements}{33}{chapter.3}
+\contentsline {chapter}{\numberline {A}BLOCk input form}{40}{appendix.A}
+\contentsline {section}{\numberline {A.1}\texttt {NSIDE} list of control points}{40}{section.A.1}
+\contentsline {section}{\numberline {A.2}\texttt {NBLOCK} specification}{41}{section.A.2}
+\contentsline {subsection}{\numberline {A.2.1}One dimensional block}{41}{subsection.A.2.1}
+\contentsline {subsection}{\numberline {A.2.2}Two dimensional block}{41}{subsection.A.2.2}
+\contentsline {subsection}{\numberline {A.2.3}Three dimensional block}{42}{subsection.A.2.3}
+\contentsline {chapter}{\numberline {B}Patch storage arrays}{44}{appendix.B}

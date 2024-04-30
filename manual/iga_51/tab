@@ -1,0 +1,16 @@
+
+\begin{table}
+\begin{center}
+\begin{tabular}{| l | p{4in} | |} \hline
+NAME & Description \\ \hline
+{\tt IEDOF(1,i,ma)} & Degree of freedom 1 for node {\tt i} of material
+{\tt ma}. \\
+$\cdots$ & to \\
+{\tt IEDOF(ndf,i,ma)} & Degree of freedom {\tt ndf} for node {\tt i}
+of material. \\ \hline
+\end{tabular}
+\caption{Element degree of freedom assignment array \texttt{IEDOF} use for material number \texttt{ma}}
+\label{tab426}
+\index{Element degree of freedom array}
+\end{center}
+\end{table}

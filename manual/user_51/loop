@@ -1,0 +1,125 @@
+
+\section{Looping to Replicate Mesh Parts}
+\label{mloop}
+
+Many models for problems analyzed by finite element methods have mesh parts
+which are similar except for stretching and rotation transformations.
+\textsl{FEAPpv} provides input capabilities to generate the model using
+\texttt{LOOP}-\texttt{NEXT} commands.  The basic input structure is given
+by the command sequence
+\begin{verbatim}
+       LOOP,n
+         ...
+       NEXT
+\end{verbatim}
+where $n$ defines the number of times to repeat the commands contained
+within the loop.  The value of $n$ may be a constant or a parameter.
+Any standard \textsl{FEAPpv} mesh commands may be used between the \texttt{LOOP}
+and \texttt{NEXT} statements, however, it is easiest to use commands which do
+not require explicit definitions for node or element numbers.
+
+\begin{figure}[hb!]
+\centerline {\hfil \includegraphics[height=2.2in]{figs/lp2blk} \hfil}
+\caption{Two blocks using \texttt{LOOP-NEXT} commands}
+\label{floop.0}
+\end{figure}
+A simple example is the repetition of two blocks of identical elements
+in which the material number is different.  Assume first that a file
+named \texttt{Imblock} is constructed which contains the commands
+\begin{verbatim}
+       BLOCk
+         CART n1 n2 0 0 ma
+           1   0  0
+           2   a  0
+           3   a  b
+           4   0  b
+
+       PARAMeter
+          ma = ma + 1
+
+\end{verbatim}
+Then a second file is given which defines the initial values of parameters
+and the looping control.  This file is given by the statements shown in
+Table \ref{tloop.1}
+where we note the use of the loop using the \texttt{TRANsform} command. 
+\begin{table}[ht!]
+\begin{center}
+\begin{verbatim}
+       FEAPpv * * Two block problem
+         0  0  0  2  2  4
+       PARAmeters
+         a  = 5
+         b  = 4
+         n1 = 6
+         n2 = 3
+         ma = 1
+ 
+       LOOP,2
+         INCLude Imblock
+         TRANsform
+           1 0 0
+           0 1 0
+           0 0 1
+           a 0 0
+       NEXT
+       MATE 1
+         SOLID
+           ELAStic ISOTropic 1000 0.25
+
+       MATE 2
+         SOLID
+           ELAStic ISOTropic 2000 0.25
+
+       END
+\end{verbatim}
+\caption{\texttt{LOOP-NEXT} mesh construction}
+\label{tloop.1}
+\end{center}
+\end{table}
+The above example produces the mesh shown in Fig. \ref{floop.0} and
+is trivial (also not much is gained over a construction
+using two block commands directly).
+
+\begin{figure}[ht!]
+\centerline {\hfil \includegraphics[height=3.5in]{figs/wheel5} \hfil}
+\caption{Disk with holes}
+\label{floop.1}
+\end{figure}
+A more involved example is shown 
+in Fig. \ref{floop.1} for a disk containing circular holes.  This
+example was constructed using the commands shown in Table \ref{tloop.2}.
+\begin{table}[ht!]
+\begin{center}
+\begin{verbatim}
+       LOOP 5
+         TRANSform
+           cosd(th)  sind(th)    0
+          -sind(th)  cosd(th)    0
+               0         0       1
+               0         0       0
+         INCLude Iwseg
+         TRANSform
+           cosd(th)  sind(th)    0
+           sind(th) -cosd(th)    0
+               0         0       1
+               0         0       0
+         INCLude Iwseg
+         PARAmeter
+           th = th + 72
+
+       NEXT
+\end{verbatim}
+\caption{\texttt{LOOP-NEXT} disk mesh construction}
+\label{tloop.2}
+\end{center}
+\end{table}
+The file \texttt{Iwseg} contains the mesh for one part of the repeating
+mesh as shown in Fig. \ref{floop.2}.
+\begin{figure}[ht!]
+\centerline {\hfil \includegraphics[height=2.0in]{figs/wheelsg} \hfil}
+\caption{Mesh segment for disk with holes}
+\label{floop.2}
+\end{figure}
+
+Many more involved meshe constructs may be considered using the
+\texttt{LOOP}-\texttt{NEXT} commands.

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2021: Regents of the University of California
+!....  Copyright (c) 1984-2024: Regents of the University of California
 !                               All rights reserved
 
 !-----[--+---------+---------+---------+---------+---------+---------+-]
@@ -17,6 +17,8 @@
 !-----[--+---------+---------+---------+---------+---------+---------+-]
       implicit  none
 
+      include  'comfil.h'
+      include  'comsav.h'
       include  'iofile.h'
       include  'pdata2.h'
       include  'pdatps.h'
@@ -25,37 +27,34 @@
       include  'x11f.h'
 
       logical       :: eflag
+      integer       :: mm
 
       save
 
 !     Error message
-
       if(eflag .and. rank.eq.0) then
-        write(*,'(a)')
-     &       ' --> ERRORS OCCURRED: For details see output file.'
+        mm = index(fout,' ') - 1
+        write(*,'(a,a/1x)')
+     &       ' --> ERRORS OCCURRED: For details see file: ',fout(1:mm)
       endif
 
 !     Close PostScript file if open
-
       if (hdcpy) call fpplcl()
 
 !     X11 device
-
       if(everon) call gdx11(6,xx,yy)
 
 !     Clear last time history plot data set
-
       call ptimpl()
 
 !     Close parallel arrays
-
       call parstop()
 
 !     Close last input & output file
-
       close(unit=ior, status = 'keep')
       close(unit=iow, status = 'keep')
 
+!     Stop all execution
       stop
 
       end subroutine plstop

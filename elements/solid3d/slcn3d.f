@@ -43,6 +43,6 @@
         end do ! ii
       end do ! l
 
-      iste = 6 
+      iste = 6
 
       end subroutine slcn3d

@@ -1,0 +1,34 @@
+\heada{SOLUTION}{DATA}
+\hspace{1.0cm}{{data,xxxx \hfill}}
+\headb
+
+During command language execution it is sometimes desirable to
+progressively change parameters, e.g., the time step size or
+the solution tolerance accuracy.  This could become cumber-
+some and require an excessive number of commands if
+implemented directly.  Accordingly, the {\tt DATA} command may
+be used in instances when the time step or tolerance is to
+be varied during a {\tt LOOP} execution.  The permissible values
+for {\tt xxxx} are {\tt TOL} and {\tt DT}.
+The actual values of the tolerance or time step size are
+given after the {\tt END} statement using the data inputs
+specified in the {\tt TOL} or {\tt DT} manuals.  For example, to
+vary time steps during a loop the commands:
+
+\begin{verbatim}
+       LOOP,time,3
+         DATA,DT
+         TIME
+         ...
+         ...
+       NEXT,time
+       ....
+       ...
+       END
+       DT,,0.1
+       DT,,0.2
+       DT,,0.4
+\end{verbatim}
+could be given to indicate three time steps with dt = 0.1,
+0.2, and 0.4 respectively.
+\vfill\eject

@@ -1,0 +1,30 @@
+\heada{SOLUTION}{LOOP}
+\hspace{1.0cm}{{loop,$<$xxxx$>$,n1 \hfill}}
+\headb
+
+The {\tt LOOP} command {\tt must} be used in conjunction
+with a matching {\tt NEXT} command.
+
+A {\tt LOOP-NEXT} pair is used to
+repeat the execution of a set of commands.  The {\tt LOOP}
+appears first, followed by one or more commands then
+a {\tt NEXT} command.  The loop-next commands may be
+nested to a depth of 8.  That is,
+\begin{verbatim}
+       LOOP,level\_1,n1
+         LOOP,level\_2,n1
+           LOOP,level\_3,n1
+              etc. to 8-levels
+           NEXT
+         NEXT
+       NEXT
+\end{verbatim}
+is permitted.
+If desired, the {\tt xxxx} may be used (as above)
+to describe the type of next which is being closed, i.e.,
+{\tt NEXT,time} would indicate the end of a time loop.
+
+During interactive executions, {\tt LOOP-NEXT} commands
+are not executed until the matching {\tt NEXT} command is input.
+In this way a set of statements may be grouped and executed together.
+\vfill\eject

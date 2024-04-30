@@ -1,0 +1,42 @@
+\heada{SOLUTION}{ARCLength}
+\hspace{1.0cm}{{arcl,$<$xxxx,kfl,lfl$>$ \hfill}}
+\headb
+
+The {\tt ARCL}ength command computes a solution using an arclength
+continuation method.
+
+The {\tt kfl} options are defined as follows:
+
+\begin{center}
+\begin{tabular}{l l }
+kfl = 0:& Normal plane, modified newton solution \\
+        & N.B. kfl = 0: defaults to kfl = 2 \\
+kfl = 1:& Updated normal plane, modified newton solution \\
+kfl = 2:& Normal plane, full newton solution \\
+kfl = 3:& Updated normal plane, full newton solution \\
+kfl = 4:& Displacement control, modified newton solution \\
+kfl = 5:& Displacement control, full newton solution
+\end{tabular}
+\end{center}
+
+The {\tt lfl} options are defined as follows:
+\begin{center}
+\begin{tabular}{l l }
+lfl = 0:& Use current values for arclength and load direction \\
+        & (Initial default is calculated by first solution step). \\
+lfl = 1:& Change current values for arclength and load direction
+\end{tabular}
+\end{center}
+
+ARCL must be called once at the beginning of the
+solution commands when a nonlinear problem is to be
+solved using this method.  With this call all flags will
+be set and retained to perform an arclength solution.
+To turn arclength off after it has been activated issue {\tt ARCL,OFF}.
+
+For the calculation of load deflection curves
+specify {\tt PROP}\-ortional
+load using default parameters;
+the actual load level is computed by {\tt ARCL}.
+
+\vfill\eject

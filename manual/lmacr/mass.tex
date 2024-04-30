@@ -1,0 +1,20 @@
+\heada{SOLUTION}{MASS}
+\hspace{1.2cm}{{mass \hfill}} \\{\smallskip}
+\hspace{1.0cm}{{mass,lump \hfill}}
+\headb
+
+The command {\tt MASS} is used to compute a consistent
+or a diagonal {\it mass} matrix.  Each element
+computes a contribution to both the consistent mass
+diagonal mass.
+The global mass to assemble is controlled by the parameter on the {\tt MASS}
+command, with {\tt LUMP} producing a diagonal mass and any option the
+consistent mass.
+
+A consistent mass or a lumped (diagonal) mass 
+may be used for eigencomputations (see command
+{\tt SUBS}pace).  Both may also be used for transient solutions computed
+using the explicit method (see command
+{\tt TRAN}sient,{\tt EXPL}icit). They are not needed for other time integration
+methods.
+\vfill\eject

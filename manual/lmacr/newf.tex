@@ -1,0 +1,38 @@
+\heada{SOLUTION}{NEWForce}
+\hspace{1.2cm}{{newf \hfill}} \\{\smallskip}
+\hspace{1.0cm}{{newf,zero \hfill}}
+\headb
+
+The use of the {\tt NEWF}orce command will set a fixed
+pattern of nodal forces and displacements to the values of
+the current pattern in boundary force and displacements plus the
+previous "fixed" pattern.  That is:
+
+\begin{enumerate}
+\item{
+For degree-of-freedoms where forces (loads) are  specified:
+\begin{equation}
+{\tt f0(i,1) = f(i,1)*prop(t) + f0(i,1)}
+\end{equation}
+}
+\item{
+For degree-of-freedoms where displacements  are  specified:
+\begin{equation}
+{\tt f0(i,2) = u(i)}
+\end{equation}
+where {\tt f0(i,n)} is the {\it fixed} pattern forces and displacements,
+{\tt f(i,1)} is the pattern specified in force boundary loads,
+{\tt prop(t)} is the current value of the proportional loading at the current
+time $t$, and {\tt u(i)} is the current displacement value.
+}
+\end{enumerate}
+
+When execution is initiated the values in {\tt f0(i,n)} are all
+zero.  NOTE at restart they again will become all zero so
+that caution must be exercised at any restart where {\tt NEWF}orce
+had been used in generating the results.
+
+The {\tt f0(i,n)} may be reset to zero using the {\tt NEWF}orce,{\tt zero}
+command (values are not updated).
+N.B. This only affects the current partition degree of freedoms.
+\vfill\eject

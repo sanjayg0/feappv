@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2021: Regents of the University of California
+!....  Copyright (c) 1984-2024: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -15,7 +15,9 @@
 
 !      Outputs:
 !         none
-!-----[--.----+----.----+----.-----------------------------------------]
+!-----[--.----+--!-.----+----.-----------------------------------------]
+      use        mpi
+
       implicit   none
 
       include   'debugs.h'
@@ -23,7 +25,7 @@
       include   'elpers.h'
       include   'iodata.h'   ! ios
       include   'setups.h'
-      include   'mpif.h'
+!     include   'mpif.h'
 
       character (len=128) :: ufinp
       character (len=  3) :: fext
@@ -41,13 +43,12 @@
       endif
 
 !     Close parallel arrays
-
       if(rank.eq.0) then
         nsbuf = dsend + 7
         do i = 1,ntasks - 1
           if(debug) then
             call udebug('     MPI_Send:Stop',usr_msg)
-            write(*,*) 'PARSTOP:MPI_SSend:NSBUF,MSG',nsbuf,usr_msg
+            write(*,*) 'PARSTOP:MPI_SSend:NSBUF,MSG',nsbuf,usr_msg,i
           endif
           call MPI_SSend(rbuf, nsbuf, MPI_DOUBLE_PRECISION, i, usr_msg,
      &                  MPI_COMM_WORLD, ierr)

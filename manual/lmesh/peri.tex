@@ -1,0 +1,89 @@
+\heada{MESH}{PERIodic}
+\hspace{1cm}{{peri,$<$ther,cauc,ither,icau,    $>$ \hfill}}
+\headb
+
+\index{Mesh command!PERIodic}
+
+For some problems in stress analysis of solids
+it is desirable to specify non-zero nodal displacements
+that result from applying a non-zero displacement gradient.  For such situations
+the displacement of the node is computed from
+\begin{displaymath}
+\B{u}_a = \B{G} \, \B{x}_a
+\end{displaymath}
+where $\B{u}_a$ and $\B{x}_a$ are the displacement and coordinate of node $a$;
+and $\B{G}$ is a \textit{specified} gradient computed
+\begin{displaymath}
+\B{G} = \begin{bmatrix}
+\dpdif{u_1}{x_1} & \dpdif{u_1}{x_2} & \dpdif{u_1}{x_3} \\
+\dpdif{u_2}{x_1} & \dpdif{u_2}{x_2} & \dpdif{u_2}{x_3} \\
+\dpdif{u_3}{x_1} & \dpdif{u_3}{x_2} & \dpdif{u_3}{x_3} \end{bmatrix}
+= \begin{bmatrix}
+G_{11} & G_{12} & G_{13} \\[+6pt]
+G_{21} & G_{22} & G_{23} \\[+6pt]
+G_{31} & G_{32} & G_{33} \end{bmatrix}
+\end{displaymath}
+The displacement gradient is input using the commands
+\begin{verbatim}
+       PERIodic <CAUChy ,     >
+         G_11    G_12    G_13
+         G_21    G_22    G_23
+         G_31    G_32    G_33
+\end{verbatim}
+
+Another useful application is to impose \textit{periodic} boundary conditions
+in which the constraint for two nodes is given as
+\begin{displaymath}
+u_i^+ = u_i^- + \sum_{j=1}^d G_ij ( x_j^+ - x_j^-)
+~~\mbox{with}~~ x_j^+ = x_j^- ~~ j \ne i
+\end{displaymath}
+where $d$ is the mesh dimension.  Such periodic cases are useful in evaluating
+the behavior of micro-scale models under specified strain histories.  Generally,
+the constraint can only be used for meshes in which the geometry is rectangular and the boundary nodes satisfy the above constraint.  The boundary
+constraints for the problem can then be specified by specifying fixed
+displacement conditions for the corner nodes and \texttt{ELINk} conditions
+for the parallel boundaries (see Sec. \ref{link}).
+
+A similar behavior may be imposed for thermal problems where temperature $T$
+has the condition
+\begin{displaymath}
+T^+ = T^- + \sum_{j=1}^d  G_j ( x_j^+ - x_j^-)
+~~\mbox{with}~~ x_j^+ = x_j^- ~~ j \ne i
+\end{displaymath}
+in which $G_j = \partial T/\partial x_j$ is a constant thermal gradientl..
+The input is specified as
+\begin{verbatim}
+       PERIodic THERmal
+         G_1    G_2    G_3
+\end{verbatim}
+
+It is also possible to solve the problem using an incremental form in which
+temperature, strain and deformation gradient are defined by
+\begin{displaymath}
+\nabla T = \pdif{T}{\B{x}} + \bar{G}
+\end{displaymath}
+\begin{displaymath}
+\bepsilon = \left( \dpdif{\B{u}}{\B{x}} \right)^{(s)} + \bar{\B{G}}^{(s)}
+\end{displaymath}
+and
+\begin{displaymath}
+\B{F} = \pdif{\B{u}}{\B{x}} + \bar{\B{G}}
+\end{displaymath}
+respectively. In the above the barred quantities are the imposed gradients.
+
+The above are input as
+\begin{verbatim}
+       PERIodic ITHErmal
+         G_1    G_2    G_3
+\end{verbatim}
+or
+\begin{verbatim}
+       PERIodic ICAUchy
+         G_11    G_12    G_13
+         G_21    G_22    G_23
+         G_31    G_32    G_33
+\end{verbatim}
+In the latter, the distinction between small and finite deformation is
+based on the constitutive model used.
+
+\vfil\eject

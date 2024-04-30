@@ -1,0 +1,60 @@
+\heada{MESH}{MPROportional factors}
+\hspace{1.0cm}{{ fpro                  \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ node1,ng1,(pnum(i,node1),i=1,ndf) \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ node2,ng1,(pnum(i,node2),i=1,ndf) \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ <etc.,terminate with blank record> \hfill}}
+\headb
+
+The {\tt MPRO}portional factors command is used to specify the proportional
+load numbers for nodal mass conditions specified by {\tt MASS} inputs.
+For each node a record is entered with the following information:
+
+\begin{center}
+\begin{tabular}{r l}
+\it node         &-- Number of node \\
+\it ng           &-- Generator increment to next node \\
+\it pnum(1,node) &-- Proportional load number of dof-1 \\
+\it pnum(2,node) &-- Proportional load number of dof-2 \\
+                 &\quad etc., to {\it ndf} directions \\
+\end{tabular}
+\end{center}
+The proportional load numbers are interpretted as follows:
+
+\begin{center}
+\begin{tabular}{r l}
+\it pnum(i,node)  =  0  & dof-i uses sum of specified proportional \\
+                        & load factors \\
+\it pnum(i,node) not 0  & dof-i uses specified proportional load \\
+                        & based on order of solution inputs \\
+                        & prop (default = 1. if prop not used). \\
+\end{tabular}
+\end{center}
+As a default all {\it pnum} values are set to zero (0) and individual
+proportional load factors to 1.
+
+Generation is performed similar to {\tt FORCe} input.  Thus
+\begin{verbatim}
+      MPROportional
+         1 5 0 1
+        21 0 1 2
+
+\end{verbatim}
+would generate nodes {\tt 6, 11, 16} with proportional load number {\tt 1}
+assigned to the second degree of freedom; node {\tt 21} would have
+proportional load {\tt 1} for the first degree of freedom and {\tt 2} for
+the second degree of freedom.
+
+In addition to specifying the mass proportional load numbers it is necessary
+to specify a factor to multiply the time values.  This is given as a
+{\tt GROUnd} acceleration option using a {\tt GLOBal} command.  For example,
+the commands:
+\begin{verbatim}
+      GLOBAL
+        GROUND factor v-1 v-2 ... v-ndf
+\end{verbatim}
+speifies the factors {\tt v-i} for each discrete mass degree of freedom.
+Using this option it is possible to specify different acceleration effects
+for the various degrees of freedom.  Similar options exist for many of the
+elements included with {\sl FEAPpv} and for these it is necessary also to
+include the {\tt GROUnd} record with each affected material set.
+\vfil\eject

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 !                        -      -       -        -
-!....  Copyright (c) 1984-2021: Regents of the University of California
+!....  Copyright (c) 1984-2024: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -18,12 +18,14 @@
 !     Outputs
 !       Starts of all files
 !-----[--.----+----.----+----.-----------------------------------------]
+      use        mpi
+
       implicit   none
 
       include   'comfil.h'
       include   'elpers.h'
       include   'setups.h'
-      include   'mpif.h'           ! MPI common block
+!     include   'mpif.h'           ! MPI common block
 
       character (len=128) :: sfinp,sfout,sfres,sfsav,sfplt
       character (len=3)   :: fext

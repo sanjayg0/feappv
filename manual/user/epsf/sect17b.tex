@@ -1,0 +1,369 @@
+\section{Time Dependent Loading}
+
+The loading applied to a problem may be changed during a solution
+process.  This may be achieved by specifying new nodal loads for
+each time step using the commands
+\begin{verbatim}
+       BATCh
+        ...
+       LOOP,time,steps
+         MESH
+          ...
+       NEXT
+        ...
+       END
+       FORCe
+        ...
+       END
+       FORCE
+        ...
+       END
+        ...
+\end{verbatim}
+in which a set of new forces appears for each time step performed.  The
+use of the {\tt MESH} command within a solution strategy permits the alteration
+of any nodal or element data.  It is not permitted to change the size of the
+problem by adding new nodes or elements (elements may be {\tt ACTI}vated
+or {\tt DEAC}tivated based on region descriptions); however, nodal forces,
+displacements, boundary restraint codes, etc. may be changed.
+Material paramters may be changed but not the type of material model (i.e.,
+it is not permitted to change a model from elastic to elasto-plastic during
+the solution process).
+
+The above form, while general in concept, requires extensive amounts of
+data to describe the behavior.  {\sl FEAP} can easily treat
+loading states which may be written in the form
+\begin{equation}
+\B{F}(t) = p_j(t) \, \B{F}_j
+\end{equation}
+where $p_j(t)$ is a set of time dependent (proportional loading) factors
+and $\B{F}_j$ is a fixed loading pattern on a mesh.
+
+To perform an analysis involving proportional loads, during mesh input
+it is necessary to specify:
+\begin{enumerate}
+\item
+Nodal force patterns $\B{F}_j$;
+\item
+Associations between force patterns and proportional loading factors
+using the $FPRO$\-por\-tion\-al command during mesh generation.  This command
+has the form
+\begin{verbatim}
+       FPROportional
+         NODE NG J1 J2 ... Jndf
+            ...
+                         ! Termination record
+\end{verbatim}
+where the {\tt Ji} define the proportional load number $p_j$ assigned to
+a degree of freedom.  A zero value will use the {\it sum} of all specified
+proportional load factors as the multiplier for an associated force or
+displacement, whereas, a non-zero value will use only the individual $p_j$
+factor; and
+\item
+The proportional loading function $p_j(t)$.
+\end{enumerate}
+
+A proportional loading function is specified using the solution command 
+\begin{verbatim}
+       PROPortional,,Ji,Jj
+\end{verbatim}
+where {\tt Ji} and {\tt Jj} define a range of loadings to be input.
+If {\tt Jj} is zero only the {\tt Ji} function is to be input.
+A functional type of proportional loading is
+\begin{equation}
+p(t) = a_0 + a_1 t + a_2 [ \sin a_3 (t - t_{min})]^k ~~~;~~~
+t_{min} \le t \le t_{max}
+\end{equation}
+and is input by the statements
+\begin{verbatim}
+       PROP,,J1
+        ...
+       END
+       1 K T-min T-max A0 A1 A2 A3
+\end{verbatim}
+This is called TYpe 1 loading and requires a 1 in the first column defining
+the parameters.  A blank record is considered to be a Type 1 loading with
+default parameters:
+\begin{equation}
+t_{min} = 0 ~;~ t_{max} = 10^{6} ~;~ a_1 = 1 ~;~ k = a_0 = a_2 = a_3 = 0
+\end{equation}
+
+A piecewise linear set of values may be input using the Type 2 proportional
+loading function which is specified by a {\tt PROP}ortional command  whose
+data is:
+\begin{center}
+\begin{tabular}{l l l l l l}
+  2 & n \\
+$t_1$ & $p_1$ & $t_2$ & $\cdots$ & $t_n$ & $p_n$ \\
+$t_{n+1}$ & $p_{n+1}$ & $\cdots$ & $\cdots$ & $t_{2n}$ & $p_{2n}$ \\
+$\cdots$ & $\cdots$ \\
+\end{tabular}
+\end{center}
+by default $n = 1$ and the values appear as time/factor pairs on each record.
+Input terminates with a blank record.
+
+\section{Continuation Methods: Arclength Solution}
+
+Many non-linear static problems have solutions which exhibit limit load
+states or other types of variations in the response which make solution
+difficult.  Continuation methods may be employed to make solutions to
+this class of problems easier to obtain.  {\sl FEAP} includes a version
+of continuation methods based on maintaining a constant length of a specified
+load-displacement path.  This solution process is commonly called an {\it
+arclength} method.  To employ the arclength method in a solution the
+command {\tt ARCL}ength is used.  A typical algorithm for an arclength 
+solution is given by:
+\begin{verbatim}
+       ARCLength
+       DT,,delta-t
+       LOOP,time,n-steps
+         TIME
+         LOOP,newton,n-iters
+           TANGent,,1
+         NEXT,iteration
+          ..... (outputs, etc.)
+       NEXT,time
+\end{verbatim}
+
+\begin{description}
+\item[Remark:]{It is {\it not} permitted to use a {\tt PROP}ortional loading
+command with the arclength procedure.}
+\end{description}
+
+\section[Augmented Solutions]{AUGMENTED SOLUTIONS}
+\label{augment}
+
+{\sl FEAP} has options to employ penalty method solutions to enforce
+CONStraints.  A penalty method is used as an option of the {\tt GAP}
+element and also to enforce incompressibility constraints in some of
+the continuum elements.  The use of large penalty parameter
+values in some material
+models and some finite deformation analyses makes a
+Newton iteration loop difficult or impossible to converge.  Often
+when the penalty parameter value is reduced so that acceptable convergence
+of the iteration is achieved it is observed that the constraint is not
+accurately captured.  In these cases it is possible to achieve a better
+satisfaction of the constraint by using an {\it augmented Lagrangian}
+solution strategy.  The augmented Lagrangian solution scheme implemented
+in {\sl FEAP} is based on the Uzawa algorithm briefly discussed on pp 358
+of {\it The Finite Element Method, Vol 1}, 4th ed., by Zienkiewicz \&
+Taylor.  The command language program to perform an augmented solution
+is given by:
+\begin{verbatim}
+       LOOP,augment,n-augm
+         LOOP,newton,n-iter
+           TANGent,,1
+         NEXT,iter
+         AUGMent
+       NEXT,augment
+\end{verbatim}
+The number of augmented iterations ({\tt n-augm}) should be kept quite
+small as convergence of the iteration process is only checked by the
+{\tt TANG}ent command.  If convergence is achieved in this loop execution
+passes to the {\tt AUGM}ent command and another augmentation is performed
+until the {\tt n-augm} augmentation iterations are performed.
+
+\section{Time History Plots}
+\label{tplot}
+
+The response of specific solution quantities may be saved in files during
+solution using the {\tt TPLO}t command.  This permits the construction of
+time history plots during or after the completion of a solution using any
+program which is capable of constructing x-y plots from files (e.g., using
+gnuplot or Matlab).  The {\tt TPLO}t command works only with time dependent
+problems and whenever the command {\tt TIME} is executed writes
+data to files with the
+name designated for plots at the start of execution and an added extender. 
+To recover the last computed data set it is necessary to conclude an analysis
+with a {\tt TIME} command.  The {\tt TPLO}t command is given as
+\begin{verbatim}
+       TPLOt
+        ...
+       END
+       type,n1,n2,x,y,z
+       show (optional to force echo of data list)
+       ...
+                    ! Termination record
+\end{verbatim}
+The parameters may have the values described in Table \ref{tabtpl}.
+
+\begin{table}
+\begin{center}
+\begin{tabular}{| c | c | c | c | c | c |} \hline
+Type & $n_1$ & $n_2$ & $x$ & $y$ & $z$ \\ \hline
+disp &  Node & dof   & $x$ & $y$ & $z$ \\
+velo &  Node & dof   & $x$ & $y$ & $z$ \\
+acce &  Node & dof   & $x$ & $y$ & $z$ \\
+reac &  Node & dof   & $x$ & $y$ & $z$ \\
+stre &  Elmt & component   & - & - & - \\
+arcl &  Node & dof   & $x$ & $y$ & $z$ \\
+cont &  Node & dof   & $x$ & $y$ & $z$ \\
+ener &  Comp & print       & - & - & - \\ \hline 
+\end{tabular}
+\caption{Tplot types and parameters}
+\label{tabtpl}
+\end{center}
+\end{table}
+
+Indicated data may be given either by the node number, or the coordinate
+of the point where the data is located (the closest node to the point
+will be selected).  The energy components, if computed, should be ordered
+as: 1-3: linear momentum; 4-6: angular momentum; 7: stored energy; 8: kinetic
+energy; 9: dissipated energy; and 10: total energy.
+
+\section{Viewing Solution Data: SHOW Command}
+\label{show}
+
+The {\tt SHOW} command permits users to display the problem size and values
+for some of the solution parameters as well as to check the amount of data
+stored in arrays allocated in the solution space.  The command is given as
+\begin{verbatim}
+       SHOW,option,v1,v2
+\end{verbatim}
+where {\tt option} can have the values {\tt DICT}ionary, {\it array name}, or 
+be omitted.  When omitted the {\tt SHOW} command displays values for basic
+solution parameters.  Use of the {\tt DICT}\-ion\-ary opation displays the
+names, type, and size for all arrays currently allocated in the solution
+space.  Values stored in each array may be displayed by using the name
+as the {\it array name} option.  If the array is large the {\tt vi} parameters
+can be used to limit the amount of information displayed.
+
+\section{Reexecuting Commands: HISTORY Command}
+\label{hist}
+
+A useful feature of the command language for 
+interactive executions is the {\tt HIST}ory command.  During the execution
+of solution commands the program compiles a list of all commands 
+executed (called the {\it history list}) which may be used to re-execute
+one or several of the commands.  The user may also {\tt SAVE} this list
+as a file and at a later time {\tt READ} the list back into the program.
+At any stage of interactive execution the list may be displayed by
+entering the command {\tt HIST,LIST} or {\tt HIST};
+alternatively, a portion of the list
+may be displayed; e.g., {\tt HIST,LIST,5,9} will display only commands
+5 through 9.  A user may then re-execute commands by entering
+the command numbers from the history list.  For example, {\tt HIST,,1}
+(note the double commas as field separators) would re-execute
+command 1, or {\tt HIST,,6,9} would re-execute commands 6 through 9
+inclusive.  The history commands also may be embedded in a normal
+command language {\tt LOOP-NEXT} pair;  e.g., entering the commands:
+\begin{verbatim}
+       LOOP,,4
+         HIST,,6,9
+       NEXT
+\end{verbatim}
+performs a loop 4 times in which during each loop commands
+6 through 9 are executed.
+If the history commands 6 to 9 involve a loop or next which is not
+closed it is necessary to provide a closing sequence before execution
+will commence.
+
+\section{Solutions Using Procedures}
+\label{proc}
+
+Many analyses require the use of a sequence of commands which 
+are then reused throughout the solution process or in subsequent
+solution of problems.  For example, in
+the analysis of static problems the sequence of commands:
+\begin{verbatim}
+       TANG,,1
+       DISP,ALL
+       STRE,ALL
+       REAC,ALL
+       STRE,NODE,1,50   !(output first 50 nodes)
+\end{verbatim}
+may be used.  The repeated input of this sequence is not only time
+consuming but may result in user input errors.  This sequence of
+commands may be defined as a {\tt PROC}edure and saved for use during
+the current analysis or during any subsequent analysis.  A procedure
+only may be defined during an interactive solution; however, it may
+be used in either a batch or interactive solution (including
+the solution in which the procedure is defined).  A procedure is 
+saved in the current directory in a file with the extender {\tt .pcd}.
+
+A procedure is created during an interactive analysis by entering the command:
+\begin{verbatim}
+       PROCedure,name,v1,v2,v3
+\end{verbatim}
+The name {\it procedure} may be abbreviated by the first four (or more)
+characters, {\it name} is any 1-8 character alphanumeric identifier
+which specifies the procedure name ({\it the first 4 characters must
+not be the same as an existing command name}), {\tt v1,v2,v3} are
+any 1 to 4 alphanumeric parameter names for the procedure.  The
+parameters are optional.  For example the procedure for
+a static analysis may be given as:
+\begin{verbatim}
+       PROCedure,STATIC,NODE
+\end{verbatim}
+After entering a procedure name and its parameters,
+prompts to furnish the commands
+for the procedure are given.  These are normal execution commands
+and may not contain calls to other procedures or {\tt HIST} commands.
+The parameter names
+defined in the procedure (e.g., {\tt NODE} in the above {\tt STATIC}
+command) may be used in place of any numerical
+entries in commands.  A procedure is terminated
+using an {\tt END} command.  As an example the complete
+static analysis procedure would read:
+\begin{verbatim}
+       PROCedure,STATIC,NODE
+         TANG,,1
+         DISP,ALL
+         STRE,ALL
+         REAC,ALL
+         STRE,NODE,1,NODE
+       END
+\end{verbatim}
+Note that in the {\it nodal stress} command the parameter {\tt NODE}
+is used twice.  The first use is for the definition of the
+command and is an alphanumeric parameter of the
+command.  The second {\tt NODE} is a numerical parameter of
+the command.  The value for this {\tt NODE} parameter is taken from the one
+specified at the time of execution.  The use of
+the static procedure is specified by entering the command line:
+\begin{verbatim}
+       STATIC,,50
+\end{verbatim}
+and, at execution, the 50 will be the value of the {\tt NODE} parameter in the
+procedure definition above (e.g., the first 50 nodal stresses will be
+output).  All characters in the {\it name} (e.g., up to 8 characters) of a 
+procedure must be specified.
+It is not permitted to abbreviate the name of a procedure using
+the first four characters of the procedure {\it name}.
+
+The procedure {\tt STATIC} may be used in any subsequent analysis
+by entering the valid procedure name and parameters (if
+needed).  Currently it is not possible to preview a procedure
+while a solution is in progress (they can be viewed from other windows in
+a multi-window compute environment).
+Thus in large analyses it is advised that a
+review of the {\tt NAME.PCD} file be made to look at the contents.
+Extreme care should be exercised to prevent long unwanted
+calculations or outputs from an inappropriate use of a procedure.  For
+example, a {\tt STREss,ALL} is a viable command for small problems but can
+produce very large amounts of data for large problems.
+
+\section{Output of Element Arrays}
+\label{eouts}
+
+When solving problems difficulties often occur for which additional information
+is needed about the element.  {\sl FEAP} includes a capability to print the
+arrays produced by the highest numbered element (i.e., the one whose number
+is {\tt NUMEL}) by the last command.  The command is named {\tt EPRI}nt.
+For example, after a {\tt TANG}ent command the use of {\tt EPRI}nt
+would display the element tangent matrix (e.g., stiffness) and residual
+vector for this element.  This option works for both symmetric and unsymmetric
+tangents.  Similarly, the element mass matrix used for eigen computations
+could be output using the command immediatly after the {\tt MASS} command.
+
+If additional information about the array is desired it is possible to make
+a spectral transformation, but for symmetric tangents only.  This is obtained
+by using the command
+\begin{verbatim}
+       EIGElement,vector
+\end{verbatim}
+Omitting the {\tt vector} option outputs eigen-values only.
+This may be useful to ensure an element has the proper number of rigid
+body modes, or that it is correctly defined.  Presence of any negative
+eigen-values should be very carefully interpretted as normally they imply
+solution difficulties.

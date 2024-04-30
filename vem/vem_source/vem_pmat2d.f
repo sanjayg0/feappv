@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2021: Regents of the University of California
+!....  Copyright (c) 1984-2024: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -44,7 +44,6 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit none
 
-      include 'debugs.h'
       include 'iofile.h'
       include 'qudshp.h'                   ! sa(125)
       include 'sdata.h'                    ! ndm
@@ -92,26 +91,21 @@
 !     -------------------------------------------------------
 
 !     Reciprocal volume
-
       volr = 1.0d0/vol
 
 !     Perform base computation for various order edges
-
       select case (k_order)
 
 !       Linear edges
-
         case (1)
 
 !         Build G- and B-matrix
-
           Pdmat(:,:,1:nel) = 0.0d0
           Plmat(:,:,1:nel) = 0.0d0
           do i = 1,nel  ! Number of edges
             j      = mod(i,nel) + 1
 
 !           Pdmat
-
             tx(:) = xl(:,j) - xl(:,i)              ! h * tangent
 
             nx(1) = 0.5d0*(xl(2,j) - xl(2,i))*volr ! h^{-1} included
@@ -124,7 +118,6 @@
             Pdmat(1,2,j) = Pdmat(1,2,j) + nx(2)
 
 !           D matrix for k_order = 1 (size = nk)
-
             xx(:)     =  (xl(:,i) - xc(:))*hVm1
             Dmat(i,1) = 1.0d0
             Dmat(i,2) = xx(1)
@@ -143,7 +136,6 @@
           end do ! i
 
 !         Form terms for P0mat projector
-
           Hmtr(:,:)        = 0.0d0
           Bmtr(:,:)        = 0.0d0
 
@@ -153,29 +145,24 @@
             j      = mod(i,nel) + 1
 
 !           Volume element
-
             dx1(:) = xl(:,i) - xc(:)
             dx2(:) = xl(:,j) - xc(:)
             vold   = (dx1(1)*dx2(2) - dx1(2)*dx2(1))*0.5d0
 
 !           First row of H_mat:
-
             call vem_pascal(k_order,xl(1,i),xc, hVm1, p, nm)
 
             Hmtr(1,1:3) = Hmtr(1,1:3) + p(0,1:3)/dble(nel)
 
 !           Quadrature over the element
-
             do l = 1,lint2
 
 !             Increment counter
-
               ll = ll + 1
 
               dvol(ll) = vold*el2(4,l)
 
 !             Solution point
-
               xx(:) = xl(:,i)*el2(1,l)
      &              + xl(:,j)*el2(2,l)
      &              + xc(:)  *el2(3,l)
@@ -188,7 +175,6 @@
               md(:,1:nm,ll) = p(1:2,1:nm)
 
 !             H matrix - Rows 2-nk
-
               do jj = 2,3
                 fac(:) = p(1:2,jj)*dvol(ll)
                 do ii = 2,3
@@ -198,7 +184,6 @@
               end do ! jj
 
 !             Bmtrrix
-
               do ii = 1, nel
 !               N.B. nkm1 = 1
                 fac(:) = Pdmat(1,:,ii)*dvol(ll) ! Monomial = 1.0
@@ -215,11 +200,9 @@
           ltot = ll
 
 !         Invert H
-
           call invert(Hmtr, 3, 10)
 
 !         Compute P0mat = G^{-1} * B
-
           do ii = 1,nel
             P0mat(:,ii) = Hmtr(:,1)*Bmtr(1,ii)
      &                  + Hmtr(:,2)*Bmtr(2,ii)
@@ -229,11 +212,9 @@
         case (2)
 
 !         Set interior coordinate to centroid
-
           xl(:,nel) = xc(:)
 
 !         Loop over edges: This part common to all first deriv forms.
-
           Gmtr(:,:)    = 0.0d0
           Gmtr(1,1)    = vol
           Psmtr(:,:,:) = 0.0d0
@@ -249,19 +230,16 @@
             dx4(:) = xl(:,c)*2.0d0 - xl(:,i) - xl(:,j)
 
 !           Area integral
-
             do l = 1,lintv(i)
 
               ll = ll + 1
 
 !             Differential volume element
-
               dx1(:)   = dxn(:) + 2.d0*elv(2,ll)*dx4(:)
               dx2(:)   = dxm(:) + 2.d0*elv(1,ll)*dx4(:)
               dvol(ll) = (dx1(1)*dx2(2) - dx1(2)*dx2(1))*elv(4,ll)*0.5d0
 
 !             Solution point
-
               xx(:)  = xl(:,i)*elv(1,ll)
      &               + xl(:,j)*elv(2,ll)
      &               + xc(:)  *elv(3,ll)
@@ -275,7 +253,6 @@
               md(:,1:nm,ll) = p(1:2,1:nm)
 
 !             G-matrix
-
               Gmtr(2,2) = Gmtr(2,2) + p(0,2)*p(0,2)*dvol(ll)
               Gmtr(2,3) = Gmtr(2,3) + p(0,2)*p(0,3)*dvol(ll)
               Gmtr(3,3) = Gmtr(3,3) + p(0,3)*p(0,3)*dvol(ll)
@@ -283,7 +260,6 @@
             end do ! l
 
 !           Edge integrals
-
             do l = 1,lint1
 
               call shp1dn(sg1(1,l),shp1,3)
@@ -312,7 +288,6 @@
           end do ! i loop
 
 !         Internal value
-
           Psmtr(2,1,nel) = Psmtr(2,1,nel) - vol*hVm1
           Psmtr(3,2,nel) = Psmtr(3,2,nel) - vol*hVm1
 
@@ -329,7 +304,6 @@
           end do ! i loop
 
 !         D matrix for stabilizing
-
           Dmat(:,1:nk) = 0.0d0
           do i = 1,nel-1  ! Number of external nodes
 
@@ -344,14 +318,12 @@
           end do ! i
 
 !         Moment stabilizing part
-
           Dmat(nel,1) = 1.0d0
           Dmat(nel,4) = Gmtr(2,2)*volr ! Same as int_v p(0,1)*p(0,4)*dV
           Dmat(nel,5) = Gmtr(2,3)*volr ! Same as int_v p(0,1)*p(0,5)*dV
           Dmat(nel,6) = Gmtr(3,3)*volr ! Same as int_v p(0,1)*p(0,6)*dV
 
 !         Loop over edges: For P0mat projector
-
           Hmtr(:,:)    = 0.0d0
           Bmtr(:,:)    = 0.0d0
           Bmtr(1,nel)  = 1.0d0
@@ -359,20 +331,17 @@
           do i = 1,ne
 
 !           Area integral
-
             do l = 1,lintv(i)
 
               ll = ll + 1
 
 !             H-matrix - Row  1
-
               fac(1) = dvol(ll)*volr
               do ii = 1,nk
                 Hmtr(1,ii) = Hmtr(1,ii) + mm(ii,ll)*fac(1)
               end do ! ii
 
 !             H-matrix - Rows 2-nk
-
               do jj = 2,nk
                 fac(:) = md(1:2,jj,ll)*dvol(ll)
                 do ii = 2,nk
@@ -383,7 +352,6 @@
               end do ! jj
 
 !             Bmtrrix
-
               do ii = 1, nel
                 fac(:) = Pdmat(1,:,ii)
                 do jj = 2,nkm1
@@ -401,15 +369,12 @@
           end do ! i loop
 
 !         Save total number of GP
-
           ltot = ll
 
 !         Invert Hmtr
-
           call invert(Hmtr,6,10)
 
 !         Compute P0mat = H^{-1} * B
-
           do ii = 1,nel
             P0mat(:,ii) = 0.0d0
             do jj = 1,nk
@@ -422,7 +387,5 @@
           write(*,'(a,i3)') ' --> ERROR Note coded for',k_order
 
       end select
-
-      if(debug) write(*,*) ' LTOT =',ltot,' NEL =',nel
 
       end subroutine vem_pmat2d

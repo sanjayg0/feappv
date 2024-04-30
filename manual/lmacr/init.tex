@@ -1,0 +1,30 @@
+\heada{SOLUTION}{INITial conditions}
+\hspace{1.2cm}{{init,disp \hfill}} \\{\smallskip}
+\hspace{1.0cm}{{init,rate \hfill}} \\{\smallskip}
+\headb
+
+Non-zero initial displacements or rates (e.g., velocities)
+for a dynamic solution may be specified using the
+{\tt INIT}ial command.  The values for  any  non-zero  vector
+are  specified after the {\tt END} command for batch executions
+and may be generated in a manner similar to nodal
+generations in the mesh input.  For interactive execution
+prompts are given for the corresponding data.   Accordingly,
+the vectors are input as:
+
+\begin{verbatim}
+       n1,ng1,v1-1, . . . ,v1-ndf
+       n2,ng2,v2-1, . . . ,v2-ndf
+       etc.
+\end{verbatim}
+where, {\tt n1} and {\tt n2} define  two  nodes;  {\tt ng1}  defines  an
+increment  to  node  {\tt n1}  to be used in generation; {\tt v1-1},
+{\tt v2-1} define values for the  first  degree  of  freedom  at
+nodes  {\tt n1},  {\tt n2},  respectively;  etc.  for  the remaining
+degree of freedoms.  Generated values are linearly  interpolated
+using the {\tt v1} and {\tt v2} values; etc.  for the remaining
+degree of freedoms.  Note that {\tt ng2}  is  used  for  the
+next  pair  of  generation  records.  If a value of {\tt ng1} or
+{\tt ng2} is zero or blank, no generation is  performed  between
+{\tt n1} and {\tt n2}.
+\vfill\eject

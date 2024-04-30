@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2021: Regents of the University of California
+!....  Copyright (c) 1984-2024: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -25,6 +25,8 @@
 !      Outputs:
 !         N.B.  Interprocessor communications
 !-----[--.----+----.----+----.-----------------------------------------]
+      use        mpi
+
       implicit   none
 
       include   'cdata.h'
@@ -49,7 +51,7 @@
       include   'tdata.h'
       include   'tdato.h'
 
-      include   'mpif.h'
+!     include   'mpif.h'
 
       include   'p_int.h'
       include   'pointer.h'

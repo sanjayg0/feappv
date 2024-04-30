@@ -1,0 +1,67 @@
+\heada{MESH}{FORCe}
+\hspace{1.0cm}{{ forc                  \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ node1,ngen1,(f(i,node1),i=1,ndf) \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ node2,ngen2,(f(i,node2),i=1,ndf) \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ <etc.,terminate with blank record> \hfill}}
+\headb
+
+The {\tt FORC}e command is used to specify the values for
+nodal boundary forces.
+For each node to be specified a record is entered with the
+following information:
+
+\begin{center}
+\begin{tabular}{r l}
+\it node      &-- Number of node to be specified \\
+\it ngen      &-- Increment to next node, if generation \\
+              &\quad is used, otherwise 0. \\
+\it f(1,node) &-- Value of force for 1-dof \\
+\it f(2,node) &-- Value of force for 2-dof \\
+              &\quad etc., to {\it ndf} directions \\
+\end{tabular}
+\end{center}
+When generation is performed, the node number  sequence
+for {\it node1-node2} sequence shown at top will be:
+
+\begin{center}
+{\it node1, node1+ngen1, node1+2$\times$ngen1, .... , node2}
+\end{center}
+
+The values for each force will be a linear
+interpolation between the {\it node1} and {\it node2} values for
+each degree-of-freedom.
+
+While it is possible to specify both the force and the displacement applied
+to a node, only one can be active during a solution step.  The determination
+of the active value is determined from the boundary
+restraint condition value.  If the boundary restraint value is zero
+and you use one of the force-commands a force
+value is imposed, whereas, if the boundary restraint value is non-zero
+and you use one of the displacement-commands a
+displacement value is imposed. (See {\tt BOUN}dary, {\tt CBOU}ndary,
+or {\tt EBOU}ndary pages for setting boundary
+conditions.).  It is possible to change the type of boundary restraint
+during execution by resetting the boundary restraint value.
+
+Force conditions may also be specified using the {\tt EFOR}ce and {\tt CFOR}ce
+commands.  The data is order dependent with data
+defined by {\tt FORC}e processed first, {\tt EFOR}ce processed second and
+the {\tt CFOR}ce data processed last.  The value defined last is used for
+any analysis.
+
+\noindent{\bf{Example: FORCe}}
+
+A concentrated force is to be applied to nodes 10 and 15.  The force at node
+10 has values of 100.0 in the horizontal direction and 0 in the vertical
+direction; whereas the force at node 15 has a magnitude of 200 and makes an
+angle of $60^o$ with the horizonatal axis.  These two forces may be specified
+using the command set:
+\begin{verbatim}
+       FORCe
+         10  0  100.0          0.0
+         15  0  200*cosd(60) 200*sind(60)
+\end{verbatim}
+Note the use of the built-in functions available in \textsl{FEAPpv} to compute
+the horizontal and vertical components.
+
+\vfil\eject

@@ -3,7 +3,7 @@
 !-----[--.----+----.----+----.-----------------------------------------]
 !      * * F E A P p v * * Finite Element Analysis Program
 !                          -      -       -        -
-!....  Copyright (c) 1984-2021: Regents of the University of California
+!....  Copyright (c) 1984-2024: Regents of the University of California
 !                               All rights reserved
 
 !     Finite Element Analysis Program - personal version - (FEAPpv) for
@@ -68,8 +68,8 @@
 !-----[--.----+----.----+----.-----------------------------------------]
 !     Set version header for output to file and screen
 
-      versn(1) = 'Release 5.1.2c'
-      versn(2) = '31 January 2022'
+      versn(1) = 'Release 5.1.2e'
+      versn(2) = '15 April 2024'
 
 !-----[--.----+----.----+----.-----------------------------------------]
 !     Set precision for real variables:

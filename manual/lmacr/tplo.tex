@@ -1,0 +1,86 @@
+\heada{SOLUTION}{TPLOts}
+\hspace{1.0cm}{{ tplo,,inc \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ $<$ After end record give the data $>$}} \\{\smallskip}
+\hspace{1.0cm}{{ disp,node,dof,x,y,z \hfill}} \\{\smallskip}
+\hspace{1.0cm}{{ velo,node,dof,x,y,z \hfill}} \\{\smallskip}
+\hspace{1.0cm}{{ acce,node,dof,x,y,z \hfill}} \\{\smallskip}
+\hspace{1.0cm}{{ reac,node,dof,x,y,z \hfill}} \\{\smallskip}
+\hspace{1.0cm}{{ arcl,node,dof \hfill}} \\{\smallskip}
+\hspace{1.0cm}{{ stre,elmt,comp \hfill}} \\{\smallskip}
+\hspace{1.0cm}{{ ener \hfill}} \\{\smallskip}
+\hspace{1.0cm}{{ show \hfill}}
+\headb
+
+The {\tt TPLO}t command can be used to specify components of
+displacement, velocity, acceleration, reaction,
+arclength parameter, stress, and
+energy which are to be saved to construct time history plots as a
+post processing operation.  The command may be issued
+several times; however, the total number of components to be
+saved for each type of plot (time vs. displacement or time
+vs. reaction, etc.) is limited to 20.  An exception is for stress
+components where a maximum of 200 is permitted.  The {\tt inc} option
+is used to specify the number of time steps between saving of information.
+Each time the command
+tplot is given components are added to the list.  The option
+show may be used to echo the current list to the screen during
+interactive executions.
+
+Options which include both {\tt} and {\tt x,y,z} may be used in one
+of two ways.  Giving the command as:
+\begin{verbatim}
+       xxxx,node,dof
+\end{verbatim}
+requires specific numbers to be provided for the {\tt node} and {\tt dof}
+parameters.  The value of {\tt node} is an {\it active}
+global node number of the mesh (i.e., one which has not been deleted by
+at {\tt TIE} command).  Alternatively, the command may be given as:
+\begin{verbatim}
+       xxxx,,dof,x,y,z
+\end{verbatim}
+where {\tt x,y,z} are values for the necessary number of coordinates (ndm).
+A search will be made to locate the node which is {\it closest} to the
+coordinates given.
+
+The {\tt DISP}lacement option will save the node and degree
+of freedom value, together with the time in a file {\tt Pxxx.dis},
+where {\tt xxx} is the name assigned for the input data file (with
+the I stripped).  The components are on one record in the
+order given during the tplot inputs.  Similarly for other
+node based quantities.
+
+The {\tt ENER}gy option maybe used to accumulate total
+linear/angular momentum and kinetic/potential energy.
+
+The {\tt ARCL}ength option output the arc-length load level
+versus the selected nodal displacement dof.
+
+The {\tt STRE}ss option will save the element and component
+value, together with the time in a file {\tt Pxxxy.str}, where {\tt xxx}
+is the name assigned for the input data file (with the I
+stripped) and {\tt y} ranges between {\tt a} and {\tt j}.
+The components are on one record in the order
+given during the tplot inputs.  The meaning of components is
+element dependent and each programmer must decide what is to
+be saved.  Indeed the components need not be stresses, they
+may be strains, internal variables, etc.
+
+An example for the use of tplot is:
+\begin{verbatim}
+       BATCh
+         TPLOt
+       END
+       stre,3,24
+       stre,25,24
+       stre,25,26
+       disp,11,2
+       disp,,2,5.2,4.3,-1.2
+       show
+                  ! blank termination record
+\end{verbatim}
+requests stress output for component 24 in element 3 and components 24
+and 26 from element 25.  The program will also
+output nodal displacement as requested by {\tt disp} for dof 2 at
+node 11 and at the node located at the coordinates closest to
+( 5.2, 4.3, -1.2).  Finally, the list will be echoed by the {\tt show} command.
+\vfill\eject

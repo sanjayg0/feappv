@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2021: Regents of the University of California
+!....  Copyright (c) 1984-2024: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -22,6 +22,8 @@
 !     Output:
 !       None
 !-----[--.----+----.----+----.-----------------------------------------]
+      use        mpi
+
       implicit   none
 
       include   'debugs.h'
@@ -32,7 +34,7 @@
       include   'setups.h'
       include   'tdata.h'
 
-      include   'mpif.h'
+!     include   'mpif.h'
 
       integer       :: mm,nsbuf,nrbuf
       integer       :: usr_msg, msg_stat(MPI_STATUS_SIZE), ierr

@@ -1,0 +1,117 @@
+\section{NURBS mesh refinement}
+
+Generally, the initial input data defining the geometry of the problem is not
+sufficient for an accurate analysis.  It may be necessary to \textit{elevate}
+the order of the NURBS approximation for the patches or to \textit{insert}
+additional knot values in the knot vectors.  To perform these steps by hand
+is a tedious and error prone process.  The current implementation in
+\textsl{FEAP} permits both steps to be performed using solution `Command
+Language' statements.
+These are generally given in a batch solution.
+
+\subsection{Degree ELEVation}
+
+To raise the polynomial order of one B-spline defining a NURBS the
+solution command set
+\begin{verbatim}
+       BATCh
+         ELEVate PATCh blk dir incr
+       END
+\end{verbatim}
+may be used.  The parameters are: \texttt{blk} is the patch number;
+\texttt{dir} is the direction in the patch to elevate; and \texttt{incr} is
+the order increment to increase.  Execution of these commands creates a
+file named: \texttt{NURBS\_mesh} that contains the new set of control points,
+side lists, knot vectors and patches.  At this stage only one direction
+in one patch has been elevated and it is necessary to repeat the process for
+other patches and directions.  The process of repeating the process can be
+performed using the \textsl{FEAP} input \texttt{LOOP-NEXT} commands.
+
+\subsubsection{\ul{Multiple elevations}}
+
+In addition to preparing the input file for the original problem
+description,
+the process of performing several elevations can be accommodated easily by
+preparing an additional mesh input file with the structure
+\begin{verbatim}
+       FEAP <optional title information>
+         0 0 0 ndm ndf nel
+
+       MATE <all material properties included in original mesh
+
+       INCLude NURBS_mesh
+
+       END
+       STOP
+\end{verbatim}
+Then prepare a third input file that has the form:
+\begin{verbatim}
+       INCLude I<original mesh>
+       BATCH
+         ELEVate PATCh pat1 dir1 incr1
+       END
+
+       INCLude I<NURBS_mesh>
+       BATCh
+         ELEVate PATCh pat2 dir2 incr2
+       END
+
+       etc. for other patches/directions
+\end{verbatim}
+where \texttt{I<NURBS\_mesh>} is the name of the second input file containing the
+\texttt{INCLude NURBS\_mesh} statement.
+The analysis is initiated by specifying the third file as the solution
+input file.
+After the processing of the original mesh the subsequent processes may all
+use the file containing the \texttt{NURBS\_mesh} include.  Using parameters
+and looping structures such as
+\begin{verbatim}
+       PARAmeter
+         d = 1
+
+       LOOP,2
+         PARAmeter
+           d = d + 1
+
+         INCLude I<NURBS_mesh>  ! File with INClude NURBS_mesh
+         BATCh
+           ELEVate PATCh 1 d 2
+         END
+       NEXT
+\end{verbatim}
+would elevate the second and third directions of three-dimensional
+patch 1 by two orders.
+
+\subsection{KNOT insertion}
+
+To insert knots the command set
+\begin{verbatim}
+       BATCh
+         INSErt PATCh pat dir value rr
+       END
+\end{verbatim}
+may be use.  The parameters are: \texttt{pat} is the patch number;
+\texttt{dir} the knot direction in the patch; \texttt{value} the location
+in the knot vector to perform an insertion; and \texttt{rr} the number of
+times to repeat the insertion.
+
+Each use of an \texttt{INSErt} set again
+results in a new \texttt{NURBS\_mesh}.  Multiple insertions can again be 
+performed using the above loop structure.  For meshes that perform several
+knot insertions some time may elapse before the final \texttt{NURBS\_mesh}
+file is created.
+
+After several elevations and insertions, the final \texttt{NURBS\_mesh} file
+contains an isogeometric problem description suitable for analysis.  The
+analysis can be performed using an input file containing the
+\texttt{INCLude NURBS\_mesh} along with boundary conditions and loading
+specification.  This is now a standard \textsl{FEAP} solution process and
+any of the solution options described in the User Manual may be used.
+Recall that the activation of a NURBS analysis in an element is controlled by a
+statement in the \texttt{MATErial} set data:
+\begin{verbatim}
+       MATE ma
+          ....
+         NURBs,,q1,q2,q3
+          ....
+\end{verbatim}

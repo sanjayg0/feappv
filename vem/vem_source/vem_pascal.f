@@ -1,6 +1,14 @@
 !$Id:$
       subroutine vem_pascal(k, xx, xc, hVm1, p, nm)
 
+!      * * F E A P * * A Finite Element Analysis Program
+
+!....  Copyright (c) 1984-2024: Regents of the University of California
+!                               All rights reserved
+
+!-----[--.----+----.----+----.-----------------------------------------]
+!     Modification log                                Date (dd/mm/year)
+!       Original version                                    23/08/2023
 !-----[--+---------+---------+---------+---------+---------+---------+-]
 !     Purpose: Compute 2-d polynomial and derivative in Pascal triangle
 

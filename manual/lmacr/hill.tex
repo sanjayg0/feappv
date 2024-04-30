@@ -1,0 +1,40 @@
+\heada{SOLUTION}{HILL}
+\hspace{1.0cm}{{hill  \hfill}}
+\hspace{1.2cm}{{ hill,stress \hfill}} \\{\smallskip}
+\hspace{1.2cm}{{ hill,tangent \hfill}}
+\headb
+
+\index{Solution command!HILL}
+The command {\tt HILL} is used to perform computation of averaged properties
+on a representative volume element (RVE) using the Hill-Mandel hommogenization
+method.  The approach may be used to compute the properties for either
+a thermal problem and a small or finite deformation solid problem.
+For this case a typical RVE may be defined and subjected to
+displacement boundary
+conditions. The boundaries of the RVE are subjected to a homogeneous 
+thermal gradient: a strain
+(for small deformations) or a deformation gradient (for finite deformations).
+The description for the gradients is given in Sect. \ref{periodicbc}.
+
+The computation of the averaged properties is determined using a solution
+command
+\begin{verbatim}
+       LOOP,,nits
+         TANGent,,1
+       NEXT
+       HILL <TANGent,     >
+\end{verbatim}
+to obtain the homogenized stress (or thermal flux) and associated tangent array
+or
+\begin{verbatim}
+       LOOP,,nits
+         TANGent,,1
+       NEXT
+       HILL STREss
+\end{verbatim}
+to obtain stress or thermal flux averages only. 
+THe \texttt{LOOP-NEXT} is not needed for linear problems.
+The properties for non-linear problems subjected to time varying loads may
+also be obtained, however, in this case it is necessary to define
+time variations to the deformation by a proportional loading.
+\vfill\eject

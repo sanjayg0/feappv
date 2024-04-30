@@ -1,0 +1,28 @@
+\heada{PLOT}{POSTscript}
+\hspace{1.0cm}{{post,n1,n2 \hfill}}
+\headb
+
+The {\tt POST}Script command will enable the output of a
+postscript file for later use in producing hard copy plots.
+The sequence is initiated by the first {\tt POST}Script command (a
+non-zero {\tt n1} is in landscape mode, a zero value is in portrait mode).
+The name of the file
+containing the output is {\tt feapX.eps} (where X is between
+{\tt a} and {\tt z}) and appears on the text screen.  Subsequent
+commands will produce plots which appear on the screen and will also
+send information to the output file.  A second {\tt POST}Script command
+closes the output file and subsequent commands will
+give plots only on the screen.
+
+Up to 26 PostScript output files may be produced during
+a work session.  The program checks for existence of a file
+before the open operation.  Files must be purged by the user
+outside a FEAPpv execution session.  Note that PostScript
+files can be quite large and disk quotas can easily be
+exceeded.
+
+If {\tt n2} is non-zero the {\sl FEAPpv} logo is printed in the
+PostScript file by commands that cause it to be printed on
+the screen (e.g., {\tt WIPE}).  Default: n2 = 0.
+\vfill
+\eject

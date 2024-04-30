@@ -4,12 +4,11 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2021: Regents of the University of California
+!....  Copyright (c) 1984-2024: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
-
-!     Purpose:  Construct two dimensional interpolation using blending
+!     Purpose:  Construct three dimensional interpolation using blending
 
 !     Inputs:
 !        n         - Block number

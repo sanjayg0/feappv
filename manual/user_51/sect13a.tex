@@ -1,0 +1,346 @@
+\chapter[Element Library]{ELEMENT LIBRARY}
+\label{elmlib}
+
+{\sl FEAPpv} contains a library of standard elements and material models which may
+be employed to solve a wide range of problems in solid and structural mechanics,
+and heat transfer analysis.
+In addition, users may program and add new elements to the program.
+The type of element to
+be employed in an analysis is specified as part of the \texttt{MATErial} data
+sets.  The first record of each material data set also contains the material
+property number.  Each material property number is an integer ranging from
+one (1) to the maximum number of material sets specified on the control data
+record (which immediately follows the \texttt{FEAPpv} start/title record); however,
+as noted earlier,
+the maximum number on material sets on the control data may be specified
+as zero and {\sl FEAPpv} will
+automatically compute the maximum number of material sets from the input data.
+The second record of the material set data defines the type of element to be
+used.  The library of standard elements includes the following types:
+
+\begin{enumerate}
+\item
+SOLId - A solid element is used to solve continuum problems with
+either small or large deformations.  Options exist to use finite
+elements based on displacement or mixed formulations.
+Small deformation elements contains a library of
+models for elastic, viscoelastic, or elastoplastic constitutive equations.
+Finite deformation elements contain only elastic material models.
+One demensional problems use \textit{line elements} defined by nodal
+coordinates $x$ and displacements $u$.
+For two dimensional problems each element is a triangle or a quadrilateral.
+The degrees of freedom on each node are displacements,
+$u_i$, in the coordinate directions.
+The degrees of freedom are ordered as:
+2-D Plane problems, $u_x , u_y $, coordinates are $x , y$;
+2-D Axisymmetric problems, $u_r , u_z $, coordinates are $r , z$.
+For three dimensional problems only a displacement form is included and each
+element is a hexahedron (brick) or a tetrahedron
+with degree-of-freedoms $u_x , u_y , u_z$.
+No finite deformation element is included for three dimensional solids.
+
+\item
+FRAMe - The frame element is used to model structural members which include
+axial, bending, and shearing deformations only.  The model is formulated in
+terms of force resultants which are computed by integration of stress components
+over the cross-sectional area of the member.
+Each element has 2-nodes and may be used in a two or three dimensional
+problem.  The degrees of freedom on each node are: Displacements, $u_i$, in the
+coordinate directions and a rotation, $\theta_z$, about the z-axis
+for two dimensions
+and rotations, $\theta_i$, about all axes for three dimensions.
+The degrees of freedom are ordered as:
+2-D $u_x , u_y , \theta_z$;
+3-D $u_x , u_y , u_z , \theta_x , \theta_y , \theta_z$;
+
+\item
+TRUSs - The truss element is used to model structural members which include
+axial deformations and axial forces only.  The axial
+force resultant is computed by integration of the axial stress component
+over the cross-sectional area of the member.
+Each element has 2-nodes and may be used in one, two and three dimensional
+problems.  The degrees of freedom on each node are displacements, $u_i$, in each
+coordinate direction; thus, the number is the same as the spatial dimension
+of the problem.
+The degrees of freedom are ordered as: $u_x , u_y , u_z$
+
+\item
+PLATe - The plate element is used to model structural behavior of planar (flat)
+bodies which have one dimension small compared to the two other dimensions.
+The element may be used for small deformation analyses only and
+includes bending and transverse shearing deformations.
+Provisions are also included to permit modeling of plates for which the
+transverse shearing deformations are ignored.  The model is formulated in
+terms of force resultants which are computed by integration of stress components
+over the thickness of the plate.
+Each element may be a triangle with 3-nodes or a quadrilateral
+with 4-nodes and is used in a two dimensional
+problem.  The degrees of freedom on each node are: The transverse displacement,
+$u_3 = w$, and rotations $\theta_x$ and $\theta_y$ about the coordinate axes.
+The degrees of freedom are ordered as: $w , \theta_x , \theta_y$;
+
+\item
+SHELl - The shell element is used to model structural behavior of curved
+bodies which have one dimension small (a thickness normal to
+the remaining surface coordinates) compared to the other dimensions of
+the surface.  The shell is for small deformations only and includes bending and
+in-plane deformations only (no transverse shearing strains).
+The model is formulated in
+terms of force resultants which are computed by integration of stress components
+over the cross-sectional thickness of the shell.
+In two-dimensions the element is a 2-node ring sector whereas in
+three-dimensions each element is a quadrilateral with 4-nodes.
+The degrees of freedom on each node are: Displacements,
+$u_i$, and rotations, $\theta_i$, about the coordinate axes.
+The degrees of freedom are ordered as:
+$u_r , u_z , \theta$ in two dimensions and
+$u_x , u_y , u_z , \theta_x , \theta_y , \theta_z$ (6-dof) in three dimensions.
+
+\item
+MEMBrane- The membrane element is used to model structural behavior
+of curved bodies which are thin and carry in-plane loading
+only.  The element is generally unstable unless attached to a
+contiguous solid or otherwise restrained.  The model is formulated in
+terms of the in-plane force resultants and a cross-sectional thickness.
+Each element is a quadrilateral with 4-nodes
+and may be used only in a three dimensional
+problem.  The degrees of freedom on each node are: Displacements,
+$u_i$.  The degrees of freedom are ordered as:
+$u_x , u_y , u_z $;
+
+\item
+THERmal -  The thermal element is used to compute temperatures in solid
+bodies or truss elements.  The element solves the Fourier heat conduction
+equation.
+For two dimensional problems each element is a quadrilateral
+or a triangle.
+For three dimensional problems each element
+is a hexagon or a tetrahedron.
+The degree of freedom on each node is temperature, $T$, and, by default,
+is placed in the first position in the unknowns (i.e., first degree of freedom).
+If the element is combined with a solid element to perform thermo-mechanical
+analyses it is necessary to relocate the temperature degree of freedom using
+the option on the material set element type record (see the \texttt{MATE}erial
+set command description in the {\sl FEAPpv} Mesh User Manual in Appendix A).
+
+\item
+USER -  Each user element must be developed and added to the program.
+Provisions are included which permit the addition of up to 5 additional
+element modules to the program.
+The shape of the element, the number of degrees of freedom at each node,
+and other parameters may be set by the user.  See Reference \cite{zt1n}
+or the {\sl FEAP} Programmers Manual\scite{feapp} for information on adding
+a user element.
+\end{enumerate}
+
+Each element requires additional input data to describe the
+specific constitutive model, the finite element formulation to be used,
+loading applied to elements, etc.
+
+As an example consider an analysis of a two dimensional
+continuum (solid) with a single material and constrained to a plane strain
+deformation state.  The problem is to be modeled in small strain
+by a linear elastic material with isotropic properties.
+\begin{verbatim}
+       MATErial,1
+         SOLId
+         ELAStic ISOTropic 30e+06 0.3
+                                  ! blank termination record
+\end{verbatim}
+The property \texttt{ELAStic} is required for all types of \texttt{SOLId}
+elements.  The material records for an
+analysis which includes linear elastic solid elements is shown above.
+
+By default all problems are in small strain, however, the input can include
+the option \texttt{SMALl} if desired as
+\begin{verbatim}
+       MATErial,1
+         SOLId
+         SMALl
+         ELAStic ISOTropic 30e+06 0.3
+                                  ! blank termination record
+\end{verbatim}
+Statements following the \texttt{SOLId} may be in any order.  If a finite
+deformation problem is desired it is necessary to include the \texttt{FINIte}
+statement as 
+\begin{verbatim}
+       MATErial,1
+         SOLId
+         ELAStic ISOTropic 30e+06 0.3
+         FINIte
+                                  ! blank termination record
+\end{verbatim}
+
+For two dimensional problems in small deformations there are three
+element types: (1) A displacement model; (2) A mixed $\B{u}-p-\theta$ model
+and (3) an enhanced strain model.  By default the displacement model is used.
+The element type may be specified by including an added statement in
+the material specification: The choices are \texttt{DISPlacement},
+\texttt{MIXEd} or \texttt{ENHAnced}.
+In finite deformations only the two dimensional displacement and mixed forms
+exist.  For three dimensional models only the small strain displacement model
+is included with the current version.
+
+In two dimensional applications
+the displacement and the mixed formulation may be described by elements
+with between four (4) and nine (9) nodes.
+A three (node) triangular element
+may be formed for the displacement model by repeating the number of any
+node or by specifying only three nodes on an element.
+In three dimensional applications the element is described by an eight (8)
+node hexahedron.  The displacement model may also describe wedge
+(by coalescing appropriate nodes of the hexahedron) and a 4-node tetrahedron.
+
+The material models and other options
+available for use with the solid elements are described in the next chapter.
+
+In two-dimensions, the {\it frame elements} can treat small and large
+displacement problems.  This is controlled by including a \texttt{SMALl} (default) or \texttt{FINIte} statement in the material model specification.  It is also
+possible to include the effects of shear deformation (Timoshenko beam theory)
+or to have no shear deformation in the bending behavior (Euler-Bernoulli
+theory).  This is controlled by an appropriate record in the material
+data as 
+\begin{verbatim}
+       SHEAR ON
+\end{verbatim}
+or
+\begin{verbatim}
+       SHEAR OFF
+\end{verbatim}
+In three-dimensions only the small strain form without shear deformation is
+available.
+
+The frame elements are restricted to elastic behavior.
+Frame elements without shear deformation
+include effects of bending and axial deformations only.  Cubic interpolations
+are used for the bending behavior and a linear displacement for the
+axial behavior.
+For forms which include shear deformation, linear interpolation along
+the beam axis is used
+for all displacements and the rotation, thus, it is necessary to use more
+elements to obtain good accuracy.  All elements have
+two nodes.  To define the orientation of the cross section for a three
+dimensional analysis it is necessary to define a \texttt{REFE}r\-ence
+\texttt{VECT}or, \texttt{DIRE}c\-tion, or \texttt{NODE}.
+A frame element is included using the commands:
+\begin{verbatim}
+       MATErial,1
+         FRAMe
+             ....
+\end{verbatim}
+The required data for frame elements is the material model, cross section
+data, and for three dimensional frames geometric information to orient the
+coordinate axes of the cross section.  Typically, \texttt{ELAStic} models are
+required and the
+cross section data given by \texttt{CROSs} section properties.
+The geometric data for orienting cross section axes
+is given by \texttt{REFErence VECTor} or \texttt{REFErence NODE} options.
+
+The {\it truss elements} include small and large deformation formulations.
+The elements have two nodes and include a number of one dimensional
+constitutive models as indicated in the next chapter.
+The truss element is included using the commands:
+\begin{verbatim}
+       MATErial,1
+         TRUSs
+             ....
+\end{verbatim}
+Required data is material model (e.g., typically \texttt{ELAStic}) and cross
+section \texttt{CROSs} giving the area of the section.
+Optional data is the type of inelastic constitutive model.
+
+The {\it plate element} is restricted to small deformation applications
+in which only the bending response of flat slabs is included.  The problem
+is treated as a two-dimensional problem for the mesh (in the $x_1$-$x_2$
+coordinate plane).  Only
+linear thermo-mechanical response is included for the material models.
+Each element may be a three node triangle or a four node quadrilateral.
+The plate element is included using the commands:
+\begin{verbatim}
+       MATErial,1
+         PLATe
+             ....
+\end{verbatim}
+Required data is the material model (e.g., \texttt{ELAStic}) and the thickness
+given by the \texttt{THICk} option.
+
+The {\it shell element} is capable of only small deformation analysis. 
+The model includes bending and membrane strains only -
+no transverse shearing deformation is included - thus restricting application
+to thin shell problems only.
+A resultant elastic formulation is provided.
+A shell element is included using the commands:
+\begin{verbatim}
+       MATErial,1
+         SHELl
+             ....
+\end{verbatim}
+Required data is the elastic material model (e.g., \texttt{ELAStic})
+and the thickness given by the \texttt{THICk} option.
+Additional data for loading is also available.
+
+A {\it membrane element} is derived from the shell element by deleting
+the bending deformations, thus leaving only the in-plane
+strain deformation terms.  Elements for small displacements
+are included and are restricted to elastic behavior.
+The membrane element is included using the commands:
+\begin{verbatim}
+       MATErial,1
+         MEMBrane
+             ....
+\end{verbatim}
+Required data is the material model (e.g., \texttt{ELAStic}) and the thickness
+given by the \texttt{THICk} option.
+
+The {\it thermal elements} are all based on a standard Galerkin (irreducible,
+displacement) formulation.\scite{zt1n}  The
+element shapes available are identical to those for the displacement
+form of a solid element.
+
+At present the finite deformation material
+models for the solid elements do not permit a coupled thermo-mechanical
+analysis.  The small deformation models for elasticity do permit coupled
+thermo-mechanical analyses to be performed using an iterative solution
+algorithm.\footnote{While the model is linear, there is no tangent terms for
+the coupling between temperature and displacement.  Thus, solution requires
+added iterations} The material behavior for the thermal analysis is a linear
+Fourier model.  Both isotropic and orthotropic models are available.
+The thermal element is included using the commands:
+\begin{verbatim}
+       MATErial,1
+         THERmal
+           FOURier ...
+\end{verbatim}
+Required data is the material model given by the \texttt{FOURier} option.
+Note also that it is necessary to specify the glogal degree of freedom
+for the temperature when displacements are present (see below).
+
+The specification of {\it user elements} must contain a number of an
+element module which has been added to {\sl FEAPpv}.
+Each user developed element module
+is designated as \texttt{subroutine elmtnn(...)}, where \texttt{nn} ranges
+from \texttt{01} to \texttt{05}.
+Accordingly, a typical set of data for a user element \texttt{elmt02}
+is given as:
+\begin{verbatim}
+       MATErial,1
+         USER      2              ! Use elmt02(...) module
+         xxxxxx                   ! Additional data records
+                                  ! blank termination record
+\end{verbatim}
+
+The first two records of the \texttt{MATE}rial set always must be:
+
+\begin{verbatim}
+       MATErial ma
+         type unum mset doflist
+\end{verbatim}
+where \texttt{ma} is the material set number, \texttt{type} is the element type
+(e.g., solid, truss, etc.), \texttt{unum} is the user element number,
+\texttt{mset} is the material set number given for each element (by default
+it is the material number - this option permits two material types
+to access the same element connection list), and \texttt{doflist} is the
+list of global degree-of-freedoms to assign the internal element order (by
+default this is the order 1,2,3,...,ndf).  For the standard elements contained
+in {\sl FEAPpv} it is one needs only the \texttt{type} parameter unless
+degrees of freedom are to be relocated (e.g., for thermal analysis).

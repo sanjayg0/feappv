@@ -1,0 +1,79 @@
+\chapter[Mesh Manipulation Commands]{MESH MANIPULATION COMMANDS}
+\label{manip}
+
+Once an initial mesh is completely defined it may be further processed
+to: (1) merge nodes with the same coordinates using the \texttt{TIE} command,
+or (2) force a sharing of degrees-of-freedom using the \texttt{LINK}
+command.  These commands may be given in any order immediately following
+the mesh \texttt{END} command.  While they may be in any order the data is
+first saved in temporary files and \textsl{FEAPpv} later executes the
+commands in a definite order.
+
+\section{The TIE Command}
+\label{tie}
+
+The ability to merge nodes which have the same coordinates permits
+the generation of a mesh in separate parts without having to consider
+a common node numbering system between the individual parts.
+The \texttt{TIE} command permits merging
+based on material set numbers, region numbers, a range of node numbers,
+or on all the defined node numbers.
+The latter is achieved by entering the command as:
+\begin{verbatim}
+       TIE
+\end{verbatim}
+without any parameters.  A range of node numbers to search may be
+specified also.  For example, if the merge is to be done only for
+nodes numbered between 34 and 65 the command is issued as:
+\begin{verbatim}
+       TIE,, 34, 65
+\end{verbatim}
+It is however, not possible to merge nodes from two different ranges of
+numbers.
+
+It is also possible to merge parts based on material numbers.  For example,
+if a problem with two bodies is generated using material set 1
+for body one and material set 2 for body two,
+a merge may be achieved for the parts of each body
+without any possibility of merging nodes in body one to those in
+body two.  This is achieved using the commands:
+\begin{verbatim}
+       TIE MATErial 1  1
+       TIE MATErial 2  2
+\end{verbatim}
+If it is desired to tie nodes for materials 1 and 2 together, the command
+\begin{verbatim}
+       TIE MATErial 1  2
+\end{verbatim}
+may be used.
+
+Alternatively, the nodes to be merged may be associated with a region.  In
+this option it is necessary to include {\tt REGIon} commands as part of the
+element generation process (i.e., using either {\tt ELEMent} or {\tt BLOCk}).
+The basic command to merge parts in \textit{Region m} to those in
+\textit{Region n} is
+\begin{verbatim}
+       TIE REGIon m  n
+\end{verbatim}
+The parameters \texttt{m} and \texttt{n} may have the same or different values.
+
+When the tie option is used one node from a merged pair is deleted from
+the mesh and its number on the element connections replaced by the retained
+number.  It is not possible to plot or output values for the
+deleted node.  If printing is in effect at the end of the mesh
+generation process, the nodes deleted are listed in the output
+file.  This is different than creating common solution
+values for degree of freedoms associated with two nodes
+using the \texttt{LINK} option described below.  In a link
+option the node is not deleted, and thus projections may create a
+different solution at the two nodes.
+
+\section{The LINK Command}
+\label{link}
+
+The link option may be used to make the solution of one or more of
+the degrees-of-freedom associated with two nodes have the same value.
+This option is useful in creating repeating type solutions, that is, those
+in which the solution on a surface is repeated on an identical surface
+with a different location.\scite{zt1n}
+The link is performed based on node numbers using the \texttt{LINK} command.

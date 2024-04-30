@@ -1,0 +1,201 @@
+\chapter[Input Records]{INPUT RECORDS SPECIFICATION}
+\label{record}
+
+Data input specifications in {\sl FEAPpv} consist of records which may contain
+from 1 to 255 characters of information in free format form.
+Each record can contain up to 16 alphanumeric data items.  The maximum
+field width for any single data item is 16 characters (15 characters of
+data and 1 character for separating fields).  Specific types of data items
+are discussed below.  Sets of records, called {\it data sets},
+start with a text command which controls input of one or more 
+data items.  Data sets may be grouped into a single file (called the input
+data file) or may be separated into several files and joined together
+using the {\it include} command described below.  Sets of records may also
+be designated as a {\it save} set and later {\it read} again for reuse.
+
+Each input record may be in the form of text and/or numerical
+constants, parameters, or expressions.  Text fields all start with the 
+letters {\tt a} through {\tt z} (either upper or lower case may be
+used, however, internally {\sl FEAPpv} converts upper case letters to lower case).
+The remaining characters may be either letters or numbers.
+Constants are conventional
+forms for specifying input data and may be integer or real
+quantities as needed.  Parameters consist of one or two characters to
+which values are assigned.  The first character of a parameter must be
+a letter (a to z); the second may be a letter (a to z) or numeral (0 to 9).
+Expressions are combinations of
+constants, parameters, and/or functions which can be evaluated as the
+required data input item.  Each of these forms is described below.
+
+\section{Constants}
+
+Constants may be represented as integers or floating point numbers.
+Integers are specified without a decimal point as 1, -10, etc;
+floating point numbers may only be expressed in the forms
+\begin{verbatim}
+       3.56,   -12.37,   1.34e+5,   -4.36d-05
+\end{verbatim}
+In particular, the forms
+\begin{verbatim}
+       1.0+3,  -3.456-03
+\end{verbatim}
+may not be used since they will be evaluated as an expression (see
+below).  In particular, the above two examples would yield data values
+of {\tt 4.0} and {\tt -6.456}, respectively.
+
+The specification of each constant is restricted to 15
+significant figures (including the exponent value) plus a separator (either
+a comma or a blank).  If more
+significant figures are needed in an exponent form, parameters and
+an expression may be used.  For example,
+\begin{verbatim}
+       a1 =  1.234567890123*1.e-5
+\end{verbatim}
+produces a number with the full 15 digits but with an exponent larger than
+could otherwise be obtained with this precision and stay within the
+15 character limit.
+
+\section{Parameters}
+
+The use of parameters will simplify the data input
+required to define problems for a {\sl FEAPpv} solution.
+Data may be specified as a single character parameter
+(e.g., $a$, $b$, through $z$), two character parameters
+(e.g., $aa$, $ab$ through $zz$), or a character and a numeral
+(e.g., $e0$ through $e9$).  All alphabetic input
+characters are automatically converted to lower case, hence there are 962
+unique parameters permitted at any one time.  Values are
+assigned to parameters by the {\tt PARA}meter data command during mesh
+generation or modification.  The general form to assign a constant
+to a parameter is
+\begin{verbatim}
+       a  = 3.567
+       e1 = 200.0e9
+       nu = 0.3
+\end{verbatim}
+Blanks are permitted and are ignored in the processing of a
+record (except in expressions).
+Once a parameter is defined it may be used in place of
+any constant in the data input.  For example the following would use
+the value of the parameter $a$ defined above
+\begin{verbatim}
+       COORdinates
+         1,,a,0.
+\end{verbatim}
+With this assignment the 1-coordinate of the 1-node would have a
+value of 3.567.
+
+Parameters may have their values redefined as many times as
+needed by using the PARAmeter data command followed by other commands
+and data using the values of assigned parameters.  A user may then
+specify another
+PARAmeter command to redefine parameters, followed by additional
+data inputs, etc.
+
+\section{Expressions}
+
+The most powerful form of data input in {\sl FEAPpv} is through the use of
+expressions in combination with parameters.  An expression may
+include parameters and/or constants.  Expressions may include
+operations of addition, subtraction, multiplication, division, and
+exponentiation.  In addition, some functions may be used.  A
+hierarchical evaluation is performed according to the rules
+defined in Table \ref{tab51}.
+
+\begin{table}[ht!]
+\begin{center}
+\begin{tabular}{ c l l }
+Order & Operation & Notation \\
+   &                            &            \\
+1. & Parenthetical expressions  &  {\tt(  )}   \\
+2. & Functions                  &            \\
+3. & Exponentiation             & \char '136    \\
+4. & Multiplication or Division & {\tt *}  or {\tt /}  \\
+5. & Addition or Subtraction    & {\tt +}  or {\tt -}  \\
+\end{tabular}
+\end{center}
+\caption {Hierarchy for expression evaluation}
+\label{tab51}
+\end{table}
+Evaluations within this hierarchy proceed from left to right in
+each expression.  At the present time only one level of parenthesis
+may appear in any expression.  Accordingly, the expression
+\begin{verbatim}
+       1./4. + 4
+\end{verbatim}
+is evaluated as 4.25, whereas
+\begin{verbatim}
+       1./(4. + 4)
+\end{verbatim}
+is evaluated as 0.125.
+
+All constants, parameters, and expressions are evaluated as double
+precision real quantities, however, they are permitted in place of integer
+data also.  Expressions may appear in any location
+in place of a constant or an expression.  Accordingly, a force may
+be assigned as
+\begin{verbatim}
+       FORCe
+         1,,a/12. + 3.
+\end{verbatim}
+Additionally, node and element numbers may also
+appear as expressions.  This permits the input of {\it substructure}
+parts in a modular form.  For example,
+\begin{verbatim}
+       BLOCk
+         CARTesian,4,4,n,e,m
+         1,0.+x,0.+y
+         2,5.+x,0.+y
+         3,5.+x,5.+y
+         4,0.+x,5.+y
+                        ! end with blank record
+       COOR
+         n+25,0,5.5+x,2.5+y
+                        ! end with blank record
+       ELEM
+         e+16,p,n+14,n+15
+                        ! end with blank record
+\end{verbatim}
+could be used to input a block of nodes and elements (see Section \ref{block}).
+By specifying
+the values of the parameters {\tt n,e,m,x,} and {\tt y} a form of a
+{\it substructure} is defined.  The part may be replicated using either
+the {\tt INCLude} option or the
+name associated with {\tt SAVE} and {\tt READ} in the mesh
+data input statements.
+
+\section{Functions}
+
+The following functions may appear in an expression, a statement, or a
+parameter definition:
+\begin{verbatim}
+       abs   exp,  int,  log,   sqrt,
+       sin,  cos,  tan,  atan,  asin,  acos,
+       sind, cosd, tand, atand, asind, acosd,
+       cosh, sinh, tanh,
+\end{verbatim}
+The trigonometric and inverse trigonometric functions which end in {\it d}
+involve values of angles in degrees; whereas, the ones without involve values
+in radians.
+
+Each function has one argument which is contained between parenthesis
+(which counts as the one level of depth).  The argument may be an
+expression but may not contain any parenthesis or additional functions.
+Thus, the expression
+\begin{verbatim}
+       p = 4.*atan(1)
+\end{verbatim}
+will compute the value of $\pi$ and assign it to the parameter $p$.
+Internal computations are all performed in double precision arithmetic (e.g.,
+as {\tt REAL*8} variables).
+Again note that the function parenthesis count as one level, hence
+\begin{verbatim}
+       q = tan(1./(3.+a))
+\end{verbatim}
+is not a legal expression at the present time.
+It should be replaced by the pair of statements
+\begin{verbatim}
+       q = 1./(3.+a)
+       q = tan(q)
+\end{verbatim}
+

@@ -1,0 +1,26 @@
+\heada{PLOT}{LINE}
+\hspace{1.0cm}{{line,n1,v1 \hfill}}
+\headb
+
+The {\tt LINE} command may be used to set the line type.
+This command only affects PostScript outputs.
+The line type is assigned by the value of {\tt n1} as:
+
+\begin{center}
+\begin{tabular}{c | l }
+ Number & Line Type \\ \hline
+   0 &  solid \\
+   1 &  dotted \\
+   2 &  dash-dot \\
+   3 &  short dash \\
+   4 &  long dash \\
+   5 &  dot-dot-dash \\
+   6 &  short dash-long dash \\
+   7 &  wide dash
+\end{tabular}
+\end{center}
+
+The width of the line is set using {\tt v1} which may have values
+between 0.0 and 2.0 (normal is 1.0).
+\vfill
+\eject

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2021: Regents of the University of California
+!....  Copyright (c) 1984-2024: Regents of the University of California
 !                               All rights reserved
 
 !-----[--+---------+---------+---------+---------+---------+---------+-]
@@ -58,11 +58,9 @@
       data blnk/'_________________'/
 
 !     Try some other y-positions for multiple contours
-
       data yfr/0.805d0,0.625d0,0.445d0,0.265d0/
 
 !     DOS or X11 device position parameters
-
       dtext  = 0.0000d0
       xhead  = 1.1200d0
       xleft  = 1.0400d0
@@ -81,9 +79,8 @@
       yph = real(ycor/1.28d0)
 
 !     Draw color bars - with values
-
       do i = 1,7
-        call pppcol(ipal(i),2)
+        call pppcol(ipal(8-i),2)
         yphbot = ycor - 1.35d0*dy - 5.d0/7.d0*i/xdv
         yphtop = ycor - 1.35d0*dy - 5.d0/7.d0*(i-1)/xdv
         call dplot( xleft,yphbot,1)
@@ -92,23 +89,20 @@
         call dplot( xleft,yphtop,2)
         call clpan
         call pppcol(1,1)
-        if(i.lt.7) then
+        if(i.lt.7 .and. ifrm.eq.0) then
           yphbot = yphbot - 0.0075d0
-          if(ifrm.eq.0 .or. i.eq.1 .or. i.eq.6) then
-            write(yy, '(1p1e9.2)' ) vc(i)
-            call tplot(xtext,yphbot,yy,9,1)
-          endif
+          write(yy, '(1p1e9.2)' ) vc(7-i)
+          call tplot(xtext,yphbot,yy,9,1)
         endif
       end do
 
-      if(ifrm.eq.0) then
-        write(yy, '(1p1e9.2)' ) rmn
-        yphbot = ycor - 1.35d0*dy - 0.0075d0
-        call tplot(xtext,yphbot,yy,9,1)
-        write(yy, '(1p1e9.2)' ) rmx
-        yphbot = yphbot - 5.d0/xdv
-        call tplot(xtext,yphbot,yy,9,1)
-      endif
+!     Add maximum & minimums
+      write(yy, '(1p1e9.2)' ) rmx
+      yphbot = ycor - 1.35d0*dy - 0.0075d0
+      call tplot(xtext,yphbot,yy,9,1)
+      write(yy, '(1p1e9.2)' ) rmn
+      yphbot = yphbot - 5.d0/xdv
+      call tplot(xtext,yphbot,yy,9,1)
 
       call tplot(xhead,ycor,blnk,17,1)
       if(mc.eq.5) then
@@ -136,16 +130,13 @@
       end do
 
 !     Write min/max for current view
-
       if(ifrm.eq.0) then
 
 !       Display current view values
-
         write(yy, '(12hCurrent View)' )
         call tplot(xhead ,ycor - 1.25d0*dy - 6./xdv,yy,12,1)
 
 !       Display min for current view - with coords
-
         write(yy, '(6hMin = ,1p1e9.2)' ) psmn
         call tplot(xhead+0.25d0*dy,ycor-1.85d0*dy-6./xdv,yy,15,1)
 
@@ -159,7 +150,6 @@
         endif
 
 !       Display max for current view - with coords
-
         write(yy, '(6hMax = ,1p1e9.2)' ) psmx
         call tplot(xhead+0.25d0*dy,ycor-3.85d0*dy-6./xdv,yy,15,1)
 

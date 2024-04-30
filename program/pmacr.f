@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2021: Regents of the University of California
+!....  Copyright (c) 1984-2024: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -76,7 +76,7 @@
       include  'comblk.h'
 
       integer        :: ncomd
-      parameter        (ncomd = 73)
+      parameter        (ncomd = 74)
 
       character (len=128) :: fint
       character (len=15)  :: lct(200)
@@ -98,7 +98,7 @@
 !           subprogram contains macro command statements.
 
       data wd/'stre','utan','tang','form','mass','reac','chec','damp',
-     1        'augm','geom','dire','iter','hill',
+     1        'augm','geom','dire','iter','hill','flux',
 
      2        'tol ','dt  ','loop','next','prop','data','time','prin',
      2        'nopr','tran','init','iden','newf','back','debu','if  ',
@@ -124,7 +124,7 @@
      p        'manu' /
 
       data ed/    0,     0,     0,     0,     0,     0,     0,     1,
-     1            1,     1,     3,     3,     1,
+     1            1,     1,     3,     3,     1,     0,
 
      2            0,     0,     0,     0,     0,     1,     0,     0,
      2            0,     0,     0,     1,     1,     1,     0,     3,
@@ -150,7 +150,7 @@
      p            4 /
 
       data nwd1,nwd2,nwd3,nwd4,nwd5,nwd6,nwd7,nwd8,nwd9,nwdp
-     &    /  13,  19,  20,  12,   2,   1,   1,   2,   2,   1 /
+     &    /  14,  19,  20,  12,   2,   1,   1,   2,   2,   1 /
 
       if(initf) then
 

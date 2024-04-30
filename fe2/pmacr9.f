@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2021: Regents of the University of California
+!....  Copyright (c) 1984-2024: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -35,11 +35,11 @@
       text = lct
 
 !     [FE^2 <'start','get','send'>
-
       if(j.eq.1) then
         if(debug) write(*,2000) ' FE^2 ',lct
         call pfe2solv(lct)
 
+!     [RVE  <'set'>
       elseif(j.eq.2) then
 
         if(debug) write(*,2000) ' RVE    ',lct

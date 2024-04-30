@@ -1,0 +1,27 @@
+\heada{SOLUTION}{ENDIf}
+\hspace{1.0cm}{{endi \hfill}}
+\headb
+
+\index{Solution command!ENDIf}
+\index{IF-ELSE-ENDIf control}
+The {\tt ENDIf} command is used with a matching
+{\tt IF} command to terminate the control construction.
+For example, the sequence
+\begin{verbatim}
+        ...
+       IF  10-a
+         tang,,1
+         param a 0
+       ELSE b
+         pause
+       ELSE
+         form
+         solv
+       ENDIf
+       param a = a+1
+        ...
+\end{verbatim}
+would compute a tangent, residual, and solution increment if {\tt 10-a}
+is positive; otherwise the solution increment is computed using a
+previous tangent.
+\vfill\eject

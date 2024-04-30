@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2021: Regents of the University of California
+!....  Copyright (c) 1984-2024: Regents of the University of California
 !                               All rights reserved
 
 !     Two dimensional (plane/axisymmetric) Linear Thermal Element
@@ -53,7 +53,7 @@
 
       integer       :: ix(*)
       real (kind=8) :: d(*),ul(ndf,nen,*),xl(ndm,*),s(nst,*),p(*)
-      real (kind=8) :: xx(2),gradt(3),flux(3,64),dt(3,3)
+      real (kind=8) :: xx(2),gradt(3),flux(3,64),kk(3,3)
 
       save
 
@@ -70,7 +70,6 @@
       if(nint(d(189)).eq.8) then  ! VEM
 
 !       Set VEM order from element data
-
         if(ix(nen+8).gt.0) then
           k_order = ix(nen+8)
         else
@@ -80,7 +79,6 @@
       endif
 
 !     Input material properties
-
       if(isw.eq.1) then
 
         if(ior.lt.0) write(*,2000)
@@ -88,22 +86,18 @@
         call inmate(d,tdof,nen,6)
 
 !       Delete unused parameters
-
         do i = 2,ndf
           ix(i) = 0
         end do
 
 !       Set to preclude sloping boundary transformations
-
         ea(1,-iel) = 0
         ea(2,-iel) = 0
 
 !       Set plot sequence
-
         pstyp = 2
 
 !     Check of mesh if desired (chec)
-
       elseif(isw.eq.2) then
 
         if(nel.eq.3 .or. nel.eq.6 .or. nel.eq.7) then
@@ -113,7 +107,6 @@
         endif
 
 !     Compute conductivity (stiffness) matrix
-
       elseif(isw.eq.3 .or. isw.eq.6 .or.
      &       isw.eq.4 .or. isw.eq.8) then
 
@@ -125,19 +118,16 @@
           jac(l) = jac(l)*d(14)
 
 !         Compute gradient and temperature
-
           call thfx2d(xl,ul, xx,shp2(1,1,l),temp,gradt,ndm,ndf,nel)
 
 !         Compute thermal flux and conductivity
-
           call modltd(d, temp,gradt,hr(nh1+nn),hr(nh1+nn),nhv,
-     &                dd,flux,rhoc, isw)
+     &                kk,flux,rhoc, isw)
           nn = nn + nhv
 
           if(isw.eq.3 .or. isw.eq.6) then
 
 !           Compute thermal rate
-
             tdot = 0.0d0
             do j = 1,nel
               tdot = tdot + shp2(3,j,l)*ul(1,j,4)
@@ -150,27 +140,23 @@
             j1 = 1
             do j = 1,nel
 
-              a1 = (dt(1,1)*shp2(1,j,l) + dt(1,2)*shp2(2,j,l))*jac(l)
-              a2 = (dt(2,1)*shp2(1,j,l) + dt(2,2)*shp2(2,j,l))*jac(l)
+              a1 = (kk(1,1)*shp2(1,j,l) + kk(1,2)*shp2(2,j,l))*jac(l)
+              a2 = (kk(2,1)*shp2(1,j,l) + kk(2,2)*shp2(2,j,l))*jac(l)
               a3 = d(4)*d(64)*shp2(3,j,l)*jac(l)
 
 !             Compute residual
-
               p(j1) = p(j1) - a1*gradt(1) - a2*gradt(2)
      &                      - a3*(cfac*tdot + lfac*ul(1,j,4))
 
 !             Compute tangent
-
               a1 = a1*ctan(1)
               a2 = a2*ctan(1)
               a3 = a3*ctan(2)
 
 !             Lumped rate terms
-
               s(j1,j1) = s(j1,j1) + a3*lfac
 
 !             Consistent rate and conductivity terms
-
               i1 = 1
               do i = 1,nel
                 s(i1,j1) = s(i1,j1) + a1*shp2(1,i,l) + a2*shp2(2,i,l)
@@ -180,10 +166,9 @@
               j1 = j1 + ndf
             end do ! j
 
-
 !         Output heat flux
-
           elseif(isw.eq.4) then
+
             mct = mct - 1
             if(mct.le.0) then
               write(iow,2002) o,head
@@ -192,9 +177,9 @@
               endif
               mct = 50
             endif
-            write(iow,2003) n_el,ma,xx,flux(1:2,l),gradt
+            write(iow,2003) n_el,ma,xx,flux(1:2,l),gradt(1:2)
             if(ior.lt.0 .and. pfr) then
-              write(*,2003) n_el,ma,xx,flux(1:2,l),gradt
+              write(*,2003) n_el,ma,xx,flux(1:2,l),gradt(1:2)
             endif
           endif
 
@@ -205,7 +190,6 @@
         if(vemfl .and. (isw.eq.3 .or. isw.eq.6)) then
 
 !         Compute stabilizing parameter
-
           trS = 0.0d0
           do i = 1,nel*ndf,ndf
             trS = trS + s(i,i)
@@ -217,7 +201,6 @@
         endif
 
 !       Compute nodal heat flux for output/plots
-
         if(isw.eq.8) then
           if(vemfl) then
             call vem_thcn(flux,p,s)
@@ -227,7 +210,6 @@
         endif
 
 !     Compute heat capacity (mass) matrix
-
       elseif(isw.eq.5) then
 
         call quadr2d(d,.false.)

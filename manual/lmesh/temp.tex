@@ -1,0 +1,29 @@
+\heada{MESH}{TEMPerature}
+\hspace{1.0cm}{{ temp                 \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ node1,ngen1,t(node1) \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ node2,ngen2,t(node2) \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ <etc.,terminate with blank record> \hfill}}
+\headb
+
+The {\tt TEMP}erature command is used to specify the values for
+nodal temperatures.  For each node to be specified a record
+is entered with the following information:
+
+\begin{center}
+\begin{tabular}{r l}
+\it node    &-- Number of the node to be specified \\
+\it ngen    &-- Increment to the next node, if generation \\
+            &\quad is used, otherwise 0. \\
+\it t(node) &-- Value of temperature for node. \\
+\end{tabular}
+\end{center}
+When generation is performed, the node number  sequence
+will be (for {\it node1-node2} sequence shown at top):
+
+\begin{center}
+{\it node1, node1+ngen1, node1+2$\times$ngen1, .... , node2 }
+\end{center}
+
+The values for each temperature will be a linear  interpolation
+between {\it node1} and {\it node2}. 
+\vfil\eject

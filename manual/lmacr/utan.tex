@@ -1,0 +1,56 @@
+\heada{SOLUTION}{UTANgent}
+\hspace{1.2cm}{{ utan,,<n1,v2> \hfill}}\\{\smallskip}
+\hspace{1.0cm}{{ utan,line,<n1,v2,v3> \hfill}}
+\headb
+
+The {\tt UTAN}gent command computes an unsymmetric tangent stiffness matrix
+about the current value of the solution state vector.  For
+linear applications the current stiffness matrix is just the
+normal stiffness matrix.
+
+If the value of {\tt n1} is non-zero, a force vector for
+the current residual is also computed (this is identical to
+the {\tt FORM} command computation) - thus leading to greater
+efficiency when both the tangent stiffness and a residual
+force vector are needed.
+
+If the value of {\tt v2} is non-zero a {\it shift} is applied
+to the stiffness matrix in which the element mass matrix is
+multiplied by {\tt v2} and subtracted from the stiffness matrix.
+This option may not be used with the {\tt SUBS}pace algorithm,
+which is restricted to symmetric tangents only (see {\tt TANG}ent.
+The shift may be used to represent a forced vibration
+solution in which all loads are assumed to be harmonic
+at a value of the square-root of {\tt v2} (rad/time-unit).
+
+After the tangent matrix is computed, a triangular
+decomposition is available for subsequent solutions using
+{\tt FORM} and {\tt SOLV}e, etc.
+
+In the solution of non-linear problems, using a full or
+modified Newton method, convergence from any starting point
+is not guaranteed.  Two options exist within available
+commands to improve chances for convergence.  One is to use
+a line search to prevent solutions from diverging rapidly.
+Specification of the command {\tt UTAN,LINE} plus options
+invokes the line search option (it may also be used in conjunction
+with {\tt SOLVe,LINE} in modified Newton schemes).  The
+parameter {\tt v3} is typically chosen between 0.5 and 0.8
+(default is 0.8).
+
+The second option to improve convergence of non-linear
+problems is to reduce the size of the load step increments.
+The command {\tt BACK} may be used to {\it back-up} to the
+beginning of the last time step (all data in the solution
+vectors is reset and the history data base for inelastic
+elements is restored to the initial state when the current
+time is started). Repeated use of the {\tt BACK} command may be
+used. However, it applies only to the current time interval.
+The loads may then be adjusted and a new solution with
+smaller step sizes started.
+
+The {\tt UTAN}gent operation is normally the most time consuming
+step in problem solutions - for large problems several
+seconds are required - be patient!
+\vfill\eject
+

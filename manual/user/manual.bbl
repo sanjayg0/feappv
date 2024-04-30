@@ -1,0 +1,88 @@
+\begin{thebibliography}{10}
+
+\bibitem{zt1n7}
+O.C. Zienkiewicz, R.L. Taylor, and J.Z. Zhu.
+\newblock {\em The Finite Element Method: Its Basis and Fundamentals}.
+\newblock Elsevier, Oxford, $7^{th}$ edition, 2013.
+
+\bibitem{zt2n7}
+O.C. Zienkiewicz, R.L. Taylor, and D.~Fox.
+\newblock {\em The Finite Element Method for Solid and Structural Mechanics}.
+\newblock Elsevier, Oxford, $7^{th}$ edition, 2013.
+
+\bibitem{feapp}
+R.L. Taylor and S.~Govindjee.
+\newblock {\em FEAP - {A} {Finite} {Element} {Analysis} {Program}, {Programmer}
+  {Manual}}.
+\newblock University of California, Berkeley.
+\newblock \url{projects.ce.berkeley.edu/feap}.
+
+\bibitem{feape}
+R.L. Taylor and S.~Govindjee.
+\newblock {\em FEAP - {A} {Finite} {Element} {Analysis} {Program}, {Example}
+  {Manual}}.
+\newblock University of California, Berkeley.
+\newblock \url{projects.ce.berkeley.edu/feap}.
+
+\bibitem{zt1n}
+O.C. Zienkiewicz and R.L. Taylor.
+\newblock {\em The Finite Element Method: The Basis}, volume~1.
+\newblock Butterworth-Heinemann, Oxford, $5^{th}$ edition, 2000.
+
+\bibitem{zt2n}
+O.C. Zienkiewicz and R.L. Taylor.
+\newblock {\em The Finite Element Method: Solid Mechanics}, volume~2.
+\newblock Butterworth-Heinemann, Oxford, $5^{th}$ edition, 2000.
+
+\bibitem{zt1}
+O.C. Zienkiewicz and R.L. Taylor.
+\newblock {\em The Finite Element Method}, volume~1.
+\newblock McGraw-Hill, London, $4^{th}$ edition, 1989.
+
+\bibitem{christensen71a}
+R.M. Christensen.
+\newblock {\em Theory of Viscoelasticity: An Introduction}.
+\newblock Academic Press, New York, 1971 (Reprinted 1991).
+
+\bibitem{feapt}
+R.L. Taylor.
+\newblock {\em FEAP - {A} {Finite} {Element} {Analysis} {Program}, {Theory}
+  {Manual}}.
+\newblock University of California, Berkeley.
+\newblock \url{projects.ce.berkeley.edu/feap}.
+
+\bibitem{taylorpg}
+R.L. Taylor, K.S. Pister, and G.L. Goudreau.
+\newblock Thermomechanical analysis of viscoelastic solids.
+\newblock {\em International Journal for Numerical Methods in Engineering},
+  2:45--79, 1970.
+
+\bibitem{simort85}
+J.C. Simo and R.L. Taylor.
+\newblock Consistent tangent operators for rate-independent elastoplasticity.
+\newblock {\em Computer Methods in Applied Mechanics and Engineering},
+  48:101--118, 1985.
+
+\bibitem{simort86}
+J.C. Simo and R.L. Taylor.
+\newblock A return mapping algorithm for plane stress elastoplasticity.
+\newblock {\em International Journal for Numerical Methods in Engineering},
+  22:649--670, 1986.
+
+\bibitem{simo:hughes}
+J.C. Simo and T.J.R. Hughes.
+\newblock {\em Computational Inelasticity}, volume~7 of {\em Interdisciplinary
+  Applied Mathematics}.
+\newblock Springer-Verlag, Berlin, 1998.
+
+\bibitem{zt1n6}
+O.C. Zienkiewicz, R.L. Taylor, and J.Z. Zhu.
+\newblock {\em The Finite Element Method: Its Basis and Fundamentals}.
+\newblock Elsevier, Oxford, $6^{th}$ edition, 2005.
+
+\bibitem{newmark}
+N.~Newmark.
+\newblock A method of computation for structural dynamics.
+\newblock {\em Journal Engineering Mechanics, ASCE}, 85:67--94, 1959.
+
+\end{thebibliography}

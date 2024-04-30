@@ -1,0 +1,9 @@
+
+\begin{figure}[t!]
+\begin{center}
+
+\includegraphics[height=3in]{figs/nblock2d}
+
+\caption{Two dimensional NURBS block data \label{fig2b} }
+\end{center}
+\end{figure}

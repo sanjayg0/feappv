@@ -1,0 +1,46 @@
+This is BibTeX, Version 0.99d (TeX Live 2018/MacPorts 2018.47642_8)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: manual_51.aux
+The style file: unsrt.bst
+Database file #1: /Users/rlt/Feap/biblio/book.bib
+You've used 17 entries,
+            1791 wiz_defined-function locations,
+            621 strings with 7405 characters,
+and the built_in function-call counts, 3165 in all, are:
+= -- 291
+> -- 135
+< -- 4
++ -- 52
+- -- 35
+* -- 178
+:= -- 523
+add.period$ -- 54
+call.type$ -- 17
+change.case$ -- 12
+chr.to.int$ -- 0
+cite$ -- 17
+duplicate$ -- 154
+empty$ -- 319
+format.name$ -- 35
+if$ -- 708
+int.to.chr$ -- 0
+int.to.str$ -- 17
+missing$ -- 21
+newline$ -- 91
+num.names$ -- 17
+pop$ -- 57
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 45
+stack$ -- 0
+substring$ -- 107
+swap$ -- 25
+text.length$ -- 4
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 0
+while$ -- 27
+width$ -- 19
+write$ -- 200

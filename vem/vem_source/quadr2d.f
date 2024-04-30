@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2021: Regents of the University of California
+!....  Copyright (c) 1984-2024: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -36,7 +36,6 @@
       save
 
 !     Compute Gauss quadrature points and weights for 2-d elements
-
       quad   = .false.
       vemfl  = .false.
 
@@ -101,6 +100,7 @@
           call int2d(l,lint,sg2)
         endif
         quad = .true.
+
       endif
 
       end subroutine quadr2d

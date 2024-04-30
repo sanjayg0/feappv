@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2021: Regents of the University of California
+!....  Copyright (c) 1984-2024: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -28,7 +28,6 @@
       save
 
 !     Compute strains and coordinates
-
       do j = 1,6
         eps(j,1) = 0.0d0
         eps(j,3) = 0.0d0
@@ -43,16 +42,14 @@
         eps(1,1) = eps(1,1) + shp(1,j)*ul(1,j,1)
         eps(2,1) = eps(2,1) + shp(2,j)*ul(2,j,1)
         eps(3,1) = eps(3,1) + shp(3,j)*ul(1,j,1)
-        eps(4,1) = eps(4,1) + shp(2,j)*ul(1,j,1)
-     &                      + shp(1,j)*ul(2,j,1)
-        eps(1,3) = eps(1,1) + shp(1,j)*ul(1,j,2)
-        eps(2,3) = eps(2,1) + shp(2,j)*ul(2,j,2)
-        eps(3,3) = eps(3,1) + shp(3,j)*ul(1,j,2)
-        eps(4,3) = eps(4,1) + shp(2,j)*ul(1,j,2) + shp(1,j)*ul(2,j,2)
+        eps(4,1) = eps(4,1) + shp(2,j)*ul(1,j,1) + shp(1,j)*ul(2,j,1)
+        eps(1,3) = eps(1,3) + shp(1,j)*ul(1,j,2)
+        eps(2,3) = eps(2,3) + shp(2,j)*ul(2,j,2)
+        eps(3,3) = eps(3,3) + shp(3,j)*ul(1,j,2)
+        eps(4,3) = eps(4,3) + shp(2,j)*ul(1,j,2) + shp(1,j)*ul(2,j,2)
       end do
 
 !     Compute enhanced strains
-
       if(etype.eq.3) then
         do j = 1,2
           eps(1,1) = eps(1,1) + shpi(1,j)*ui(2*j-1,1)
@@ -67,14 +64,12 @@
       endif
 
 !     Strain at t_n
-
       eps(1,2) = eps(1,1) - eps(1,3)
       eps(2,2) = eps(2,1) - eps(2,3)
       eps(3,2) = eps(3,1) - eps(3,3)
       eps(4,2) = eps(4,1) - eps(4,3)
 
 !     Set 3-strain (thickness/hoop)
-
       if(stype.eq.3) then
         eps(3,1) = eps(3,1)/xx
         eps(3,2) = eps(3,2)/xx

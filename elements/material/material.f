@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2021: Regents of the University of California
+!....  Copyright (c) 1984-2024: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -315,6 +315,10 @@
             fflag = .true.
             sflag = .false.
           endif
+          if(pcomp(text(2),'volu',4)) then
+            d(170) = max(1,min(4,nint(ev(1))))
+          endif
+
 
 !       Element type: Displacement
         elseif(pcomp(text(1),'disp',4)) then
@@ -564,7 +568,8 @@
           endif
 
 !       Thermal Representative Volume Material behavior
-        elseif(ietype.eq.6 .and. pcomp(text(1),'rve' ,3)) then
+        elseif(ietype.eq.6 .and. (pcomp(text(1),'trve',4)   .or.
+     &                            pcomp(text(1),'rve' ,3))) then
 
           if(ntasks.le.1) then
             write(iow,*) ' *ERROR* Use RVE material only for np > 1'
@@ -714,6 +719,7 @@
             tdof = ndm + 1
 
           endif
+          t1 = d(61)
 
 !       Ground motion acceleration factors/proportional load numbers
         elseif(ietype.ne.6 .and. pcomp(text(1),'grou',4)) then
@@ -733,7 +739,8 @@
           endif
 
 !       User Material Model interface
-        elseif(pcomp(text(1),'ucon',4)) then
+        elseif(pcomp(text(1),'ucon',4) .or.
+     &         pcomp(text(1),'umat',4)) then
 
 !         Default user constitutive equation number
           umat    = 1
@@ -771,7 +778,7 @@
       if(ietype.ne.6) then
 
 !       Small deformation options
-        if(sflag) then
+        if(sflag .and. imat.ne.13) then
           d(1)    = e1
           d(2)    = nu12
           d(3)    = alp(1)
@@ -900,7 +907,7 @@
           endif
 
 !       Finite deformation options
-        elseif(fflag)then
+        elseif(fflag .and. imat.ne.13)then
 
 !         Output Regular NeoHookean
           if(imat.eq.1) then
@@ -911,6 +918,12 @@
               write(*,2010) ' ',e1,nu12,bulk,g12
             endif
             write(iow,2010) ' ',e1,nu12,bulk,g12
+            if(nint(d(170)).lt.5) then
+              if(ior.lt.0) then
+                write(*,2062) nint(d(170))
+              endif
+              write(iow,2062) nint(d(170))
+            endif
 
 !           Compute Lame' parameters
             d(1)  = e1
@@ -1253,6 +1266,11 @@
         if(ior.lt.0) then
           write(*,2090) 'Global NURBS',(i,nint(d(189+i)),i=1,ndm)
         endif
+      elseif(nint(d(189)).eq.8) then
+        write(iow,2090) 'VEM - Virtual Elements'
+        if(ior.lt.0) then
+          write(*,2090) 'VEM - Virtual Elements'
+        endif
       endif
 
 !     Mass type
@@ -1379,7 +1397,7 @@
       d(20)  = imat
       d(31)  = d(31)*rad
       d(193) = tmat
-      if(ietype.eq.1 .or. ietype.eq.5) then
+      if(ietype.eq.1 .or. ietype.eq.5 .or. ietype.eq.6) then
         i     = int(nh1)
         if(ndm.eq.2) then
           nh1   = nh1*ii*ii
@@ -1445,10 +1463,10 @@
           endif
         endif
       elseif (ietype.eq.6) then
-        if(d(61).eq.0.0d0) then
-          write(iow,4006) e1,d(61)
+        if(t1.eq.0.0d0) then
+          write(iow,4006)
           if(ior.lt.0) then
-            write(*,4006) e1,d(61)
+            write(*,4006)
           endif
         endif
       endif
@@ -1578,6 +1596,12 @@
      &       10x,'Mass  value: a0',1p,1e14.5/
      &       10x,'Stiff value: a1',1p,1e14.5)
 
+2062  format(10x,'Volume Model    ',i2/
+     &       15x,'1: U(J) = 0.25*(J**2 - 1 - 2 * ln J)'/
+     &       15x,'2: U(J) = 0.50*(J - 1)**2'/
+     &       15x,'3: U(J) = 0.50*(ln J)**2'/
+     &       15x,'4: U(J) = 2.00*(J - 1 - ln J)'/1x)
+
 2063  format(/10x,'Augmented Solution for Inextensible Behavior')
 
 2064  format( 24x,'No shear deformation')
@@ -1589,7 +1613,7 @@
 
 2084  format( 10x,'Augmenting   : ',a)
 
-2090  format(10x,'Interpolation: ',a/(15x,'Quadrature ',i1,' = ',i5:))
+2090  format(10x,'Interpolation: ',a:/(15x,'Quadrature ',i1,' = ',i5:))
 
 2091  format( 5x,'M e c h a n i c a l   P r o p e r t i e s'//
      &        4x,a,'Representative Volume Element Model'//
@@ -3559,42 +3583,35 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
-      integer       :: i
-      real (kind=8) :: detf, press,logj,uppj, mu, mu2, estore, xlamd,ha
-
+      integer       :: i, jsw
+      real (kind=8) :: detf, xlamd, ha
+      real (kind=8) :: u,up,upp, mu, mu2, hp,hpp, logj, estore
       real (kind=8) :: d(*),sig(6),aa(6,6),bb(6)
 
       save
 
 !     Compute pressure and its derivative
-      logj  = log(abs(detf))
-      press = d(21)*logj/detf + xlamd
-      uppj  = d(21)/detf
-
-!     Augment function
-      ha    = detf - 1.0d0
+      jsw = nint(d(170))
+      call fengy3(d,detf,u,up,upp, ha,hp,hpp, jsw)
+      up  =  up  + xlamd * hp
+      upp = (upp + xlamd * hpp) * detf + up
 
 !     Set CAUCHY stresses and elastic tangent moduli
       mu  =  d(22)/detf
       mu2 =  mu + mu
       do i = 1,3
-        sig(i  )    = mu*bb(i) - mu + press
+        sig(i  )    = mu*bb(i) - mu + up
         sig(i+3)    = mu*bb(i+3)
-        aa(i  ,i  ) = mu2 - 2.d0*press + uppj
-        aa(i+3,i+3) = mu  - press
+        aa(i  ,i  ) = mu2 - up - up
+        aa(i+3,i+3) = mu  - up
       end do
 
 !     Add volumetric correction to aa
-      aa(1,2) = aa(1,2) + uppj
-      aa(2,1) = aa(1,2)
-      aa(1,3) = aa(1,3) + uppj
-      aa(3,1) = aa(1,3)
-      aa(2,3) = aa(2,3) + uppj
-      aa(3,2) = aa(2,3)
+      aa(1:3,1:3) = aa(1:3,1:3) + upp
 
 !     Compute stored energy
-      estore = d(21)*logj*logj*0.5d0
-     &       + d(22)*(0.5d0*(bb(1) + bb(2) + bb(3)) - 1.5d0 - logj)
+      logj   = log(abs(detf))
+      estore = u + d(22)*(0.5d0*(bb(1) + bb(2) + bb(3)) - 1.5d0 - logj)
 
       end subroutine stnh3f
 

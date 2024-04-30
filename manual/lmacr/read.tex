@@ -1,0 +1,34 @@
+\heada{SOLUTION}{READ}
+\hspace{1.0cm}{{read,xxxx \hfill}}
+\headb
+
+The {\tt READ} command may be used to input the
+values of displacements and nodal stresses previously com-
+puted and saved using the {\tt WRIT}e command - it is primarily
+used for plots related to deformations or nodal
+stresses.  It is not intended for a restart option (see
+{\tt REST}art) but may be used to restore displacement states of
+linear and non-linear elastic elements (or other elements
+with no data base requirements) for which reactions,
+stresses, etc. may then be computed.
+
+The values of {\tt xxxx} are used to specify the file name
+(4-characters only), manipulate the file, and read displacements
+and nodal stresses.  The values permitted are:
+
+\begin{verbatim}
+       xxxx = wind: Rewind current file.
+       xxxx = back: Backspace current file.
+       xxxx = clos: Close current file.
+       xxxx = disp: Read displacement state from current file.
+       xxxx = stre: Read nodal stress state from current file.
+       xxxx = Anything else will set current filename.
+\end{verbatim}                   
+Only four characters are permitted and only one
+file may be opened at any time.  Files may be
+opened and closed several times during any run
+to permit the use of more than one file name.
+
+A {\tt READ} input is created using the {\tt WRIT}e command
+which has identical options for {\tt xxxx} except for the backspace option.
+\vfill\eject

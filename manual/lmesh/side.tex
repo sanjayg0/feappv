@@ -1,0 +1,62 @@
+\heada{MESH}{SIDE}
+\hspace{1.0cm}{{ side                  \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ type1,(is(i,side1),i=1,nn) \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ type2,(is(i,side2),i=1,nn) \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ <etc.,terminate with blank record> \hfill}}
+\headb
+
+Currently, {\sl FEAPpv} uses the
+{\tt SIDE} command to generate patches of a mesh using the {\it blending
+function} option and to determine contact surfaces.
+Blending functions are briefly discussed in the
+Zienkiewicz \& Taylor finite element book, volume 1 pp 181 ff.  Each
+super node is defined by an input of the following information:
+
+It is necessary to define only those edges which are not straight or which
+have interpolations which generate non-equal spacing on a straight edge.
+There are four options for generating the side description as indicated
+in the following table:
+
+\begin{center}
+\begin{tabular}{l l}
+\it type     & \qquad Type of interpolation \\ \hline
+    cart     &  - Lagrange interpolation in cartesian coordinates \\
+    pola     &  - Lagrange interpolation in polar coordinates \\
+    segm     &  - Straight multi-segment interpolation \\
+    elli     &  - Lagrange interpolation in elliptical coordinates
+\end{tabular}
+\end{center}
+For Lagrange interpolation in cartesian coordinates the list of values
+defining the connected super nodes are given according to the following:
+
+\begin{center}
+\begin{tabular}{r l}
+\it  is     & \qquad Type of interpolation \\ \hline
+      1     &  - End 1 super-node number \\
+      2     &  - End 2 super-node number \\
+      3     &  - Intermediate node nearest End 1 \\
+  $\cdots$  &  - etc. for remaining internal nodes
+\end{tabular}
+\end{center}
+For Lagrange interpolation in polar or elliptical coordinates the list of values
+is input as above, followed by the super-node number defining the
+location of the origin for the polar radius.
+
+For straight multi-segment interpolations the inputs are given as:
+
+\begin{center}
+\begin{tabular}{c l}
+\it  is     & \qquad Type of interpolation \\
+      1     &  - End 1 super-node number \\
+      2     &  - Number of equal increments to next node \\
+      3     &  - Intermediate node nearest End 1 \\
+      4     &  - Number of equal increments to next node \\
+      5     &  - Next intermediate node \\
+  $\cdots$  &  - etc. for remaining internal nodes \\
+     nn     &  - End 2 super-node number
+\end{tabular}
+\end{center}
+In addition to the side definitions it is necessay to define the super-node
+locations using the mesh command {\tt SNOD}e.  Finally, the mesh command
+{\tt BLEN}d must be specified for each mesh patch to be created.
+\vfil\eject

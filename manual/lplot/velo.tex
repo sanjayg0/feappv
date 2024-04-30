@@ -1,0 +1,39 @@
+\heada{PLOT}{VELOcity}
+\hspace{1.0cm}{{velo,n1,n2,n3 \hfill}}
+\headb
+
+Plot contours for velocity degree of freedom {\tt n1}
+(default is 1).
+Two options are available to construct contouring:
+\begin{enumerate}
+\item{
+If {\tt n2} is zero or negative, areas between contours
+will be shaded in colors or grayscale.  For this case, only
+the minimum and maximum contour values are specified - by
+default (enter return) the program constructs 7 evenly
+spaced intervals for the shading.
+
+If {\tt n3} is positive, plotting of the mesh is suppressed.
+If {\tt n3} is negative, plotting
+of the mesh is suppressed and the previously existing
+contour values are used.  Note the that the contours must
+have been already set by a previous call to {\tt VELO}city for this
+option to function properly.}
+\item{
+If {\tt n2} is a positive number specific contour lines may be designated
+and plotted as lines. It is necessary to define the value for each of the
+{\tt n2} contour lines.
+If {\tt n3} is non-zero a numerical label will
+be added near each contour indicating the relationship to a
+value table given on the screen.}
+\end{enumerate}
+
+In interactive mode, after the {\tt velo,n1,n2,n3} command
+is given prompts for additional data will appear.  For each
+contour line the values to be plotted should be entered
+(maximum of 8 items per record).  Maximum and minimum existing values
+are indicated on the screen.
+For shaded plots only a lower and an upper value separating the smallest
+and largest shading from their adjacent ones are input.
+\vfill
+\eject

@@ -1,0 +1,54 @@
+\heada{SOLUTION}{EIGVectors}
+\hspace{1.2cm} {{ eigv,nn,<n1,n2,n3> \hfill}} \\{\smallskip}
+\hspace{1.0cm} {{ eigv,coor,idir,xi,nn \hfill}} \\{\smallskip}
+\hspace{1.0cm} {{ eigv,all,n1,nn \hfill}} \\{\smallskip}
+\headb
+
+The command {\tt EIGV}ector may be used to print the
+current values of eigenvector vector \texttt{nn} as follows:
+
+\begin{enumerate}
+\item{
+Using the command:
+
+\begin{verbatim}
+          eigv,nn,n1,n2,n3
+\end{verbatim}
+prints out the eigenvector \texttt{nn} for nodes
+{\tt n1} to {\tt n2} at increments of {\tt n3} (default increment = 1).  If
+{\tt n2} is not specified only the value of node {\tt n1} is
+output.  If both {\tt n1} and {\tt n2} are not specified only
+the first nodal solution is reported.}
+
+\item{
+If the command is specified as:
+
+\begin{verbatim}
+          eigv,coor,idir,xi,nn
+\end{verbatim}
+all nodal quantities for the coordinate direction {\tt idir}
+with value equal to {\tt xi} are output.
+
+Example: 
+\begin{verbatim}
+          eigv,coor,1,3.5,2
+\end{verbatim}
+prints all the nodes in eigenvector 2 which have $x_1$ = 3.5.
+
+This is useful to find the nodal values along a particular
+constant coordinate line.}
+
+\item{
+If the command is specified as:
+
+\begin{verbatim}
+          eigv,all,nn
+\end{verbatim}
+all nodal solutions for eigenvector \texttt{nn} are output.}
+\end{enumerate}
+
+In order to output a solution vector it is first necessary to
+specify commands language instructions to compute the desired
+values, e.g., for displacements perform a static or transient analysis.
+
+\vfill\eject

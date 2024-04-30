@@ -1,0 +1,57 @@
+\heada{MESH}{ELEMent}
+\hspace{1.0cm}{{ elem \hfill}}
+\hspace{1.4cm}{{ nelm1,ngen1,matl1,(ix(i,nelm1),i=1,nen) \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ nelm2,ngen2,matl2,(ix(i,nelm2),i=1,nen) \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ <etc.,terminate on blank record> \hfill}} \\{\smallskip}
+\hspace{1.0cm}{{ elem,old \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ nelm1,matl1,(ix(i,nelm1),i=1,nen),ngen1 \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ nelm2,matl2,(ix(i,nelm2),i=1,nen),ngen2 \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ <etc.,terminate on blank record> \hfill}}
+\headb
+
+The {\tt ELEM}ent command is used to specify values of
+nodal numbers which are attached to an element.  The command may appear
+more than once during mesh inputs.  It may also be combined with {\tt BLOC}k
+and {\tt BLEN}d inputs to generate elements in a mesh.  For each
+element to be specified by an {\tt ELEM}ent command,
+a record is entered with the following information:
+
+\begin{center}
+\begin{tabular}{r l}
+\it nelm        &-- Number of the element to be specified \\
+\it ngen        &-- Value to increment each node-i value \\
+                &\quad when generation is used (default = 1). \\
+\it matl        &-- Material identifier for the element, \\
+                &\quad this will determine the element type. \\
+\it ix(1,nelm)  &-- Node-1 number attached to element. \\
+\it ix(2,nelm)  &-- Node-2 number attached to element. \\
+                &\quad  etc., to {\it nen} nodes. \\
+\end{tabular}
+\end{center}
+Element inputs must be in increasing values for {\it nelm}.
+If gaps occur in the input order 
+generation is performed, the element number
+sequence will be in increments of 1 from {\it nelm1} to {\it nelm2};
+the nodes which are generated for each intermediate element
+will be as follows:
+
+\begin{verbatim}
+       ix(i,nelm1+1) = ix(i,nelm1) + ngen1
+\end{verbatim}
+except
+\begin{verbatim}
+       ix(i,nelm1+1) = 0  whenever ix(i,nelm1) = 0}
+\end{verbatim}
+
+The program assumes that any zero value of an {\it ix(i,nelm)}
+indicates that no node is attached at that point.
+
+Input terminates whenever a blank record is encountered.
+
+ADVICE: When the number of elements on the control record is input as
+zero {\sl FEAPpv} attempts to compute the number of elements in the mesh.
+The number computed is the largest number input by an {\tt ELEM}ent
+input or during a {\tt BLOC}k and {\tt BLEN}d
+generation.  During {\tt ELEM}ent input
+it is necessary to input the last element in generation sequences.
+\vfil\eject

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2021: Regents of the University of California
+!....  Copyright (c) 1984-2024: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -113,6 +113,7 @@
       call fdate( cdate )
       ctext   = 'start'
       contrfl = .true.
+      fmt_long = .false.
       do while(.not.pcomp(ctext,'    ',4))
         errck  = tinput(ctext,1,td(2),8)
         if(pcomp(ctext,'feap',4)) then

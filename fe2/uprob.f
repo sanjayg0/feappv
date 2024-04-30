@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2021: Regents of the University of California
+!....  Copyright (c) 1984-2024: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -21,6 +21,8 @@
 !      Outputs:
 !         none   - Users are responsible for generating problems
 !-----[--.----+----.----+----.-----------------------------------------]
+      use        mpi
+
       implicit   none
 
       include   'cblktr.h'
@@ -36,7 +38,7 @@
       include   'pointer.h'
       include   'comblk.h'
 
-      include   'mpif.h'
+!     include   'mpif.h'
 
       logical             :: setvar, pcomp, vinput
       character (len=132) :: sbuf

@@ -1,0 +1,38 @@
+\heada{SOLUTION}{PRINt}
+\hspace{1.2cm}{{prin \hfill}} \\{\smallskip}
+\hspace{1.0cm}{{prin,on \hfill}} \\{\smallskip}
+\hspace{1.0cm}{{prin,off \hfill}} \\{\smallskip}
+\hspace{1.0cm}{{prin,comm \hfill}} \\{\smallskip}
+\hspace{1.0cm}{{prin,data \hfill}} \\{\smallskip}
+\hspace{1.0cm}{{prin,less \hfill}} \\{\smallskip}
+\hspace{1.0cm}{{prin,$<$xxxx$>$ \hfill}}
+\headb
+
+The use of the {\tt PRIN}t restores printing turned off by
+the {\tt NOPR}int command or resets the level of printing to the screen.  
+In interactive mode the use of {\tt PRIN}t,{\tt OFF} eliminates all printing
+to the screen and the output file.
+{\tt PRIN}t,{\tt ON} restores all printing.
+
+Use of {\tt PRINt,LESS} reduces the amount of command information displayed.
+Use of {\tt PRINt,COMM}and restores command prints if they have been
+disabled by a {\tt PRINt,OFF} or {\tt NOPRint,COMM}.
+
+The {\tt PRINt,DATA} option restores printing of mesh data to the output
+file.
+
+The default value is {\tt PRIN}t,{\tt ON}.
+
+The specification of:
+\begin{verbatim}
+       xxxx = TANGent
+       xxxx = UTANgent
+       xxxx = CMASs
+       xxxx = LMASs
+       xxxx = RESIdual
+\end{verbatim}
+\par\noindent
+will output the diagonal entries for the specified array.
+This may be useful in debugging elements, etc.  The {\tt DEBU}g
+option is also available.
+\vfill\eject

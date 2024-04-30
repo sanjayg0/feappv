@@ -4,7 +4,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2021: Regents of the University of California
+!....  Copyright (c) 1984-2024: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -56,7 +56,7 @@
 
       character (len=128) :: fnam
       character (len=15)  :: ptype
-      character (len=4)   :: fext, wd(14), vtype
+      character (len=4)   :: fext, wd(15), vtype
 
       logical       :: prt,prth,errck,pinput,tinput,pcomp,lsave, polfl
       logical       :: setmem,palloc, oprt,oprth, wdflg, axifl
@@ -80,10 +80,10 @@
 
       data      tol0 / 1.0d-5/, tolxi / 1.0d-8 /
 
-      data      wdlist /14/
+      data      wdlist /15/
       data      wd / 'gap ', 'node', 'line', 'quad', 'pola', 'cart',
      &               'disp', 'tang', 'norm', 'surf', 'segm', 'dofs',
-     &               'axis', 'plan' /
+     &               'axis', 'plan', 'flux' /
 
 !     Coordinate surface loading, boundary condition, and angle inputs
       if     (isw.eq.1) then
@@ -195,6 +195,10 @@
           ddof  = max(1,min(ndf,nint(pl(1))))
           fnorm = 3
           go to 1
+        elseif( pcomp(ptype,'flux',4)) then
+          ddof  = max(1,min(ndf,nint(pl(1))))
+          fnorm = 4
+          go to 1
         elseif( pcomp(ptype,'node',4)) then
           point = np(190)
           if(isw.eq.1 .or. isw.eq. 5) then
@@ -303,9 +307,14 @@
               end if
             elseif(fnorm.eq.3) then
               call prtitl(prth)
-              write(iow,2030) xl,(pl(i),i=1,3)
               if(ior.lt.0) then
                 write(*,2030) xl,(pl(i),i=1,3)
+              end if
+            elseif(fnorm.eq.4) then
+              call prtitl(prth)
+              write(iow,2033) ddof,xl,pl(1:3)
+              if(ior.lt.0) then
+                write(*,2033) ddof,xl,pl(1:3)
               end if
             end if
           elseif(isw.eq.2) then
@@ -452,7 +461,7 @@
         endif
 
 !       Compute nodal forces from surface pressures
-        if(isw.eq.1 .and. fnorm.le.2) then
+        if(isw.eq.1 .and. (fnorm.le.2 .or. fnorm.eq.4)) then
 
 !         Find end points
           do n = 1,numnp
@@ -518,8 +527,13 @@
 
 !         Compute nodal forces for pressures
           if(prt) then
-            write(iow,2001)
-            if(ior.lt.0) write(*,2001)
+            if(fnorm.le.2) then
+              write(iow,2001)
+              if(ior.lt.0) write(*,2001)
+            elseif(fnorm.eq.4) then
+              write(iow,2005) ddof
+              if(ior.lt.0) write(*,2005) ddof
+            endif
           endif
 
           do n = 1,numel
@@ -592,10 +606,19 @@
                 endif
 
 !               Tangential loading values
-                do i = 1,nel
-                  fl(1,i) = fl(1,i) + shp(2,i)*xp(1)*ff
-                  fl(2,i) = fl(2,i) + shp(2,i)*xp(2)*ff
-                end do ! i
+                if(fnorm.le.2) then
+                  do i = 1,nel
+                    fl(1,i) = fl(1,i) + shp(2,i)*xp(1)*ff
+                    fl(2,i) = fl(2,i) + shp(2,i)*xp(2)*ff
+                  end do ! i
+
+!               Flux loading values
+                elseif(fnorm.eq.4) then
+                  ff = ff*sqrt(xp(1)**2 + xp(2)**2)
+                  do i = 1,nel
+                    fl(1,i) = fl(1,i) + shp(2,i)*ff
+                  end do ! i
+                endif
               end do ! l
 
 !             Transform for normal loading
@@ -608,29 +631,46 @@
               endif
 
 !             Perform outputs and add to nodal forces
-              do i = 1,nel
-                i1 = ep(n,i)
+              if(fnorm.le.2) then
+                do i = 1,nel
+                  i1 = ep(n,i)
 
-                if(prt) then
-                  write(iow,2002) i1,fl(1,i),fl(2,i)
-                  if(ior.lt.0) then
-                    write(*,2002) i1,fl(1,i),fl(2,i)
+                  if(prt) then
+                    write(iow,2002) i1,fl(1,i),fl(2,i)
+                    if(ior.lt.0) then
+                      write(*,2002) i1,fl(1,i),fl(2,i)
+                    endif
                   endif
-                endif
 
-!               Sloping boundary conditions
-                if(ang(i1).ne.0.0d0) then
-                  call pdegree(ang(i1), sn,cn)
-                  ff      =  cn*fl(1,i) + sn*fl(2,i)
-                  fl(2,i) = -sn*fl(1,i) + cn*fl(2,i)
-                  fl(1,i) =  ff
-                endif
+!                 Sloping boundary conditions
+                  if(ang(i1).ne.0.0d0) then
+                    call pdegree(ang(i1), sn,cn)
+                    ff      =  cn*fl(1,i) + sn*fl(2,i)
+                    fl(2,i) = -sn*fl(1,i) + cn*fl(2,i)
+                    fl(1,i) =  ff
+                  endif
 
-!               Add to nodal forces
-                f(1,i1,1) =  f(1,i1,1) + fl(1,i)
-                f(2,i1,1) =  f(2,i1,1) + fl(2,i)
-              end do
+!                 Add to nodal forces
+                  f(1,i1,1) =  f(1,i1,1) + fl(1,i)
+                  f(2,i1,1) =  f(2,i1,1) + fl(2,i)
+                end do ! i
 
+!             Flux outputs
+              elseif(fnorm.eq.4) then
+                do i = 1,nel
+                  i1 = ep(n,i)
+
+                  if(prt) then
+                    write(iow,2002) i1,fl(1,i)
+                    if(ior.lt.0) then
+                      write(*,2002) i1,fl(1,i)
+                    endif
+                  endif
+
+!                 Add to nodal thermal flux
+                  f(ddof,i1,1) =  f(ddof,i1,1) + fl(1,i)
+                end do ! i
+              endif
             end if
 
           end do
@@ -817,6 +857,9 @@
 
 2002  format(2(i13,1p,2e13.4))
 
+2005  format(/'       N o d a l    F l u x e s'//
+     &       '         Node     q_',i1,' Flux')
+
 2010  format('   C o o r d i n a t e    S u r f a c e',
      &       '   C o n d i t i o n'/
      &       '   x_1 Coord.   y_1 Coord.   x_2 Coord.   y_2 Coord.',
@@ -850,6 +893,13 @@
 
 2032  format(i13,i8,1p,e13.4)
 
+2033  format('   C o o r d i n a t e    S u r f a c e   F l u x',
+     &       '   f o r   DOF',i2//
+     &       '   x_1 Coord.   y_1 Coord.   x_2 Coord.   y_2 Coord.',
+     &       '   x_3 Coord.   y_3 Coord.'/1p,6e13.4/
+     &       '   d_1 Flux                  d_2 Flux               ',
+     &       '   d_3 Flux  '/3(1p,1e13.4,13x))
+
 2040  format('   C o o r d i n a t e    S u r f a c e',
      &       '   C o n d i t i o n'/
      &       '   x_1 Coord.   y_1 Coord.   x_2 Coord.   y_2 Coord.',
@@ -871,4 +921,5 @@
 3003  format(' *ERROR* PESURF: In surface condition inputs')
 
 3004  format(' --> WARNING: No nodes found for ',a,' data type')
+
       end subroutine pesurf

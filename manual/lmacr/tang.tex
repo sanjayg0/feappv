@@ -1,0 +1,73 @@
+\heada{SOLUTION}{TANGent}
+\hspace{1.2cm}{{ tang,,<n1,v2> \hfill}} \\{\smallskip}
+\hspace{1.0cm}{{ tang,line,<n1,v2,v3> \hfill}} \\{\smallskip}
+\hspace{1.0cm}{{ tang,eigv,,n1 \hfill}}
+\headb
+
+The {\tt TANG}ent command computes a symmetric tangent stiffness matrix
+about the current value of the solution state vector.  For
+linear applications the current stiffness matrix is just the
+normal {\it stiffness} matrix.
+
+If the value of {\tt n1} is non-zero, a  force  vector  for
+the  current residual is also computed (this is identical to
+the {\tt FORM} command computation) - thus leading to greater
+efficiency when both the tangent stiffness and a residual
+force vector are needed.  The resulting equations are also solved
+for the solution increment.  Thus, 
+\begin{verbatim}
+       TANGent,,1
+\end{verbatim}
+is equivalent to the set of commands
+\begin{verbatim}
+       TANGent
+       FORM
+       SOLVe
+\end{verbatim}
+
+If the value of {\tt v2} is non-zero a {\it shift} is applied
+to the stiffness matrix in which the element mass matrix is
+multiplied by {\tt v2} and subtracted from the stiffness matrix.
+This option may be used with the {\tt SUBS}pace command to
+compute the closest eigenvalues to the shift, {\tt v2}.   Alternatively,
+the shift may be used to represent a forced vibration solution
+in which all loads are assumed to be  harmonic
+at a value of the square-root of {\tt v2} (rad/time-unit).
+
+After the tangent matrix is computed, a triangular
+decomposition is available for subsequent solutions using
+{\tt FORM}, {\tt SOLV}e, {\tt BFGS}, etc.
+
+In the solution of non-linear problems, using a full or
+modified Newton method, convergence from any starting point
+is not guaranteed.  Two options exist within available
+commands to improve chances for convergence.  One is to use
+a line search to prevent solutions from diverging rapidly.
+Specification of the command {\tt TANG}ent,{\tt LINE} plus options
+invokes the line search (it may also be used in  conjunction
+with {\tt SOLV}e,{\tt LINE} in modified Newton schemes).  The
+parameter {\tt v3} is typically chosen between 0.5 and 0.8
+(default is 0.8).
+
+The second option to improve convergence of non-linear
+problems is to reduce the size of the load step increments.
+The command {\tt BACK} may be used to {\it back-up} to the
+beginning of the last time step (all data in the solution
+vectors is reset and the history data base for inelastic
+elements is restored to the initial state when the current
+time is started). Repeated use of the back command may be
+used. However, it applies only to the current time interval.
+The loads may then be adjusted and a new solution with
+smaller step sizes started.
+
+The {\tt EIGV}alue option is used in transient algorithms to
+compute eigenvalues of the (static) stiffness matrix.  If
+{\tt IDEN}tity has been issued, then the shift given by non-zero
+{\tt n1} is with respect to the identity otherwise the element
+mass matrix is used.  Note, {\tt SUBS}pace is used to compute the
+actual eigen-pairs.
+
+The {\tt TANG}ent operation is normally the most time consuming
+step in problem solutions - for large problems several
+seconds are required - be patient!
+\vfill\eject

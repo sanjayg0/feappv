@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2021: Regents of the University of California
+!....  Copyright (c) 1984-2024: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -25,7 +25,7 @@
       include  'strnum.h'
 
       integer       :: nel, i,l
-      real (kind=8) :: flux(2,*),p(*),s(nen,*), xg
+      real (kind=8) :: flux(3,*),p(*),s(nen,*), xg
 
       save
 

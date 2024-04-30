@@ -1,0 +1,51 @@
+\heada{SOLUTION}{STREss}
+\hspace{1.2cm}{{ stre,,<n1,n2,n3> \hfill}}\\{\smallskip}
+\hspace{1.0cm}{{ stre,all \hfill}}\\{\smallskip}
+\hspace{1.0cm}{{ stre,coor,idir,xi \hfill}}\\{\smallskip}
+\hspace{1.0cm}{{ stre.<node,n1,n2,n3> \hfill}}\\{\smallskip}
+\hspace{1.0cm}{{ stre,erro \hfill}}
+\headb
+
+The {\tt STRE}ss command is used to output stress
+results in elements {\tt n1} to {\tt n2} at increments of {\tt n2}
+(default = 1), or at nodes using {\it projected} values.  Thus,
+two options exist for reporting stress values. These are:
+\begin{enumerate}
+\item{
+Stresses may be reported at selected points within each
+element.  The specific values reported are described in
+each element type.  In general elements report values
+at gauss points.  The values at all points are reported
+when the command {\tt STRE}ss,{\tt ALL} is used.}
+\item{
+For solid elements results may be reported at nodes
+using the {\tt STRE}ss,{\tt NODE} option.  A projection method
+using stresses at points in each element is used to
+compute nodal values.  In general, nodal values are not
+always as accurate as stresses within elements.  This
+is especially true for reported {\it yield} stresses where
+values in excess of the limit value result in the pro-
+jection method employed.  For a mesh producing accurate
+results inside elements this degradation should not be
+significant.}
+\item{
+The command specified as:
+
+\begin{verbatim}
+       stre,coor,idir,xi
+\end{verbatim}
+prints all nodal stresses for the coordinate  direction
+{\tt idir} with value equal to {\tt xi}. Example:
+
+\begin{verbatim}
+       stre,coor,1,3.5
+\end{verbatim}
+will print all the nodal stresses which have $x_1$ = 3.5.
+This is useful in finding the nodal values along a par-
+ticular constant coordinate line.}
+\end{enumerate}
+
+With the {\tt ERRO}r option {\tt STRE}ss computes element sizes
+for adaptive mesh refinement. N.B. The error option does not function with
+all  elements.
+\vfill\eject

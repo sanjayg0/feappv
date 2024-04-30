@@ -1,0 +1,17 @@
+\heada{PLOT}{HIDE}
+\hspace{1.0cm}{{hide,n1,n2,n3 \hfill}}
+\headb
+
+The {\tt HIDE} command is used to compute the surface
+facets for a three dimensional solid region.  Subsequent
+plots are then given on the surface facets only.  A pseudo
+hidden surface routine is accomplished by sorting the facets
+and plotting from the one most distant from the viewer to
+the one closest.
+
+If {\tt n1} is {\tt -1} the outline of facets is white; if {\tt n1}
+is less than {\tt -1} the outline is black (and invisible on the screen).
+If {\tt n2} is non-zero then all boundary facets are plotted.
+If {\tt n3} is positive the color is set to n3.
+\vfill
+\eject

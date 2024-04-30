@@ -1,0 +1,30 @@
+\heada{MESH}{EREGion}
+\hspace{1.0cm}{{ ereg \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ elem1,ngen1,reg1 \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ elem2,ngen2,reg2     \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ <etc.,terminate with blank record> \hfill}}
+\headb
+
+The {\tt EREG}ion command is used to specify the region
+number for elements.  For each element to be specified a
+record is entered with the following information:
+
+\begin{center}
+\begin{tabular}{r l}
+\it elem &-- Number of the element to be specified \\
+\it ngen &-- Increment to the next element, if \\
+         &\quad generation is used, otherwise 0. \\
+\it reg  &-- Region number to be assigned \\
+\end{tabular}
+\end{center}
+When generation is performed, the element number sequence will be
+
+\begin{center}
+{\it elem1, elem1+ngen1, elem1+2$\times$ngen1, .... , elem2}
+\end{center}
+
+The generated element are assigned to {\it reg1}.
+
+Region numbers may also be assigned to element groups using the {\tt REGI}on
+mesh command.
+\vfil\eject

@@ -1,0 +1,48 @@
+\heada{PLOT}{PERSpective}
+\hspace{1.0cm}{{pers,n1 \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{Requires: \hfill}} \\{\smallskip}
+\hspace{1.8cm}{{inew: \hfill}} \\{\smallskip}
+\hspace{1.8cm}{{vx,vy,vz \hfill}} \\{\smallskip}
+\hspace{1.8cm}{{ex,ey,ez \hfill}}
+\headb
+
+All subsequent plots are to be drawn in a three dimesional perspective view.
+A plot may also be in a cartesian two dimensional view
+(see {\tt CART}esian plot manual).  The default plot mode is cartesian.
+
+\begin{center}
+\begin{tabular}{c | l }
+ inew & 0 for input of new parameters \\
+ inew & 1 for use of old parameters
+\end{tabular}
+\end{center}
+
+If new parameters are to be specified input:
+
+\begin{center}
+\begin{tabular}{c | l }
+ vx & x-coordinate of view point \\
+ vy & y-coordinate of view point \\
+ vz & z-coordinate of view point
+\end{tabular}
+\end{center}
+and
+\begin{center}
+\begin{tabular}{c | l }
+ ex & x-component of vertical vector \\
+ ey & y-component of vertical vector \\
+ ez & z-component of vertical vector
+\end{tabular}
+\end{center}
+
+The view point and a target point computed at the center of
+the body establish the view direction; the vertical vector
+for the screen establishes the orientation of the body with
+respect to the view direction
+
+In batch mode, the quantities {\tt inew}, etc. must appear
+after the command language {\tt END} command and ordered so that reads are
+performed at the execution of the correct instruction.
+In interactive mode prompts will be given for each input item.
+\vfill
+\eject

@@ -1,0 +1,59 @@
+\heada{SOLUTION}{HISTory}
+\hspace{1.0cm}{{hist,$<$clab,n1,n2$>$ \hfill}}
+\headb
+
+The use of the {\tt HIST}ory command permits the user to keep a
+history of the previously executed commands and use
+this history to reexecute specific commands.  The history
+command has several different modes of use which permit easy
+control of the execution of commands while in an
+interactive mode (use is not recommended in a batch
+execution).  The following options are available:
+
+\begin{center}
+\begin{tabular}{ l | l | l | l }
+clab & n1 & n2 & Description \\ \hline
+read &   &   & Input the list of commands   \\
+     &   &   & which were 'saved' in a previous   \\
+     &   &   & execution.  Warning, this command  \\
+     &   &   & will destroy all items currently   \\
+     &   &   & in the 'history' list, hence it    \\
+     &   &   & should be the first command when   \\
+     &   &   & used.                              \\ \hline
+save &   &   & Save the previous 'history' of     \\
+     &   &   & commands which have been 'added'   \\
+     &   &   & to the 'history' list on the file  \\
+     &   &   & named 'Feap.hist'.                 \\ \hline
+add  &   &   & Add all subsequent commands  \\
+     &   &   & executed for the current analysis  \\
+     &   &   & to the 'history' list. (default)   \\
+noad &   &   & Do not add subsequent commands   \\
+     &   &   & executed to the 'history' list   \\ \hline
+list & x & x & List the current 'history' of      \\
+     &   &   & statements. 'n1' to 'n2',          \\
+     &   &   & (default is all in list).          \\
+edit & x & x & Delete items 'n1' to 'n2' from     \\
+     &   &   & current 'history' list.            \\ \hline
+xxxx & x & x & Reexecute commands 'n1' to 'n2'    \\
+     &   &   & in the current 'history' list.  \\
+     &   &   & (note: 'xxxx' may be anything not  \\
+     &   &   & defined above for 'clab' including \\
+     &   &   & a blank field.                     \\ 
+\end{tabular}
+\end{center} 
+
+Use of the history command can greatly reduce the effort in
+interactive executions of command language programs.  Since it is not
+possible to name the file which stores the history
+commands, it is necessary for the user to move any
+files needed at a later date to a file other than
+{\tt Feap.his} before starting another analysis for which a
+history will be retained.  Prior to execution it is necessary
+to restore the list to file {\tt Feap.his} before a
+{\tt HIST,READ} command may be issued.
+
+Note that the history of commands will not be
+saved in {\tt Feap.his} unless a command {\tt HIST,SAVE} is
+used.  It is, however, possible to use the history option
+without any read or save commands.
+\vfill\eject

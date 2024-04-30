@@ -1,0 +1,855 @@
+\chapter[Material Models]{MATERIAL MODELS}
+\label{matmods}
+
+The data input for each of the current material options is summarized
+below.  Tables are included to indicate which elements types can use
+each type of data option.  As much as possible a common format and
+notation is used for all the element types.
+
+\section{Orthotropic Linear Elastic Models}
+\label{orthel}
+
+The orthotropic linear elastic material model in {\sl FEAP} is
+given by
+\begin{equation}
+ \hat{\Bf{\epsilon}}
+~=~ \hat{\B{C}} \, \hat{\Bf{\sigma}} ~+~ \hat{\Bf{\epsilon}}^{th}
+\end{equation}
+where $\hat{\Bf{\epsilon}}$ and $\hat{\Bf{\sigma}}$ are the stress and strain
+arrays in the principal material directions and the elastic compliance array
+in principal material directions is:
+\begin{equation}
+\hat{\B{C}} ~=~ \left[
+\begin{matrix}
+~\frac{1}{E_1} & - \frac{\nu_{12}}{E_2} & - \frac{\nu_{31}}{E_1} & 0 & 0 & 0 \\
+- \frac{\nu_{12}}{E_2} & ~\frac{1}{E_2} & - \frac{\nu_{23}}{E_3} & 0 & 0 & 0 \\
+- \frac{\nu_{31}}{E_1} & - \frac{\nu_{23}}{E_3} & ~\frac{1}{E_3} & 0 & 0 & 0 \\
+0 & 0 & 0 & \frac{1}{G_{12}} & 0 & 0 \\
+0 & 0 & 0 & 0 & \frac{1}{G_{23}} & 0 \\
+0 & 0 &0 & 0 & 0 & \frac{1}{G_{31}} \\
+\end{matrix} \right]
+\end{equation}
+with $E_i$ elastic moduli in principal directions, $\nu_{ij}$ Poisson ratios
+for strains measured in the principal directions.
+
+The thermal strain is given by:
+\begin{equation}
+\hat{\Bf{\epsilon}}^{th} ~=~ \left[
+\begin{matrix}
+\alpha_1 \\ \alpha_2 \\ \alpha_3 \\ 0 \\ 0 \\ 0 \\
+\end{matrix} \right]
+\, \Delta T ~=~ \hat{\Bf{\alpha}} \, \Delta T
+\end{equation}
+where
+\begin{equation}
+\Delta T ~=~ T\, - \, T_0 \, ,
+\end{equation}
+$\alpha_i$ are coefficients of linear thermal expansion and
+$T_0$ is a specified reference temperature.
+
+The orthotropic material parameters are input as shown in Table \ref{tab131a}
+using the commands {\tt ELAStic,ORTHotropic} and {\tt THERmal,ORTHotropic}.
+For 2-dimensional analyses the values of $G_{23}$ and $G_{31}$ are not used
+and may be omitted.
+The angle the principal directions makes with the $x_1$ (or $x$)
+axis for plane stress
+and plane strain analyses or the $r$ axis for axisymmetric analysis may be
+specified using the material {\tt ANGLe} command
+as shown in Table \ref{tab134a}.
+Using this angle {\sl FEAP} transforms the input material compliances to
+\begin{equation}
+\B{C} = \B{R}^T \, \hat{\B{C}} \, \B{R}
+\end{equation}
+and converts the constitutive equation to the form
+\begin{equation}
+\Bf{\sigma} ~=~ \B{D} \, \Bf{\epsilon} ~+~ {\Bf{\beta}}^{th}
+\end{equation}
+where
+\begin{equation}
+\B{C} = \B{C}^{-1}
+\end{equation}
+and
+\begin{equation}
+{\Bf{\beta}}^{th} = - \, \B{D} \, {\Bf{\epsilon}}^{th}
+\end{equation}
+
+Material data is given by the command set:
+\begin{verbatim}
+       MATErial,1
+         SOLId
+         ELAStic ORTHotropic e1 e2 e3 nu12 nu23 nu31 g12 g23 g31
+         THERmal ORTHotropic a1 a2 a3 t0
+                                  ! blank termination record
+\end{verbatim}
+Additional data options and parameters are defined in Table \ref{tab131a}.
+
+\begin{table}[ht!]
+\begin{center}
+\begin{tabular}{| l | l | l |} \hline
+Command & Type & Parameters \\ \hline
+ELAStic & ORTHotropic & $E_1, E_2, E_3, \nu_{12},
+\nu_{23}, \nu_{31}, G_{12}, G_{23}, G_{31}$ \\
+ELAStic & ISOTropic & $E, \nu$ \\
+ELAStic & TRANsverse & $E_1, E_2, \nu_{12}, \nu_{31}, G_{31}$ \\
+DAMPing & RAYLeigh  & a0 , a1 \\
+PLAStic & MISEs       & $Y_0, Y_{\infty}, \beta$ \\
+PLAStic & HARDening   & $H_{iso}, H_{kin}$ \\
+VISCoelastic & & $\mu_i, \tau_i$ \\
+THERmal & ORTHotropic & $\alpha_1, \alpha_2, \alpha_3, T_0$ \\
+THERmal & ISOTropic   & $\alpha, T_0$ \\ \hline
+FOURier & ORTHotropic & $K_1, K_2, K_3, c$ \\
+FOURier & ISOTropic   & $K, c$ \\ \hline
+DENSity &       & $\rho$ \\ \hline
+ANGLe   &       & $\psi$ \\ \hline
+\end{tabular}
+\end{center}
+\caption{Material Model Data Inputs}
+\label{tab131a}
+\end{table}
+
+\section{Isotropic Linear Elastic Models}
+\label{isosel}
+
+The isotropic models require less data since now only two independent
+elastic parameters are needed to define $\hat{\B{C}}$. These are
+taken as Young's modulus, $E$, and Poisson's ratio, $\nu$ and
+for an isotropic material the elastic compliance array is
+\begin{equation}
+\hat{\B{C}} ~=~ \left[
+\begin{matrix}
+~\frac{1}{E} & - \frac{\nu}{E} & - \frac{\nu}{E} & 0 & 0 & 0 \\
+- \frac{\nu}{E} & ~\frac{1}{E} & - \frac{\nu}{E} & 0 & 0 & 0 \\
+- \frac{\nu}{E} & - \frac{\nu}{E} & ~\frac{1}{E} & 0 & 0 & 0 \\
+0 & 0 & 0 & \frac{1}{G} & 0 & 0 \\
+0 & 0 & 0 & 0 & \frac{1}{G} & 0 \\
+0 & 0 &0 & 0 & 0 & \frac{1}{G} \\
+\end{matrix} \right]
+\end{equation}
+with the shear modulus related through
+\begin{equation}
+G ~=~ \frac{E}{2 \, (1 \,+ \, \nu)}
+\end{equation}
+For thermally isotropic materials the expansion coefficient is constant in
+all directions,thus
+\begin{equation}
+\hat{\Bf{\epsilon}}^{th} ~=~ \left[ \begin{matrix}
+\alpha \\ \alpha \\ \alpha \\ 0 \\ 0 \\ 0 \\
+\end{matrix} \right]
+\, \Delta T
+\end{equation}
+The data input for the isotropic models is input using
+the {ELASt\-ic,ISOTrop\-ic}
+and {\tt THERm\-al,ISOTrop\-ic} commands as shown in Table \ref{tab131a}.
+For an isotropic material it is not necessary to perform transformation of
+the elastic arrays since $\B{C} ~=~ \hat{\B{C}}$.
+
+The types of elements for which elastic material models may be specified
+is indicated in Table \ref{tab131b}.
+
+\section{Isotropic Finite Deformation Elastic Models}
+\label{isofel}
+
+Finite deformation hyperelastic models are provided in {\sl FEAP} for
+several stored energy functions which are written in terms of deformation
+measures.
+
+Deformation measures may be defined in terms of positions in the reference
+configuration, denoted by $\Bf{X}$, and positions in the current
+configuration, denoted by $\Bf{x}$.  The motion of a point from the
+reference to the current configuration at time $t$ is expressed as
+\begin{equation}
+\Bf{x} = \B{\varphi} ( \Bf{X}, t )
+\end{equation}
+The deformation gradient is then defined as
+\begin{equation}
+\Bf{F} = \frac{\partial \B{\varphi}}{\partial \Bf{X}}
+\end{equation}
+
+Additional measures of deformation are given by the right Cauchy-Green
+deformation tensor
+\begin{equation}
+\Bf{C} = \Bf{F}^T \Bf{F}
+\end{equation}
+and the left Cauchy-Green deformation tensor
+\begin{equation}
+\Bf{b} = \Bf{F} \, \Bf{F}^T
+\end{equation}
+A measure of strain is provided by the Green strain
+\begin{equation}
+\Bf{E} = \frac{1}{2} \left( \Bf{C} - \Bf{1} \right)
+\end{equation}
+
+The hyperelastic model expressed in terms of the strain energy function
+as a function of $\Bf{C}$ is given by
+\begin{equation}
+\Bf{S} = \frac{\partial W(\Bf{C})}{\partial \Bf{C}}
+\end{equation}
+where $W$ is a {\it stored energy} function.
+Stress in the current configuration may be deduced by transformation (pushing)
+the stress.  Accordingly
+\begin{equation}
+\B{\sigma} = \frac{1}{J} \, \Bf{F} \, \Bf{S} \, \Bf{F}^T
+\end{equation}
+Isotropic models may be
+expressed in terms of the invariants of the deformation tensor.  Accordingly,
+the three principal invariants given by
+\begin{equation}
+I_C = {\rm tr} \, \Bf{C}
+\end{equation}
+\begin{equation}
+II_C = \frac{1}{2} \left( I_C^2 - {\rm tr} \, \Bf{C}^2 \right)
+\end{equation}
+and
+\begin{equation}
+III_C = \det \Bf{C} = J^2
+\end{equation}
+where $J$ is $\det \bf{F}$ may be used to write the stored energy function.
+
+The deformation tensor may also be expressed in terms of principal
+stretches, $\lambda_A$, and their associated eigenvectors, $\Bf{N}_A$.
+Accordingly, one may write
+\begin{equation}
+\Bf{C} = \sum_{A=1}^3 \, \lambda_A^2 \, \Bf{N}_A \otimes \Bf{N}_A
+\end{equation}
+The invariants
+are then given by
+\begin{equation}
+I_C = \lambda_1^2 + \lambda_2^2 + \lambda_3^2
+\end{equation}
+\begin{equation}
+II_C = \lambda_1^2 \lambda_2^2 + \lambda_2^2 \lambda_3^2
++ \lambda_3^2 \lambda_3^2
+\end{equation}
+and
+\begin{equation}
+III_C = \lambda_1^2 \lambda_2^2 \lambda_3^2
+\end{equation}
+Alternatively, the three principal stretches may be used directly to
+write the stored energy function.  Both forms are used in {\sl FEAP}.
+
+In {\sl FEAP} the isotropic elastic moduli are defined to match results from
+the small strain isotropic elastic models. Accordingly, they only
+require specification of
+the elastic modulus, $E$, and Poisson ratio, $\nu$ or, equivalently, the
+bulk modulus, $K$, and shear modulus, $G$.
+
+\subsection{St. Venant-Kirchhoff and Energy Conserving Model}
+
+The simplest model is a St. Venant-Kirchhoff model given by:
+\begin{equation}
+\Bf{S} = \Bf{D} \, \Bf{E}
+\end{equation}
+where $\Bf{S}$ is the second Piola-Kirchhoff stress, $\Bf{E}$ is the Green
+strain, and $\Bf{D}$ are the elastic moduli.
+This model may be deduced from the stored energy function
+\begin{equation}
+W = \frac{1}{2} \, \Bf{E}^T \Bf{D} \, \Bf{E}
+\end{equation}
+For isotropy the model may be written in terms of the invariants of $\Bf{E}$;
+however, the $\Bf{D}$ will have the same structure as in an isotropic linear
+elastic material (see above).
+
+The material data set for isotropy is given as
+
+The same constitution is used to implement an energy-momentum
+algorithm for finite deformation analyses.  The data to perform an
+energy-momentum conserving form is given as
+\begin{verbatim}
+       MATErial,1
+         SOLId
+         FINIte
+         ELAStic CONServing e nu
+                                  ! blank termination record
+\end{verbatim}
+Note that the location of the {\tt FINI}te command is order insensitive.  Also
+recall that the finite deformation designation may be given for all elements
+as {\tt GLOB}al data.a
+
+The St. Venant-Kirchhoff and energy conserving models should not be used
+for problems
+in which very large compressive deformations are expected.  The model gives
+identical results to the small deformation isotropic model if deformations
+are truly infinitesimal.  It is also a good model to use if the displacements
+are large, but strains remain small.  For situations where large elastic
+deformations are involved the {\tt NEOH}ookean, {\tt MNEO}hookean,
+or {\tt OGDE}n models should be used.
+
+\begin{table}[ht!]
+\begin{center}
+\begin{tabular}{| l | l | l |} \hline
+Command & Type & Parameters \\ \hline
+ELAStic & NEOHookean & $E, \nu$ \\
+ELAStic & MNEOhookean & $E, \nu$ \\
+ELAStic & OGDEn & $K, C_1, a_1, C_2, a_2, C_3, a_3$ \\
+ELAStic & STVK & $E, \nu$ \\
+ELAStic & CONServe & $E, \nu$ \\ \hline
+\end{tabular}
+\end{center}
+\caption{Finite Deformation Elastic Material Data Inputs}
+\label{tab131c}
+\end{table}
+
+\subsection{Neo-Hookean and Modified Neo-Hookean Models}
+
+The stored energy functions for the finite deformation hyperelastic models
+are split into two parts.  The first part defines the behavior associated
+with volume changes and the second the behavior for other deformation states.
+The volumetric deformation part is defined by a function $U(J)$ multiplied
+by a material parameter.  The volumetric function is taken as
+\begin{equation}
+U(J) = ln^2 J
+\end{equation}
+
+The neo-Hookean hyperelastic model is deduced from the stored energy function
+\begin{equation}
+W = \left( K  - \frac{2}{3} G \right) \, U(J)
++ \frac{1}{2} \, G \, \left( I_C - 3 \right)
+\end{equation}
+The parameters $K$ and $G$ are equivalent to the small strain bulk and shear
+moduli, respectively.  Input data for the model is specified in terms of
+the equivalent small strain modulus ($E$) and Poisson ratio ($\nu$) such that
+the $K$ and $G$ are given by
+\begin{equation}
+\label{enu}
+K = \frac{E}{3 \, ( 1 - 2 \nu )} ~~~~;~~~~ G = \frac{E}{2 \, ( 1 + \nu )}
+\end{equation}
+The data set to use this form is given by
+\begin{verbatim}
+       MATErial,1
+         SOLId
+         FINIte
+         ELAStic NEOHook E nu
+                                  ! blank termination record
+\end{verbatim}
+
+A modified form to the neo-Hookean model is also available.  The modified
+form defines a stored energy function which splits the two terms into
+pure volumetric behavior and pure deviatoric behavior.  To accomplish
+the construction the deformation gradient is split into the product of
+a volumetric and deviatoric form as
+\begin{equation}
+\Bf{F} = \Bf{F}_{vol} \, \Bf{F}_{dev}
+\end{equation}
+where
+\begin{equation}
+\Bf{F}_{vol} = J^\frac{1}{3} \Bf{1}
+\end{equation}
+and
+\begin{equation}
+\Bf{F}_{dev} =  {J}^{- \, \frac{1}{3}} \Bf{F}
+\end{equation}
+The stored energy function is then given as
+\begin{equation}
+W = K  \, U(J)
++ \frac{1}{2} \, G \, \left( {J}^{- \, \frac{2}{3}} I_C - 3 \right)
+\end{equation}
+
+The parameters $K$ and $G$ are again specified by their small strain
+equivalent $E$ and $\nu$ defined in Eq. \ref{enu}.
+
+The data set to use the modified form is given by
+\begin{verbatim}
+       MATErial,1
+         SOLId
+         FINIte
+         ELAStic MNEOHook E nu
+                                  ! blank termination record
+\end{verbatim}
+
+\subsection{Ogden Model}
+
+{\sl FEAP} also contains a model for hyperelastic behavior which is
+expressed directly in terms of the principal stretches, $\lambda_A$.
+This model has a stored energy function expressed in the form:
+\begin{equation}
+W = K  \, U(J) + \sum_{A=1}^3 \, w(\lambda_A,J)
+\end{equation}
+and is based on the {\it Valanis-Landel hypothesis} (\cite{valan,ogden}).
+The {\it deviatoric} principal stretches are defined as
+\begin{equation}
+\tilde{\lambda}_A = J^{- \frac{1}{3}} \lambda_A
+\end{equation}
+and used to write the scalar stored energy functions as
+\begin{equation}
+w(\tilde{\lambda}_A) = \sum_j \frac{C_j}{a_j} \left(
+\tilde{\lambda}_A^{a_j} - 1 \right)
+\end{equation}
+where $j$ ranges from 1 to 3 terms.
+The data input for the Ogden model is given as
+\begin{verbatim}
+       MATErial,1
+         SOLId
+         FINIte
+         ELAStic OGDEn K C_1 a_1 C_2 a_2 C_3 a_3
+                                  ! blank termination record
+\end{verbatim}
+
+\subsection{Logarithmic Stretch Model}
+
+An alternative principal stretch model is defined by strains expressed as
+\begin{equation}
+\epsilon_A = \log{ \lambda_A }
+\end{equation}
+The stored energy function for this form is identical to the small
+strain isotropic model expressed in terms of the principal strains.
+Accordingly,
+\begin{equation}
+W( \lambda_A ) = \frac{1}{2} \, 
+\left( K - \frac{2}{3} G \right) \left( \sum_{A=1}^3 \epsilon_A \right)^2
++ G \, \sum_{A=1}^3 \epsilon_A^2
+\end{equation}
+
+This form of the finite strain implementations in {\sl FEAP} is the only
+one which may be used in elastic-plastic analyses.
+It is not recommended for situations involving hyperelastic behavior at
+large strains.
+The data input for the Logarithmic stretch  model is given as
+\begin{verbatim}
+       MATErial,1
+         SOLId
+         FINIte
+         ELAStic log E nu
+                                  ! blank termination record
+\end{verbatim}
+Note that the descriptor {\it log} is placed to fill the second field, it is
+not used explicitly by {\sl FEAP}.
+
+\section{Rayleigh Damping}
+\label{raydamp}
+
+The effects of damping may be included in transient solutions
+assuming a damping matrix in the form
+\begin{equation}
+\B{C} ~=~ a_0 \, \B{M} ~+~ a_1 \, \B{K}
+\end{equation}
+This defines a form called {\it Rayleigh Damping}.
+The input for this form of damping is given by:
+\begin{verbatim}
+       MATERIAL
+         .....
+           DAMPing RAYLeigh a0 a1
+\end{verbatim}
+
+This command is only included for small deformation elements using a
+linear elastic material model and is used only for
+time dependent solutions specified by a {\tt TRANsient} solution command.
+Rayleigh damping may also be defined for modal solutions
+(Section \ref{damping}).
+
+\section{Viscoelastic Models}
+\label{viscmod}
+
+Materials which behave in a time dependent manner require extensions of the
+elastic models cited above.  One model is given by viscoelasticity where
+stress may be related to strain through either differential or integral
+constitutive models (e.g., see {\sl FEAP} Theory Manual).  At present, the
+implementation in {\sl FEAP} is restricted to isotropic viscoelasticity in
+which time effects are included for the deviatoric stress components only.
+If we split the stress as:
+\begin{equation}
+\B{\sigma} ~=~ \sigma_{vol} \, \Bf{1} + \B{\sigma}_{dev}
+\end{equation}
+where $\sigma_{vol}$ represents the spherical part given by
+$\frac{1}{3} \sigma_{kk}$ and $\B{\sigma}_{dev}$ is the deviatoric stress part.
+Similarly the strain may be split as
+\begin{equation}
+\B{\epsilon} ~=~ \frac{1}{3} \, \theta \, \Bf{1} + \B{\epsilon}_{dev}
+\end{equation}
+where $\theta$ is the trace of the strain ($\epsilon_{kk}$)
+and $\B{\epsilon}_dev$ is the deviatoric part.
+
+The constitutive equation may now be written as
+\begin{equation}
+\B{\sigma}_dev ~=~ 2 \, G \, \int_{-\infty}^t
+\mu(t - \tau ) \, \frac{d \B{\epsilon}_{dev}}{d \tau} \, d \tau
+\end{equation}
+where $mu(t)$ is a relaxation function.  The term $G mu(t)$ is called the
+relaxation modulus.   In {\sl FEAP} the relaxation function is represented
+by a Prony series
+\begin{equation}
+\mu(t) ~=~  \mu_0 + \sum_i \, \mu_i \, \exp \frac{-t}{\tau_i}
+\end{equation}
+The $\tau_i$ are time parameters defining the relaxation times
+for the material and the $\mu_i$ are constant terms.  Currently, {\sl FEAP}
+limits the representation to three (3) exponential terms.
+The value of $\mu_0$ is computed from
+\begin{equation}
+\mu_0 ~=~  1 - \sum_i \, \mu_i
+\end{equation}
+Thus, the elastic modulus $G$ represents the instantaneous elastic response
+and $G \, \mu_0$ the equilibrium, or long time, elastic modulus.
+Only positivef $\mu_i$ are permitted and care must
+be taken in defining the $\mu_i$ to ensure that $\mu_0$ is positive or zero.
+If $\mu_0$ is zero the response can have steady creep and never reach an
+equilibrium configuration.
+
+Input data for a one term model is given by the followin data set:
+\begin{verbatim}
+       MATErial,1
+         SOLId
+         ELAStic ISOTropic 30e+06 0.3
+         VISCoelastic term1 0.7   10.0
+                                  ! blank termination record
+\end{verbatim}
+Here $\mu_1$ is 0.7 giving a $\mu_0$ of 0.3.  The relaxation time
+is 10 time units.
+
+After defining the response by the above exponential representation, the
+constitutive equations are integrated in time by assuming the
+strain rate is constant over each time step.  The method for integration
+uses exact integraion over each time step and leads to a simple recursion
+for each exponential term (e.g., see \cite{taylorpg}).  Additional details
+are also given in the {\sl FEAP} Theory manual.
+
+For finite deformation problems the viscoelastic parameters are related
+to the second Piola-Kirchhoff stress and Green strain.
+
+\section{Plasticity Models}
+\label{plasmod}
+
+Classical elasto-plastic material models are included in {\sl FEAP} for
+small and finite deformation problems.  The finite deformation model
+is based on logarithmic principal stretches and product split of the
+deformation gradient.  This leads to a form which is similar to that
+for small strains.  Accordingly, here we limit our discussion to the
+small strain problem.
+
+The stress for an elasto-plastic material may be computed by assuming
+an additive split of the strain as
+\begin{equation}
+\B{\epsilon} = \B{\epsilon}^{el} + \B{\epsilon}^{pl}
+\end{equation}
+
+An associative flow rule is assumed so that the plastic strain rate
+may be computed from a {\it yield function}, $F$, as
+\begin{equation}
+\dot{\B{\epsilon}}^{pl} = \dot{\gamma} \,
+\frac{\partial F}{\partial \B{\sigma}}
+\end{equation}
+The relation may be integrated in time using a backward Euler (implicit)
+time integration to compute a discrete form of the problem.
+
+Isotropic and kinematic hardening are also added to the model.  The kinematic
+hardening is limited to a linear form where it is assumed that
+\begin{equation}
+\B{\alpha} = H_{kin} \, \B{\epsilon}^{pl}
+\end{equation}
+where $\B{\alpha}$ is the back stress and $H_{kin}$ is the kinematic hardening
+modulus.  The isotropic hardening is taken in a linear and saturation form
+as
+\begin{equation}
+Y(e^{pl}) = Y_{\infty} + (Y_0 - Y_{\infty}) \exp (- \beta \, e^{pl})
++ H_{iso} \, e^{pl}
+\end{equation}
+where $Y_0$ is the initial uniaxial yield stress, $Y_{\infty}$ a stress
+at large values of strain, $\beta$ a delay constant, and $H_{iso}$ is a linear
+isotropic hardening modulus.  The accumulated plastic strain is computed
+from
+\begin{equation}
+e^{pl} = \int_0^t \, \dot{\gamma} \, d \tau
+\end{equation}
+
+In {\sl FEAP} the discrete problem is solved using a closest point return
+map algorithm (e.g., see \cite{simort85,simort86,simo:hughes}).
+
+Input properties for a simple material with no saturation hardening and
+linear isotropic hardening is given by:
+\begin{verbatim}
+       MATErial,1
+         SOLId
+         ELAStic ISOTropic 30e+06 0.3
+         PLAStic MISEs     30e+03
+         PLAStic HARDening 3000   0
+                                  ! blank termination record
+\end{verbatim}
+
+\section{Heat Conduction Material Models}
+\label{heat}
+
+For thermal analysis a linear heat conduction capability is included in
+{\sl FEAP}.  The constitutive equation is given by a linear Fourier
+model in which the heat flux $\B{q}$ is related to the thermal gradient $\B{h}$
+by the relation
+\begin{equation}
+\B{q} ~=~ - \, \B{K} \, \B{h}
+\end{equation}
+where, in the principal directions,
+\begin{equation}
+\B{K} ~=~ \left[ \begin{matrix}
+K_1 & 0 & 0 \\
+0 & K_2 & 0 \\
+0 & 0 & K_3 \\
+\end{matrix} \right]
+\end{equation}
+The values for $K_i$ and, for transient problems, the specific heat, $c$,
+are specified using the command {\tt FOUR}\-ier,{\tt ORTH}o\-trop\-ic
+or for the case where all are equal using {\tt FOUR}\-ier,{\tt ISOT}rop\-ic
+as indicated in Table \ref{tab131a}
+
+\begin{table}[ht!]
+\begin{center}
+\begin{tabular}{| l | c | c | c | c | c | c | c |} \hline
+Command & Solid & Truss & Frame & Plate & Shell & Membrane & Thermal \\ \hline
+ELAStic       & X & X & X & X & X & X & - \\
+PLAStic       & X & X & F & - & S & - & - \\
+VISCoelastic  & X & X & F & - & - & - & - \\
+THERmal       & X & X & X & X & - & X & - \\
+FOURier       & X & X & - & - & - & - & X \\
+DENSity       & X & X & X & X & X & X & X \\
+ANGLe         & X & - & - & X & X & X & X \\ \hline
+\end{tabular}
+\end{center}
+\caption{Material Commands vs. Element Types. X=all, F=finite, S=small.}
+\label{tab131b}
+\end{table}
+
+\section{Mass Matrix Type Specification}
+\label{masstype}
+
+The mass matrix for continuum problems and the specific heat matrix
+for thermal problems may be either a {\it consistent}, {\it lumped},
+or {\it interpolated} form.  By default {\it FEAP} uses a lumped matrix.
+If $\B{M}_{cons}$ is the consistent matrix and $\B{M}_{lump}$ is the diagonal
+lumped matrix, the interpolated matrix is defined as:
+\begin{equation}
+\B{M}_{interp} ~=~ (1 \,-\, a) \, \B{M}_{cons} ~+~ a \, \B{M}_{lump}
+\end{equation}
+The type of mass and, where required,
+the parameter $a$ are input using the {\tt MASS} command as shown in
+Table \ref{tab132a} and the elements which are affected by the command
+are indicated in Table \ref{tab132b}.
+
+\begin{table}[ht!]
+\begin{center}
+\begin{tabular}{| l | l | l |} \hline
+Command & Type & Parameters \\ \hline
+MASS & LUMPed       & {}  \\
+MASS & CONSistent   & {}  \\
+MASS & {}           & $a$ \\ \hline
+\end{tabular}
+\end{center}
+\caption{Material Model Mass Related Inputs}
+\label{tab132a}
+\end{table}
+
+\begin{table}[ht!]
+\begin{center}
+\begin{tabular}{| l | c | c | c | c | c | c | c |} \hline
+Command & Solid & Truss & Frame & Plate & Shell & Membrane & Thermal \\ \hline
+MASS          & X & X & X & X & - & - & X \\ \hline
+\end{tabular}
+\end{center}
+\caption{Mass Command vs. Element Types}
+\label{tab132b}
+\end{table}
+
+\section{Element Cross Section and Load Specification}
+\label{xsect}
+
+\subsection{Resultant formulations}
+
+The plane stress and structural elements require specification of
+cross-section information.
+For the plane stress, plate, and shell
+elements this is a thickness which is specified using the {\bf
+THICkness} command as shown in Table \ref{tab133a}.
+The plate element also permits the effects
+of transverse shear deformation to be included and, if this is
+different than the $5/6$ default value it is also given using the thickness
+command.
+For the truss and frame elements it is necessary to provide cross-sectional
+property for area, and for the frame elements, flexural effects as indicated
+in Table \ref{tab133a}.
+
+Element loads for surface pressure and body force are input using the
+{\tt LOAD} and {\tt BODY} force commands as shown in Table \ref{tab133a}.
+
+The types of elements affected by the {\tt THICkness}, {\tt LOAD} and
+{\tt BODY} commands is indicated in Table \ref{tab133b}.
+
+\begin{table}[ht!]
+\begin{center}
+\begin{tabular}{| l | l | l |} \hline
+Command & Type & Parameters \\ \hline
+THICkness & {}      & $h, \kappa$ \\
+CROSS     & section & $A, I_{xx}, I_{yy}, I_{xy},
+J_{zz}, \kappa_x, \kappa_y$ \\ \hline
+BODY & forces   & $b_1, b_2, b_3$ \\
+LOAD & normal   & $q$ \\ \hline
+\end{tabular}
+\end{center}
+\caption{Cross Section and Body Force Inputs}
+\label{tab133a}
+\end{table}
+
+\begin{table}[ht!]
+\begin{center}
+\begin{tabular}{| l | c | c | c | c | c | c | c |} \hline
+Command & Solid & Truss & Frame & Plate & Shell & Membrane & Thermal \\ \hline
+THICkness     & X & - & - & X & X & X & X \\
+CROSs         & - & X & X & - & - & - & - \\ \hline
+BODY          & X & X & X & - & X & X & - \\
+LOAD          & - & - & - & X & X & X & - \\ \hline
+\end{tabular}
+\end{center}
+\caption{Geometry and Loads vs. Element Types}
+\label{tab133b}
+\end{table}
+
+\subsection{Section integration formulations}
+
+Structural element behavior may also be defined by numerical integration
+over the cross section using the {\tt SECT}ion command.
+For the three-dimensional truss and frame elements
+the cross section may be defined by alternate forms which include: {\tt TUBE},
+a thin circular tube; {\tt RECT}angle, a rectangular solid section; {\tt WIDE}
+flange, a wide flange composite section; {\tt CHAN}nel, a channel composite
+section; {\tt ANGL}e, an angle composite section; and {\tt CIRC}le, a solid
+circular section.  The basic form of a section command is:
+
+\begin{verbatim}
+       SECTion TYPE (EV(i),i=1,6)
+\end{verbatim}
+The data parameters {\tt EV} for each type are summarized in
+Table \ref{tab133c}.
+
+\begin{table}[ht!]
+\begin{center}
+\begin{tabular}{| l | c | c | c | c | c | c | c |} \hline
+TYPE & EV(1) & EV(1) & EV(2) & EV(3) & EV(4) & EV(5) & EV(6) \\ \hline
+TUBE & $r$   & $t$   & $n$   & $q_n$ &   &   &  \\
+RECTangle & $y_b$ & $z_b$ & $y_t$ & $z_t$ & $q_y$ & $q_z$ & \\
+WIDE flange & $h$ & $f_t$ & $f_b$ & $t_t$ & $t_b$ & $t_w$ & \\
+CHANnel     & $h$ & $f_t$ & $f_b$ & $t_t$ & $t_b$ & $t_w$ & \\
+ANGLe       & $h$ & $f$ & $t_h$ & $t_f$ &   &   &   \\
+CIRCle      & $r$ & $q$ &   &   &  &  & \\ \hline
+\end{tabular}
+\end{center}
+\caption{Types and data for integrated cross-sections.}
+\label{tab133c}
+\end{table}
+
+In Table \ref{tab133c} $r$ denotes radius, $t$ thickness, $h$ height, $f$
+flange width, $t$ top, $b$ bottom, $q$ quadrature order, and $n$ number
+of segments.  The cross section is assumed to lie in a $y$-$z$ plane.
+
+\section{Miscellaneous Material Set Parameter \\ Specifications}
+\label{miscmat}
+
+In addition to the above material, geometric and loading parameters the
+values for some other variables may also be set.
+
+It is possible to replace global parameters for the type of two dimensional
+analysis using the {\tt PLANe STREss}, {\tt PLANe STRAin}, or {\tt AXISymmetric}
+commands.  Similarly the global value for the temperature degree of
+freedom to use in coupled thermo-mechanical problems may be changed
+for the current material set using the {\tt TEMPerature} command.  The
+formats are indicated in Table \ref{tab134a} and the affected element types in
+Table \ref{tab134b}.
+The values for the number of quadrature points (in elements, not cross sections)
+to be used for computing arrays and element
+outputs may be set using the {\tt QUADrature} command.
+Generally, {\sl FEAP} will select an appropriate order of quadrature to
+be used in computing the arrays and for output of element quantities.  Thus,
+care should be used in changing the default values.
+
+{\sl FEAP} includes capabilities to solve finite deformation problems
+using the {\tt SOLId}, {\tt FRAMe}, {\tt TRUSs}, {\tt SHELl}, {\tt MEMBrane}
+and {\tt GAP} elements.  To select the
+finite deformation element it is necessary to use the {\tt FINIte} deformation
+option instead of the default {\tt SMALl} deformation option.
+This may be done for all materials using the {\tt GLOBal} command.
+There are three different element technologies
+which may be selected {\tt DISPlacement} (which is the default), {\tt MIXEd},
+or {\tt ENHAnced strain} types. The data options for these are indicated
+in Table \ref{tab134a} and the affected element types in Table \ref{tab134b}.
+
+\begin{table}[ht!]
+\begin{center}
+\begin{tabular}{| l | l | l |} \hline
+Command & Type & Parameters \\ \hline
+QUADrature  & {}       & $n_{array}, n_{output}$ \\
+PENAlty     &          & $k_{pen}$ \\
+ADAPtive    & ERROr    & $\eta$ \\
+TEMPerature & {}       & $T_{dof}$ \\ \hline
+SMALl       & deformation & {} \\
+FINIte      & deformation & {} \\
+NONLinear   & {}       & {} \\ \hline
+DISPlacment & {}       & {} \\
+MIXEd       & {}       & {} \\
+ENHAnced    & strain   & {} \\ \hline
+PLANe       & STREss   & {} \\
+PLANe       & STRAin   & {} \\
+AXISymmetric & {}      & {} \\ \hline
+\end{tabular}
+\end{center}
+\caption{Miscellaneous Material Model Inputs}
+\label{tab134a}
+\end{table}
+
+\begin{table}[ht!]
+\begin{center}
+\begin{tabular}{| l | c | c | c | c | c | c | c |} \hline
+Command & Solid & Truss & Frame & Plate & Shell & Membrane & Thermal \\ \hline
+QUADrature      & X & - & -  & - & X & X & X \\
+PENAlty         & - & - & -  & - & - & - & - \\
+ADAPtive ERRor  & X & - & -  & - & - & - & - \\
+TEMPerature     & X & X & X  & X & X & - & - \\ \hline
+SMALl           & X & X & X  & - & X & X & - \\
+FINIte          & X & X & X  & - & X & X & - \\
+NONLinear       & - & X & X  & - & - & - & - \\ \hline
+DISPlacement    & X & - & -  & - & - & - & - \\
+MIXEd           & X & - & -  & - & - & - & - \\
+ENHAnced        & X & - & -  & - & - & - & - \\ \hline
+PLANe STREss    & X & - & -  & - & - & - & X \\
+PLANe STRAin    & X & - & -  & - & - & - & X \\
+AXISymmetric    & X & - & -  & - & - & - & X \\ \hline
+\end{tabular}
+\end{center}
+\caption{Miscellaneous Material Commands vs. Element Types}
+\label{tab134b}
+\end{table}
+
+\chapter[Discrete Elements]{DISCRETE ELEMENTS}
+\label{diselm}
+
+{\sl FEAP} has options to add discrete mass, damping, and stiffness
+terms to a problem.  The mass terms are added as {\it lumped} terms
+for each degree of freedom.  The data for discrete masses are
+included as input in the form
+\begin{verbatim}
+       MASS
+         m,mg,M1_m,M2_m,M3_m ... Mndf_m
+         n,ng,M1_n,M2_n,M3_n ... Mndf_n
+                                  ! blank termination record
+\end{verbatim}
+where {\tt m, n} are node numbers, {\tt mg, ng} are generation increments
+to nodes, and {\tt Mi\_m, Mi\_n} are discrete mass values.
+Generation of missing nodes will take place if the {\tt mg} value is
+non-zero.  Mass values will be interpolated linearly for the {\it i-th}
+degree of freedom.
+
+Damping values also may be given for any node.  Each linear damper is
+fixed at one end and attached to a degree of freedom at the other.
+Damping values are input as
+\begin{verbatim}
+       DAMPer
+         m,mg,C1_m,C2_m,C3_m ... Cndf_m
+         n,ng,C1_n,C2_n,C3_n ... Cndf_n
+                                  ! blank termination record
+\end{verbatim}
+where{\tt Ci\_m, Ci\_n} are discrete damper values for the {\it i-th}
+degree of freedom.
+
+Finally, linear stiffness (springs)
+may be attached to any node.  Each linear spring is
+fixed at one end and attached to a degree of freedom at the other.
+Damping values are input as
+\begin{verbatim}
+       STIFness
+         m,mg,K1_m,K2_m,K3_m ... Kndf_m
+         n,ng,K1_n,K2_n,K3_n ... Kndf_n
+                                  ! blank termination record
+\end{verbatim}
+where{\tt Ki\_m, Ki\_n} are discrete stiffness values for the {\it i-th}
+degree of freedom.

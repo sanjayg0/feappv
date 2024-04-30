@@ -4,7 +4,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2021: Regents of the University of California
+!....  Copyright (c) 1984-2024: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -67,7 +67,6 @@
       do nn = 1,numel
 
 !       Set 'ixl' array to mark dofs with fixed boundaries
-
         sflg = .false.
         nel  = 0
         do i = 1,nen
@@ -87,7 +86,6 @@
         end do ! i
 
 !       Get element tangent and residual: No assembly
-
         if(sflg) then
 
           hflgu  = .false.
@@ -98,17 +96,14 @@
      &                .false.,.false.,.false.,3,nn,nn,1)
 
 !         Project to Kirchhoff stress and tangent modulus
-
           if(tangfl) then
 
 !           Displacement boundary case
-
             call pprojpp(ixl,hr(np(44)),xs,
      &                   hr(np(35)),hr(np(36)),g, ht,
      &                   ndm,ndf,nel,nst, neq, nss)
 
 !         Compute stress only
-
           else
 
             call pprojp(ixl,hr(np(44)),xs,
@@ -163,7 +158,6 @@
         endif
 
 !       Store into cflux tangent
-
         if(prtype.eq.1) then
 
           nn = 0
@@ -177,7 +171,6 @@
         endif
 
 !       Store into pctau tangent
-
         if(prtype.eq.2) then
 
           nn = 0
@@ -191,11 +184,9 @@
         endif
 
 !     Other cases
-
       else
 
 !       Modify shear values
-
         if(prtype.eq.2) then
           do i = 4,nss
             ptau(i) = ptau(i)*0.5d0

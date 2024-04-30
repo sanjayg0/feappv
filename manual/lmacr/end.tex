@@ -1,0 +1,20 @@
+\heada{SOLUTION}{END}
+\hspace{1.0cm}{{end \hfill}}
+\headb
+
+The last batch command must be {\tt END} or {\tt QUIT}.
+This terminates the current execution sequence and returns the program
+the main driver, which may then perform additional
+solution tasks on the same data, modify the data,
+enter a new problem, or {\tt STOP} execution.
+The use of {\tt END} causes a restart file to be
+updated for subsequent resumptions of execution with the
+current status preserved.
+
+Immediately following the end command any data
+required by statements in the {\it command language program} should appear
+when a batch execution is performed.
+
+Additional solution steps may be performed by including additional
+{\tt BATC}h-{\tt END} or {\tt INTE}ractive-{\tt END} pairs.
+\vfill\eject

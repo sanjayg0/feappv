@@ -4,7 +4,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2021: Regents of the University of California
+!....  Copyright (c) 1984-2024: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -57,7 +57,7 @@
       logical       :: polfl, errc, pinput, prt, prth
       integer       :: i,j,k,l,n, i1,i2, iel,iiel,ifac,lint
       integer       :: ic(9), iq(4,7), it(3,4), il(4,7)
-      real (kind=8) :: gap0,gap,tol,tolgap,load,xsj(3),dir,den,th
+      real (kind=8) :: gap0,gap,tol,tolgap,load,xsj(4),dir,den,th
       real (kind=8) :: td(5),xmin(3),xmax(3)
       real (kind=8) :: xp(3,9),v1(3),v2(3),xi(3),xx(3),xl(3,4)
       real (kind=8) :: nn(3),normal(3),pr(4),pp(9),shp(9),shps(4)
@@ -66,32 +66,29 @@
       save
 
 !     8-node brick faces
-
       data iq  /3,2,1,4, 1,2,6,5, 2,3,7,6, 3,4,8,7, 4,1,5,8, 5,6,7,8,
      &          1,2,3,4/
 
 !     4-node tetraheron faces
-
       data it  /1,2,4, 2,3,4, 3,1,4, 1,3,2/
 
 !     Solution tolerances
-
       data tol /1.0d-3/
 
 !     Input points
-
       do n = 1,9
         ic(n) = 0
         pp(n) = 0.d0
       end do
 
 !     Force pressure inputs
-
       if(isw.eq.1) then
         if(fnorm.eq.1) then
           write(iow,2000) (n,n=1,3)
         elseif(fnorm.eq.3) then
           write(iow,2010) (n,n=1,3)
+        elseif(fnorm.eq.4) then
+          write(iow,2016) (n,n=1,3)
         endif
         i = 1
         do while(i.ne.0)
@@ -111,7 +108,6 @@
         end do
 
 !     Boundary Code inputs
-
       elseif(isw.eq.2) then
 
         write(iow,2004) (n,n=1,3),(n,n=1,ndf)
@@ -134,7 +130,6 @@
         end do
 
 !     Boundary angle inputs
-
       elseif(isw.eq.3) then
 
         write(iow,2011) (n,n=1,3),(n,n=1,ndf)
@@ -157,14 +152,12 @@
       end if
 
 !     Set missing points
-
       if(min(ic(1),ic(2),ic(3),ic(4)).eq.0) then
         write(iow,3000) ' Missing corner coordinate in PROJ3D'
         call plstop(.true.)
       endif
 
 !     Fill missing mid-side nodes
-
       do i = 1,4
         if(ic(i+4).eq.0) then
           j         = mod(i,4) + 1
@@ -182,7 +175,6 @@
       end do ! i
 
 !     Fill central node
-
       if(ic(9).eq.0) then
         xp(1,9) = 0.50d0*(xp(1,5) + xp(1,6) + xp(1,7) + xp(1,8))
      &          - 0.25d0*(xp(1,1) + xp(1,2) + xp(1,3) + xp(1,4))
@@ -201,13 +193,11 @@
       endif
 
 !     Initialize surface node indicators to zero
-
       do n = 1,numnp
         ibn(n) = 0
       end do ! n
 
 !     Set min/max for patch coordinates
-
       do i = 1,3
         xmin(i) = xp(i,1)
         xmax(i) = xp(i,1)
@@ -218,11 +208,9 @@
       end do ! i
 
 !     Polar minimum angle
-
       th     = 45.d0/atan(1.0d0)
 
 !     Set gap value
-
       gap = 0.0d0
       do i = 1,3
         gap = gap + xmax(i) - xmin(i)
@@ -244,7 +232,6 @@
       end do ! i
 
 !     Determine potential nodes for loads, etc.
-
       if(polfl) then
         angl  = 0.5d0*(xmin(2) + xmax(2))
         vv(1) = cos(angl/th)
@@ -264,7 +251,6 @@
         endif
 
 !       Eliminate nodes outside patch block
-
         if((xc(1).lt.xmin(1) .or. xc(1).gt.xmax(1)) .or.
      &     (xc(2).lt.xmin(2) .or. xc(2).gt.xmax(2)) .or.
      &     (xc(3).lt.xmin(3) .or. xc(3).gt.xmax(3)) ) then
@@ -272,31 +258,29 @@
         endif
 
 !       Search remaining nodes for those near patch
-
         if(ibn(n).ge.0) then
           ibn(n) = projpt(xc,xp,xi,gap,normal,shp)
         endif
       end do ! n
 
-!     Force computations for normal pressures
-
+!     Force computations for normal pressures & fluxes
       if(isw.eq.1) then
 
 !       Determine elements with faces on patch
-
         if(prt) then
           call prtitl(prth)
           if(fnorm.eq.1) then
             write(iow,2002) (j,j=1,3)
           elseif(fnorm.eq.3) then
             write(iow,2008)
+          elseif(fnorm.eq.4) then
+            write(iow,2015)
           endif
         endif
 
         do n = 1,numel
 
 !         Determine element type
-
           iel = ie(nie-1,ix(nen1,n))
           if(iel.ge.0) then
             iiel = inord(iel)
@@ -308,11 +292,9 @@
           end do
 
 !         No face if iiel < 0
-
 100       if(iiel.lt.0) then
 
 !         Tetrahedral element faces
-
           elseif(iiel .eq. 9 ) then
 
             nef = 3
@@ -325,7 +307,6 @@
             end do ! i
 
 !         Brick and shell element faces
-
           else
 
             nef = 4
@@ -358,7 +339,6 @@
             end do
 
 !           Compute pressures for matching faces
-
             if(ifac.eq.nef) then
               do j = 1,3
                 v1(j) =  x(j,ic(2)) - x(j,ic(nef))
@@ -393,7 +373,6 @@
               if(dir.gt.0.8d0*den) then
 
 !               Compute load at element nodes
-
                 do j = 1,nef
                   if(polfl) then
                     xc(1) =  sqrt((xl(1,j) - x0(1))**2
@@ -420,11 +399,9 @@
                 end do ! j
 
 !               Normal Force:
-
-                if(fnorm.eq.1) then
+                if(fnorm.eq.1 .or. fnorm.eq.4) then
 
 !                 Compute loads on nodes
-
                   if(nef.eq.4) then
                     call int2d(2,lint,sg)
                   else
@@ -444,38 +421,54 @@
                     end do ! k
 
                     load = load*sg(3,l)
-                    do k = 1,nef
-                      fl(1,k) = fl(1,k) + load*xsj(1)*shps(k)
-                      fl(2,k) = fl(2,k) + load*xsj(2)*shps(k)
-                      fl(3,k) = fl(3,k) + load*xsj(3)*shps(k)
-                    end do ! k
+                    if(fnorm.eq.1) then            ! Normal loads
+                      do k = 1,nef
+                        fl(1,k) = fl(1,k) + load*xsj(1)*shps(k)
+                        fl(2,k) = fl(2,k) + load*xsj(2)*shps(k)
+                        fl(3,k) = fl(3,k) + load*xsj(3)*shps(k)
+                      end do ! k
+                    elseif(fnorm.eq.4) then      ! Flux loading
+                      do k = 1,nef
+                        fl(1,k) = fl(1,k) + load*xsj(4)*shps(k)
+                      end do ! k
+                    endif
                   end do ! l
 
 !                 Check for sloping boundaries
-
-                  do k = 1,nef
-                    if(ang(ic(k)).ne.0.0d0) then
-                      call pdegree(ang(ic(k)), sn,cn)
-                      td(3)   =  cn*fl(1,k) + sn*fl(2,k)
-                      fl(2,k) = -sn*fl(1,k) + cn*fl(2,k)
-                      fl(1,k) =  td(3)
-                    endif
-                  end do ! k
-
-                  if(prt) then
+                  if(fnorm.eq.1) then
                     do k = 1,nef
-                      write(iow,2003) k,ic(k),(fl(j,k),j=1,3),pr(k)
+                      if(ang(ic(k)).ne.0.0d0) then
+                        call pdegree(ang(ic(k)), sn,cn)
+                        td(3)   =  cn*fl(1,k) + sn*fl(2,k)
+                        fl(2,k) = -sn*fl(1,k) + cn*fl(2,k)
+                        fl(1,k) =  td(3)
+                      endif
+                    end do ! k
+
+                    if(prt) then
+                      do k = 1,nef
+                        write(iow,2003) k,ic(k),(fl(j,k),j=1,3),pr(k)
+                      end do ! k
+                    endif
+
+                    do k = 1,nef
+                      f(1,ic(k),1) = f(1,ic(k),1) + fl(1,k)
+                      f(2,ic(k),1) = f(2,ic(k),1) + fl(2,k)
+                      f(3,ic(k),1) = f(3,ic(k),1) + fl(3,k)
+                    end do ! k
+
+!                 Flux output
+                  elseif(fnorm.eq.4) then
+                    do k = 1,nef
+                      f(ddof,ic(k),1) = f(ddof,ic(k),1)
+     &                                + fl(1,k)
+                      if(prt) then
+                        write(iow,2009) k,ic(k),ddof,fl(1,k), pr(k)
+                      endif
                     end do ! k
                   endif
 
-                  do k = 1,nef
-                    f(1,ic(k),1) = f(1,ic(k),1) + fl(1,k)
-                    f(2,ic(k),1) = f(2,ic(k),1) + fl(2,k)
-                    f(3,ic(k),1) = f(3,ic(k),1) + fl(3,k)
-                  end do ! k
-
 !               Displacement: Component ddof
-
                 elseif(fnorm.eq.3) then
 
                   do k = 1,nef
@@ -497,7 +490,6 @@
         end do ! n
 
 !     Set the boundary codes
-
       elseif(isw.eq.2) then
 
         if(prt) then
@@ -516,7 +508,6 @@
         end do ! n
 
 !     Set the boundary angles
-
       elseif(isw.eq.3) then
         if(prt) then
           write(iow,2012)
@@ -525,7 +516,6 @@
           if(ibn(n).eq.1) then
 
 !           Interpolate angle on patch to node position
-
             ifac  = projpt(xc,xp,xi,gap,normal,shp)
             pr(1) = 0.0d0
             do k = 1,9
@@ -536,7 +526,6 @@
             endif
 
 !           Store global angle
-
             ang(n) = pr(1)
 
           endif
@@ -562,13 +551,22 @@
      &      //3x,'Local',3x,'Global'/
      &        4x,'Node',4x,'Node     DOF Displacement')
 
-2009  format(3i8,1p,e13.4)
+2009  format(3i8,1p,2e13.4)
+
 2010  format(/6x,'Node',3(i5,' Coord'),5x,'Displ.')
 
 2011  format(/6x,'Node',3(i5,' Coord'),6x,'Angle')
+
 2012  format(/7x,'N o d a l    A n g l e s'//
      &       10x,'Global Node    Angle'/)
+
 2013  format(i20,1p,5e11.3)
+
+2015  format(/7x,'N o d a l    F l u x    F o r c e s'/
+     &       /3x,'Local',3x,'Global'/
+     &        4x,'Node',4x,'Node',5x,'DOF   Flux Force     Flux q_n')
+
+2016  format(/6x,'Node',3(i5,' Coord'),7x,'Flux')
 
 3000  format(/'  *ERROR* ',a)
 
@@ -781,7 +779,7 @@
       implicit  none
 
       integer   j,nef
-      real (kind=8) :: sg(3),xl(3,4),shps(4),xsj(3)
+      real (kind=8) :: sg(3),xl(3,4),shps(4),xsj(4)
       real (kind=8) :: x1(3),x2(3),xm(3)
 
       save
@@ -813,5 +811,7 @@
       xsj(1)  = x1(2)*x2(3) - x1(3)*x2(2)
       xsj(2)  = x1(3)*x2(1) - x1(1)*x2(3)
       xsj(3)  = x1(1)*x2(2) - x1(2)*x2(1)
+
+      xsj(4)  = sqrt(xsj(1)*xsj(1) + xsj(2)*xsj(2) + xsj(3)*xsj(3))
 
       end subroutine shp3p

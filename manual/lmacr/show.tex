@@ -1,0 +1,29 @@
+\heada{SOLUTION}{SHOW}
+\hspace{1.2cm}{{ show \hfill}} \\{\smallskip}
+\hspace{1.0cm}{{ show,dict \hfill}} \\{\smallskip}
+\hspace{1.0cm}{{ show,elem \hfill}} \\{\smallskip}
+\hspace{1.0cm}{{ show,name,n1,n2 \hfill}}
+\headb
+
+The use of the {\tt SHOW} command will display the current
+solution status for the problem.  Values include the {\tt time},
+{\tt dt}, {\tt tol}, {\tt prop}, Maximum energy in step, current energy
+in step, augmented factor, and command print status
+(T=on; F=off).
+
+The {\tt SHOW,DICT} command will produce a table of the
+current arrays allocated together with their first word
+address, lengths, precisions, and remaining memory.  All
+arrays are allocated out of a blank common whose length is
+assigned in the main routine {\tt program feap}.  The length
+also appears at the initiation of execution.
+
+The {\tt SHOW,name,n1,n2} option (where {\it name} is the array name
+displayed using the {\tt SHOW,DICT} command) outputs the current
+values of the {\tt name} array entries between {\tt n1} and {\tt n2}.
+If the range entries are both zero (omitted), the entire array is
+output.
+
+The {\tt SHOW,ELEM}ent provides a one-line description of the
+currently loaded user elements.
+\vfill\eject

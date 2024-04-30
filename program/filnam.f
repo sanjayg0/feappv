@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2021: Regents of the University of California
+!....  Copyright (c) 1984-2024: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -57,9 +57,9 @@
 
 !     Look to see if any problem has been run
 
-101   inquire(file='feapname',exist=lfil)
+101   inquire(file='feappvname',exist=lfil)
       if(lfil) then
-        open(ios,file='feapname',status='old')
+        open(ios,file='feappvname',status='old')
         read(ios,2010,err=900,end=900) pinp,pout,pres,psav,pplt
         close(ios)
         finp = pinp
@@ -240,7 +240,7 @@
 
 !     Save a copy of current filenames
 
-300   open(ios,file='feapname',status='unknown')
+300   open(ios,file='feappvname',status='unknown')
       rewind ios
       write(ios,2010) finp,fout,fres,fsav,fplt
       close(ios)
@@ -266,10 +266,10 @@
       ior = iorsav
       return
 
-!     Error in form of 'feapname' file
+!     Error in form of 'feappvname' file
 
 900   lfil = .false.
-      write(*,'(/a)') ' ERROR IN feapname FILE -- Read filenames'
+      write(*,'(/a)') ' ERROR IN feappvname FILE -- Read filenames'
       close(ios,status = 'delete')
       go to 101
 

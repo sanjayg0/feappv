@@ -1,0 +1,34 @@
+\heada{SOLUTION}{WRITe}
+\hspace{1.0cm}{{writ,xxxx \hfill}}
+\headb
+
+The {\tt WRIT}e command may be used to save the
+current values of displacements and nodal stresses for subsequent use.
+This option is particularly useful for saving
+states which are to be plotted later.  It is not intended as
+a restart option (see {\tt REST}art for restarting a previously
+saved problem state).
+
+The values of {\tt xxxx} are used to specify the file  name
+(4-characters  only),  manipulate  the  file,  and write out
+states.  The values permitted are:
+
+\begin{center}
+\begin{tabular}{l l l}
+ xxxx =& wind & rewind current output file. \\
+ xxxx =& clos & close current output file. \\
+ xxxx =& disp & write current displacement state onto the \\
+       &      & current file. \\
+ xxxx =& stre & write current nodal stress state onto the \\
+       &      & current file. \\
+ xxxx =& ???? & anything else is used to set current filename. \\
+       &      & Only four characters are permitted and only one \\
+       &      & file may be opened at any time.  Files may be \\
+       &      & opened and closed several times during any run \\
+       &      & to permit use of more than one file name.
+\end{tabular}
+\end{center}
+
+A {\tt WRIT}e output is reinput using the {\tt READ} command
+which has nearly identical options for {\tt xxxx}.
+\vfill\eject

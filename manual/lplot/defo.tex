@@ -1,0 +1,23 @@
+\heada{PLOT}{DEFOrmed}
+\hspace{1.0cm}{{defo,v1,n2,v2 \hfill}}
+\headb
+
+This command sets the plot options to be associated
+with a deformed mesh with the displacements scaled by the
+\texttt{v1} value (default: v1 = 1). If any part of an element in
+the deformed mesh leaves the plot region, it will not
+appear in the plot.
+
+Specification of a nonzero \texttt{n2} value retains the plot
+scaling at a previously set \texttt{v1} value.  This permits superpostion
+of undeformed or previous solutions on the current
+plot for comparison purposes.
+
+The parameter \texttt{v2} is used to scale eigenvectors.  By default all
+eigenvectors are unscaled.  The program attempts to scale eigenvectors for 
+plotting such that the maximum component is unity.  Thus, the scaling should
+compare the mesh dimensions such that a reasonable shape is obtained.
+
+An undeformed option is specified using the \texttt{UNDE}formed command.
+\vfill
+\eject

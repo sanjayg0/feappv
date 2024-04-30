@@ -1,0 +1,51 @@
+\section{Multiple NURBS blocks}
+
+Problems may be solved using multiple NURBS blocks.  However, the edge or
+boundary of contiguous blocks must have the same control point topology --
+the topology in other directions may be different.
+
+If multiple blocks are used, prior to any solution commands  it is
+necessary to merge the blocks into a single
+problem using the \texttt{TIE} command.
+
+After the problem is formed, standard \textsl{FEAP} solution commands are
+used to solve each problem.
+
+\section{Graphics outputs}
+
+Standard \textsl{FEAP} plot commands may be used to display the location of the
+control points (\texttt{PLOT NODE} command) and boundary restraints on the
+control points (\texttt{PLOT BOUNdary}).  Use of any contouring
+commands (\texttt{PLOT CONT}, \texttt{PLOT STRE}) is performed by projection
+onto 4-node quadrilateral subelements of the surface.  Most plot commands may be
+used but there remain some delicate transformations between the various representation of the data to be plotted.
+access problem resulting usually in a `crash' of the program.
+
+Contouring of solution variables can be obtained, however the command sequence
+is currently quite delicate.  To plot contours of the solutions the solution
+command sequence may be used 
+\begin{verbatim}
+       GMV      ! Creates a 4-node quadrilateral surface representation
+                ! of each knot interval
+       PLOT GMV ! Plot GMV representation of mesh
+       PLOT PERSpective  ! Required for 3-d only
+       PLOT HIDE         ! Required for 3-d only
+       PLOT CONT num 
+       PLOT END
+\end{verbatim}
+If stress contouring is needed the command
+\begin{verbatim}
+       STREss NODE
+\end{verbatim}
+must be given prior to the \texttt{GMV} command.
+
+Plots in interactive mode may also be given, however, using the solution
+command statement sequence
+\begin{verbatim}
+       GMV
+       PLOT
+\end{verbatim}
+and then the \texttt{GMV} and subsequent commands in interactive mode.
+
+If a problem requires long solution times it is advisable to use \texttt{SAVE}
+commands to preserve solution values prior to attempting plot outputs.

@@ -1,0 +1,52 @@
+\heada{MESH}{DISPlacements}
+\hspace{1.0cm}{{ disp                  \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ node1,ngen1,(d(i,node1),i=1,ndf) \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ node2,ngen2,(d(i,node2),i=1,ndf) \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ <etc.,terminate with blank record> \hfill}}
+\headb
+
+The {\tt DISP}lacement command is used to specify the values for
+nodal boundary displacements.
+For each node to be specified a record is entered with the
+following information:
+
+\begin{center}
+\begin{tabular}{r l}
+\it node      &-- Number of node to be specified \\
+\it ngen      &-- Increment to next node, if generation \\
+              &\quad is used, otherwise 0. \\
+\it d(1,node) &-- Value of displacement for 1-dof \\
+\it d(2,node) &-- Value of displacement for 2-dof \\
+              &\quad etc., to {\it ndf} directions \\
+\end{tabular}
+\end{center}
+When generation is performed, the node number sequence will be
+(for {\it node1-node2} sequence shown at top):
+
+\begin{center}
+{\it node1, node1+ngen1, node1+2$\times$ngen1, .... , node2}
+\end{center}
+
+The values for each displacement will be a linear
+interpolation between the {\it node1} and {\it node2} values for
+each degree-of-freedom.
+
+While it is possible to specify both the force and the displacement applied
+to a node, only one can be active during a solution step.  The determination
+of the active value is determined from the boundary
+restraint condition value.  If the boundary restraint value is zero
+and you use one of the force-commands a force
+value is imposed, whereas, if the boundary restraint value is non-zero
+and you use one of the displacement-commands a
+displacement value is imposed. (See {\tt BOUN}dary, {\tt CBOU}ndary,
+or {\tt EBOU}ndary pages for setting boundary
+conditions.).  It is possible to change the type of boundary restraint
+during execution by resetting the boundary restraint value. It is not
+possible, to specify a displacement by using the combination of a 
+force-command with a non-zero boundary restraint value, as it was
+in the last releases of {\sl FEAPpv}. For further information see the
+{\tt CDIS}placement page.
+
+Displacement conditions may also be specified using the {\tt EDIS}
+and {\tt CDIS} commands.
+\vfil\eject

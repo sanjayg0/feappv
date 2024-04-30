@@ -1,0 +1,83 @@
+\section{Isogeometric elements}
+
+The selection of an element formulation based on NURBS or T-spline interpolation is controlled in the \texttt{MATErial} data input by the command
+\begin{verbatim}
+       NURBs,,q1 q2 q3
+\end{verbatim}
+for block NURBS forms or
+\begin{verbatim}
+       TSPLine,,q1 q2 q3
+\end{verbatim}
+for T-spline forms using the mesh output from the refinement program of Mike
+Scott.  In the above $qi$ is the quadrature order for each knot direction in an
+element.
+
+\subsection{Solid elements}
+
+An isogeometric analysis may be performed using the small and finite deformation
+solid elements formulated in terms of displacements only.  The basic
+material input for an analysis is given by the usual material set commands
+described in the \textsl{FEAP} User Manual\scite{feapu}.  For example
+an analysis using small displacement model may be given as  
+\begin{verbatim}
+       MATErial ma
+         SOLID
+           ELAStic ISOTropic 200e9 0.3
+           DENSity mass      8.9
+           NURBS,,q1 q2 q3  ! or TSPLine,, q1 q2 q3
+\end{verbatim}
+A finite deformation model is used by adding the statement \texttt{FINIte}
+to the above or by specifying a specific finite deformation material model
+(e.g., \texttt{ELASTic NEOHook}).
+
+The standard implementations for mixed and enhanced forms does not work
+for an isogeometric analysis.  For meshes described by NURBS blocks a
+special form of the mixed formulation is available.  The formulation has
+nodal values for the displacements $\B{u}$ and the mean stress pressure $p$
+and a discontinuous approximation for the volume behavior in each element.
+For this formulation it is necessary to explicitly set the maximum number of
+nodal parameters on the control record.  Thus for a 2-d problem one starts
+an analysis by the statements
+\begin{verbatim}
+       FEAP * * <title information for mixed analysis>
+         0 0 0 2 3 0
+\end{verbatim}
+and for 3-d the statements
+\begin{verbatim}
+       FEAP * * <title information for mixed analysis>
+         0 0 0 3 4 0
+\end{verbatim}
+
+The material records are then given by
+\begin{verbatim}
+       MATErial ma
+         SOLID
+           ELAStic NEOHook  200e9 0.3
+           DENSity mass      8.9
+           NURBS,,q1 q2 q3  ! or TSPLine,, q1 q2 q3
+           MIXEd
+\end{verbatim}
+
+\subsection{Thin shell elements}
+
+The thin shell Kirchhoff-Love formulation by
+Kiendl \textit{et al.}\scite{kiendl09a} may be specified using the
+material commands
+\begin{verbatim}
+       MATErial ma
+         USER <24,25> 
+           ELAStic ISOTropic E nu
+           DENSity mass      ro
+           THICkness shell   h
+           <NURBs,TSPLine>,, q1 q2
+\end{verbatim}
+Element type 24 uses large displacement kinematics and
+element type 25 uses linear kinematics.
+The element has no rotation parameters and thus the control data may be set
+as
+\begin{verbatim}
+       FEAP * * <title information for shell analysis>
+         ndm = 3
+         ndf = 3
+\end{verbatim}
+

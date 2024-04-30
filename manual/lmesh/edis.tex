@@ -1,0 +1,67 @@
+\heada{MESH}{EDISplacement}
+\hspace{1.0cm}{{ edis                            \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ i-coor,xi-value,(d(j),j=1,ndf) \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ <etc.,terminate with a blank record> \hfill}}
+\headb
+
+The values of boundary displacment conditions may be set
+along any set of nodes which has a constant value of the
+{\it i-coordinate direction} (e.g., 1-direction (or x), 2-direction
+(or y), etc.).  The data to be supplied during the
+definition of the mesh consists of:
+
+\begin{center}
+\begin{tabular}{r l}
+\it i-coor   &-- Direction of coordinate (i.e., 1 = x, 2 = y, etc.) \\
+\it xi-value &-- Value of i-direction coordinate to be used during  \\
+             &\quad search (a tolerance of 1/1000 of mesh size is used  \\
+             &\quad during search, any coordinate within the gap is  \\
+             &\quad assumed to have the specified value).  \\
+\it d(1)     &-- Value of displacement for dof's  \\
+\it d(2)     &   \\
+\it ...      &   \\
+\it d(ndf)   &   \\
+\end{tabular}
+\end{center}
+While it is possible to specify both the force and the displacement applied
+to a node, only one can be active during a solution step.  The determination
+of the active value is determined from the boundary
+restraint condition value.  If the boundary restraint value is zero
+and you use one of the force-commands a force
+value is imposed, whereas, if the boundary restraint value is non-zero
+and you use one of the displacement-commands a
+displacement value is imposed. (See {\tt BOUN}dary, {\tt CBOU}ndary,
+or {\tt EBOU}ndary pages for setting boundary
+conditions.).  It is possible to change the type of boundary restraint
+during execution by resetting the boundary restraint value. It is not
+possible, to specify a displacement by using the combination of a 
+force-command with a non-zero boundary restraint value, as it was
+in the last releases of {\sl FEAPpv}. For further information see the
+{\tt CDIS}placement page.
+
+Displacement conditions may also be specified using the {\tt DISP}
+and {\tt CDIS} commands.
+The data is order dependent with data
+defined by {\tt DISP} processed first, {\tt EDIS} processed second and
+the {\tt CDIS} data processed last.  The value defined last is used for
+any analysis.
+\pagebreak
+
+\noindent{\bf{Example: EDISplacement}}
+
+All the nodes located on the $x_3 = z = 0$ plane are to have a vertical
+displacement ($2^{nd}$ dof) of -0.25 units.  This may be set using the commands
+\begin{verbatim}
+       EDISplacement
+         3 0.0  0.0 -0.25
+\end{verbatim}
+In addition it is necessary to specify boundary restraint codes for the nodes
+to which the condition is to be applied.  A simple way to do this is to use
+the command set:
+\begin{verbatim}
+       EBOUndary
+         3 0.0  0 1
+\end{verbatim}
+Of course the horizontal ($1^{st}$) dof could be restrained for any
+of the nodes also.
+\vfil\eject

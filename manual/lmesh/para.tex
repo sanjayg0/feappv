@@ -1,0 +1,58 @@
+\heada{MESH}{PARAmeter}
+\hspace{1.0cm}{{ para \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{ x = expression \hfill}}
+\headb
+
+The use of the {\tt PARA}meter command may be used to
+assign values to letter parameters.  A letter parameter is
+defined immediately following the {\tt PARA}meter command (several may
+follow terminating with a blank record) according to the
+following:
+
+\begin{verbatim}
+       x = expression
+\end{verbatim}
+where {\it x} may be any of the single letters ({\it a}-{\it z}), any group
+of two letters ({\it aa}-{\it zz}), or any letter and a
+numeral ({\it a0}-{\it z9})
+followed by the equal sign.  The expression may be any set of
+numbers (floating point numbers should contain an {\it E} or a {\it D}
+exponent format so they will not be interpretted as integer
+constants!) or one or two letter constants together with any of the
+arithmetic operations +, -, *, /, or $\hat {~}$.
+The expression is processed left to right and can contain one set of
+parentheses to force groupings.  Examples are:
+
+\begin{verbatim}
+       a  = 3.
+       bb = 14/3.45
+       f  = a + 3.23/bb
+       c  = f + 1.03e-04*a/bb
+       d1 = (f + 1.03e-04)*a/bb
+                      ! blank terminator
+\end{verbatim}
+In interactive mode of execution, the current set of paramater
+values may be output by entering {\it list} while in
+{\tt PARA}ameter input mode.  After listing, input of additional
+parameters may be continued.  It is possible to use expressions
+containing the parameters while in any input mode.
+
+An input file may contain multiple {\tt PARA}meter commands.  The
+values for parameters may be reset as needed.  If an
+expression requires more than one set of parentheses a parameter
+may be used to temporarily hold the value for one set of parentheses
+and then reset.  For example,
+
+\begin{verbatim}
+       a = cos( (2*n-1)*p/l )
+\end{verbatim}
+is not legal because of the nested parenthese, but may be replaced by
+
+\begin{verbatim}
+       a = 2*n-1
+       a = cos(a*p/l)
+\end{verbatim}
+which is legal.  Note the reuse and replacement of the {\it a} parameter.
+The list of functions permitted in expressions is defined in the user
+manual.
+\vfil\eject

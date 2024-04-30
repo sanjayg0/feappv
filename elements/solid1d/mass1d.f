@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2021: Regents of the University of California
+!....  Copyright (c) 1984-2024: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -23,6 +23,7 @@
       implicit  none
 
       include  'eldata.h'
+      include  'fdata.h'
       include  'pmod2d.h'
       include  'qudshp.h'
 
@@ -33,18 +34,19 @@
       save
 
 !     Set quadrature order
-
       call quadr1d(d)
 
 !     Set mass factors
-
-      cfac = d(7)
+      if(fl(1)) then
+        cfac = 1.0d0
+      else
+        cfac = 0.0d0
+      endif
       lfac = 1.d0 - cfac
 
       do l = 1,lint
 
 !       Compute shape functions
-
         call interp1d(l, xl, ndm,nel,.false.)
         dv = abs(jac(l))*d(4)
         if(stype.eq.3) then
@@ -56,18 +58,15 @@
         end if
 
 !       Compute db = rho*shape*dv
-
         j1 = 1
         do jj = 1,nel
 
 !         Compute lumped mass matrices
-
           aj1      = shp1(2,jj,l)*dv
           p(j1)    = p(j1)    + aj1
           s(j1,j1) = s(j1,j1) + aj1*lfac
 
 !         Compute consistent mass matrix
-
           aj1 = aj1*cfac
           i1  = 1
           do ii = 1,nel

@@ -1,6 +1,30 @@
 !$Id:$
       subroutine vem_plcon(k, nc, nel, xl, iplt, icl, v, vc, cont)
 
+!      * * F E A P * * A Finite Element Analysis Program
+
+!....  Copyright (c) 1984-2024: Regents of the University of California
+!                               All rights reserved
+
+!-----[--.----+----.----+----.-----------------------------------------]
+!     Modification log                                Date (dd/mm/year)
+!       Original version                                    23/08/2023
+!-----[--.----+----.----+----.-----------------------------------------]
+!      Purpose: Plot contours for VEM 2-d elements
+
+!      Inputs:
+!        k            - Order of VEM element
+!        nc           - Number of contours
+!        nel          - Number of element nodes
+!        xl(ndm,*)    - Nodal coordinates of element
+!        iplt(*)      -
+!        icl(*)       -
+!        v            - Nodal values of contour
+!        vc(*)        - Contour intervals
+!        cont         - Lines if true, fills if false
+
+!      Outputs:
+!-----[--.----+----.----+----.-----------------------------------------]
       implicit   none
 
       logical          :: cont
@@ -10,7 +34,6 @@
       real    (kind=8) :: xm(3,3), vq(4)
 
 !     Linear VEM
-
       if(k.eq.1) then
         vq(3)   = 0.0d0
         xm(:,3) = 0.0d0
@@ -23,7 +46,6 @@
         xm(:,3) = xm(:,3)/dble(nel)
 
 !       Plot triangular projections
-
         do i = 1,nel
           vq(1) = v(iplt(i))
           vq(2) = v(iplt(i+1))
@@ -38,7 +60,6 @@
         end do ! i
 
 !     Quadratic VEM
-
       elseif(k.eq.2) then
         vq(3)   = 0.0d0
         xm(:,3) = 0.0d0
@@ -51,7 +72,6 @@
         xm(:,3) = xm(:,3)/dble(nel-mod(nel,2))
 
 !       Plot triangular projections
-
         do i = 1,nel-mod(nel,2),2
           vq(1) = v(iplt(i))
           vq(2) = v(iplt(i+1))
@@ -76,7 +96,6 @@
         end do ! i
 
 !     k-order VEM
-
       else
         write(*,*) ' Not available in vFEAPpv'
       endif

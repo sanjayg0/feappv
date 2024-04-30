@@ -1,0 +1,97 @@
+% FEAPpv Isogeometric User Manual: Version 5.1 - Revised: May 2018
+
+\documentclass[12pt]{report}
+
+\topmargin 0.4in
+\advance \topmargin by -\headheight
+\advance \topmargin by -\headsep
+
+\setlength{\textwidth}{15.5cm}
+\setlength{\oddsidemargin}{+0.4cm}
+\setlength{\evensidemargin}{+0.4cm}
+\setlength{\textheight}{21.7cm}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{3mm}
+
+\usepackage{amsmath,amsfonts,graphicx,latexsym}
+\usepackage{makeidx,overcite}
+
+\usepackage[colorlinks=true,citecolor=blue,linkcolor=blue,bookmarksnumbered=true,pdfstartview={FitH},hyperindex=true,linktoc=all,linktocpage=true]{hyperref}
+
+\newcommand{\scite}[1]{\textsuperscript{\cite{#1}}}
+
+\newcommand{\Bf}[1]{\boldsymbol{#1}}
+\newcommand{\B}[1]{\mathbf{#1}}
+\newcommand{\Bc}[1]{\mathcal{#1}}
+\newcommand{\Bd}[1]{\mathbb{#1}}
+\newcommand{\Bs}[1]{\mathsf{#1}}
+
+\newcommand{\ul}{\underline}
+\newcommand{\dif}{\mathrm{d}}
+\newcommand{\q}{\quad}
+\newcommand{\qq}{\qquad}
+\newcommand{\pdif}[2]{\frac{\partial {#1}}{\partial {#2}}}
+\newcommand{\odif}[2]{\frac{\dif {#1}}{\dif {#2}}}
+\newcommand{\ph}{\phantom}
+
+\pagestyle{headings}
+\makeindex
+
+\title{\sl{FEAPpv} - - A Finite Element Analysis Program \\
+\rule{4.5in}{1pt} \\ {\large{Personal Version 5.1 Isogeometric User Manual}} \\}
+
+\author{Robert L. Taylor \\
+and \\
+Sanjay Govindjee \\
+Department of Civil and Environmental Engineering \\
+University of California at Berkeley \\
+Berkeley, California 94720-1710\\}
+
+\date{Revised May 2018}
+
+\begin{document}
+\bibliographystyle{unsrt}
+
+%\frontmatter
+\pagenumbering{roman}
+
+\maketitle
+
+\setlength{\parskip}{0mm}
+
+\tableofcontents
+
+\listoffigures
+
+\listoftables
+
+\setlength{\parskip}{3mm}
+\pagebreak
+
+\pagenumbering{arabic}
+%\mainmatter
+
+\input sect1.tex  % Introduction: Problem starts
+\input sect2.tex  % Loading
+\input sect3.tex  % Elevation and Knot insertion
+\input sect4.tex  % Multiple NURBS blocks, OUTM, solution
+\input sect5.tex  % T-splines solutions
+\input sect5ex.tex  % Mesh examples
+%\input sect6.tex  % Material models/element types
+
+% Bibliography
+
+%\bibliography{/Users/roberttaylor/Feap/biblio/book}
+ \bibliography{/Users/rlt/Feap/biblio/book}
+%\bibliography{/home/rlt/Feap/manual/biblio/book}
+%\bibliography{C:/Feap8/manual/biblio/book}
+
+% Appendices
+
+\appendix
+
+\input appxa.tex
+\input appenda.tex
+
+\printindex
+\end{document}

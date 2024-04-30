@@ -1,0 +1,106 @@
+\heada{SOLUTION}{PROPortional load}
+\hspace{1.2cm}{{prop,,$<$n1$>$ \hfill}} \\{\smallskip}
+\hspace{1.0cm}{{prop,,$<$n1,n2$>$ \hfill}}
+\headb
+
+In the solution of transient or quasi-static problems
+in which the {\tt TIME} command is used to describe each new
+time state the loading may be varied proportionally. At each
+time the applied loading will be computed from:
+\begin{verbatim}
+       F(i,t) = f0(i) + f(i)*prop(t)
+\end{verbatim}
+where {\tt f0(i)} is a fixed pattern which is initially zero but
+may be reset using {\tt NEWF}orce; {\tt f(i)} are
+the {\it force} and {\it displacement}
+nodal conditions defined during mesh input or
+revised during a {\tt MESH} command; and prop(t) is the
+value of the proportional loading at time {\tt t}.  Up to ten
+different proportional loading factors may be set.  Individual
+proportional factors may be assigned to degree of
+freedoms using the mesh command {\tt FPRO}portional.  If the
+assigned proportional loading number defined by {\tt FPRO} is
+zero, the sum of all active sets is taken as the proportional
+factor.  If the proportional loading number defined
+by 'fpro' is 'n1' then the value defined by set 'n1' only is
+used.  This permits individual nodal loads to be controlled
+by particular loading factors.
+
+For the form {\tt PROP,,N1}, the specific proportional
+loading is defined by specifying one set of records for each
+of the 'n1' values up to a maximum of 10 (default for {\tt N1}
+is 1, that is, {\tt PROP} alone inputs one set).  For the form
+{\tt PROP,,N1,N2}, the specific data for proportional loadings
+{\tt N1} to {\tt N2} are input.  Thus, {\tt PROP,,2,2} will assign the
+input data set to proportional loading number 2.
+
+Each set contains the following data:
+\begin{verbatim}
+       type, k, t-min, t-max, a(i),i=1,4
+\end{verbatim}
+
+The proportional loading may be specified as:
+\begin{enumerate}
+\item{
+Type 1 is defined by:
+\begin{equation}
+Prop(t) = a_1 + a_2 \, (t - t_{min})
+                 + a_3 \, \left(\sin( a_4 \, (t - t_{min}) \right)^{k}
+\end{equation}
+for all time values between {\tt t\_min} and {\tt t\_max}.  The value of
+{\tt k} must be a positive integer all other parameters are real.
+
+If a blank record is input the value of {\tt t\_min} is set to zero;
+{\tt t\_max} to $10^8$; a(1), a(3), and a(4) are zero; and a(2) is
+1.0 - this defines a ramp loading with unit slope.
+
+Example: The following defines a linearly increasing
+load to a maximum of 1.0 at time 10 and then a linearly
+decreasing load to time 20, after which the loading is
+zero:
+\begin{verbatim}
+       prop,,1,2
+       1  0  0.0  20.  0.  0.1  0.0  0.0  ! Set 1
+       1  0 10.0  20.  1. -0.2  0.0  0.0  ! Set 2
+\end{verbatim}
+Note that the negative slope is twice that of the increasing ramp.
+
+Also, if individual nodal forced conditions (e.g.,
+displacements or loads) have been assigned to proportional
+load number 1 (using the mesh 'fpro' command),
+the first input record result is used, whereas if
+assigned to number 2 the second input record is used.
+When no assignment is made or a zero is specified for
+the dof using the {\tt FPRO}, {\tt EPRO}, and/or {\tt CPRO}
+mesh commands the sum of the records is used.
+}
+\item{
+Type 2 is a table input.  The input is as follows:
+\begin{verbatim}
+       prop,,3    ! Input proportional loading 3 only
+       2,nn  (default nn is 1)
+       t\_1   ,p\_1,   t\_2   ,p\_2   , ... ,t\_nn  ,p\_nn
+       t\_nn+1,p\_nn+1,t\_nn+2,p\_nn+2, ... ,t\_2*nn,p\_2*nn
+                  ! etc., terminate with blank record
+\end{verbatim}
+The time points must be in an increasing order.  After the
+input of $t_1$, a zero time value terminates the input.
+Linear interpolation is used between each pair of times, $t_i$
+and $t_{i+1}$, for the two values, $p\_i$ and $p\_{i+1}$. This
+option is particularly useful for specifying cyclic loadings.
+
+Example:
+\begin{verbatim}
+       BATCH
+         PROP,,3
+       END
+         2,4
+         0.,0.  1.,1.  3.,-1.  5.,1.
+         7.,-1.  8.,0.  0.,0.
+                ! blank record
+\end{verbatim}
+gives a cyclic loading with linear behavior between the
+times 0. and 8. and is zero thereafter.
+}
+\end{enumerate}
+\vfill\eject

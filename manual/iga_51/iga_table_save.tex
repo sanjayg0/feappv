@@ -1,0 +1,50 @@
+
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{| c | r | p{11cm}|} \hline
+\texttt{UMACR} & uct & Description \\ \hline
+ 2 & \texttt{nzzp} & ZZ projection of stress for 2-d T-splines \\
+ 3 & \texttt{bdis} & Calls  \texttt{pdblock(3)} \\
+ 4 & \texttt{xloc} & Locate knot coordinate to insert boundary coordinate \\
+& & \texttt{BDIS,, x, y, z, blk\_no} \\
+ 5 & \texttt{bezi} & Bezier extraction from NURBS curve to generate power matrix form\\
+& & \texttt{BEZIer,, x, y, z} \\
+ 6 & \texttt{extr} & Compute extraction operator for 1-d forms. \\
+& & \texttt{EXTRact BEZIer n\_side} \\
+ 7 & \texttt{curv} & Elevation and knot insertion of curve \\
+& & \texttt{CURVe,, no, deg, ord }\\
+ 8 & \texttt{elev} & Elevate individual directions of NURBS block. \\
+& & \texttt{ELEVate block blk\_num dir inc\_order} \\
+ 9 & \texttt{inse} & Insert knot in individual directs of NURBS block. \\
+& & \texttt{INSERT block u\_knot times} \\
+ 0 & \texttt{eiga} & Determine elements on edges of NURBS blocks or T-splines.\\
+& & \texttt{EIGA,,dir xi} \\ \hline
+\end{tabular}
+\caption{Commands for NURBS/T-spline solutions. \label{tab1iga} }
+\end{center}
+\end{table}
+
+\begin{table}[t]
+\begin{center}
+\begin{tabular}{| r | p{11cm}|} \hline
+\texttt{ELMT} & Description \\ \hline
+ 1~ & NURBS Euler-Bernoulli beam \\
+ 2~ & NURBS 1-d rod. \\
+ 3~ & NURBS 1-d displacement boundary condition \\ 
+ 4~ & NURBS traction loading for tension strip \\
+ 5~ & NURBS \& T-spline thin $C^1$ plate \\
+ 6~ & NURBS \& T-spline thin membrane \\
+ 7~ & NURBS \& T-spline derivative boundary condition. \\
+ 8~ & Bending patch for Euler-Bernoulli beam ties. \\
+18~ & Global least squares boundary fit for NURBS quadrilateral region \\
+19~ & Local least squares boundary fit for NURBS quadrilateral region \\
+20~ & Follower couple to load thin shell element \\
+21~ & Thick shell ??? \\
+22~ & Reissner-Mindlin thick  isogeometric shell (Benson et al.) \\
+23~ & Thin isogeometric shell (Benson et al.) \\
+24~ & Thin isogeometric non-linear shell (Kiendl et al.) \\
+25~ & Thin isogeometric linear shell (Kiendl et al.) \\ \hline
+\end{tabular}
+\caption{User elements for NURBS/T-spline solutions. \label{tab2iga} }
+\end{center}
+\end{table}

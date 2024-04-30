@@ -1,0 +1,55 @@
+\heada{SOLUTION}{DISPlacements}
+\hspace{1.2cm} {{ disp,,<n1,n2,n3> \hfill}} \\{\smallskip}
+\hspace{1.0cm} {{ disp,coor,idir,xi \hfill}} \\{\smallskip}
+\hspace{1.0cm} {{ disp,all \hfill}} \\{\smallskip}
+\hspace{1.0cm} {{ disp,eigv,<n1,n2,n3> \hfill}}
+\headb
+
+The command {\tt DISP}lacement may be used to print the
+current values of the solution vector as follows:
+
+\begin{enumerate}
+\item{
+Using the command:
+
+\begin{verbatim}
+          disp,,n1,n2,n3
+\end{verbatim}
+prints out the current solution vector for nodes
+{\tt n1} to {\tt n2} at increments of {\tt n3} (default increment = 1).  If
+{\tt n2} is not specified only the value of node {\tt n1} is
+output.  If both {\tt n1} and {\tt n2} are not specified only
+the first nodal solution is reported.}
+
+
+\item{
+If the command is specified as:
+
+\begin{verbatim}
+          disp,coor,idir,xi
+\end{verbatim}
+all nodal quantities for the coordinate direction {\tt idir}
+with value equal to {\tt xi} are output.
+
+Example: 
+\begin{verbatim}
+          disp,coor,1,3.5
+\end{verbatim}
+prints all the nodal solution vector which have $x_1$ = 3.5.
+
+This is useful to find the nodal values along a particular
+constant coordinate line.}
+
+\item{
+If the command is specified as:
+
+\begin{verbatim}
+          disp,all
+\end{verbatim}
+all nodal solutions are output.}
+\end{enumerate}
+
+In order to output a solution vector it is first necessary to
+specify commands language instructions to compute the desired
+values, e.g., for displacements perform a static or transient analysis.
+\vfill\eject

@@ -1,0 +1,157 @@
+\chapter[Contact]{CONTACT PROBLEMS}
+\label{contact}
+
+The solution of problems in which the boundaries of one part of the
+system may interact with the boundaries of another part are called
+{\it contact} problems.  {\sl FEAP} provides options to solve problems
+in two or three dimensions in which conditions are imposed to prevent
+the penetration of one body into another.  In order to specify a
+contact analysis it is necessary to define the surfaces of the bodies
+which are to be considered during a contact analysis.  In addition a
+user must describe which of these surfaces are to be considered as 
+possible contacting pairs.  Finally, the modeling of the behavior of
+one surface interacting and/or sliding against another must be specified.
+
+In the current release of {\sl FEAP} the control of the penetration
+between bodies is implemented as a penalty or an augmented Lagrangian
+method.  Provisions are included to permit adding a Lagrange multiplier
+option at a later date.  For general problems the penetration is monitored
+from a {\it slave} point and a {\it master} point.  The slave point is
+a node and the master point is interpolated from a simple facet form
+associated with the boundary of an element.  This is often called a point
+to surface strategy.
+
+A contact problem is described by inserting the above information
+into the input data file after the mesh {\tt END} record and before
+the first solution commands.  Contact data may be given either before
+or after mesh manipulation commands.  The command sequence:
+\begin{verbatim}
+       CONTact options
+         ......
+       END contact
+\end{verbatim}
+defines the extent of contact input records.
+
+\section{Surface Definitions}
+
+After the {\tt CONT}act command it is necessary to define at least two
+surfaces which will be considered during the contact.  A surface command
+is defined by the form
+\begin{verbatim}
+       SURFace number
+         surface_type
+           surface data sets
+                          ! termination record
+\end{verbatim} 
+where {\tt number} is a numerical identifier for the surface which will
+be used as part of the {\tt PAIR} data defined below.  The
+{\tt surface-type} defines the shape of a contact facet and must be
+selected from: {\tt POIN}t, {\tt LINE}, {\tt TRIA}ngle, or
+{\tt QUAD}rilateral.  The {\tt POIN}t and {\tt LINE} options are used
+for two dimensional problems.  The {\tt POIN}t, {\tt TRIA}ngle, and
+{\tt QUAD}rilaterall options are used for three dimensional problems.
+The surface data sets may be defined using a {\tt FACE}t, {\tt BLOC}k,
+{\tt BLEN}d, or {\tt REGI}on option.  Using the {\tt FACE}t option
+requires specification of the node numbers for each element boundary segment.
+Typical data for a two dimensional problem with 2-node element boundary
+segments consists of:
+\begin{verbatim}
+       SURFace number
+         LINE
+           FACEts
+             M MG Mnode_1 Mnode_2
+             N NG Nnode_1 Nnode_2
+                ......
+                          ! termination record
+\end{verbatim} 
+where generation occurs from facets {\tt M} to {\tt N} using increments
+of {\tt MG} to each {\tt Mnode-i}.  This is performed in a manner similar
+to the element generations using the {\tt ELEM}ent mesh command.
+The facet inputs must describe a single surface entity, that is,`there can be
+no gaps between any facets.  The facets do not need to be in order but
+must be complete for a single surface.
+
+A surface may be {\it open}, with two distinct end points, or {\it closed}
+as for a wheel.
+
+The {\tt BLOCk} option is analogous to the way surface loads are generated
+using the {\tt CSUR}face mesh command.  The data for 2-node boundary segments
+is given as
+\begin{verbatim}
+       SURFace number
+         LINE
+           BLOCk SEGMent
+             1 x_1 y_1
+             2 x_2 y_2
+             3 x_3 y_3
+                          ! termination record
+\end{verbatim} 
+If only two master nodes are used to describe a block the segment is
+a straight line, whereas three points describe a parabola in the natural
+coordinate space.  The {\tt BLOCk SEGMent} command may be preceded by
+a {\tt BLOCk GAP value} to increase or decrease a search tolerance and/or by
+a {\tt BLOCk POLAr} command to perform the search in polar (or cylindrical)
+coordinates.
+
+The {\tt BLENd} option is analogous to the way sides are generated for
+blending function mesh generation.  At present only two dimensional
+surfaces may be defined by the contact blend option.  The data input is
+\begin{verbatim}
+       SURFace number
+         LINE
+           BLENd SEGMent
+             type sn_1 sn_2 sn_3 ....
+                          ! termination record
+\end{verbatim} 
+where {\tt type} is selected from {\tt CART}esian,
+{\tt POLA}r, or {\tt SEGM}ent.
+
+\section{Contact Material Models}
+
+The behavior of one surface interacting with another may be modeled in
+different ways.
+The current release includes very simple model in which the surface is
+considered as regular (no roughness or micro-mechanical details are to
+be specified) but may have frictional resistance.  For frictionless
+contact no material definition is required - {\sl FEAP} will assign default
+conditions.  If friction is present it is necessary to define a Coulomb
+frictional behavior.  This is included as the data set
+\begin{verbatim}
+       MATErial number
+         STANDard
+           FRICtion COULomb value
+                          ! termination record
+\end{verbatim} 
+where {\tt value} is a constant coefficient of friction.
+
+\section{Pair Definition}
+
+The interaction between two surfaces is controlled by the {\tt PAIR} command.
+This command describes which two surfaces are to be considered, the type of
+contact solution, the solution method, and solution tolerances.  A typical
+data set for solution of problems is given by
+\begin{verbatim}
+       PAIR number
+         NTOS slave master
+         SOLM PENAlty k_n k_t
+         TOLE values  t_1 t_2 t_3
+                          ! termination record
+\end{verbatim} 
+The parameter {\tt number} is an identifier numeral for the pair.  The
+basic solution strategy in two dimensions is node-to-segment ({\tt NTOS}) and
+requires the specification of a {\tt slave} surface identifier numeral and
+a {\tt master} surface identifier numeral.  The solution method may
+be given as {\tt SOLM PENAlty} with {\tt k-n} and {\tt k-t} the {\it penalty}
+parameters used for normal penetration control and tangential stick
+control, respectively.  alternatively, the command may be given as
+\texttt{SOLM LAGM} to impose normal gap constraints using a Lagrange multiplier
+method.  The parameter \texttt{k-n} may also be used to provide some
+\textit{stiffness} on the surface.  This stiffness is effective only during
+iteration process -- final gap is imposed exactly using the Lagrange
+multiplier approach.  The {\tt TOLE}rance option defines the values
+for solution tolerances: {\tt t-1} is a tolerance for defining initial
+penetration; {\tt t-2} is a tolerance for considering a contact open; and
+{\tt t-3} is an out of segment tolerance.
+Generally, some value for the out of segment tolerance is required to maintain
+contact when a slave node moves from one master segment to the next.  Other
+options exist to define augmentation forms and material models.

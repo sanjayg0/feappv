@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2021: Regents of the University of California
+!....  Copyright (c) 1984-2024: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -99,11 +99,11 @@
       end do
 
 !     Transfer to correct process
-
-      go to (1,2,2,4,5,6,7,8,9,10,11,12,13), j
+      go to (1,2,2,4,5,6,7,8,9,10,11,12,13,1), j
 
 !     Print stress values
 
+!     [flux,,k1,k2,k3]        - output elmt values for k1 to k2 inc k3
 !     [stre,,k1,k2,k3]        - output elmt values for k1 to k2 inc k3
 !     [stre,all]              - output all element values
 !     [stre,node,k1,k2,k3]    - output nodal stresses k1 to k3 inc k3
@@ -421,10 +421,19 @@
 !     Compute residual for time step/iteration
 
 !     [form]       - form rhs residual
+!     [form,long]  - format long
+!     [form,shor]  - format short
 !     [form,acce]  -    " + get initial acceleration if needed
 !     [form,expl]  -    " + do explicit solution with lumped mass
 
-4     if(fl(8)) return
+4     if(pcomp(lct(l),'long',4)) then
+        fmt_long = .true.
+        return
+      elseif(pcomp(lct(l),'shor',4)) then
+        fmt_long = .false.
+        return
+      endif
+      if(fl(8)) return
       rfl = .false.
       call ploa1(ttim,dt)
       call pload(mr(np(31)),hr(np(30)),hr(np(26)),prop*rlnew,tr)

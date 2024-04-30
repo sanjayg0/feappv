@@ -1,6 +1,14 @@
 !$Id:$
       subroutine vem_cent2d(xl,ndm,nel)
 
+!      * * F E A P * * A Finite Element Analysis Program
+
+!....  Copyright (c) 1984-2024: Regents of the University of California
+!                               All rights reserved
+
+!-----[--.----+----.----+----.-----------------------------------------]
+!     Modification log                                Date (dd/mm/year)
+!       Original version                                    23/08/2023
 !-----[--+---------+---------+---------+---------+---------+---------+-]
 !     Purpose: Compute volume and centroid for VEM
 
@@ -45,20 +53,18 @@
       data    tol / 1.d-12 /
 
 !     Compute an anchor point
-
       elq(4,1:3) = 1.d0/3.0d0
 
       vol   = 0.0d0
-      xc(:) = 0.0d0
 
 !     Compute the various cases
-
       select case (k_order)
 
         case (1)        ! Linear edges
 
           xb(:) = sum(xl,2)/dble(nel)
 
+          xc(:) = 0.0d0
           do n = 1,nel
             m     = mod(n,nel) + 1
             dvl   = (xl(1,n) - xb(1))*(xl(2,m) - xb(2))
@@ -80,6 +86,7 @@
 
           ll = 0
           ne = nel/2 ! Number of edges
+          xc(:) = 0.0d0
           do n = 1,ne
             m      = mod(n,ne) + 1
             c      = ne + n        ! Mid-edge node number

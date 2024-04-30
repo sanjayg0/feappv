@@ -1,0 +1,120 @@
+\chapter[Problem Definition]{PROBLEM DEFINITION}
+\label{def}
+
+To perform an analysis using the finite element method the first step is
+to subdivide the region of interest into elements and nodes.  In this
+process the analyst must make a choice on: (a) the type of elements to
+use, (b) where to place nodes, (c) how to apply the loading and
+boundary restraints, (d) the appropriate material model
+and values of its parameters in each element, and (e) any other aspects
+relating to the particular problem.  The specification of the node and
+element data defines what we will subsequently refer to as the
+{\it finite element mesh} or, for short, the {\it mesh} of the problem.  
+In order to complete a problem specification it is necessary also to
+specify additional data, e.g., boundary conditions, loads, etc..
+
+Once the analyst has defined a model of the problem to be solved it is 
+necessary to  define the nodal and element data in a form
+which may be interpreted by {\sl FEAPpv}.  The steps to define 
+a mesh for {\sl FEAPpv}
+are contained in Chapters \ref{meshin} to \ref{manip}
+and the input data for several
+example problems is described in the {\sl FEAP Example Manual}.\scite{feape}
+Each of the commands available for constructing mesh data for \textsl{FEAPpv}
+is described in Appendix A.
+
+The second phase of a finite element analysis is to specify the 
+solution algorithm for the problem.  This may range from a simple
+linear static (steady state)
+analysis for one loading condition to a more complicated transient
+non-linear analysis subjected to a variety of loading conditions.  {\sl FEAPpv}
+permits the user to specify the solution algorithm utilizing
+a solution command language which is described in Chapter \ref{command} and
+also illustrated in the book.\scite{zt1n,zt2n}
+Each solution command is also described in Appendix B of this report.
+
+\section{Execution of FEAPpv and Input/Output Files.}
+
+The execution of {\sl FEAPpv} is initiated by issuing the command:\footnote{Users
+may give a different name for the executable during the compilation of the full
+system -- it is then necessary to specify this name instead of the one stated above.}
+\vskip 0.1in \par\noindent
+\begin{verbatim}
+            FEAPpv
+\end{verbatim}
+In PC use it is possible to execute the program using standard windows options
+or to open an MS-DOS window and execute with the above command.
+If this is a first execution of the program it is necessary to
+provide names for the file containing
+the input data and those to receive output information.  Upon a successful first
+execution of the program a file \texttt{feappvname} will be written to disk to
+preserve the name for each of the input and output disk files.
+If it is desired to reinstall the program the \texttt{feappvname}
+file should be deleted and the \texttt{FEAPpv} command then reissued.
+
+For each subsequent execution of the program using the \texttt{FEAPpv} command,
+the analyst receives prompts for a new input data filename,
+as well as for the filenames which are to contain the
+output of results and diagnostics, and
+restart files (used if subsequent analyses are desired starting 
+with the final results of a previous execution).
+The name of a default selection will also be indicated and may be accepted
+by pressing the return (enter) key without specifying any other data.
+Prior to running {\sl FEAPpv} it is necessary to create the input data file
+using a standard text editor or word processing system. The other
+files are created by {\sl FEAPpv}.  A large part of the remainder of
+this manual is directed to defining
+the steps needed to create a valid input data file and to describe the
+command language instructions needed to solve and output results for
+a problem.
+
+\section{Modification of Default Options}
+
+At the time that the executable version of {\sl FEAPpv} is created
+default values for several parameters may be set in file {\tt feappv.f}.
+These default parameters may be changed without recompilation
+by creating a file named {\tt feap.ins} which contains the new values for
+specific parameters.  This file must be placed in each directory where
+problems are to be solved.  The {\tt feap.ins} file contains separate records
+which define the default parameters to be employed during any solution.  The
+current options are given in Table \ref{tab22}.
+
+\begin{table}
+\begin{center}
+\begin{tabular}{l l l |  l}
+Option & Parameter 1 & Parameter 2 & Description \\ \hline
+manfile & mesh & path & Path to locate MESH \\
+ & & & COMMAND manual pages \\
+        & macr & path & Path to locate SOLUTION \\
+ & & & COMMAND manual pages \\
+        & plot & path & Path to locate PLOT \\
+ & & & COMMAND manual pages \\
+        & elem & path & Path to locate USER \\
+ & & & ELEMENT manual pages \\ \hline
+noparse & & & Assumes input data is mostly \\
+ & & & numeric  \\
+parse & & & Assumes input data contains \\
+ & & & parameters  \\ \hline
+graphic & prompt & off & Turns off contour prompts \\
+        &        & on  & Turns on contour prompts \\
+        & default & off & Turns off graphics defaults \\
+        &         & on  & Turns on graphics defaults \\ \hline
+postscr & color & reverse & Makes color PostScript files \\
+ & & & with reversed order. \\
+        &       & normal  & Makes color PostScript files \\
+ & & & with normal order. \\ \hline
+helplev & basic & & Default level for commands \\
+ & & & Same as: MANU,0 \\
+        & interm & & Default level for commands \\
+ & & & Same as: MANU,1 \\
+        & advance & & Default level for commands \\
+ & & & Same as: MANU,2 \\
+        & expert & & Default level for commands \\
+ & & & Same as: MANU,3 \\
+increment & value & & Set increment value change to \\
+ & & & force reduction in array size. \\
+\end{tabular}
+\caption{Options for Changing Default Parameters}
+\label{tab22}
+\end{center}
+\end{table}

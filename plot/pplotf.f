@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2021: Regents of the University of California
+!....  Copyright (c) 1984-2024: Regents of the University of California
 !                               All rights reserved
 
 !     P l o t   C o n t r o l   R o u t i n e   F o r   F E A P
@@ -71,7 +71,7 @@
 !     Dictionary storage
 
       integer           :: list
-      parameter         (  list = 46)
+      parameter         (  list = 48)
       character (len=4) :: wd(list)
       integer           :: ed(list)
 
@@ -84,7 +84,7 @@
      2        'fill','eigv','scal','axis','pers','hide','defo','unde',
      3        'cont','velo','acce','post','reac','mate','dofs','estr',
      4        'pstr','prom','defa','rang','nora','snod','prof','manu',
-     5        'uplo',
+     5        'flux','uplo','utot',
      u        'plt1','plt2','plt3','plt4','plt5'/
 
       data ed/    1,     0,     1,     2,     0,     1,     0,     0,
@@ -92,7 +92,8 @@
      2            0,     0,     1,     0,     0,     0,     0,     0,
      3            0,     0,     0,     0,     0,     0,     1,     0,
      4            0,     2,     2,     1,     1,     0,     0,     4,
-     u            3,     4,     4,     4,     4,     4/
+     5            0,     3,     0,
+     u            4,     4,     4,     4,     4/
 
       data ss/.25d0,.75d0,.25d0,.75d0/,tt/.75d0,.75d0,.25d0,.25d0/
       data tr/.true./, fa /.false./
@@ -100,11 +101,9 @@
 !-----[--.----+----.----+----.-----------------------------------------]
 
 !     Assign storage for deformed position
-
       setvar = palloc( 53, 'CT   ', 3*numnp, 2)
 
 !     Initialize on first call
-
       if(.not.pfl) then
 
         npid = id31         ! ID
@@ -154,7 +153,6 @@
         maplt   = 0
 
 !       Determine 3-d sizes for surface plots
-
         setvar = palloc(128,'APLOT',numel  ,1)
         call setclp(hr(npxx),ndm,numnp)
         call plfacn(mr(np(33)),mr(np(128)),nen,
@@ -175,7 +173,6 @@
         end do ! i
 
 !       Set initial conditions for no perspective
-
         kpers   = 0
         call pzero (xsyc,3)
         call pzero (eold,3)
@@ -193,7 +190,6 @@
         call frame(hr(npxx),ndm,numnp,1)
 
 !       Check for user plot library names
-
         do i = 1,5
           k4 = list - 5 + i
           if(.not.pcomp(upltc(i),wd(k4),4)) then
@@ -203,7 +199,6 @@
         end do ! i
 
 !     Check for elements currently active
-
       else
         if(pltact) then
           pltact = fa
@@ -245,7 +240,6 @@
       ijump = 0
 
 !     Start plot or clear screen
-
 60    if(iclear.eq.0) then
         call plopen
         call plclos
@@ -278,7 +272,6 @@
       endif
 
 !     Set initial values for parameters
-
       ipb    = 0
       dtext  = 0.0d0
       do l = 1,list
@@ -289,7 +282,6 @@
       go to 200
 
 !     Set 'ct' parameters for interactive mode
-
 100   if(ijump.ne.0) then
         setvar = vinput(tx(2),15,ct(1),1)
         ct(2)  = td(1)
@@ -300,7 +292,6 @@
       endif
 
 !     Transfer to requested plot operation
-
       go to( 1, 1, 3, 4, 5, 6, 7, 8, 9, 9,11,12,13,14,15,16,17,18,19,20,
 
 !            f  w  f  c  c  l  m  o  l  d  s  n  b  e  z  c  f  e  s  a
@@ -315,12 +306,12 @@
 !            r  d  f  d  n  l  c  s  a  t  f  t  t  o  f  n  r  o  o  n
 !            s  e  o  e  t  o  e  t  c  e  s  r  r  m  a  g  a  d  f  u
 
-     &      41, 800,800,800,800,800), l
+     &      11, 41, 25,800,800,800,800,800), l
 
-!            u   p   p   p   p   p
-!            p   l   l   l   l   l
-!            l   t   t   t   t   t
-!            o   1   2   3   4   5
+!            f   u   u   p   p   p   p   p
+!            l   p   t   l   l   l   l   l
+!            u   l   o   t   t   t   t   t
+!            x   o   t   1   2   3   4   5
 
       go to 200
 
@@ -331,7 +322,6 @@
 !                   ifrm = 3 for lower-left
 !                   ifrm = 4 for lower-right
 !                   ifrm = 5 for legend Box
-
 1     ifrm = nint(ct(1))
       ifrm = min(5,ifrm)
 110   if(ifrm.ge.1 .and. ifrm.le.4) then
@@ -345,7 +335,6 @@
       endif
 
 !     [wipe,ifrm,noclean] - ifrm as above - clean screen
-
       if(l.eq.2) then
         xp(1) = real(min(-ct(1),ct(2)))
         if(ifrm.eq.0) iclear = 0
@@ -361,7 +350,6 @@
       go to 200
 
 !     [fact,value] - Multiply plot area by 'value'
-
 3     if(ct(1).eq.0.0d0) then
         fact = 1.0
       else
@@ -370,7 +358,6 @@
       go to 110
 
 !     [cent]er,s0-1,s0-2  - center graphics in window
-
 4     if(abs(ct(1))+abs(ct(2)).ne.0.0d0) then
         s0(1) = ct(1)
         s0(2) = ct(2)
@@ -381,7 +368,6 @@
       go to 200
 
 !     [cart] - cartesian view: (l=5)
-
 5     nix   = 33
       nxd   = nen1
       nxn   = nen
@@ -395,7 +381,6 @@
 
 !     [line,value,width] - 'value' is line type
 !                          'width' is line width (device dependent)
-
 6     iln(1) = max(0,min(nint(ct(1)),7))
       iln(2) = max(0,min(nint(ct(2)),5))
       if(ior.lt.0) then
@@ -454,7 +439,6 @@
 !     [outl,k1,k2] - Outline of 2-d meshes
 !              k1  - 3-d outline
 !              k2 < 0 alters line color
-
 8     call pdefm(hr(npxx),hr(npuu),cs,hr(np(45)),ndm,ndf,numnp,
      &           hr(np(53)),.true.)
       call plopen
@@ -472,7 +456,6 @@
       go to 200
 
 !     [load,,k1] - Plot load vector: k1 > 0 tip on node
-
 9     call plopen
       call pppcol(3,1)
       call pdefm(hr(npxx),hr(npuu),cs,hr(np(45)),ndm,ndf,numnp,
@@ -494,7 +477,6 @@
         setvar = palloc(112,'TEMP2',0,2)
 
 !     [disp,,k1] - Plot displacement vector: k1 > 0 tip on node
-
       elseif(l.eq.10) then
         call pltfor(hr(np(53)),hr(npuu),hr(np(45)),mr(np(31)),
      &              mr(np(111)),3,ndf,numnp,k1,2)
@@ -504,13 +486,13 @@
       go to 200
 
 !     Stress contours
+!     [flux,k1,k2,k3] - k1 = component number (1-ndf) - Projected values
 !     [stre,k1,k2,k3] - k1 = component number (1-ndf) - Projected values
 !     [pstr,k1,k2,k3] - k1 = component number (1-4)   - Principal values
 !     [estr,k1,k2,k3] - k1 = component number (1-ndf)
 !                       k2 = # lines (fill if <,= 0)
 !                       k3 = 0: superpose mesh
 !                       k3 > 0: no mesh
-
 11    ipb = nint(ct(3))
       setvar = palloc( 58,'NDNP',numnp*npstr,2)
       setvar = palloc( 57,'NDER',numnp*8    ,2)
@@ -528,7 +510,7 @@
 !     if(.not.fl(11)) then
         call pjstrs(trifl)
 !     endif
-      if(l.eq.11) then
+      if(l.eq.11 .or. l.eq.41) then
         k1 = min(npstr-1,max(k1,1))
         fp(2)= fp(1) + numnp*(k1 - 1)
         k5 = 1
@@ -550,7 +532,6 @@
       k3 = 1
 
 !     No projection case
-
       if(l.eq.32) then
         if(.not.hide) then
           setvar = palloc(111,'TEMP1',numel*nen,2)
@@ -571,7 +552,6 @@
 !     [node,k1,k2] - Plot nodes k1 to k2 & numbers
 !                               k1 = 0 show all nodes & numbers
 !                               k1 < 0 show all nodes, no numbers
-
 12    call pdefm(hr(npxx),hr(npuu),cs,hr(np(45)),ndm,ndf,numnp,
      &           hr(np(53)),.true.)
       setvar = palloc(111,'TEMP1',numnp,1)
@@ -598,7 +578,6 @@
       go to 200
 
 !     [boun,k1] - Plot/label boundary restraints; k1 > 0
-
 13    call pdefm(hr(npxx),hr(npuu),cs,hr(np(45)),ndm,ndf,numnp,
      &           hr(np(53)),.true.)
       setvar = palloc(111,'TEMP1',numnp,1)
@@ -612,7 +591,6 @@
       go to 200
 
 !     [elem],n1,n2 - Label elements with numbers n1 to n2 (default = all)
-
 14    call pdefm(hr(npxx),hr(npuu),cs,hr(np(45)),ndm,ndf,numnp,
      &           hr(np(53)),.true.)
       call plopen
@@ -629,7 +607,6 @@
       go to 200
 
 !     [zoom,k1,k2] Set window for zoom; k1 = 1st node; k2 = 2nd node
-
 15    nzm1 = nint(ct(1))
       nzm2 = nint(ct(2))
       fwin = .false.
@@ -637,7 +614,6 @@
      &           hr(np(53)),.true.)
 
 !     Construct perspective projection if necessary
-
       if(kpers.ne.0) then
         call frame(hr(np(53)),  3,numnp,-1)
         call perspj(hr(np(53)),mr(npty),numnp,errv)
@@ -652,7 +628,6 @@
 !                    k1 >= 0  color postscript
 !                    k2 =  0  standard color order
 !                    k2 != 0  reversed color order
-
 16    icol = nint(ct(1))
       if(ct(1).lt.0.0d0) then
         if(ior.lt.0) write(*,*) 'PostScript - grayscale'
@@ -674,7 +649,6 @@
 
 !     [fill,k1],<k2> - fill current material in color 'k1'
 !                    - no 'Time =' displayed if 'k2' non-zero.
-
 17    call pdefm(hr(npxx),hr(npuu),cs,hr(np(45)),ndm,ndf,numnp,
      &           hr(np(53)),.true.)
       k1 = nint(ct(1))
@@ -687,20 +661,16 @@
 
 !     [eigv,k1,k2,k3] - Plot eigenvector for value 'k1' and material 'k2'
 !                       k2 = 0 for all materials. k3-dof
-
 18    k1 = max(1,min(mq,int(abs(ct(1)))))
 
 !     Place value on screen
-
       call pleigt(hr(np(76)+k1-1))
 
 !     Compute current deformed state of coordinates
-
       call pdefm(hr(npxx),hr(npuu),cs,hr(np(45)),ndm,ndf,numnp,
      &           hr(np(53)),.true.)
 
 !     Add unit scaled eigenvector to deformed coordinates
-
       setvar = palloc(111,'TEMP1',nneq,2)
       call pmovec(mr(np(31)),hr(np(77)+(k1-1)*neq), hr(np(111)),
      &            nneq)
@@ -745,7 +715,6 @@
       go to 200
 
 !     [scal,cs,c2,c3] - Rescale for deformed window
-
 19    nzm1 = 0
       nzm2 = 0
       jj   = 2
@@ -757,7 +726,6 @@
       if(ct(3).eq.0.0d0) jj = 1
 
 !     Construct perspective projection if necessary
-
       if(kpers.ne.0) then
         call frame(hr(np(53)),  3,numnp,-jj)
         call perspj(hr(np(53)),mr(npty),numnp,errv)
@@ -768,7 +736,6 @@
       go to 200
 
 !     [axis,x,y] - Plot axes at screen coords x,y
-
 20    xm = 0.1*max(xmax(1)-xmin(1),xmax(2)-xmin(2),xmax(3)-xmin(3))
       call plopen
       call pppcol(1,1)
@@ -782,7 +749,6 @@
 
 !     [pers] Input parameters for perspective projection
 !     [pers,on,zview] - zview = ??
-
 21    call plopen
       kpers   = 1
       odefalt = defalt
@@ -810,7 +776,6 @@
       go to 200
 
 !     [hide,nopl,back,color] Plot visible mesh
-
 22    call pdefm(hr(npxx),hr(npuu),cs,hr(np(45)),ndm,ndf,numnp,
      &           hr(np(53)),.true.)
       hide  = tr
@@ -827,7 +792,6 @@
       endif
 
 !     Set plot mesh quantities
-
       dumv = ct(2)
       call phide(dumv,nix,nxd,nxn,nne,nface,iln)
 
@@ -837,7 +801,6 @@
 !           scale  = multiplier on displacements (default=1)
 !           resize = non-zero: do not rescale plot region
 !           escale = multiplier on eigenvectors  (default=1)
-
 23    cs = ct(1)
       es = ct(3)
       if(max(cs,es).eq.0.0d0) cs = 1.d0
@@ -849,7 +812,6 @@
       go to 200
 
 !     [unde,,resize,escale]; do not rescale if resize is non-zero
-
 24    cs = 0.0d0
       if(ior.lt.0) write(*,2012) es
 
@@ -864,7 +826,7 @@
 !                       k2 = # lines (fill if <,= 0)
 !                       k3 = 0: superpose mesh
 !                       k3 > 0: no mesh
-
+!     [utot,k1,k2,k3] - k2 = #dofs
 25    k2  = nint(ct(2))
       ipb = nint(ct(3))
       n   = abs(k2)
@@ -879,18 +841,25 @@
       setvar = palloc(111,'TEMP1',nneq,2)
 
 !     Contours of dependent variables
-
-      if(l.eq.25) then
+      if(l.eq.25 .or. l.eq.42) then
         call protv(mr(npty),hr(npuu),hr(np(45)),ndm,ndf,numnp,
      &             hr(np(111)),.true.)
-        fp(1) = np(111)
-        icp = ndf
+!       Total of components
+        if(l.eq.42) then
+          setvar = palloc(112,'TEMP2',nneq,2)
+          call dtot_pl(hr(np(111)),hr(np(112)), i)
+          fp(1) = np(112)
+          icp = ndf
+          i   = 1
+        else
+          fp(1) = np(111)
+          icp = ndf
+        endif
         call rprint(hr(fp(1)+i-1),icp,k4)
         call pltcon(hr(np(53)),mr(np(32)),mr(np(nix)),mr(np(62)),
      &              hr(fp(1)),nie,3,icp,nxd,nxn,i,n,i,2,labl)
 
 !     [velo,k1,k2,k3]
-
       elseif(l.eq.26) then
         if(fl(9)) then
           call protv(mr(npty),hr(np(42)),hr(np(45)),ndm,ndf,numnp,
@@ -909,7 +878,6 @@
         endif
 
 !     [acce,k1,k2,k3]
-
       elseif(l.eq.27) then
         if(fl(9)) then
           call protv(mr(npty),hr(np(42)+nneq),hr(np(45)),ndm,ndf,
@@ -928,16 +896,15 @@
         endif
       endif
       setvar = palloc(111,'TEMP1',0,2)
+      if(l.eq.42) setvar = palloc(112,'TEMP2',0,2)
       call pltime()
       go to 200
 
 !     [post] or [post,1] (0=portrait mode, 1=landscape mode)
 !            PostScript -  open or close file
-
 28    if (.not. hdcpy) then
 
 !       Open PostScript file, set hdcpy=.true.
-
         hdcpy = tr
         psfram = (ct(1) .ne. 0.0d0)
         hdlogo = (ct(2) .eq. 0.0d0)
@@ -950,14 +917,12 @@
       else
 
 !       Close PostScript file, set hdcpy=.false.
-
         call fpplcl()
         hdcpy = fa
       endif
       goto 200
 
 !     [reac,,k2]  Plot nodal reactions; k2=non-zero gives tip at node
-
 29    call plopen
       call pppcol(5,1)
       setvar = palloc(111,'TEMP1',numnp,1)
@@ -982,7 +947,6 @@
       goto 200
 
 !     [mate,#] - Set material number for plots (reset projection flag if new)
-
 30    k1    = maplt
       maplt = nint(ct(1))
       maplt = max(0,min(maplt,nummat))
@@ -996,17 +960,14 @@
       endif
 
 !     Set element material number to all processed
-
       if(maplt.eq.0) then
 
 !       Set normal material numbers to zero value
-
         do i = 0,numel-1
           mr(np(128)+i) = 0
         end do
 
 !     Set element material numbers so only 'maplt' is processed
-
       else
 
         k1 = 0
@@ -1040,7 +1001,6 @@
       go to 200
 
 !     [dofs,k1,k2,k3] - Reset degree-of-freedoms for deformed plots
-
 31    do i = 1,3
         pdf(i) = nint(ct(i))
       end do
@@ -1051,7 +1011,6 @@
       go to 200
 
 !     [prom]pt,<on,off> - Set graphics prompt level
-
 34    if(pcomp(tx(2),'off',3) .or. ct(1).eq.1.d0) then
         prompt = .false.
       else
@@ -1060,7 +1019,6 @@
       go to 200
 
 !     [defa]ult,<on,off> - Set graphics defaults
-
 35    if(pcomp(tx(2),'off',3) .or. ct(1).eq.1.d0) then
         defalt = .false.
       else
@@ -1069,7 +1027,6 @@
       go to 200
 
 !     [rang]e,,min,max - range for fill plots
-
 36    if(pcomp(tx(2),'off',3)) then
         rangfl = .false.
         if(iow.lt.0) write(*,2008)
@@ -1082,7 +1039,6 @@
       go to 200
 
 !     [nora]nge - off
-
 37    rangfl = .false.
       if(iow.lt.0) write(*,2008)
       go to 200
@@ -1090,7 +1046,6 @@
 !     [snod,k1,k2] - Plot supernodes nodes k1 to k2 & numbers
 !                               k1 < 0 show all nodes
 !                               k1 = 0 show all nodes & numbers
-
 38    k4 = nint(ct(1))
       if(k4.lt.0) then
         k1 = 0
@@ -1117,25 +1072,21 @@
 
 !     [prof]ile,<ct.eq.0> - Plot layout of upper profile
 !     [prof]ile,<ct.ne.0> - Plot layout of total profile
-
 39    call plopen
       call pltprf(mr(np(21)),neq,ct(1).ne.0.0d0)
       go to 200
 
 !     [manu]al,,hlplev - Set manual help display level
-
 40    hlplev = max(-1,min(3,nint(ct(1))))
       go to 200
 
 !     [uplo]t - ct: User plots
-
 41    call plopen
       call pppcol(1,0)
       call uplot(ct)
       go to 200
 
 !     User plot option library
-
 800   k4 = l + 5 - list
       call plopen
       call pppcol(1,0)
@@ -1143,7 +1094,6 @@
       go to 200
 
 !     Close plot
-
 200   call plclos
       if(ijump.ne.0) go to 60
 

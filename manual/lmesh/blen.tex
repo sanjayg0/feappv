@@ -1,0 +1,65 @@
+\heada{MESH}{BLENd}
+\hspace{1.0cm}{{\quad blen (Surface in 2 or 3-D) \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{\quad surf,r-inc,s-inc,[node1,elmt1,mat],b-type \hfill}}
+\\{\smallskip}
+\hspace{1.8cm}{{\quad (snode(i),i=1,4) \hfill}} \\{\smallskip}
+\hspace{1.0cm}{{\quad blen (3-D Solid) \hfill}} \\{\smallskip}
+\hspace{1.4cm}{{\quad soli,r-inc,s-inc,t-inc,[node1,elmt1,mat],b-type \hfill}}
+\\{\smallskip}
+\hspace{1.8cm}{{\quad (snode(i),i=1,8) \hfill}}
+\headb
+
+{\sl FEAPpv} can generate patches of a mesh using the {\tt BLEN}ding
+function mesh command.  Blending functions are briefly discussed in the
+Zienkiewicz \& Taylor finite element book, volume 1 pp 181 ff.  Each
+super node is defined by an input of the following information:
+
+The {\tt BLEN}d data input segment may be used to generate:
+\begin{enumerate}
+\item 4-node quadrilateral elements in 2 or 3-D.
+\item 8-node bricks in 3-D.
+\end{enumerate}
+
+For surface patches
+the nodes and quadrilateral elements
+defined by {\tt BLEN}d command is developed from a master
+element which is defined by an isoparametric
+mapping function in terms of the two natural coordinates,
+r (or $\xi_1$) and s (or $\xi_2$), respectively.
+The node numbers on the master element of each
+patch defined by {\tt BLEN}d are defined from the values of the
+four super-nodes used to define the vertices of the blend patch region.
+The four vertex super-nodes are numbered in any right-hand rule sequence.
+The r-direction ($\xi_1$) is defined along the direction of the first
+two super-nodes and the s-direction ($\xi_2$) along the direction of the
+first and fourth super-nodes.
+The vertex super-nodes are used as the end nodes which define the four edges
+of the blend patch. {\sl FEAPpv} searches the list of edges defined by the
+the {\tt SIDE} command.  If a match is found it is used as the patch edge.
+If no match is found {\sl FEAPpv} will define a straight edge with linear
+equal increment interpolation used to define the spacing of
+nodes in the finite element mesh.  Care must be used in defining any
+specified sides in order to avoid errors from this automatic generation.
+
+For three dimensional solid patches the same technique is used; however, now
+it is necessary to define eight vertex super-nodes to define the blend
+patch.  The eight nodes are numbered by any right-hand rule sequence.
+The r-direction and s-direction are defined in the same way as for the
+surface patch.  The third t-direction ${\xi_3}$ is along the direction defined
+by the first to fifth vertex super-node.
+
+The r-, s-, and t-increments are used in the same manner as for the {\tt BLOC}k
+command.  Care must be used in defining the increments along any direction
+which involves a multi-segment interpolation to ensure that the total number
+of intervals from the side definition for the mult-segment agrees with the
+number of increments specified with the {\tt BLEN}d command.
+
+Examples for two and three dimensional blends are illustrated in the {\sl FEAPpv}
+User Manual.
+
+Since the description of the {\tt BLEN}d command depends on existence of 
+{\tt SNOD}e and {\tt SIDE} command data, the actual generation of nodes and
+elements is deferred until the entire mesh data has been defined.  Thus,
+errors may not appear in the output file in the order data was placed in the
+input file.
+\vfil\eject

@@ -1,0 +1,22 @@
+\heada{SOLUTION}{SAVE}
+\hspace{1.0cm}{{save,$<$fileext$>$ \hfill}}
+\headb
+
+The {\tt SAVE} command may be used to save the
+current solution state and history data for use as a restart
+file.  In the solution of complicated nonlinear problems
+where difficulties are expected in achieving convergence
+(e.g., a solution step may produce an overflow which terminates
+exectution) a restart state may be saved on the disk
+for each converged state.  The problem may then be initiated
+from any of the saved states and continued.
+
+The {\tt fileext} is optional and may be any 1-4
+alphanumeric characters and is appended to the name of the
+current restart save file which was named when the problem
+was started if specified.  In interactive mode should a name
+be given which already exists the user receives a prompt for
+an alternate name or given the opportunity to write over the
+old file.
+\vfill\eject
+

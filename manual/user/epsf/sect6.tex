@@ -1,0 +1,79 @@
+\chapter[Mesh Input Data]{MESH INPUT DATA SPECIFICATIONS}
+\label{meshin}
+
+The description of the mesh data for a problem to be solved by {\sl FEAP}
+consists of several parts as described in the following sections.
+
+\section{Start of Problem and Control Information}
+\label{start}
+
+The first part of an input data file contains the {\it control data}
+which consists of two records:
+\begin{enumerate}
+\item
+A start/title record which must have as the
+first four non-blank characters {\sl FEAP} (either upper or lower case letters
+may be used with the remainder used as a problem title.
+\item
+The second recond contains
+problem size information consisting of:
+\begin{enumerate}
+\item NUMNP - Number of nodal points;
+\item NUMEL - Number of elements;
+\item NUMMAT - Number of material property sets;
+\item NDM - Space dimension of mesh;
+\item NDF - Maximum number of unknowns per node; and
+\item NEN - Maximum number of nodes per element.
+\end{enumerate}
+\end{enumerate}
+As noted above,
+input records for {\sl FEAP} are in free format.  Each data item
+is separated by a comma, equal sign or blank characters.
+If blank characters are used without commas, each data item {\it must} be
+included.  That is multiple blank fields are not considered to be a zero.
+Each data item is restricted to 14 characters (15 including the blank or
+comma).
+
+For standard input options
+{\sl FEAP} can automatically determine the number of nodes,
+elements, and material sets.  Thus, on the control record the values of NUMNP,
+NUMEL, and NUMMAT may be omitted (i.e., specified as zero).  When using
+automatic numbering it is generally advisable to use mesh input options
+which avoid direct specification of a node or element number.  Specification
+of nodal loads (forces), nodal displacements (displacements), and boundary
+condition restraint codes have options which begin with {\tt E} and {\tt C}
+for {\it edge} and {\it coordinate} related options, respectively.
+It is recommended these be used whenever possible.
+
+The use of the automatic determination of data requires a the mesh data
+to be read twice: Once to do the counts and once to input the data.
+For problems with a large number of data records,
+this may result in significant time lapse during the input data phase.
+The need for a second read may be avoided by inserting a {\tt NOCOunt}
+record {\it before} the {\tt FEAP} record and providing the actual number of
+nodes, elements and material sets on the control record.
+
+We next consider commands used to describe the remainder of the finite
+element mesh.  In {\sl FEAP} each data set starts with a command name
+of which only the first four characters are used as identifiers.
+Appendix A describes options for each mesh input and manipulation command.
+Immediately following each command is the data to be processed.  Where 
+a variable number of records is needed to define the data set a blank
+line is used as a termination record.  Extra blank lines before or after
+data sets are ignored.
+
+Commands may be in any order.  If there is any order dependence {\sl FEAP}
+will transfer the input data to temporary files and process it after the
+mesh specification is terminated by the {\tt END} command.  Thus, information
+will not necessarily occur in the output file in the order which data is
+specified in the input file.
+
+All data from a mesh input is written to the output file by default.  For very
+large problems the size of the output file may become large.  Once a mesh
+has been checked for correctness it may not be necessary to retain this
+information in subsequent analyses.  Control of the data retained in the
+output file is provided by using the {\tt PRIN}t and {\tt NOPR}int commands.
+By default {\tt PRIN}t is assumed and all data is written.  Insertion of a
+{\tt NOPR}int record before any data set (not within a data set) suspends
+writing the data to the output file until another {\tt PRIN}t command is
+encountered.

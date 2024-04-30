@@ -1,0 +1,44 @@
+\heada{SOLUTION}{FORM}
+\hspace{1.2cm}{{form \hfill}} \\{\smallskip}
+\hspace{1.0cm}{{form,acce \hfill}} \\{\smallskip}
+\hspace{1.0cm}{{form,expl \hfill}}
+\headb
+
+The {\tt FORM} command computes the residual for the  current
+time and iteration of a solution.  {\sl FEAPpv} is a general nonlinear
+program and computes a residual for each solution by subtracting
+from any applied loads: (1) The force computed for
+the stresses in each element, often called the {\it stress divergence}
+or {\it internal force} term; (2) If the problem is dynamic the
+inertia forces.
+
+At the end of each computation {\sl FEAPpv} reports the value
+of the current residual in terms of its Euclidean norm,
+which is the square root of the sum of squares of each component
+of force.
+
+If the {\tt ACCEleration} option is present an acceleration is computed by
+solving the equation:
+\begin{equation}
+\Bf{M} \, \Bf{a} \ = \ \Bf{R}
+\end{equation}
+where $\Bf{M}$ is a consistent mass or a lumped
+mass computed by the {\tt MASS} command
+and must be computed before the specification
+of the {\tt FORM} command.  This option may be used to compute
+consistent accelerations for starting a transient
+analysis using the Newmark type integration algorithms when
+initial forces or initial displacements are specified.
+
+If the {\tt EXPL}icit option is present {\sl FEAPpv} computes a solution to
+the equations of motion (momentum equations) using an explicit
+solution option.  Prior to using the {\tt FORM,\-EXPL}icit command
+it is necessary to specify the explicit solution option using
+the {\tt TRAN}sient,\-{\tt EXPL}icit command.
+Explicit solutions are conditionally
+stable, thus, a critical time step must be estimated
+before attempting a solution.  An estimate to the critical
+time step may be obtained using the maximum wave speed in
+the material, $c$, and the closest spacing between nodes, $h$.
+The maximum time step used must be less or equal to $h/c$.
+\vfill\eject

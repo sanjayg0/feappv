@@ -1,0 +1,66 @@
+\heada{MESH}{FEAPpv}
+\hspace{1.0cm} {{ feappv [ title of problem for printouts, etc.]\hfill}}
+\\{\smallskip}
+\hspace{1.2cm} {{ numnp,numel,nummat,ndm,ndf,nen,npd,nud,nad \hfill}}
+\headb
+
+Each problem to be solved by {\sl FEAPpv} initiates with a single record
+which contains the characters {\tt FEAPpv} (either in upper or
+lower case) as the first
+entry; the remainder of the record (columns 5-80) may be used to
+specify a problem title.  The title will be printed
+as the first line of output on each page.
+The {\tt FEAPpv} record may be preceded by {\tt PARA}meter specifications
+(see parameter input manual page).
+
+Immediately following the {\tt FEAPpv} record the {\it control}
+information describing characteristics of the finite element
+problem to be solved must be given.
+The {\it control} information data entries are:
+
+\begin{center}
+\begin{tabular}{r l}
+\it  numnp  &-- Total number of nodal points in the problem. \\
+\it  numel  &-- Total number of elements in the problem. \\
+\it  nummat &-- Number of material property sets in the problem. \\
+\it  ndm    &-- Number of spatial coordinates needed to define mesh. \\
+\it  ndf    &-- Maximum number of degrees-of-freedom on any node. \\
+\it  nen    &-- Maximum number of nodes on any element. \\
+\it  npd    &-- Maximum number of parameters for element properties. \\
+            &   \quad (default 200). \\
+\it  nud    &-- Maximum number of parameters for user element properties. \\
+            &   \quad (default 50). \\
+\it  nad    &-- Increases size of element arrays to {\it ndf$\times$nen+nad}. \\
+\end{tabular} 
+\end{center}
+For many problems it is not necessary to specify values for {\it numnp},
+{\it numel}, or {\it nummat}.  {\sl FEAPpv} can compute the maximum values for
+each of these quantities.  However, for some meshes or when user functions
+are used to perform the inputs it is necessary to assign the values for
+these parameters.
+
+The number of spatial coordinates needed to define the finite
+element mesh {\it (ndm)} must be 1, 2, or 3.  The maximum
+number of the other quantities is limited only by the size of the
+dynamically dimensioned array used to store all the data and solution
+parameters.  This is generally quite large and, normally, should not
+be exceeded.  If the error message that memory is exceeded appears the
+data should be checked to make sure that no errors exist which could
+cause large amounts of memory to solve the problem. For example, if the error
+occurs when the {\tt TANG}ent or {\tt UTAN}gent
+solution macro statements
+are encountered, the profile of the matrix should be checked for very
+large column heights (can be plotted using the {\tt PLOT,PROF}ile command).
+Appropriate renumbering of the mesh or use of the
+solution command {\tt OPTI}mize can
+often significantly reduce the storage required.
+For symmetric tangent problems the use of the sparse solution routine,
+which invoked using the solution command {\tt DIREct,SPAR}se, often requires
+significantly less memory.  For some problems with symmetric tangents
+a solution can be achieved using the iterative conjugate gradient solution
+method (invoked by the {\tt ITER}ation solution command.
+
+If necessary, the
+main subprogram, {\tt program feappv}, can be recompiled with a larger
+value set for the {\tt parameter mmax} controling the size of blank common.
+\vfil\eject

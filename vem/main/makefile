@@ -8,6 +8,11 @@ vfeap: $(OBJECTS) $(ARFEAPPV) $(ARVFEAPPV)
 	$(ARVFEAPPV) $(ARFEAPPV) $(LDOPTIONS)
 	dsymutil vfeappv
 
+# UBUNTU and other GCC loader type machines (unchecked)
+# Replace $(ARVFEAPPV) \ by:
+#    -L$(FEAPPVHOME5_1)/vem \
+#    -Wl,-whole-archive -lfeappvvem_g -Wl,-no-whole-archive \
+
 clean:
 	rm -f *.o
 	rm -f *genmod.mod

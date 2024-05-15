@@ -57,7 +57,7 @@
         else
           ni = ri
         endif
-        if(debug) then
+        if(debug .and. ndebug.ge.2) then
           call mprint(u,1,lenu/4,1,'U_histin')
           if(flgh) call mprint(h,1,lenh,1,'H_histin')
         endif
@@ -69,7 +69,7 @@
         write(iounit) ni,u
         if(flgh) write(iounit) h
         call pflush(iounit)
-        if(debug) then
+        if(debug .and. ndebug.ge.2) then
           call mprint(u,1,lenu/4,1,'U_histout')
           if(flgh) call mprint(h,1,lenh,1,'H_histout')
         endif

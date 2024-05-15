@@ -133,7 +133,7 @@
               a3 = rhoc*shp2(3,i,l)*jac(l)
 
 !             Compute residual
-              p(i1) = p(i1) - (shp2(1,i,l)*flux(1,l)
+              p(i1) = p(i1) + (shp2(1,i,l)*flux(1,l)
      &                      +  shp2(2,i,l)*flux(2,l))
      &                      - a3*(cfac*tdot + lfac*ul(1,i,4))
 

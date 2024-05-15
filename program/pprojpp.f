@@ -58,7 +58,7 @@
      &                  4, 2, 5,
      &                  6, 5, 3/
 
-      if(debug) then
+      if(debug .and. ndebug.ge.2) then
         call iprint(ixl,ndf,nel,ndf,'IXL')
         call mprint( xl,ndm,nel,ndm,' XL')
         call mprint( gradu,3,3,3,' GRADU')
@@ -139,9 +139,11 @@
           end do ! i
         end do ! ir
 
-        if(debug) call mprint(xs,ndm,nel,ndm,'XS')
-        if(debug) call mprint(s,nst,nst,nst,'S')
-        if(debug) call mprint(p,ndf,nst,ndf,'P')
+        if(debug. and. ndebug.ge.2) then
+          call mprint(xs,ndm,nel,ndm,'XS')
+          call mprint(s,nst,nst,nst,'S')
+          call mprint(p,ndf,nst,ndf,'P')
+        endif
 
 !       Compute stress
 
@@ -202,6 +204,6 @@
 
       endif ! prtype
 
-      if(debug) call mprint(g,neq,nss,neq,'G1')
+      if(debug .and. ndebug.ge.2) call mprint(g,neq,nss,neq,'G1')
 
       end subroutine pprojpp

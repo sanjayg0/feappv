@@ -70,7 +70,7 @@ jobs:
 
   build-win:
     name: Build Windows
-    runs-on: windows-2019
+    runs-on: windows-latest
     steps:
       - name: Obtain Source Code
         uses: actions/checkout@v4

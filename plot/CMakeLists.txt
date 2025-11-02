@@ -4,6 +4,8 @@
 #                        All Rights Reserved.
 # =================================================================
 add_library(FEAP_Plot OBJECT)
+target_link_libraries(feappv PRIVATE FEAP_Plot)
+
 target_sources(FEAP_Plot
     PRIVATE
         dtot_pl.f

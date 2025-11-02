@@ -306,3 +306,4 @@ target_sources(FEAP_Program
         writer.f
 )
 
+target_link_libraries(feappv PRIVATE FEAP_Program)

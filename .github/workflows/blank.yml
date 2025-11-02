@@ -19,13 +19,15 @@ on:
   workflow_dispatch:
 
 
+# Define jobs to compile on Linux, MacOS, and Windows
 jobs:
+
   build-linux:
-    name: Build Linux
+    name: Build on Linux
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout source code
+    - name: Obtain source code
       uses: actions/checkout@v4
 
     - name: Install dependencies
@@ -33,11 +35,15 @@ jobs:
         sudo apt-get install gfortran libopenblas-dev libopenmpi-dev
         echo Finish GFORTRAN install
 
-    - name: Configure and Compile
+    - name: Configure with CMake
       run: |
         mkdir build
         cmake -S . -B build
-        cmake --build build -j 8
+#       cmake --build build -j 8
+
+    - name: Compile feappv
+      run: |
+        cmake --build build -j 8 --target feappv
 
   build-mac:
     name: Build Mac OS
@@ -45,7 +51,7 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      - name: Checkout source code
+      - name: Obtain source code
         uses: actions/checkout@v4
 
       - name: Install dependencies
@@ -68,21 +74,20 @@ jobs:
     steps:
       - name: Obtain Source Code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Microsoft Visual Studio
+      - name: Install Visual Studio
         uses: ilammy/msvc-dev-cmd@v1
         with:
           vsversion: 2019
-      - name: Intel oneAPI Basic & HPC Toolkits
+
+      - name: Install Intel Toolchain
         shell: pwsh
         env:
           WINDOWS_BASEKIT_URL: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/7dff44ba-e3af-4448-841c-0d616c8da6e7/w_BaseKit_p_2024.1.0.595_offline.exe
           WINDOWS_BASEKIT_COMPONENTS: intel.oneapi.win.mkl.devel
           WINDOWS_HPCKIT_URL: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/c95a3b26-fc45-496c-833b-df08b10297b9/w_HPCKit_p_2024.1.0.561_offline.exe
           WINDOWS_HPCKIT_COMPONENTS: "intel.oneapi.win.mpi.devel:intel.oneapi.win.ifort-compiler"
-#       working-directory: D:\a\OpenSees\OpenSees\.github\workflows
+
         run: |
           cd .github
           cd workflows
@@ -92,9 +97,13 @@ jobs:
       - name: Configure and Compile
         shell: cmd
         run: |
+          # Setup shell environment
+          call "C:\Program Files (x86)\Intel\oneAPI\setvars.bat" intel64 mod
+          # Create build directory
           mkdir build
           cd build
-          call "C:\Program Files (x86)\Intel\oneAPI\setvars.bat" intel64 mod
+          # Configure
           cmake .. -DBLA_STATIC=ON -DMKL_LINK=static -DMKL_INTERFACE_FULL=intel_lp64
+          # Compile
           cmake --build . --config Release
 

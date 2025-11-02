@@ -3,15 +3,6 @@
 #           (c) Regents of the University of California            
 #                        All Rights Reserved.
 # =================================================================
-add_library(FEAP_Elements OBJECT)
-target_link_libraries(feappv PRIVATE FEAP_Elements)
+add_library(FEAP_VEM OBJECT)
 
-add_subdirectory(frame)
-add_subdirectory(material)
-add_subdirectory(shells)
-add_subdirectory(solid1d)
-add_subdirectory(solid2d)
-add_subdirectory(solid3d)
-add_subdirectory(thermal)
-
-
+add_subdirectory(vem_source)

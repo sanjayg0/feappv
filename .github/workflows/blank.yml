@@ -78,7 +78,7 @@ jobs:
       - name: Install Visual Studio
         uses: ilammy/msvc-dev-cmd@v1
         with:
-          vsversion: 2019
+          vsversion: 2022
 
       - name: Install Intel Toolchain
         shell: pwsh

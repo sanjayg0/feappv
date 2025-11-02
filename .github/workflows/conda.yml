@@ -87,6 +87,9 @@ jobs:
         run: |
           call "%CONDA%\condabin\conda.bat" activate ifx
 
+          set IFX_INC=%CONDA_PREFIX%\opt\compiler\include\intel64
+          set INCLUDE=%IFX_INC%;%INCLUDE%
+
           rem Paths for MKL (from conda-forge)
           set MKLROOT=%CONDA_PREFIX%\Library
           set CMAKE_PREFIX_PATH=%CONDA_PREFIX%
@@ -97,6 +100,7 @@ jobs:
             -DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY ^
             -DMKL_INTERFACE_FULL=intel_lp64 ^
             -DBLA_VENDOR=Intel10_64_dyn ^
+            -DCMAKE_REQUIRED_INCLUDES="%IFX_INC%" ^
             -DCMAKE_Fortran_COMPILER="%CONDA_PREFIX%\Library\bin\ifx.exe" ^
             -DMKLROOT="%MKLROOT%" -DMKL_ROOT="%MKLROOT%"
           cmake --build . --config Release

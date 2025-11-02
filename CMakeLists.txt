@@ -52,9 +52,9 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
   add_subdirectory(windows)
   set_target_properties(feappv PROPERTIES WIN32_EXECUTABLE TRUE)
   # Add options for QuickWin framework
-  target_compile_options(feappv PUBLIC /iface:cvf /libs:qwin /c)
+  target_compile_options(feappv PUBLIC /iface:cvf /c) #/libs:qwin /c)
   target_link_options(feappv PRIVATE
-    /NODEFAULTLIB:"ifconsol.lib" 
+#   /NODEFAULTLIB:"ifconsol.lib" 
     /MANIFEST:NO 
     /INCREMENTAL:NO 
     /SUBSYSTEM:WINDOWS 

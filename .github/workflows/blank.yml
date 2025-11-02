@@ -32,14 +32,13 @@ jobs:
 
     - name: Install dependencies
       run: |
-        sudo apt-get install gfortran libopenblas-dev libopenmpi-dev
+        sudo apt-get install gfortran libopenblas-dev libopenmpi-dev libx11-dev
         echo Finish GFORTRAN install
 
     - name: Configure with CMake
       run: |
         mkdir build
         cmake -S . -B build
-#       cmake --build build -j 8
 
     - name: Compile feappv
       run: |

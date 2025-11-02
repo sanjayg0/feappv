@@ -56,14 +56,15 @@ jobs:
 
       - name: Install dependencies
         run: |
-         ln -s /opt/homebrew/bin/gcc-13 /usr/local/bin/gcc
-         ln -s /opt/homebrew/bin/gfortran-13 /usr/local/bin/gfortran
-         brew install open-mpi
+        #  ln -s /opt/homebrew/bin/gcc-13 /usr/local/bin/gcc
+        #  ln -s /opt/homebrew/bin/gfortran-13 /usr/local/bin/gfortran
+         brew install open-mpi libomp gfortran
          brew install scalapack
          brew install xquartz
 
       - name: Configure and Compile
         run: |
+          export FC=$(brew --prefix gcc)/bin/gfortran-$(brew list gcc | grep -Eo 'gfortran-[0-9]+' | head -n1 | grep -Eo '[0-9]+')
           mkdir build
           cmake -S . -B build
           cmake --build build

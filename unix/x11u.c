@@ -7,6 +7,9 @@
 /*----[--.----+----.----+----.-----------------------------------------]
  *    Modification log                                Date (dd-mm-year)
  *      1. Add cinput()                                     23-10-2017
+ *      2. Updated to ISO C                                 07-02-2026
+ *      3. Update to check for fonts                        07-02-2026
+ *      4. Fix memory leak on exposure                      07-02-2026
  */
 /*-----[--.----+----.----+----.-----------------------------------------*/
 /*     Purpose: FEAP driver for X windows Version 11, Release 6.        */
@@ -72,7 +75,6 @@
 #include <unistd.h>
 
 #include "digwin.h"
-/*void jpgd(); */
 
 /* Note: if you don't have the file "malloc.h", then use the following: */
 /* extern char *malloc(); */
@@ -145,7 +147,8 @@ static char gray8_bits [] = {0x11, 0x11, 0x00, 0x00, 0x44, 0x44, 0x00, 0x00,
        /* Some global definitions */
        /***************************/
 
-#define MAX_OPCODE      16        /* number of op-code values */
+#define MAX_OPCODE      14        /* number of op-code values for 3 argument calls */
+#define MAX_OPCODE_4     2        /* number of op-codes for 4 argument calls */
 
 #define DEFAULT_X      485        /* X Window Location on Screen */
 #define DEFAULT_Y      165        /* Y Window Location on Screen */
@@ -189,8 +192,7 @@ void gdx11_clear_pixmap(DIGWin *dw)
        /*  given the user's guidelines for what part of the window to use.*/
        /*******************************************************************/
 
-void gdx11_adjust_digwin(dw)
-     DIGWin *dw;
+void gdx11_adjust_digwin(DIGWin *dw)
 {
 
       int x,y;
@@ -199,7 +201,7 @@ void gdx11_adjust_digwin(dw)
       Window root;
 
 /*      static void gdx11_init_polylines(), gdx11_init_strings(); */
-      void gdx11_init_polylines(), gdx11_init_strings();
+      void gdx11_init_polylines(DIGWin *dw), gdx11_init_strings(DIGWin *dw);
 
       XGetWindowAttributes(dw->xdisplay,dw->xwin,&(dw->xwa));
       dw->x_offset = (dw->min_x*dw->xwa.width)/100+dw->x_border;
@@ -225,8 +227,7 @@ void gdx11_adjust_digwin(dw)
        /* Refresh the FEAP window */
        /*****************************/
 
-void gdx11_refresh_digwin(dw)
-     DIGWin *dw;
+void gdx11_refresh_digwin(DIGWin *dw)
 {
   int i,j,x,y,l,flag,width ;
   int start = 0;
@@ -238,8 +239,14 @@ void gdx11_refresh_digwin(dw)
   int gray_pv;
   int np;
   char text[80] ;
-  Font nfont ;
+  Font nfont = 0;
   XFontStruct *nfont_struct ;
+
+  int font_names;
+  int stop_var;
+  char **list;
+
+  extern void plstop_(int *stop_var);
 
   fg_pv = (unsigned long)dw->polyline_pixel_value[0];
   XSetForeground(disp,dw->xgc,fg_pv);
@@ -286,22 +293,61 @@ void gdx11_refresh_digwin(dw)
   XSetBackground(disp,dw->xgc,bg_pv);
   XSetForeground(disp,dw->xgc,fg_pv);
 
-  if ( Min ( dw->x_len , 1.27*dw->y_len ) < 440 )
-     nfont        = XLoadFont(disp,"*helvetica-medium-r-normal--8*"); 
-  else if ( Min ( dw->x_len , 1.27*dw->y_len ) < 600. )
+  font_names = 0;
+  stop_var   = 0;  /* Set to 1 to ask for Ofile message from plstop */
+
+  if ( Min ( dw->x_len , 1.27*dw->y_len ) < 440 ) {
+     list = XListFonts(disp,"*helvetica-medium-r-normal--8*",1,&font_names);
+     if(font_names == 0) {
+        printf("Font %s not found, please load\n","*helvetica-medium-r-normal--8*");
+        plstop_(&stop_var);
+     }
+     else nfont        = XLoadFont(disp,"*helvetica-medium-r-normal--8*");
+  }
+  else if ( Min ( dw->x_len , 1.27*dw->y_len ) < 600. ) {
+     list = XListFonts(disp,"*helvetica-medium-r-normal--10*",1,&font_names);
+     if(font_names == 0) {
+        printf("Font %s not found, please load\n","*helvetica-medium-r-normal--10*");
+        plstop_(&stop_var);
+     }
      nfont        = XLoadFont(disp,"*helvetica-bold-r-normal--10*");
-  else if ( Min ( dw->x_len , 1.27*dw->y_len ) < 760. )
+  }
+  else if ( Min ( dw->x_len , 1.27*dw->y_len ) < 760. ) {
+     list = XListFonts(disp,"*helvetica-medium-r-normal--12*",1,&font_names);
+     if(font_names == 0) {
+        printf("Font %s not found, please load\n","*helvetica-medium-r-normal--12*");
+        plstop_(&stop_var);
+     }
      nfont        = XLoadFont(disp,"*helvetica-bold-r-normal--12*");
-  else if ( Min ( dw->x_len , 1.27*dw->y_len ) < 920. )
+  }
+  else if ( Min ( dw->x_len , 1.27*dw->y_len ) < 920. ) {
+     list = XListFonts(disp,"*helvetica-medium-r-normal--14*",1,&font_names);
+     if(font_names == 0) {
+        printf("Font %s not found, please load\n","*helvetica-medium-r-normal--14*");
+        plstop_(&stop_var);
+     }
      nfont        = XLoadFont(disp,"*helvetica-bold-r-normal--14*");
-  else if ( Min ( dw->x_len , 1.27*dw->y_len ) < 1080. )
+  }
+  else if ( Min ( dw->x_len , 1.27*dw->y_len ) < 1080. ) {
+     list = XListFonts(disp,"*helvetica-medium-r-normal--18*",1,&font_names);
+     if(font_names == 0) {
+        printf("Font %s not found, please load\n","*helvetica-medium-r-normal--18*");
+        plstop_(&stop_var);
+     }
      nfont        = XLoadFont(disp,"*helvetica-bold-r-normal--18*");
-  else
+  }
+  else {
+     list = XListFonts(disp,"*helvetica-medium-r-normal--20*",1,&font_names);
+     if(font_names == 0) {
+        printf("Font %s not found, please load\n","*helvetica-medium-r-normal--20*");
+        plstop_(&stop_var);
+     }
      nfont        = XLoadFont(disp,"*helvetica-bold-r-normal--20*");
+  }
 
   nfont_struct = XQueryFont(disp,nfont);
-
   XSetFont(disp,dw->xgc,nfont);
+  XFreeFontNames(list);
 
   start = 0 ;
 
@@ -343,15 +389,10 @@ void gdx11_refresh_digwin(dw)
        /* Make XWindow into FEAP XWindow */
        /**********************************/
 
-DIGWin *gdx11_make_digwin_from_xwin(display,xwindow,
-                                    back_pixel,fore_pixel,
-                                    x_border,y_border,
-                                    min_x,max_x,min_y,max_y)
-     Display *display;
-     Window xwindow;
-     unsigned long back_pixel, fore_pixel;
-     int x_border, y_border;
-     int min_x, max_x, min_y, max_y;
+DIGWin *gdx11_make_digwin_from_xwin(Display *display, Window xwindow,
+                                    unsigned long back_pixel, unsigned long fore_pixel,
+                                    int x_border, int y_border,
+                                    int min_x, int max_x, int min_y, int max_y)
 {
   DIGWin *dw;
   Screen *screen;
@@ -461,7 +502,7 @@ DIGWin *gdx11_make_digwin_from_xwin(display,xwindow,
        setgc.fill_style = FillStippled;
        dw->xgc_mono_fill = XCreateGC(display,xwindow,
                       (GCForeground|GCBackground|GCFunction|GCLineWidth|
-                       GCLineStyle|GCFillStyle),
+                       GCLineStyle|GCFillStyle|GCGraphicsExposures),
                              &setgc);
        XSetFillStyle(display,dw->xgc_mono_fill,FillOpaqueStippled);
   }
@@ -485,9 +526,7 @@ DIGWin *gdx11_make_digwin_from_xwin(display,xwindow,
        /* Create a FEAP XWindow from scratch */
        /****************************************/
 
-DIGWin *gdx11_create_digwin(xservername,window_width,window_height)
-     char *xservername ;
-     int window_width, window_height;
+DIGWin *gdx11_create_digwin(char *xservername, int window_width, int window_height)
 {
   Display *disp;
   Window xwin;
@@ -553,6 +592,7 @@ DIGWin *gdx11_create_digwin(xservername,window_width,window_height)
   size_hints.min_width  = 20;
   size_hints.min_height = 20;
   size_hints.flags = USPosition|PSize|PMinSize;
+
   XSetStandardProperties(disp,xwin,"FEAP Graphics Window","FEAP Win",
                          None,0,0,&size_hints);
   XMapWindow(disp,xwin);
@@ -576,9 +616,8 @@ DIGWin *gdx11cdw(xservername,widthptr,heightptr)
 */
 /* GCC, INTEL, SUN and DEC use :
 */
-DIGWin *gdx11cdw_(xservername,widthptr,heightptr)
-     char *xservername;
-     int *widthptr, *heightptr;
+DIGWin *gdx11cdw_(char *xservername, int *widthptr, int *heightptr)
+
 {
   return(gdx11_create_digwin(xservername,*widthptr,*heightptr));
 }
@@ -588,8 +627,7 @@ DIGWin *gdx11cdw_(xservername,widthptr,heightptr)
        /* Set FEAP Drawing Window */
        /*****************************/
 
-DIGWin *gdx11_set_current_digwin(dw)
-     DIGWin *dw;
+DIGWin *gdx11_set_current_digwin(DIGWin *dw)
 {
   DIGWin *old_dw = current_dw;
 
@@ -610,8 +648,7 @@ DIGWin *gdx11setdw(dw)
 */
 /* GCC, INTEL, SUN and DEC use :
 */
-DIGWin *gdx11setdw_(dw)
-     DIGWin **dw;
+DIGWin *gdx11setdw_(DIGWin **dw)
 {
   return(gdx11_set_current_digwin(*dw));
 }
@@ -620,8 +657,7 @@ DIGWin *gdx11setdw_(dw)
        /* Set Default Xwindow Size */
        /****************************/
 
-void gdx11_set_def_window_size(width,height)
-     int width, height;
+void gdx11_set_def_window_size(int width,int height)
 {
   default_width = width;
   default_height = height;
@@ -633,8 +669,7 @@ void gdx11setwindow(widthptr,heightptr)
 */
 /* GCC, INTEL, SUN and DEC use :
 */
-void gdx11setwindow_(widthptr,heightptr)
-     int *widthptr, *heightptr;
+void gdx11setwindow_(int *widthptr,int *heightptr)
 {
   gdx11_set_def_window_size(*widthptr,*heightptr);
 }
@@ -643,8 +678,7 @@ void gdx11setwindow_(widthptr,heightptr)
        /* Free FEAP Window */
        /********************/
 
-void gdx11_free_digwin(dw)
-     DIGWin *dw;
+void gdx11_free_digwin(DIGWin *dw)
 {
   if (current_dw == dw) current_dw = NULL;
   if (default_dw == dw) default_dw = NULL;
@@ -672,15 +706,11 @@ void gdx11_free_digwin(dw)
 
 static XComposeStatus lookup_status;
 
-int gdx11_handle_digwin_event(dw,eventptr,term_char,term_button)
-     DIGWin *dw;
-     XEvent *eventptr;
-     char term_char;
-     unsigned int term_button;
+int gdx11_handle_digwin_event(DIGWin *dw, XEvent *eventptr, char term_char, unsigned int term_button)
 {
   int terminator = 0;
 /* static void gdx11_flush(); */
-  void gdx11_flush();
+  void gdx11_flush(DIGWin *dw);
 
   switch (eventptr->type)
     {
@@ -724,8 +754,7 @@ int gdx11_handle_digwin_event(dw,eventptr,term_char,term_button)
        /******************/
 
 /* static void gdx11_init_strings(dw) */
-  void gdx11_init_strings(dw)
-     DIGWin *dw;
+  void gdx11_init_strings(DIGWin *dw)
 {
   dw->nstrings = 0;
 }
@@ -735,16 +764,14 @@ int gdx11_handle_digwin_event(dw,eventptr,term_char,term_button)
        /********************/
 
 /* static void gdx11_init_polylines(dw) */
-  void gdx11_init_polylines(dw)
-     DIGWin *dw;
+  void gdx11_init_polylines(DIGWin *dw)
 {
   dw->npolylines = 0;
   dw->npoints[0] = 0;
   dw->next_point = 0;
 }
 
-static void gdx11_term_polyline(dw)
-     DIGWin *dw;
+static void gdx11_term_polyline(DIGWin *dw)
 {
   /* Terminate previous polyline if necessary */
 
@@ -755,8 +782,7 @@ static void gdx11_term_polyline(dw)
   dw->npoints[dw->npolylines] = 0;
 }
 
-static void gdx11_end_polygon(dw)
-     DIGWin *dw;
+static void gdx11_end_polygon(DIGWin *dw)
 {
   int npoly = dw->npolylines;
 
@@ -770,9 +796,7 @@ static void gdx11_end_polygon(dw)
   dw->npoints[dw->npolylines] = 0;
 }
 
-static void gdx11_check_polyline_overflow(dw,n)
-     DIGWin *dw;
-     int n;
+static void gdx11_check_polyline_overflow(DIGWin *dw,int n)
 {
   if (dw->next_point+n > MAX_POINTS || dw->npolylines >=MAX_SEG)
     {
@@ -783,9 +807,7 @@ static void gdx11_check_polyline_overflow(dw,n)
     }
 }
 
-static void gdx11_start_polyline(dw,x,y)
-     DIGWin *dw;
-     int x, y;
+static void gdx11_start_polyline(DIGWin *dw,int x,int y)
 {
   gdx11_term_polyline(dw);
   gdx11_check_polyline_overflow(dw,2);
@@ -800,10 +822,7 @@ static void gdx11_start_polyline(dw,x,y)
   return;
 }
 
-static void gdx11_start_polygon(dw,n,x,y)
-     DIGWin *dw;
-     int n;
-     int x, y;
+static void gdx11_start_polygon(DIGWin *dw, int n, int x, int y)
 {
   gdx11_term_polyline(dw);
   gdx11_check_polyline_overflow(dw,n);
@@ -811,9 +830,7 @@ static void gdx11_start_polygon(dw,n,x,y)
   return;
 }
 
-static void gdx11_add_point_to_polyline(dw,x,y)
-     DIGWin *dw;
-     int x,y;
+static void gdx11_add_point_to_polyline(DIGWin *dw,int x,int y)
 {
   if (dw->npoints[dw->npolylines]==0)
     gdx11_start_polyline(dw,dw->current_x,dw->current_y);
@@ -836,9 +853,7 @@ static void gdx11_add_point_to_polyline(dw,x,y)
        /* 1. - INITIALIZE DEVICE */
        /**************************/
 
-static void gdx11_init_device(dw,x_data,y_data)
-     DIGWin *dw;
-     float (* x_data)[], (* y_data)[];
+static void gdx11_init_device(DIGWin *dw, float (* x_data)[], float (* y_data)[])
 {
   /* If we do not yet have a diglib Xwindow get one */
   if (dw == NULL)
@@ -860,9 +875,7 @@ static void gdx11_init_device(dw,x_data,y_data)
        /* 2. - GET FRESH PLOTTING SURFACE, i.e. ERASE WINDOW */
        /******************************************************/
 
-static void gdx11_clear_page(dw,x_data,y_data)
-     DIGWin *dw;
-     float (* x_data)[], (* y_data)[];
+static void gdx11_clear_page(DIGWin *dw, float (* x_data)[], float (* y_data)[])
 {
   dw->current_pixel_value = dw->pixel_value_for_color[1];
 
@@ -883,9 +896,7 @@ static void gdx11_clear_page(dw,x_data,y_data)
        /* 3. - MOVE TO (X,Y) */
        /**********************/
 
-static void gdx11_move_to(dw,x_data,y_data)
-     DIGWin *dw;
-     float (* x_data)[], (* y_data)[];
+static void gdx11_move_to(DIGWin *dw, float (* x_data)[], float (* y_data)[])
 {
 
   int x = x_translate(dw,(*x_data)[0]);
@@ -905,9 +916,7 @@ static void gdx11_move_to(dw,x_data,y_data)
        /* 4. - DRAW TO (X,Y) */
        /**********************/
 
-static void gdx11_draw_to(dw,x_data,y_data)
-     DIGWin *dw;
-     float (* x_data)[], (* y_data)[];
+static void gdx11_draw_to(DIGWin *dw, float (* x_data)[], float (* y_data)[])
 {
   register int new_x, new_y;
 
@@ -923,14 +932,18 @@ static void gdx11_draw_to(dw,x_data,y_data)
        /******************************/
 
 /* static void gdx11_flush(dw,x_data,y_data) */
- void gdx11_flush(dw,x_data,y_data)
-     DIGWin *dw;
-     float (* x_data)[], (* y_data)[];
+static void gdx11_flush_wrapper(DIGWin *dw, float (* x_data)[], float (* y_data)[])
+{
+  void gdx11_flush(DIGWin *dw);
+  gdx11_flush(dw);
+}
+
+ void gdx11_flush(DIGWin *dw)
 {
   gdx11_term_polyline(dw);
 
   gdx11_refresh_digwin(dw);
-  XCopyArea(dw->xdisplay, dw->svimage, dw->xwin, dw->xgc, 
+  XCopyArea(dw->xdisplay, dw->svimage, dw->xwin, dw->xgc,
             0, 0, dw->xwa.width,dw->xwa.height, 0 ,0);
   XFlush(dw->xdisplay);
 }
@@ -939,9 +952,7 @@ static void gdx11_draw_to(dw,x_data,y_data)
        /* 6. - RELEASE DEVICE */
        /***********************/
 
-static void gdx11_release_device(dw,x_data,y_data)
-     DIGWin *dw;
-     float (* x_data)[], (* y_data)[];
+static void gdx11_release_device(DIGWin *dw, float (* x_data)[], float (* y_data)[])
 {
   /*
    *  This routine should really close out the window system,
@@ -956,9 +967,7 @@ static void gdx11_release_device(dw,x_data,y_data)
        /* 7. - RETURN DEVICE CHARACTERISTICS */
        /**************************************/
 
-static void gdx11_return_device(dw,x_data,y_data)
-     DIGWin *dw;
-     float (* x_data)[], (* y_data)[];
+static void gdx11_return_device(DIGWin *dw, float (* x_data)[], float (* y_data)[])
 {
   (*x_data)[0] = 11.0;                      /* Nonzero device ID */
   if (dw!=NULL && dw->xwin != ((Window)NULL) )
@@ -988,9 +997,7 @@ static void gdx11_return_device(dw,x_data,y_data)
        /* 8. - SELECT PLOTTING COLOR */
        /******************************/
 
-static void gdx11_select_color(dw,x_data,y_data)
-     DIGWin *dw;
-     float (* x_data)[], (* y_data)[];
+static void gdx11_select_color(DIGWin *dw, float (* x_data)[], float (* y_data)[])
 {
   int new_pv = (int) (*x_data)[0];
 
@@ -1036,12 +1043,8 @@ static void gdx11_select_color(dw,x_data,y_data)
       }
 }
 
-static void gdx11_get_input(dw,cursor,allow_keys,left,middle,right,
-                            press,x,y)
-     DIGWin *dw;
-     Cursor cursor;
-     int allow_keys, left, middle, right;
-     int *press, *x, *y;
+static void gdx11_get_input(DIGWin *dw, Cursor cursor, int allow_keys, int left, int middle, int right,
+                            int *press, int *x, int *y)
 {
   Display *disp = dw->xdisplay;
   Window w = dw->xwin;
@@ -1111,9 +1114,7 @@ static void gdx11_get_input(dw,cursor,allow_keys,left,middle,right,
        /* 9. - GET GIN INPUT */
        /**********************/
 
-static void gdx11_gin(dw,x_data,y_data)
-     DIGWin *dw;
-     float (* x_data)[], (* y_data)[];
+static void gdx11_gin(DIGWin *dw, float (* x_data)[],  float (* y_data)[])
 {
   int key;
   int x,y;
@@ -1140,9 +1141,7 @@ static void gdx11_gin(dw,x_data,y_data)
 
 /* Not yet implemented */
 /* Because colors are allocated READ-ONLY, this will take some work! */
-static void gdx11_set_color_map_rgb(dw,x_data,y_data)
-     DIGWin *dw;
-     float (* x_data)[], (* y_data)[];
+static void gdx11_set_color_map_rgb(DIGWin *dw, float (* x_data)[],  float(* y_data)[])
 {
 /*  int color_index = (*x_data)[0]; */
 }
@@ -1152,9 +1151,7 @@ static void gdx11_set_color_map_rgb(dw,x_data,y_data)
        /********************************/
 
 /* Not yet implemented, probably never will be */
-static void gdx11_set_color_map_hls( op_code, x_data, y_data )
-     int   *op_code;
-     float (* x_data)[], (* y_data)[];
+static void gdx11_set_color_map_hls(DIGWin *dw, float (* x_data)[], float (* y_data)[])
 {
 }
 
@@ -1162,9 +1159,7 @@ static void gdx11_set_color_map_hls( op_code, x_data, y_data )
        /* 12. - GET LOCATOR INPUT */
        /***************************/
 
-static void gdx11_button_input(dw,x_data,y_data)
-     DIGWin *dw;
-     float (* x_data)[], (* y_data)[];
+static void gdx11_button_input(DIGWin *dw, float (* x_data)[], float (* y_data)[])
 {
   int button;
   int x,y;
@@ -1188,9 +1183,7 @@ static void gdx11_button_input(dw,x_data,y_data)
        /*  13. - SET LINE STYLE     */
        /*****************************/
 /*  Added by RLT on 1/22/93  */
-static void gdx11_set_line (dw,x_data,y_data)
-     DIGWin *dw;
-     float (* x_data)[], (* y_data)[];
+static void gdx11_set_line (DIGWin *dw, float (* x_data)[], float (* y_data)[])
 {
   unsigned int line_width;
   int          line_style;
@@ -1201,7 +1194,7 @@ static void gdx11_set_line (dw,x_data,y_data)
 
   /* Change GC for this window */
 
-  XGCValues setgc;
+//  XGCValues setgc;
 
   /* First flush buffer with any current events */
 
@@ -1213,9 +1206,9 @@ static void gdx11_set_line (dw,x_data,y_data)
   gdx11_init_polylines(dw);
   gdx11_init_strings(dw); 
 
-  setgc.foreground = (unsigned long)dw->pixel_value_for_color[1];
-  setgc.background = (unsigned long)dw->pixel_value_for_color[0];
-  setgc.function   = GXcopy;
+ // setgc.foreground = (unsigned long)dw->pixel_value_for_color[1];
+ // setgc.background = (unsigned long)dw->pixel_value_for_color[0];
+ // setgc.function   = GXcopy;
 
   if  (new_ln <= 1)
       line_style = LineSolid;
@@ -1224,7 +1217,7 @@ static void gdx11_set_line (dw,x_data,y_data)
   else
       line_style = LineDoubleDash;
 
-  setgc.fill_style = FillSolid;
+//  setgc.fill_style = FillSolid;
 
   if  (new_wd <= 1)
       line_width = 0;
@@ -1256,9 +1249,7 @@ static void gdx11_set_line (dw,x_data,y_data)
        /* 14. - Set Clip Window */
        /*************************/
 
-static void gdx11_clip_mask(dw,x_data,y_data)
-  DIGWin *dw;
-  float (* x_data)[], (* y_data)[];
+static void gdx11_clip_mask(DIGWin *dw, float (* x_data)[], float (* y_data)[])
 {
   register int new_x;
   XRectangle rectangles[1];
@@ -1284,13 +1275,10 @@ static void gdx11_clip_mask(dw,x_data,y_data)
   }
 }
        /**************************************/
-       /*  MAX_OPCODE-1 - DRAW TEXT STRING   */
+       /*  MAX_OPCODE-1 - DRAW TEXT STRING   (op_code < -1024) */
        /**************************************/
 
-static void gdx11_draw_text(dw,n,x_data,y_data)
-     DIGWin *dw;
-     int n ;
-     float (* x_data)[], (* y_data)[];
+static void gdx11_draw_text(DIGWin *dw,int n,float (* x_data)[], float (* y_data)[])
 {
   int i ;
   dw->textx[dw->nstrings] = x_translate(dw,(*x_data)[0]);
@@ -1309,13 +1297,10 @@ static void gdx11_draw_text(dw,n,x_data,y_data)
 }
 
        /************************************/
-       /* MAX_OPCODE - DRAW FILLED POLYGON */
+       /* MAX_OPCODE - DRAW FILLED POLYGON (op_code > 1024) */
        /************************************/
 
-static void gdx11_draw_polygon(dw,n,x_data,y_data)
-     DIGWin *dw;
-     int n;
-     float (* x_data)[], (* y_data)[];
+static void gdx11_draw_polygon(DIGWin *dw,int n,float (* x_data)[], float (* y_data)[])
 {
   int    i;
 /*  Display *disp = dw->xdisplay;*/
@@ -1351,21 +1336,21 @@ void gdx11( op_code, x_data, y_data )
  */
 /* GCC, INTEL, SUN and DEC use :
  */
-void gdx11_( op_code, x_data, y_data )
-     int    *op_code;        /* holds device independent op-code */
-     float  (* x_data)[];    /* x coordinate data */
-     float  (* y_data)[];    /* y coordinate data */
+        /* op_code holds device independent op-code */
+        /* x_data x coordinate data */
+        /* y_data y coordinate data */
+void gdx11_(int *op_code, float (* x_data)[], float (* y_data)[])
 {
   /* An array of pointers to function */
   /*  i.e. a jump table that is global to this compilation unit */
 
-  static void (* jump_table[MAX_OPCODE])() =
+  static void (* jump_table3[MAX_OPCODE])(DIGWin *, float (*)[], float (*)[]) =
     {
       gdx11_init_device,           /*  1 = initialize new device */
       gdx11_clear_page,            /*  2 = erase the window      */
       gdx11_move_to,               /*  3 = move - no draw        */
       gdx11_draw_to,               /*  4 = draw - draw line      */
-      gdx11_flush,                 /*  5 = flush buffer          */
+      gdx11_flush_wrapper,         /*  5 = flush buffer          */
       gdx11_release_device,        /*  6 = release device = NULL */
       gdx11_return_device,         /*  7 = return device feature */
       gdx11_select_color,          /*  8 = select colors         */
@@ -1375,18 +1360,26 @@ void gdx11_( op_code, x_data, y_data )
       gdx11_button_input,          /* 12 = locator input w/mouse */
       gdx11_set_line,              /* 13 = set line style        */
       gdx11_clip_mask,             /* 14 = set clip region       */
-      gdx11_draw_text,             /* MAX_OP - 1 = draw text     */
-      gdx11_draw_polygon           /* MAX_OP     = polygon fill  */
-      };                           /*      MAX_OPCODE = 16       */
+      };                           /*      MAX_OPCODE = 14       */
+
+  static void (* jump_table4[MAX_OPCODE_4])(DIGWin *, int , float (*)[], float (*)[]) =
+    {
+      gdx11_draw_text,             /* *op_code < -1024 draw text     */
+      gdx11_draw_polygon           /* *op_code >  1024 polygon fill  */
+      };
 
   if (DEBUG>=3) fprintf(stderr,"FEAP-X11 called, op_code = %d\n",*op_code);
+
   /* Check for correct op-code, and run */
   if (*op_code > 1024)
-    jump_table[MAX_OPCODE-1](current_dw,*op_code-1024,x_data,y_data);
+    jump_table4[1](current_dw,*op_code-1024,x_data,y_data); /* gdx11_draw_polygon */
+
   else if (*op_code < -1024)
-    jump_table[MAX_OPCODE-2](current_dw,-*op_code-1024,x_data,y_data);
+    jump_table4[0](current_dw,-*op_code-1024,x_data,y_data); /* gdx11_draw_text */
+
   else if ((0 <= *op_code) && (*op_code <= MAX_OPCODE-1))
-    jump_table[*op_code-1](current_dw,x_data,y_data);
+    jump_table3[*op_code-1](current_dw,x_data,y_data);
+
   if (DEBUG>=3) fprintf(stderr,"FEAP-X11 done with op_code = %d\n",*op_code);
 }
 
@@ -1410,7 +1403,6 @@ struct {
  * Assumes that Fortran True == 1 and Fortran False == 0
  */
 
-
 int cinput_nox()
 {
         int stlen,j;
@@ -1428,6 +1420,7 @@ int cinput_nox()
         comrec_.record[stlen-1] = ' '; /* zap carraige return */
         return 1;
 }
+
 /*
  * Select switch loop to look for X11 events and keyboard events
  */
@@ -1437,7 +1430,7 @@ int cinput_x()
     fd_set readfds;
     struct timeval timeout;
 
-    int n, retv;
+    int retv;
     int fd, cinput_x_unfinished;
 
     cinput_x_unfinished = 1;
@@ -1455,7 +1448,7 @@ int cinput_x()
         FD_SET (fd, &readfds);
 
         /* Select on fd's, process input as needed */
-        n = select(fd + 1, &readfds, NULL, NULL, &timeout);
+        select(fd + 1, &readfds, NULL, NULL, &timeout);
 
         /* Data on stdin */
         if (FD_ISSET(0, &readfds)) {

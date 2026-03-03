@@ -376,6 +376,9 @@
           if(eltype.gt.0) then
             ii = max(-1,min(3,nint(ev(1))))
             jj = max( 1,min(3,nint(ev(2))))
+            if( pcomp(text(2),'noda',4).or.pcomp(text(2),'node',4)) then
+              d(182) = 2.0d0
+            endif
           else
             ii = nint(ev(1))
             jj = nint(ev(2))

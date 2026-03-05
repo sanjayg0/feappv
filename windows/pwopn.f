@@ -39,7 +39,7 @@
 
       textscreen.numxpixels   =   800
       textscreen.numypixels   =   800
-      textscreen.numtextcols  =    90
+      textscreen.numtextcols  =    80
       textscreen.numtextrows  =  5000
       textscreen.fontsize     = #000A0010
       textscreen.numcolors    =  -1

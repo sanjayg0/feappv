@@ -49,7 +49,7 @@
           call tint2dn(nel,lint,el2)
         else
           if(stiff) then
-            l =  6 ! 3
+            l =  6
           else
             l =  7
           endif

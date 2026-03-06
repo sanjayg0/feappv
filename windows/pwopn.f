@@ -37,10 +37,10 @@
 
 !     Set the x & y pixels & font to give 80 x 50 text window
 
-      textscreen.numxpixels   =  800
-      textscreen.numypixels   =  800
-      textscreen.numtextcols  =  -1
-      textscreen.numtextrows  =  -1
+      textscreen.numxpixels   =   800
+      textscreen.numypixels   =   800
+      textscreen.numtextcols  =    80
+      textscreen.numtextrows  =  5000
       textscreen.fontsize     = #000A0010
       textscreen.numcolors    =  -1
       textscreen.title =

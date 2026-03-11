@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<VisualStudioProject ProjectType="typeStaticLibrary" ProjectCreator="Intel Fortran" Keyword="Static Library" Version="11.0" ProjectIdGuid="{DF56B1E9-A20A-4DED-BEF3-491757FFF5CA}">
+<VisualStudioProject ProjectType="typeStaticLibrary" ProjectCreator="Intel Fortran" Keyword="Static Library" Version="11.0" ProjectIdGuid="{1ACA5063-0F6B-4932-8E6D-F3D68B55D939}">
 	<Platforms><Platform Name="x64"/></Platforms>
 	<Configurations>
-		<Configuration Name="Debug|x64" UseCompiler="ifxCompiler"> ConfigurationType="typeStaticLibrary">
+		<Configuration Name="Debug|x64" UseCompiler="ifxCompiler" ConfigurationType="typeStaticLibrary">
 			<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true"                        DebugInformationFormat="debugEnabled"                        Optimization="optimizeDisabled"                        Traceback = "true"                        WarnInterfaces="true"                        StackFrameCheck="true"                        AdditionalIncludeDirectories="include"                        RuntimeLibrary="rtMultiThreadedDebugDLL"/>
 			<Tool Name="VFMidlTool" SuppressStartupBanner="true" TargetEnvironment="midlTargetAMD64"/>
 		</Configuration>

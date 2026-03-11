@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VisualStudioProject ProjectCreator="Intel Fortran" Keyword="QuickWin" Version="11.0" ProjectIdGuid="{4EC52688-533E-49FC-ADE1-AA495FF79A3E}">
+	<Platforms><Platform Name="x64"/></Platforms>
+	<Configurations>
+		<Configuration Name="Debug|x64" UseCompiler="ifxCompiler"> ConfigurationType="typeExecutable">
+			<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true"                        DebugInformationFormat="debugEnabled"                        Optimization="optimizeDisabled"                        Traceback = "true"                        WarnInterfaces="true"                        StackFrameCheck="true"                        AdditionalIncludeDirectories="include"                        RuntimeLibrary="rtQuickWinDebug"/>
+			<Tool Name="VFLinkerTool" LinkIncremental="linkIncrementalNo" SuppressStartupBanner="true" IgnoreDefaultLibraryNames="msvcrtd.lib" GenerateDebugInformation="true" SubSystem="subSystemWindows"/>
+			<Tool Name="VFManifestTool" SuppressStartupBanner="true"/>
+			<Tool Name="VFMidlTool" SuppressStartupBanner="true" TargetEnvironment="midlTargetAMD64"/>
+		</Configuration>
+		<Configuration Name="Release|x64" UseCompiler="ifxCompiler" ConfigurationType="typeExecutable">
+			<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true"                       AdditionalIncludeDirectories="include"                       RuntimeLibrary="rtQuickWin"/>
+			<Tool Name="VFLinkerTool" SuppressStartupBanner="true" IgnoreDefaultLibraryNames="msvcrt.lib" SubSystem="subSystemWindows"/>
+			<Tool Name="VFManifestTool" SuppressStartupBanner="true"/>
+			<Tool Name="VFMidlTool" SuppressStartupBanner="true" TargetEnvironment="midlTargetAMD64"/>
+		</Configuration>
+	</Configurations>
+	<Files>
+		<File RelativePath=".\main/feappv.f"/>
+		<File RelativePath=".\$(Platform)\$(Configuration)\feappv_lib.lib"/>
+	</Files>
+</VisualStudioProject>

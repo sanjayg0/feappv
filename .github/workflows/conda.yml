@@ -1,0 +1,110 @@
+
+name: CMake Build
+
+env:
+  CMAKE_VERSION: 3.20.1
+  BUILD_TYPE: Release
+  OPENSEESRT_BUILD: local
+
+
+# Trigger in two scenarios:
+# 1) when pushing directly into master, and
+# 2) when pull requests are opened on devel
+on:
+  push:
+    branches: [master]
+
+  pull_request:
+    branches: [devel]
+
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  
+  build-win32:
+
+    name: Build on Windows
+    runs-on: [windows-latest]
+    steps:
+      - name: Obtain Source Code
+        uses: actions/checkout@v4
+
+      # Enter the MSVC “Developer Command Prompt” so cl.exe & libs are usable
+      - name:  Microsoft Visual Studio
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: amd64
+          vsversion: 2022
+
+      # Miniforge (conda-forge) with mamba
+      - name: Set up Miniforge
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          miniforge-version: latest
+          miniforge-variant: Miniforge3
+          use-mamba: true
+          activate-environment: ifx
+
+      - name: Create env with ifx + MKL + tools
+        shell: cmd
+        run: |
+          call "%CONDA%\condabin\conda.bat" activate ifx
+          mamba install -y -c conda-forge ^
+            cmake ninja tk ^
+            ifx_win-64 ^
+            mkl-devel conda-forge/label/mkl_rc::blas
+
+
+      # # Configure (no build):
+      # - name: CMake configure
+      #   shell: cmd
+      #   run: |
+      #     call "%CONDA%\condabin\conda.bat" activate ifx
+
+      #     rem Intel intrinsic modules (iso_c_binding, iso_fortran_env)
+      #     set IFX_INC=%CONDA_PREFIX%\opt\compiler\include\intel64
+      #     set INCLUDE=%IFX_INC%;%INCLUDE%
+
+      #     rem Paths for MKL (from conda-forge)
+      #     set MKLROOT=%CONDA_PREFIX%\Library
+      #     set CMAKE_PREFIX_PATH=%CONDA_PREFIX%
+
+      #     if exist build rmdir /s /q build
+      #     cmake -S . -B build -G Ninja ^
+      #       -DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY ^
+      #       -DCMAKE_Fortran_COMPILER="%CONDA_PREFIX%\Library\bin\ifx.exe" ^
+      #       -DCMAKE_REQUIRED_INCLUDES="%IFX_INC%" ^
+      #       -DBLA_VENDOR=Intel10_64_dyn ^
+      #       -DCMAKE_TOOLCHAIN_FILE:FILEPATH="ifx_toolchain.cmake" ^
+      #       -DMKLROOT="%MKLROOT%" -DMKL_ROOT="%MKLROOT%"
+
+      - name: Configure and Compile
+        shell: cmd
+        run: |
+          call "%CONDA%\condabin\conda.bat" activate ifx
+
+          set IFX_INC=%CONDA_PREFIX%\opt\compiler\include\intel64
+          set INCLUDE=%IFX_INC%;%INCLUDE%
+
+          rem Paths for MKL (from conda-forge)
+          set MKLROOT=%CONDA_PREFIX%\Library
+          set CMAKE_PREFIX_PATH=%CONDA_PREFIX%
+
+          mkdir build
+          cd build
+          cmake .. -G Ninja -DBLA_STATIC=ON -DMKL_LINK=static ^
+            -DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY ^
+            -DMKL_INTERFACE_FULL=intel_lp64 ^
+            -DBLA_VENDOR=Intel10_64_dyn ^
+            -DCMAKE_REQUIRED_INCLUDES="%IFX_INC%" ^
+            -DCMAKE_Fortran_COMPILER="%CONDA_PREFIX%\Library\bin\ifx.exe" ^
+            -DMKLROOT="%MKLROOT%" -DMKL_ROOT="%MKLROOT%"
+          cmake --build . --config Release
+
+
+
+

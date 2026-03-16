@@ -1,0 +1,22 @@
+
+target_sources(FEAP_IGA
+    PRIVATE
+        pcurvel.f
+        pcurvin.f
+        pelvblk1d.f
+        pelvblk2d.f
+        pelvblk3d.f
+        pelvout1d.f
+        pelvout2d.f
+        pelvout3d.f
+        pnurbel1d.f
+        pnurbel2d.f
+        pnurbel3d.f
+        poutblk1d.f
+        poutblk2d.f
+        poutblk3d.f
+        psetnurb.f
+        psetPw.f
+        psetQw.f
+        psetUw_ks.f
+)

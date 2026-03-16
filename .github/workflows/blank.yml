@@ -1,0 +1,109 @@
+# =================================================================
+#   F I N I T E   E L E M E N T   A N A L Y S I S   P R O G R A M
+#           (c) Regents of the University of California            
+#                        All Rights Reserved.
+# =================================================================
+
+name: CI
+
+# Trigger in two scenarios:
+# 1) when pushing directly into master, and
+# 2) when pull requests are opened on devel
+on:
+  push:
+    branches: [master]
+
+  pull_request:
+    branches: [devel]
+
+  workflow_dispatch:
+
+
+# Define jobs to compile on Linux, MacOS, and Windows
+jobs:
+
+  build-linux:
+    name: Build on Linux
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Obtain source code
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get install gfortran libopenblas-dev libopenmpi-dev libx11-dev
+        echo Finish GFORTRAN install
+
+    - name: Configure with CMake
+      run: |
+        mkdir build
+        cmake -S . -B build
+
+    - name: Compile feappv
+      run: |
+        cmake --build build -j 8 --target feappv
+
+  build-mac:
+    name: Build Mac OS
+    runs-on: macos-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Obtain source code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        #  ln -s /opt/homebrew/bin/gcc-13 /usr/local/bin/gcc
+        #  ln -s /opt/homebrew/bin/gfortran-13 /usr/local/bin/gfortran
+        run: |
+         brew install open-mpi libomp gfortran
+         brew install scalapack
+         brew install xquartz
+
+      - name: Configure and Compile
+        run: |
+          export FC=$(brew --prefix gcc)/bin/gfortran-$(brew list gcc | grep -Eo 'gfortran-[0-9]+' | head -n1 | grep -Eo '[0-9]+')
+          mkdir build
+          cmake -S . -B build
+          cmake --build build
+
+  build-win:
+    name: Build Windows
+    runs-on: windows-latest
+    steps:
+      - name: Obtain Source Code
+        uses: actions/checkout@v4
+
+      - name: Install Visual Studio
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          vsversion: 2022
+
+      - name: Install Intel Toolchain
+        shell: pwsh
+        env:
+          WINDOWS_BASEKIT_URL: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/7dff44ba-e3af-4448-841c-0d616c8da6e7/w_BaseKit_p_2024.1.0.595_offline.exe
+          WINDOWS_BASEKIT_COMPONENTS: intel.oneapi.win.mkl.devel
+          WINDOWS_HPCKIT_URL: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/c95a3b26-fc45-496c-833b-df08b10297b9/w_HPCKit_p_2024.1.0.561_offline.exe
+          WINDOWS_HPCKIT_COMPONENTS: "intel.oneapi.win.mpi.devel:intel.oneapi.win.ifort-compiler"
+
+        run: |
+          cd .github
+          cd workflows
+          ./install_fortran.bat $env:WINDOWS_BASEKIT_URL $env:WINDOWS_BASEKIT_COMPONENTS
+          ./install_fortran.bat $env:WINDOWS_HPCKIT_URL $env:WINDOWS_HPCKIT_COMPONENTS
+
+      - name: Configure and Compile
+        shell: cmd
+        run: |
+          # Setup shell environment
+          call "C:\Program Files (x86)\Intel\oneAPI\setvars.bat" intel64 mod
+          # Create build directory
+          mkdir build
+          cd build
+          # Configure
+          cmake .. -DBLA_STATIC=ON -DMKL_LINK=static -DMKL_INTERFACE_FULL=intel_lp64
+          # Compile
+          cmake --build . --config Release
+

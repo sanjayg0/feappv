@@ -1,0 +1,29 @@
+
+target_sources(FEAP_IGA
+    PRIVATE
+        bezier1d.f
+        beziers.f
+        derbezier1d.f
+        findsegm.f
+        interp1d.f
+        interp2d.f
+        interp3d.f
+        interps2d.f
+        invert3.f
+        mixbezier1d.f
+        nurb_sh1.f
+        pknotdiv.f
+        pknotel.f
+        pknotelm.f
+        pknotlen.f
+        pknotnum.f
+        pknots.f
+        pt_shp.f
+        shp1d_nurb.f
+        shp2d_bez.f
+        shp2d_nurb.f
+        shp2d_shl.f
+        shp3d_bez.f
+        shp3d_nurb.f
+)
+

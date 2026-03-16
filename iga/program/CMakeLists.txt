@@ -1,0 +1,45 @@
+
+target_sources(FEAP_IGA
+    PRIVATE
+        knotext.f
+        nsurfpres2d.funused
+        pc_elmtin.f
+        pc_extrin.fold
+        pcircle.f
+        pdblk_out.f
+        pdblock.f
+        pedgin.f
+        pellipse.f
+        pform.fold
+        pgenurb.f
+        plblock.f
+        plknots.f
+        pmacr1.f
+        pmacr1.fold
+        pmacr8.f
+        pmesh.f
+        pmesh.fold
+        pnblend.f
+        pnblk3el.f
+        pnblkel.f
+        pnblklen.f
+        pnblock.f
+        pn_elev.f
+        pnewprob.f
+        pn_insert.f
+        pnorml.f
+        pnpatch.f
+        pnpatlen.f
+        pnrdrd.f
+        pnsides.f
+        pnsidlen.f
+        pnums.f
+        pnurbdi2d.f
+        pnurbld2d.f
+        poutnelm.fold
+        poutnurb.f
+        ppart.f
+        ptinvert.f
+        setnelm.f
+)
+

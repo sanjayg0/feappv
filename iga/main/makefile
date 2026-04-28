@@ -16,7 +16,7 @@ ifeappv: $(OBJECTS) $(ARFEAPPV) $(ARIFEAPPV)
 
 clean:
 	rm -f *.o
-	rm -f *genmod.mod
+	rm -f *.mod
 	rm -f *genmod.f90
 
 fclean:

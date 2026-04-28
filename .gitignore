@@ -12,3 +12,5 @@ vfeappv
 .DS_STORE
 main/makefile
 makefile.in
+feapname
+feappvname

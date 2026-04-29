@@ -22,7 +22,7 @@ clean:
 fclean:
 	rm -f *.o
 	rm -f *.mod
-	rm -f *genmod.mod
+	rm -f *.mod
 	rm -f *genmod.f90
 	rm -f vfeappv
 	rm -r -f vfeap*.dSYM

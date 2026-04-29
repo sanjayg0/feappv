@@ -1,5 +1,10 @@
 \begin{thebibliography}{10}
 
+\bibitem{zt1n8}
+O.C. Zienkiewicz, R.L. Taylor, and S.~Govindjee.
+\newblock {\em The Finite Element Method: Its Basis and Fundamentals}.
+\newblock Elsevier, Oxford, $8^{th}$ edition, 2024.
+
 \bibitem{zt1n7}
 O.C. Zienkiewicz, R.L. Taylor, and J.Z. Zhu.
 \newblock {\em The Finite Element Method: Its Basis and Fundamentals}.
@@ -15,14 +20,12 @@ R.L. Taylor and S.~Govindjee.
 \newblock {\em FEAP - {A} {Finite} {Element} {Analysis} {Program}, {Programmer}
   {Manual}}.
 \newblock University of California, Berkeley.
-\newblock \url{projects.ce.berkeley.edu/feap}.
 
 \bibitem{feape}
 R.L. Taylor and S.~Govindjee.
 \newblock {\em FEAP - {A} {Finite} {Element} {Analysis} {Program}, {Example}
   {Manual}}.
 \newblock University of California, Berkeley.
-\newblock \url{projects.ce.berkeley.edu/feap}.
 
 \bibitem{zt1n}
 O.C. Zienkiewicz and R.L. Taylor.
@@ -61,7 +64,6 @@ R.L. Taylor.
 \newblock {\em FEAP - {A} {Finite} {Element} {Analysis} {Program}, {Theory}
   {Manual}}.
 \newblock University of California, Berkeley.
-\newblock \url{projects.ce.berkeley.edu/feap}.
 
 \bibitem{taylorpg}
 R.L. Taylor, K.S. Pister, and G.L. Goudreau.
@@ -93,8 +95,8 @@ O.C. Zienkiewicz, R.L. Taylor, and J.Z. Zhu.
 \newblock Elsevier, Oxford, $6^{th}$ edition, 2005.
 
 \bibitem{newmark}
-N.~Newmark.
+N.M. Newmark.
 \newblock A method of computation for structural dynamics.
-\newblock {\em Journal Engineering Mechanics, ASCE}, 85:67--94, 1959.
+\newblock {\em Journal of the Engineering Mechanics, ASCE}, 85:67--94, 1959.
 
 \end{thebibliography}

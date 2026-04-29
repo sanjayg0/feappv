@@ -2,7 +2,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2024: Regents of the University of California
+!....  Copyright (c) 1984-2026: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -36,24 +36,24 @@
       type(qwinfo)       :: winfo,frmwindow
       logical            :: status
       use        IFQWIN
-              
-      implicit   none  
-              
+
+      implicit   none
+
       type(windowconfig)  :: textscreen
       logical             :: vstatus
-          
+
       save
-          
+
 !     Open Child Console Window for text inputs
-          
+
       open (unit = 5, file = 'CON')
-          
+
 !     Get Current Input Data Window Size
-          
+
       vstatus  = getwindowconfig(textscreen)
-          
+
 !     Set the x & y pixels & font to give 80 x 50 text window
-        
+
       textscreen.numxpixels   =  800
       textscreen.numypixels   =  800
       textscreen.numtextcols  =  -1
@@ -67,7 +67,7 @@
 
       vstatus = setwindowconfig(textscreen)
       if(.not.vstatus) vstatus = setwindowconfig(textscreen)
-      
+
       vstatus = deletemenuqq(4, 0)
 
       vstatus = displaycursor($gcursoron)

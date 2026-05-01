@@ -17,5 +17,12 @@ feappvname
 *.aux
 *.bbl
 *.blg
+*.idx
+*.ilg
+*.ind
+*.lof
 *.log
+*.lot
+*.out
+*.toc
 *.synctex.gz

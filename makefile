@@ -3,7 +3,7 @@
 
 include $(FEAPPVHOME5_1)/makefile.in
 
-CLEANDIRS = modules elements program plot unix user main
+CLEANDIRS =  modules elements program plot unix user main
 
 feappv: archive
 	(cd main; make feappv)
@@ -21,6 +21,9 @@ install: archive feappv
 
 clean:
 	for i in $(CLEANDIRS); do (cd $$i; make clean); done
+	@@echo "--> FEAPpv directories cleaned <--"
+
+aclean:
 	if [ -f $(ARFEAPPV) ]; then rm $(ARFEAPPV); fi
-	@@echo "--> FEAPpv cleaned <--"
+	@@echo "--> FEAPpv archive cleaned <--"
 

@@ -12,7 +12,7 @@
 # Location of feappv include files (integer4 is no longer in the distribution
 # as of version 5.1)
 
-  FINCLUDE = $(FEAPPVHOME5_1)/include
+  FINCLUDE = $(FEAPPVHOME5_1)/include -I$(FEAPPVHOME5_1)/modules
 
 # Location of C-compiler include files (depends where compiler installed)
 
@@ -20,7 +20,7 @@
   CINCLUDE = /opt/local/include -I$(FEAPPVHOME5_1)/include
 
 # IgA (Isogeometric)
-  NINCLUDE = $(FEAPPVHOME5_1)/iga/include
+  NINCLUDE = $(FEAPPVHOME5_1)/iga/include  -$(FEAPPVHOME5_1)/iga/modules
 
 #------------------------------------------------------------------------
 # Which compilers to use (Set compiler names available on your computer)
@@ -45,6 +45,15 @@
 
   FFOPTFLAG = -O2 -Warn all -g
   CCOPTFLAG = -O2 -Wall -g
+
+#------------------------------------------------------------------------
+# Select modules by compiler type
+
+# Intel: ifort style
+  PMODULEDIR  = -module $(FEAPHOME8_7)/modules
+  PMODULEDIRI = -module $(FEAPHOME8_7)/iga/modules
+  PMODULEDIR2 = -module $(FEAPHOME8_7)/fe2/modules
+  PMODULEDIRV = -module $(FEAPHOME8_7)/vem/modules
 
 #------------------------------------------------------------------------
 # Source Types (generally this is blank)

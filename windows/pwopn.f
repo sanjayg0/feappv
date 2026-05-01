@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2024: Regents of the University of California
+!....  Copyright (c) 1984-2026: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -37,10 +37,10 @@
 
 !     Set the x & y pixels & font to give 80 x 50 text window
 
-      textscreen.numxpixels   =  800
-      textscreen.numypixels   =  800
-      textscreen.numtextcols  =  -1
-      textscreen.numtextrows  =  -1
+      textscreen.numxpixels   =   800
+      textscreen.numypixels   =   800
+      textscreen.numtextcols  =    80
+      textscreen.numtextrows  =  5000
       textscreen.fontsize     = #000A0010
       textscreen.numcolors    =  -1
       textscreen.title =

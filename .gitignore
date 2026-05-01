@@ -1,5 +1,6 @@
 *.a
 *__genmod*
+*.mod
 built_objs
 filein
 *.dSYM/
@@ -9,3 +10,19 @@ fe2feappv
 ifeappv
 vfeappv
 .DS_STORE
+main/makefile
+makefile.in
+feapname
+feappvname
+*.aux
+*.bbl
+*.blg
+*.idx
+*.ilg
+*.ind
+*.lof
+*.log
+*.lot
+*.out
+*.toc
+*.synctex.gz

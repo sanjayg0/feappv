@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2024: Regents of the University of California
+!....  Copyright (c) 1984-2026: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -49,7 +49,7 @@
           call tint2dn(nel,lint,el2)
         else
           if(stiff) then
-            l =  3
+            l =  6
           else
             l =  7
           endif

@@ -47,7 +47,7 @@ feappv: $(OBJECTS) $(SOURCES) $(ARFEAPPV)
 clean:
 	rm -f *.o
 	rm -f *genmod.f90
-	rm -f *genmod.mod
+	rm -f *.mod
 
 fclean:
 	rm -f feappv

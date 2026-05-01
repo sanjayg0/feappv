@@ -14,3 +14,8 @@ main/makefile
 makefile.in
 feapname
 feappvname
+*.aux
+*.bbl
+*.blg
+*.log
+*.synctex.gz

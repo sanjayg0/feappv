@@ -1,6 +1,7 @@
-[![Github All Releases](https://img.shields.io/tokei/lines/github/sanjayg0/feappv?style=plastic)]()
 [![Github All Releases](https://img.shields.io/github/search/sanjayg0/feappv/goto?style=plastic)]()
 [![Github All Releases](https://img.shields.io/github/forks/sanjayg0/feappv?style=plastic)]()
+[![Github All Releases](https://img.shields.io/github/repo-size/sanjayg0/feappv)]()
+
 
 
 # feappv

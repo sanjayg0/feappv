@@ -20,7 +20,7 @@
   CINCLUDE = /opt/local/include -I$(FEAPPVHOME5_1)/include
 
 # IgA (Isogeometric)
-  NINCLUDE = $(FEAPPVHOME5_1)/iga/include  -$(FEAPPVHOME5_1)/iga/modules
+  NINCLUDE = $(FEAPPVHOME5_1)/iga/include  -I$(FEAPPVHOME5_1)/iga/modules
 
 #------------------------------------------------------------------------
 # Which compilers to use (Set compiler names available on your computer)
@@ -50,10 +50,10 @@
 # Select modules by compiler type
 
 # GNU: gfortran style
-  PMODULEDIR  = -J$(FEAPHOME8_7)/modules
-  PMODULEDIRI = -J$(FEAPHOME8_7)/iga/modules
-  PMODULEDIR2 = -J$(FEAPHOME8_7)/fe2/modules
-  PMODULEDIRV = -J$(FEAPHOME8_7)/vem/modules
+  PMODULEDIR  = -J$(FEAPPVHOME5_1)/modules
+  PMODULEDIRI = -J$(FEAPPVHOME5_1)/iga/modules
+  PMODULEDIR2 = -J$(FEAPPVHOME5_1)/fe2/modules
+  PMODULEDIRV = -J$(FEAPPVHOME5_1)/vem/modules
 
 #------------------------------------------------------------------------
 # Source Types (generally this is blank)

@@ -32,6 +32,7 @@
       include  'idata1.h'
       include  'iofile.h'
       include  'prflag.h'
+      include  'setups.h'
 
       character (len=15) :: lct(*),clab(2),vv(3)
       character (len=4)  :: wd(nwd)
@@ -82,7 +83,11 @@
 
       clab(1) = ' '
       do while( pcomp(clab(1),' ',1) )
-        if(ior.lt.0) write(*,2004) nn+1,ll-1
+        if(mpiflg) then
+          if(ior.lt.0) write(*,2007) nn+1,ll-1
+        else
+          if(ior.lt.0) write(*,2004) nn+1,ll-1
+        endif
         errck = tinput(clab,2,td,4)
         ct(1,ll) = td(1)
         ct(2,ll) = td(2)
@@ -377,6 +382,8 @@
 2005  format(1p,3e15.7)
 
 2006  format('   Exit with restart file save (y or n) :',$)
+
+2007  format('   List',i3,'  Command',i3,'> ')
 
 3001  format(' *WARNING* Maximum number of command statements =',i4
      &     ,/'    Use history edit to reduce or program will stop'

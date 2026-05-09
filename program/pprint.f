@@ -17,6 +17,8 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit   none
 
+      include 'setups.h'
+
       character      :: string*(*)
       integer        :: l,le
 
@@ -24,10 +26,15 @@
       do l = le,1,-1
         if(string(l:l).ne.' ') exit
       end do ! l
-      write(*,2000) string(1:l),' '
+      if(mpiflg) then
+        write(*,2001) string(1:l),' '
+      else
+        write(*,2000) string(1:l),' '
+      endif
 
 !     Format
 
 2000  format(a,a,$)
+2001  format(a,a)
 
       end subroutine pprint

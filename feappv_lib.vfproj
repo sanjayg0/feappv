@@ -557,6 +557,7 @@
 		<File RelativePath=".\windows/clpan.f"/>
 		<File RelativePath=".\windows/dplot.f"/>
 		<File RelativePath=".\windows/etime.f"/>
+		<File RelativePath=".\windows/pfclip.f"/>
 		<File RelativePath=".\windows/pflush.f"/>
 		<File RelativePath=".\windows/plabl.f"/>
 		<File RelativePath=".\windows/plclos.f"/>

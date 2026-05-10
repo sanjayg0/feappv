@@ -4,10 +4,11 @@ OBJECTS = $(FEAPPVHOME5_1)/main/feappv.o # umacr1.o
 
 ifeappv: $(OBJECTS) $(ARFEAPPV) $(ARIFEAPPV)
 	ranlib $(ARIFEAPPV)
-	$(FF) -Wl,-no_pie -o ifeappv $(OBJECTS) \
+	$(FF)  -o ifeappv $(OBJECTS) \
 	$(ARIFEAPPV) \
 	$(ARFEAPPV) $(LDOPTIONS)
-	dsymutil ifeappv
+	@@echo "--> IGA FEAPpv executable made <--"
+	#dsymutil ifeappv
 
 # UBUNTU and other GCC loader type machines
 # Replace $(ARIFEAPPV) \ by:

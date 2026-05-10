@@ -4,9 +4,10 @@ OBJECTS =  $(FEAPPVHOME5_1)/main/feappv.o
 
 vfeap: $(OBJECTS) $(ARFEAPPV) $(ARVFEAPPV)
 	ranlib $(ARVFEAPPV)
-	$(FF) -Wl,-no_pie -o vfeappv $(OBJECTS) \
+	$(FF) -o vfeappv $(OBJECTS) \
 	$(ARVFEAPPV) $(ARFEAPPV) $(LDOPTIONS)
-	dsymutil vfeappv
+	@@echo "--> VEM FEAPpv executable made <--"
+	#dsymutil vfeappv
 
 # UBUNTU and other GCC loader type machines (unchecked)
 # Replace $(ARVFEAPPV) \ by:

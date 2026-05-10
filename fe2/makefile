@@ -24,7 +24,7 @@ OBJECTS = $(FEAPPVHOME5_1)/main/feappv.o \
 install: $(OBJECTS) $(ARFEAPPV)
 	ranlib $(ARFEAPPV)
 	$(FFE2) -o fe2feappv $(OBJECTS) $(ARFEAPPV) $(LDOPTIONSFE2)
-	dsymutil fe2feappv
+	# dsymutil fe2feappv
 	@@echo "--> FE2 FEAPpv executable made <--"
 
 clean:

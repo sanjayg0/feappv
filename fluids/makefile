@@ -27,8 +27,9 @@ OBJECTS = $(FEAPPVHOME5_1)/main/feappv.o \
 #feap: $(OBJECTS) $(SOURCES) $(FINCLUDE) $(ARFEAPPV)
 feappv: $(OBJECTS) $(SOURCES) $(ARFEAPPV)
 	ranlib $(ARFEAPPV)
-	$(FF) -o feappv $(OBJECTS) $(ARFEAPPV) $(LDOPTIONS)
-	dsymutil feappv
+	$(FF) -o ffeappv $(OBJECTS) $(ARFEAPPV) $(LDOPTIONS)
+	@@echo "--> Fluids FEAPpv executable made <--"
+	#dsymutil feappv
 
 .f.o:
 	$(FF) -c $(FFOPTFLAG) -I$(FINCLUDE) $*.f -o $*.o

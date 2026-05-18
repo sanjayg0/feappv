@@ -25,8 +25,11 @@ with Visual Studio (you must also have the Intel compiler installed). Then build
 library project followed by the executable project.
 
 Alternately, open the Intel oneAPI command prompt, and from the FEAPpv
-top level directory type ' devenv feappv_sol.sln /build "Release|x64"
-'.  Replace Release by Debug if you want the debug version.
+top level directory type 
+
+```devenv feappv_sol.sln /build "Release|x64"```
+ 
+Replace Release by Debug if you want the debug version.
 
 ## Mac/Linux
 1. Copy main/makefile_default to main/makefile

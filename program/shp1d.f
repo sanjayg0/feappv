@@ -46,6 +46,8 @@
 
         shp(1,1) = -1.d0/xjac
         shp(1,2) =  1.d0/xjac
+   
+        xjac = 0.5d0*xjac
 
 !     Quadratic element
 

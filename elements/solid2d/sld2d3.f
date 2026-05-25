@@ -490,7 +490,7 @@
 
 2001  format(a1,20a4//5x,'Element Stresses'//'     Elmt Mat',
      &    4x,'1-coord    2-coord   1-stress   2-stress      Angle'/
-     &   15x,'11-stress  22-stress  33-stress  12-stress',
+     &   15x,'11-stress  22-stress  33-stress  12-stress'/
      &   15x,'11-strain  22-strain  33-strain  12-strain'/39(' -'))
 2002  format(i9,i4,0p,2f11.3,1p,3e11.3/13x,1p,4e11.3/13x,1p,4e11.3/)
 

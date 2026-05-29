@@ -10,6 +10,7 @@
 !     Modification log                                Date (dd/mm/year)
 !       Original version                                    01/11/2006
 !       1. Change DFLIB to IFQWIN                           10/04/2014
+!       2. Drop IFQWIN; close plot window via winplot_close 29/05/2026
 !-----[--+---------+---------+---------+---------+---------+---------+-]
 !      Purpose: Close any open plot windows and stop execution
 
@@ -19,7 +20,7 @@
 !      Outputs:
 !         none
 !-----[--+---------+---------+---------+---------+---------+---------+-]
-      use       IFQWIN
+      use       winplot_mod
 
       implicit  none
 
@@ -28,7 +29,7 @@
       include  'plflag.h'
 
       logical       :: eflag
-      integer       :: p_status,vclrwk,vclswk
+      integer       :: p_status,vclswk
 
       save
 
@@ -44,7 +45,6 @@
       if (hdcpy) call fpplcl()
 
       if(everon) then
-        p_status = vclrwk()
         p_status = vclswk()
       endif
 
@@ -60,8 +60,6 @@
 
       close(unit=ior, status = 'keep')
       close(unit=iow, status = 'keep')
-
-      p_status = setexitqq(QWIN$EXITNOPERSIST)
 
       stop
 

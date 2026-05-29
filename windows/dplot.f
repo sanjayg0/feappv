@@ -10,6 +10,7 @@
 !     Modification log                                Date (dd/mm/year)
 !       Original version                                    01/11/2006
 !       1. Change DFLIB to IFQWIN                           10/04/2014
+!       2. Drop IFQWIN; clip via winplot_set_clip           29/05/2026
 !-----[--+---------+---------+---------+---------+---------+---------+-]
 !      Purpose:  Line drawing routine for device types
 
@@ -21,7 +22,7 @@
 !      Outputs:
 !         none      - Outputs are graphics lines/moves
 !-----[--+---------+---------+---------+---------+---------+---------+-]
-      use       IFQWIN
+      use       winplot_mod
 
       implicit  none
 
@@ -65,7 +66,7 @@
 
 !     Set current clip region size
 
-      call setcliprgn(iwx1,iwy2,iwx2,iwy1)
+      call winplot_set_clip(int(iwx1),int(iwy2),int(iwx2),int(iwy1))
 
 !     Set flag to indicate inside clip region (or not checking)
 

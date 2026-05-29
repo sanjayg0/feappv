@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<VisualStudioProject ProjectCreator="Intel Fortran" Keyword="QuickWin" Version="11.0" ProjectIdGuid="{09D4F116-0F3A-41C1-99E7-50109A514D98}">
+<VisualStudioProject ProjectCreator="Intel Fortran" Keyword="Console" Version="11.0" ProjectIdGuid="{09D4F116-0F3A-41C1-99E7-50109A514D98}">
 	<Platforms><Platform Name="x64"/></Platforms>
 	<Configurations>
 		<Configuration Name="Debug|x64" UseCompiler="ifxCompiler" ConfigurationType="typeExecutable">
-			<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true"                        DebugInformationFormat="debugEnabled"                        Optimization="optimizeDisabled"                        Traceback = "true"                        WarnInterfaces="true"                        StackFrameCheck="true"                        AdditionalIncludeDirectories="include"                        RuntimeLibrary="rtQuickWinDebug"/>
-			<Tool Name="VFLinkerTool" LinkIncremental="linkIncrementalNo" SuppressStartupBanner="true" IgnoreDefaultLibraryNames="msvcrtd.lib" GenerateDebugInformation="true" SubSystem="subSystemWindows"/>
+			<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true"                        DebugInformationFormat="debugEnabled"                        Optimization="optimizeDisabled"                        Traceback = "true"                        WarnInterfaces="true"                        StackFrameCheck="true"                        AdditionalIncludeDirectories="include"                        RuntimeLibrary="rtMultiThreadedDebugDLL"/>
+			<Tool Name="VFLinkerTool" LinkIncremental="linkIncrementalNo" SuppressStartupBanner="true" GenerateDebugInformation="true" SubSystem="subSystemConsole" AdditionalDependencies="user32.lib gdi32.lib"/>
 			<Tool Name="VFManifestTool" SuppressStartupBanner="true"/>
 			<Tool Name="VFMidlTool" SuppressStartupBanner="true" TargetEnvironment="midlTargetAMD64"/>
 		</Configuration>
 		<Configuration Name="Release|x64" UseCompiler="ifxCompiler" ConfigurationType="typeExecutable">
-			<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true"                       AdditionalIncludeDirectories="include"                       RuntimeLibrary="rtQuickWin"/>
-			<Tool Name="VFLinkerTool" SuppressStartupBanner="true" IgnoreDefaultLibraryNames="msvcrt.lib" SubSystem="subSystemWindows"/>
+			<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true"                       AdditionalIncludeDirectories="include"                       RuntimeLibrary="rtMultiThreadedDLL"/>
+			<Tool Name="VFLinkerTool" SuppressStartupBanner="true" SubSystem="subSystemConsole" AdditionalDependencies="user32.lib gdi32.lib"/>
 			<Tool Name="VFManifestTool" SuppressStartupBanner="true"/>
 			<Tool Name="VFMidlTool" SuppressStartupBanner="true" TargetEnvironment="midlTargetAMD64"/>
 		</Configuration>

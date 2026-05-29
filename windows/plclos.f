@@ -15,6 +15,8 @@
 !      Outputs:
 !         none      - Returns command outputs to text device
 !-----[--+---------+---------+---------+---------+---------+---------+-]
+      use       winplot_mod
+
       implicit  none
 
       include  'print.h'
@@ -24,5 +26,10 @@
 !     Close plot device
 
       fopn = .false.
+
+!     Trigger a repaint of the native Win32 plot window so the display
+!     list accumulated since plopen() becomes visible.
+
+      call winplot_redraw()
 
       end subroutine plclos

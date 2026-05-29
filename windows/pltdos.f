@@ -1,5 +1,4 @@
 !$Id:$
-
 !      * * F E A P * * A Finite Element Analysis Program
 
 !....  Copyright (c) 1984-2026: Regents of the University of California
@@ -10,107 +9,29 @@
 !       Original version                                    01/11/2006
 !       1. Change DFLIB to IFQWIN                           10/04/2014
 !       2. Force Fit To Size for text window                28/09/2017
+!       3. Replace IFQWIN with native Win32 winplot_mod     29/05/2026
 !-----[----------------------------------------------------------------]
-!      Purpose:  Library of plot outputs for Windows systems
+!      Purpose:  Plot primitive shims for the native Win32 driver.
+!                The bodies are thin wrappers around winplot_mod.
 
-!      Inputs:
-!         See individual routines
-
-!      Outputs:
-!         See individual routines
+!      Inputs / Outputs:  See individual routines
 !-----[----------------------------------------------------------------]
       integer function vopnwk()
 
-      use        IFQWIN
-
+      use        winplot_mod
       implicit   none
-
-      include  'iofile.h'
-      include  'plflag.h'
-      include  'pdata2.h'
+      include   'plflag.h'
 
       integer         idxl,idyl,jfill
       common /vgraph/ idxl,idyl,jfill
 
-      type(windowconfig) :: myscreen
-      type(qwinfo)       :: winfo,frmwindow
-      logical            :: status
-      integer(2)         :: numfonts
-      integer            :: uchild
-
-!     Open workstation, home cursor, set up scaling
-
       if(screfl) then
-
-        uchild = 7
-        open(unit=uchild,file='user',title='F E A P p v    P l o t s')
-
-!       Get window size data for plot outputs
-
-        status  = getwsizeqq(uchild,qwin$sizecurr,winfo)
-        status  = getwsizeqq(qwin$framewindow,qwin$sizemax,frmwindow)
-
-!       Position for Graphics screen (in text row/columns shifts)
-
-        winfo.X = winfo.X + 6*winfo.w/10  ! frmwindow.W - winfo.W
-        winfo.Y = winfo.Y                 ! frmwindow.H - winfo.H
-
-        winfo.type=qwin$set
-
-        status  = setwsizeqq(uchild,winfo)
-        if(.not.status) status = setwsizeqq(uchild,winfo)
-
-!       Get screen capability
-
-        status = getwindowconfig(myscreen)
-
-!       Set sizes to maximum available
-
-        myscreen.numtextcols=-1
-        myscreen.numtextrows=-1
-        myscreen.fontsize   =-1
-
-!       Sizing graphics screen
-
-        myscreen.numypixels= (myscreen.numypixels)*0.6
-        myscreen.numxpixels= (myscreen.numypixels)*1.3
-
-!       Set window configuration
-
-        status = setwindowconfig(myscreen)
-        if(.not.status) status = setwindowconfig(myscreen)
-
-!       Set sizing for lines drawn by FEAP
-
-        idyl   = nint(22480.0/(myscreen.numypixels))
-        idxl   = idyl
-
-        if(myscreen.numcolors .le. 4) then
-          jfill = 1
-        else
-          jfill = 2
-        endif
-
-        vopnwk = displaycursor ( $GCURSOROFF   )
-        call     clearscreen   ( $GCLEARSCREEN )
-
-!       Set font for Arial outputs vector mode
-
-        numfonts=initializefonts()
-        if (numfonts.le.0) print *,"INITIALIZEFONTS error"
-        if (grstatus().ne.$GROK) then
-          write(*,*) 'INITIALIZEFONTS GRSTATUS error.'
-        endif
-        vopnwk =  setfont( 't''Arial''h14b' )
-
+        call winplot_open()
       endif
 
-!     Tile Windows for Maximum Viewing
-
-      status = focusqq(uchild)
-      status = clickmenuqq(loc(WINSIZETOFIT))
-      status = focusqq(5)             ! Input window active
-      status = setactiveqq(uchild)
+      idxl   = 1
+      idyl   = 1
+      jfill  = 2
 
       vopnwk = 0
 
@@ -118,63 +39,42 @@
 
       integer function vclrwk()
 
-!     Clear the workstation
-
-      use        IFQWIN
-
+      use        winplot_mod
       implicit   none
 
-      save
-
-      call clearscreen( $GCLEARSCREEN )
+      call winplot_clear()
       vclrwk = 0
 
       end
 
       integer function vclswk()
 
-!     Function to close plot (if necessary)
-
+      use        winplot_mod
       implicit   none
 
-      save
-
-      close(7, status='delete')
-
+      call winplot_close()
       vclswk = 0
+
       end
 
       integer function vgtxts(xi,yi,nn,cstr)
 
-!     Place graphics text on screen
-
-      use        IFQWIN
-
+      use        winplot_mod
       implicit   none
 
-      integer         idxl,idyl,jfill
-      common /vgraph/ idxl,idyl,jfill
+      include   'pdata2.h'
 
-      integer          :: n,nn
-      integer(2)       :: ix,iy
+      integer          :: nn, ix, iy
       real(8)          :: xi,yi
       character(len=1) :: cstr(nn)
-      type(xycoord)    :: xy
 
-      save
+!     Convert FEAP-normalized text coordinates (x in [0,1.28],
+!     y in [0,1]) to integer device-space coordinates the same
+!     way dplot.f converts line coordinates: jx = x*idx, jy = y*idy.
 
-!     x,y locations for outgtext
-
-      ix = xi*22000/idxl
-      iy = (22200 - yi*22000)/idyl
-
-      call moveto( ix , iy , xy )
-
-!     Output characters one at a time
-
-      do n = 1,nn
-         call outgtext(cstr(n))
-      end do ! n
+      ix = int(xi*dble(idx))
+      iy = int(yi*dble(idy))
+      call winplot_text(ix, iy, nn, cstr)
 
       vgtxts = 0
 
@@ -182,15 +82,13 @@
 
       integer function vipal(it)
 
-      use        IFQWIN
-
       implicit   none
 
       integer         idxl,idyl,jfill
       common /vgraph/ idxl,idyl,jfill
 
       integer :: it
-      integer    ipal(15)
+      integer :: ipal(15)
 
       save
 
@@ -210,117 +108,66 @@
      &             #3F3F00      , !  14: LIGHTCYAN
      &             #3F003F      / !  15: LIGHTMAGENTA
 
-!     Set color pallet
-
       if(it.gt.0 .and. it.le.15 ) then
         vipal = ipal(it)
         if(jfill.lt.2) vipal = 1
       else
-        vipal = #000000 ! Black
+        vipal = #000000
       endif
 
       end
 
       integer function vstcol(it)
 
-      use        IFQWIN
-
+      use        winplot_mod
       implicit   none
 
-!     Set text color for graphics output
+      integer    :: it, vipal, icll
 
-      integer    :: icll
-      integer    :: it, vipal
-
-      save
-
-      icll   = vipal(it)
-      vstcol = settextcolorrgb( icll )
+      icll = vipal(it)
+      call winplot_set_color_rgb(icll)
+      vstcol = icll
 
       end
 
       integer function vslcol(it)
 
-      use        IFQWIN
-
+      use        winplot_mod
       implicit   none
 
-!     Set line color for graphics output
+      integer    :: it, vipal, icll
 
-      integer    :: icll
-      integer    :: it, vipal
-
-      save
-
-      icll   = vipal(it)
-      vslcol = setcolorrgb( icll )
+      icll = vipal(it)
+      call winplot_set_color_rgb(icll)
+      vslcol = icll
 
       end
 
       integer function vpline(ixy,ipen)
 
-!     Move/draw for lines
-
-      use        IFQWIN
-
+      use        winplot_mod
       implicit   none
 
-      integer         idxl,idyl,jfill
-      common /vgraph/ idxl,idyl,jfill
-
-      type(xycoord) :: xy
-      integer(2)    :: ix,iy
-      integer       :: ipen
-      integer       :: ixy(2,*)
-
-      save
-
-!     Set cocordinates
-
-      ix = ixy(1,1)/idxl
-      iy = (22000 - ixy(2,1))/idyl
-
-!     Draw line
+      integer    :: ipen
+      integer    :: ixy(2,*)
 
       if(ipen.eq.2) then
-        vpline = lineto( ix , iy )
-
-!     Move without draw
-
+        call winplot_lineto(ixy(1,1), ixy(2,1))
       elseif(ipen.eq.3) then
-        call     moveto( ix , iy , xy )
+        call winplot_moveto(ixy(1,1), ixy(2,1))
       end if
+      vpline = 0
 
       end
 
       integer function vfarea(npt,ixy)
 
-      use        IFQWIN
-
-!     Panel fill
-
+      use        winplot_mod
       implicit   none
 
-      integer         idxl,idyl,jfill
-      common /vgraph/ idxl,idyl,jfill
+      integer    :: npt, ixy(2,npt)
 
-      type(xycoord) :: poly (62)
-      integer       :: npt, ixy(2,npt)
-      integer(2)    :: n, nn
-
-      save
-
-!     Trace area to fill
-
-      nn = min(31,npt)
-      do n = 1,nn
-        poly(n).xcoord = ixy(1,n)/idxl
-        poly(n).ycoord = (22000 - ixy(2,n))/idyl
-      end do ! n
-
-!     Perform fill
-
-      vfarea = polygon( $GFILLINTERIOR, poly , nn )
+      call winplot_polyfill(npt, ixy)
       vfarea = 0
 
       end

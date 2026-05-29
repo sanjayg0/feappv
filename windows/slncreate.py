@@ -6,6 +6,7 @@
 #-----[--.----+----.----+----.-----------------------------------------]
 #     Modification log                                Date (dd/mm/year)
 #       Original version                                    03/10/2026
+#       1. Drop QuickWin; console subsystem with Win32 GDI  29/05/2026
 #-----[----------------------------------------------------------------]
 #      Purpose:  Generate *.sln and *.vfproj for Visual Studio
 
@@ -54,12 +55,12 @@ def write_vfproj(filename, proj_guid, is_exe=False):
 
     config_type = "typeExecutable" if is_exe else "typeStaticLibrary"
 
-    runtime_library = "rtQuickWin" if is_exe else "rtMultiThreadedDLL"
+    runtime_library = "rtMultiThreadedDLL"
     compiler_opts = f'SuppressStartupBanner="true" \
                       AdditionalIncludeDirectories="include" \
                       RuntimeLibrary="{runtime_library}"'
 
-    druntime_library = "rtQuickWinDebug" if is_exe else "rtMultiThreadedDebugDLL"
+    druntime_library = "rtMultiThreadedDebugDLL"
     dcompiler_opts = f'SuppressStartupBanner="true" \
                        DebugInformationFormat="debugEnabled" \
                        Optimization="optimizeDisabled" \
@@ -76,8 +77,8 @@ def write_vfproj(filename, proj_guid, is_exe=False):
 
         if is_exe:
           f.write('<VisualStudioProject ProjectCreator="Intel Fortran" '
-                                       'Keyword="QuickWin" ' 
-                                       'Version="11.0" ' 
+                                       'Keyword="Console" '
+                                       'Version="11.0" '
                                        f'ProjectIdGuid="{{{proj_guid}}}">\n')
         else:
           f.write('<VisualStudioProject ProjectType="typeStaticLibrary" ProjectCreator="Intel Fortran" '
@@ -92,7 +93,8 @@ def write_vfproj(filename, proj_guid, is_exe=False):
         f.write(f'\t\t\t<Tool Name="VFFortranCompilerTool" {dcompiler_opts}/>\n')
         if is_exe:
           f.write('\t\t\t<Tool Name="VFLinkerTool" LinkIncremental="linkIncrementalNo" SuppressStartupBanner="true" '
-                  'IgnoreDefaultLibraryNames="msvcrtd.lib" GenerateDebugInformation="true" SubSystem="subSystemWindows"/>\n')
+                  'GenerateDebugInformation="true" SubSystem="subSystemConsole" '
+                  'AdditionalDependencies="user32.lib gdi32.lib"/>\n')
           f.write('\t\t\t<Tool Name="VFManifestTool" SuppressStartupBanner="true"/>\n')
         f.write('\t\t\t<Tool Name="VFMidlTool" SuppressStartupBanner="true" TargetEnvironment="midlTargetAMD64"/>\n')
         f.write('\t\t</Configuration>\n')
@@ -100,7 +102,8 @@ def write_vfproj(filename, proj_guid, is_exe=False):
         f.write(f'\t\t<Configuration Name="Release|x64" UseCompiler="ifxCompiler" ConfigurationType="{config_type}">\n')
         f.write(f'\t\t\t<Tool Name="VFFortranCompilerTool" {compiler_opts}/>\n')
         if is_exe:
-          f.write('\t\t\t<Tool Name="VFLinkerTool" SuppressStartupBanner="true" IgnoreDefaultLibraryNames="msvcrt.lib" SubSystem="subSystemWindows"/>\n')
+          f.write('\t\t\t<Tool Name="VFLinkerTool" SuppressStartupBanner="true" SubSystem="subSystemConsole" '
+                  'AdditionalDependencies="user32.lib gdi32.lib"/>\n')
           f.write('\t\t\t<Tool Name="VFManifestTool" SuppressStartupBanner="true"/>\n')
         f.write('\t\t\t<Tool Name="VFMidlTool" SuppressStartupBanner="true" TargetEnvironment="midlTargetAMD64"/>\n')
         f.write('\t\t</Configuration>\n')
@@ -161,4 +164,4 @@ if __name__ == "__main__":
     print(f"Build System Generated Successfully.")
     print(f"Location: {PROJECT_ROOT}")
     print(f"Compiler: Intel Fortran (ifx)")
-    print(f"Graphics: QuickWin enabled for {PROJECT_NAME_EXE}")
+    print(f"Graphics: native Win32 (winplot_mod) for {PROJECT_NAME_EXE}")

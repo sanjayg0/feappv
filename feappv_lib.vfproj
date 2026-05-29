@@ -579,5 +579,6 @@
 		<File RelativePath=".\windows/pstart.f"/>
 		<File RelativePath=".\windows/pwopn.f"/>
 		<File RelativePath=".\windows/tplot.f"/>
+		<File RelativePath=".\windows/winplot_mod.f90"/>
 	</Files>
 </VisualStudioProject>

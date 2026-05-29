@@ -10,19 +10,11 @@
 !     Modification log                                Date (dd/mm/year)
 !       Original version                                    01/11/2006
 !       1. Change DFLIB to IFQWIN                           10/04/2014
+!       2. No-op stub for console subsystem                 29/05/2026
 !-----[--+---------+---------+---------+---------+---------+---------+-]
-!      Purpose: Turn cursor on for text inputs
-
-!      Inputs:
-
-!      Outputs:
+!      Purpose: Turn cursor on for text inputs.  Under the console
+!               subsystem the cursor is owned by the terminal.
 !-----[--+---------+---------+---------+---------+---------+---------+-]
-      use      IFQWIN
-
       implicit none
-
-      integer      :: vstatus
-
-      vstatus = displaycursor($GCURSORON)
 
       end subroutine pltcur

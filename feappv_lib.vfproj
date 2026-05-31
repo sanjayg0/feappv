@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<VisualStudioProject ProjectType="typeStaticLibrary" ProjectCreator="Intel Fortran" Keyword="Static Library" Version="11.0" ProjectIdGuid="{1ACA5063-0F6B-4932-8E6D-F3D68B55D939}">
+<VisualStudioProject ProjectType="typeStaticLibrary" ProjectCreator="Intel Fortran" Keyword="Static Library" Version="11.0" ProjectIdGuid="{5789A7E5-102A-43BB-917B-7011D3D67AA5}">
 	<Platforms><Platform Name="x64"/></Platforms>
 	<Configurations>
-		<Configuration Name="Debug|x64" UseCompiler="ifxCompiler" ConfigurationType="typeStaticLibrary">
+		<Configuration Name="Debug|x64" UseCompiler="ifxCompiler" ConfigurationType="typeStaticLibrary" OutputDirectory="$(Platform)\$(Configuration)\lib" IntermediateDirectory="$(Platform)\$(Configuration)\lib">
 			<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true"                        DebugInformationFormat="debugEnabled"                        Optimization="optimizeDisabled"                        Traceback = "true"                        WarnInterfaces="true"                        StackFrameCheck="true"                        AdditionalIncludeDirectories="include"                        RuntimeLibrary="rtMultiThreadedDebugDLL"/>
 			<Tool Name="VFMidlTool" SuppressStartupBanner="true" TargetEnvironment="midlTargetAMD64"/>
 		</Configuration>
-		<Configuration Name="Release|x64" UseCompiler="ifxCompiler" ConfigurationType="typeStaticLibrary">
+		<Configuration Name="Release|x64" UseCompiler="ifxCompiler" ConfigurationType="typeStaticLibrary" OutputDirectory="$(Platform)\$(Configuration)\lib" IntermediateDirectory="$(Platform)\$(Configuration)\lib">
 			<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true"                       AdditionalIncludeDirectories="include"                       RuntimeLibrary="rtMultiThreadedDLL"/>
 			<Tool Name="VFMidlTool" SuppressStartupBanner="true" TargetEnvironment="midlTargetAMD64"/>
 		</Configuration>

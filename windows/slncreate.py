@@ -54,6 +54,7 @@ exe_files = get_fortran_files(exe_dirs)
 def write_vfproj(filename, proj_guid, is_exe=False):
 
     config_type = "typeExecutable" if is_exe else "typeStaticLibrary"
+    subfolder   = "exe" if is_exe else "lib"
 
     runtime_library = "rtMultiThreadedDLL"
     compiler_opts = f'SuppressStartupBanner="true" \
@@ -89,7 +90,9 @@ def write_vfproj(filename, proj_guid, is_exe=False):
         f.write('\t<Platforms><Platform Name="x64"/></Platforms>\n')
         f.write('\t<Configurations>\n')
 
-        f.write(f'\t\t<Configuration Name="Debug|x64" UseCompiler="ifxCompiler" ConfigurationType="{config_type}">\n')
+        f.write(f'\t\t<Configuration Name="Debug|x64" UseCompiler="ifxCompiler" ConfigurationType="{config_type}" '
+                f'OutputDirectory="$(Platform)\\$(Configuration)\\{subfolder}" '
+                f'IntermediateDirectory="$(Platform)\\$(Configuration)\\{subfolder}">\n')
         f.write(f'\t\t\t<Tool Name="VFFortranCompilerTool" {dcompiler_opts}/>\n')
         if is_exe:
           f.write('\t\t\t<Tool Name="VFLinkerTool" LinkIncremental="linkIncrementalNo" SuppressStartupBanner="true" '
@@ -99,7 +102,9 @@ def write_vfproj(filename, proj_guid, is_exe=False):
         f.write('\t\t\t<Tool Name="VFMidlTool" SuppressStartupBanner="true" TargetEnvironment="midlTargetAMD64"/>\n')
         f.write('\t\t</Configuration>\n')
 
-        f.write(f'\t\t<Configuration Name="Release|x64" UseCompiler="ifxCompiler" ConfigurationType="{config_type}">\n')
+        f.write(f'\t\t<Configuration Name="Release|x64" UseCompiler="ifxCompiler" ConfigurationType="{config_type}" '
+                f'OutputDirectory="$(Platform)\\$(Configuration)\\{subfolder}" '
+                f'IntermediateDirectory="$(Platform)\\$(Configuration)\\{subfolder}">\n')
         f.write(f'\t\t\t<Tool Name="VFFortranCompilerTool" {compiler_opts}/>\n')
         if is_exe:
           f.write('\t\t\t<Tool Name="VFLinkerTool" SuppressStartupBanner="true" SubSystem="subSystemConsole" '
@@ -117,7 +122,7 @@ def write_vfproj(filename, proj_guid, is_exe=False):
           f.write(f'\t\t<File RelativePath=".\\{file_path}"/>\n')
  
         if is_exe:
-          f.write(f'\t\t<File RelativePath=".\\$(Platform)\\$(Configuration)\\{PROJECT_NAME_LIB}.lib"/>\n')
+          f.write(f'\t\t<File RelativePath=".\\$(Platform)\\$(Configuration)\\lib\\{PROJECT_NAME_LIB}.lib"/>\n')
  
             
         f.write('\t</Files>\n')

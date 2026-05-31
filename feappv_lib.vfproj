@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<VisualStudioProject ProjectType="typeStaticLibrary" ProjectCreator="Intel Fortran" Keyword="Static Library" Version="11.0" ProjectIdGuid="{5789A7E5-102A-43BB-917B-7011D3D67AA5}">
+<VisualStudioProject ProjectType="typeStaticLibrary" ProjectCreator="Intel Fortran" Keyword="Static Library" Version="11.0" ProjectIdGuid="{3175F59B-DF4C-4B23-A9AC-120FFCF84837}">
 	<Platforms><Platform Name="x64"/></Platforms>
 	<Configurations>
 		<Configuration Name="Debug|x64" UseCompiler="ifxCompiler" ConfigurationType="typeStaticLibrary" OutputDirectory="$(Platform)\$(Configuration)\lib" IntermediateDirectory="$(Platform)\$(Configuration)\lib">

@@ -95,9 +95,10 @@ def write_vfproj(filename, proj_guid, is_exe=False):
                 f'IntermediateDirectory="$(Platform)\\$(Configuration)\\{subfolder}">\n')
         f.write(f'\t\t\t<Tool Name="VFFortranCompilerTool" {dcompiler_opts}/>\n')
         if is_exe:
+          lib_path = f'$(Platform)\\$(Configuration)\\lib\\{PROJECT_NAME_LIB}.lib'
           f.write('\t\t\t<Tool Name="VFLinkerTool" LinkIncremental="linkIncrementalNo" SuppressStartupBanner="true" '
                   'GenerateDebugInformation="true" SubSystem="subSystemConsole" '
-                  'AdditionalDependencies="user32.lib gdi32.lib"/>\n')
+                  f'AdditionalDependencies="{lib_path} user32.lib gdi32.lib"/>\n')
           f.write('\t\t\t<Tool Name="VFManifestTool" SuppressStartupBanner="true"/>\n')
         f.write('\t\t\t<Tool Name="VFMidlTool" SuppressStartupBanner="true" TargetEnvironment="midlTargetAMD64"/>\n')
         f.write('\t\t</Configuration>\n')
@@ -107,8 +108,9 @@ def write_vfproj(filename, proj_guid, is_exe=False):
                 f'IntermediateDirectory="$(Platform)\\$(Configuration)\\{subfolder}">\n')
         f.write(f'\t\t\t<Tool Name="VFFortranCompilerTool" {compiler_opts}/>\n')
         if is_exe:
+          lib_path = f'$(Platform)\\$(Configuration)\\lib\\{PROJECT_NAME_LIB}.lib'
           f.write('\t\t\t<Tool Name="VFLinkerTool" SuppressStartupBanner="true" SubSystem="subSystemConsole" '
-                  'AdditionalDependencies="user32.lib gdi32.lib"/>\n')
+                  f'AdditionalDependencies="{lib_path} user32.lib gdi32.lib"/>\n')
           f.write('\t\t\t<Tool Name="VFManifestTool" SuppressStartupBanner="true"/>\n')
         f.write('\t\t\t<Tool Name="VFMidlTool" SuppressStartupBanner="true" TargetEnvironment="midlTargetAMD64"/>\n')
         f.write('\t\t</Configuration>\n')
@@ -121,12 +123,8 @@ def write_vfproj(filename, proj_guid, is_exe=False):
         for file_path in current_files:
           f.write(f'\t\t<File RelativePath=".\\{file_path}"/>\n')
  
-        if is_exe:
-          f.write(f'\t\t<File RelativePath=".\\$(Platform)\\$(Configuration)\\lib\\{PROJECT_NAME_LIB}.lib"/>\n')
- 
-            
         f.write('\t</Files>\n')
-        f.write('</VisualStudioProject>')
+        f.write('</VisualStudioProject>\n')
 
 def write_sln():
     sln_path = os.path.join(PROJECT_ROOT, f"{SOLUTION_NAME}.sln")

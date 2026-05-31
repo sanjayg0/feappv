@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<VisualStudioProject ProjectCreator="Intel Fortran" Keyword="Console" Version="11.0" ProjectIdGuid="{9511295B-977E-498E-9827-59D28AF9A329}">
+<VisualStudioProject ProjectCreator="Intel Fortran" Keyword="Console" Version="11.0" ProjectIdGuid="{74C28E5A-16E2-4386-ADFA-4254A0CB82D2}">
 	<Platforms><Platform Name="x64"/></Platforms>
 	<Configurations>
 		<Configuration Name="Debug|x64" UseCompiler="ifxCompiler" ConfigurationType="typeExecutable" OutputDirectory="$(Platform)\$(Configuration)\exe" IntermediateDirectory="$(Platform)\$(Configuration)\exe">
 			<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true"                        DebugInformationFormat="debugEnabled"                        Optimization="optimizeDisabled"                        Traceback = "true"                        WarnInterfaces="true"                        StackFrameCheck="true"                        AdditionalIncludeDirectories="include"                        RuntimeLibrary="rtMultiThreadedDebugDLL"/>
-			<Tool Name="VFLinkerTool" LinkIncremental="linkIncrementalNo" SuppressStartupBanner="true" GenerateDebugInformation="true" SubSystem="subSystemConsole" AdditionalDependencies="user32.lib gdi32.lib"/>
+			<Tool Name="VFLinkerTool" LinkIncremental="linkIncrementalNo" SuppressStartupBanner="true" GenerateDebugInformation="true" SubSystem="subSystemConsole" AdditionalDependencies="$(Platform)\$(Configuration)\lib\feappv_lib.lib user32.lib gdi32.lib"/>
 			<Tool Name="VFManifestTool" SuppressStartupBanner="true"/>
 			<Tool Name="VFMidlTool" SuppressStartupBanner="true" TargetEnvironment="midlTargetAMD64"/>
 		</Configuration>
 		<Configuration Name="Release|x64" UseCompiler="ifxCompiler" ConfigurationType="typeExecutable" OutputDirectory="$(Platform)\$(Configuration)\exe" IntermediateDirectory="$(Platform)\$(Configuration)\exe">
 			<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true"                       AdditionalIncludeDirectories="include"                       RuntimeLibrary="rtMultiThreadedDLL"/>
-			<Tool Name="VFLinkerTool" SuppressStartupBanner="true" SubSystem="subSystemConsole" AdditionalDependencies="user32.lib gdi32.lib"/>
+			<Tool Name="VFLinkerTool" SuppressStartupBanner="true" SubSystem="subSystemConsole" AdditionalDependencies="$(Platform)\$(Configuration)\lib\feappv_lib.lib user32.lib gdi32.lib"/>
 			<Tool Name="VFManifestTool" SuppressStartupBanner="true"/>
 			<Tool Name="VFMidlTool" SuppressStartupBanner="true" TargetEnvironment="midlTargetAMD64"/>
 		</Configuration>
 	</Configurations>
 	<Files>
 		<File RelativePath=".\main/feappv.f"/>
-		<File RelativePath=".\$(Platform)\$(Configuration)\lib\feappv_lib.lib"/>
 	</Files>
 </VisualStudioProject>

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2024: Regents of the University of California
+!....  Copyright (c) 1984-2026: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -68,7 +68,7 @@
      &   13x,'Number  projected  items = ',i3/
      &   13x,'Current number specified = ',i3//
      &   13x,'Correct by adding include file strnum.h & statement:'/
-     &   17x,'istv = max(istv,'i3,')'/
+     &   17x,'istv = max(istv,',i3,')'/
      &   13x,'in isw.eq.1 part of user element.'/
      &   13x,'See FEAP Programmer Manual for details.'/)
 

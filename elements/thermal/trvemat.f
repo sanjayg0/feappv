@@ -27,6 +27,8 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit   none
 
+      include   'iofile.h'
+
       integer       :: nh, isw
       real (kind=8) :: ta, rhoc
       real (kind=8) :: d(*), tgrad(3), flux(3),dd(3,*), hn(*),h1(*)
@@ -34,6 +36,9 @@
 !     Compute and output flux (q) and conductivities (moduli)
 
       save
+
+      if(.false.) write(iow,*) d(1),ta,tgrad(1),hn(1),h1(1),nh,
+     &                         flux(1),dd(1,1),rhoc, isw
 
 !     DUMMY MODULE:  Multi-scale use only
 

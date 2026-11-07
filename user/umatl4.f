@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2024: Regents of the University of California
+!....  Copyright (c) 1984-2026: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -32,10 +32,16 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit none
 
+      include 'iofile.h'
+
       integer       :: nh,istrt,isw, ii
       real (kind=8) :: td
       real (kind=8) :: eps(*),theta(*),d(*),ud(*),hn(nh),h1(nh)
       real (kind=8) :: sig(*),dd(6,*)
+
+!     Remove following arguments when used in coding element
+      if(.false.) write(iow,*) d(1),dd(1,1),eps(1),h1(1),hn(1),ii,istrt,
+     &                         sig(1),theta(1),ud(1),td
 
 !     Set initial values to history values in both hn(*) and h1(*)
 

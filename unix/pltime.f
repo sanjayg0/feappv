@@ -23,12 +23,11 @@
       save
 
 !     Display time for current view
-
       dtext = 0.00d0
       call pppcol(1,1)
       yy = ' '
       call tplot(1.13d0 , 0.135d0, yy, 15, 1)
-      write(yy, '(6hTime =,1p,1e9.2)' ) ttim
+      write(yy, '(a6,1p,1e9.2)' ) 'Time =',ttim
       call tplot(1.13d0 , 0.135d0, yy, 15, 1)
 
       end subroutine pltime

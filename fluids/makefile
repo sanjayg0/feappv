@@ -28,8 +28,8 @@ OBJECTS = $(FEAPPVHOME5_1)/main/feappv.o \
 feappv: $(OBJECTS) $(SOURCES) $(ARFEAPPV)
 	ranlib $(ARFEAPPV)
 	$(FF) -o ffeappv $(OBJECTS) $(ARFEAPPV) $(LDOPTIONS)
-	@@echo "--> Fluids FEAPpv executable made <--"
-	#dsymutil feappv
+	@@echo "--> Fluids fFEAPpv executable made <--"
+	#dsymutil ffeappv
 
 .f.o:
 	$(FF) -c $(FFOPTFLAG) -I$(FINCLUDE) $*.f -o $*.o
@@ -51,6 +51,6 @@ clean:
 	rm -f *.mod
 
 fclean:
-	rm -f feappv
-	rm -r -f feappv*.dSYM
+	rm -f ffeappv
+	rm -r -f ffeappv*.dSYM
 

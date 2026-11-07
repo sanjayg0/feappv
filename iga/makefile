@@ -8,7 +8,7 @@ CLEANDIRS = main \
 
 ifeappv: iarchive
 	(cd main; make ifeappv)
-	@@echo "--> FEAPpv executable made <--"
+	@@echo "--> iFEAPpv executable made <--"
 
 iarchive:   
 	(cd elements; make iarchive)

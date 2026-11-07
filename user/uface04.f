@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2024: Regents of the University of California
+!....  Copyright (c) 1984-2026: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -19,7 +19,12 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit   none
 
+      include   'iofile.h'
+
       integer        :: uptyp,nel,ufac
       integer        :: iu(4,*)
+
+!     Remove following arguments when used in coding element
+      if(.false.) write(iow,*) iu(1,1),nel,ufac,uptyp
 
       end subroutine uface04

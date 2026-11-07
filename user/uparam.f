@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2024: Regents of the University of California
+!....  Copyright (c) 1984-2026: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -21,15 +21,20 @@
 !       nrm     - Vector storing mass vector
 !       nrt     - Total vectors required by algorithm
 !-----[--.----+----.----+----.-----------------------------------------]
-
       implicit  none
+
+      include  'iofile.h'
 
       integer       :: nrk,nrc,nrm,nrt,isw
       real (kind=8) :: ct(3)
 
+!     Remove following arguments when used in coding element
+      if(.false.) write(iow,*) ct(1),nrk,nrc,nrm,nrt
+
       if(isw.eq.0) then
         nrt = 0
       else
+
       endif
 
       end subroutine uparam

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2024: Regents of the University of California
+!....  Copyright (c) 1984-2026: Regents of the University of California
 !                               All rights reserved
 
 !-----[--+---------+---------+---------+---------+---------+---------+-]
@@ -25,10 +25,15 @@
 !-----[--+---------+---------+---------+---------+---------+---------+-]
       implicit  none
 
+      include  'iofile.h'
+
       integer       :: ns
       logical       :: afl,bfl
 
       integer       :: ld(ns)
       real (kind=8) :: s(ns,ns),p(ns), b(*)
+
+!     Remove following arguments when used in coding element
+      if(.false.) write(iow,*) s(1,1),p(1),b(1),ld(1),afl,bfl
 
       end subroutine uasble

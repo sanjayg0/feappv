@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2024: Regents of the University of California
+!....  Copyright (c) 1984-2026: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -19,10 +19,14 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
-      include 'umac1.h'  ! uct
+      include  'iofile.h'  ! uct
+      include  'umac1.h'  ! uct
 
       logical       :: pcomp
       real (kind=8) :: ctl(3)
+
+!     Remove following arguments when used in coding element
+      if(.false.) write(iow,*) ctl(1)
 
 !     Provide user plot name
 

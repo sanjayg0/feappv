@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2024: Regents of the University of California
+!....  Copyright (c) 1984-2026: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -26,6 +26,7 @@
       implicit  none
 
       include  'comblk.h'
+      include  'iofile.h'
       include  'pointer.h'
       include  'sdata.h'
 
@@ -34,6 +35,9 @@
       integer       :: ix(neix, *), ic(*), nty
 
       save
+
+!     Remove following arguments when used in coding element
+      if(.false.) write(iow,*) numnp
 
 !     Count number of elements attached to each node.
       do i = 1, numel

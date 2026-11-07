@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2024: Regents of the University of California
+!....  Copyright (c) 1984-2026: Regents of the University of California
 !                               All rights reserved
 
 !      Purpose: Determine number of elements connected to each node
@@ -19,7 +19,12 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit   none
 
+      include   'iofile.h'
+
       integer       :: k, nel, iu, iplt(*)
+
+!     Remove following arguments when used in coding element
+      if(.false.) write(iow,*) k,iplt(1),nel,iu
 
       write(*,*) ' Option available only for VEM version'
 

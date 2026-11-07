@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2024: Regents of the University of California
+!....  Copyright (c) 1984-2026: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -29,12 +29,17 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
+      include  'iofile.h'
+
       integer       :: umat,nh,ii,istrt,isw
       real (kind=8) :: td, eps,sig,dd
 
       real (kind=8) :: d(*),ud(*),hn(nh),h1(nh)
 
       save
+
+!     Remove following arguments when used in coding element
+      if(.false.) write(iow,*) h1(1),hn(1),ii,istrt,isw,td,ud(1)
 
 !     Material Model 1
       if(umat.eq.1) then

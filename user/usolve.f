@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2024: Regents of the University of California
+!....  Copyright (c) 1984-2026: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -22,7 +22,12 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit none
 
+      include 'iofile.h'
+
       logical       :: flags(*)
       real (kind=8) :: b(*)
+
+!     Remove following arguments when used in coding element
+      if(.false.) write(iow,*) flags(1),b(1)
 
       end subroutine usolve

@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2024: Regents of the University of California
+!....  Copyright (c) 1984-2026: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -24,8 +24,13 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
+      include  'iofile.h'
+
       integer       :: n,nneq,isw
       real (kind=8) :: du(*),u(nneq,2),ud(nneq,*)
+
+!     Remove following arguments when used in coding element
+      if(.false.) write(iow,*) du(1),u(1,1),ud(1,1),isw
 
 !     Loop structure for partitions
       do n = 1,nneq

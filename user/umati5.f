@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2024: Regents of the University of California
+!....  Copyright (c) 1984-2026: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -21,10 +21,15 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
+      include  'iofile.h'
+
       character (len=15) :: vtype
       logical       :: pcomp
       integer       :: n1,n3
       real (kind=8) :: vv(5),d(*),ud(*)
+
+!     Remove following arguments when used in coding element
+      if(.false.) write(iow,*) d(1),n1,n3,ud(1),vv(1)
 
 !     Set command name
 

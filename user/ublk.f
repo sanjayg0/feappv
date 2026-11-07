@@ -4,7 +4,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2024: Regents of the University of California
+!....  Copyright (c) 1984-2026: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -50,6 +50,10 @@
       real (kind=8) :: dr,ds,dt,xl(*),x(*)
 
       save
+
+!     Remove following arguments when used in coding element
+      if(.false.) write(iow,*) ntyp,nn,nr,ns,nt,xl(1),x(1),ixl(1),ix(1),
+     &                         dr,ds,dt,ndm,nen1,ma,ctype,prt,isw
 
       if(ior.lt.0) write(*,2000)
       write(iow,2000)

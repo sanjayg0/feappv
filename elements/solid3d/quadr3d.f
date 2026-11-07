@@ -18,6 +18,7 @@
       implicit   none
 
       include   'eldata.h'
+      include   'iofile.h'
       include   'qudshp.h'
       include   'pointer.h'
       include   'comblk.h'
@@ -25,6 +26,9 @@
       logical       :: stiff
       integer       :: l
       real (kind=8) :: d(*)
+
+!     Remove following arguments when used in coding element
+      if(.false.) write(iow,*) d(1)
 
       ttfl    = .false.
       quad    = .false.

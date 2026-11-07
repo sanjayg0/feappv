@@ -133,32 +133,32 @@
       if(ifrm.eq.0) then
 
 !       Display current view values
-        write(yy, '(12hCurrent View)' )
+        write(yy, '(a12)' ) 'Current View'
         call tplot(xhead ,ycor - 1.25d0*dy - 6./xdv,yy,12,1)
 
 !       Display min for current view - with coords
-        write(yy, '(6hMin = ,1p1e9.2)' ) psmn
+        write(yy, '(a6,1p1e9.2)' ) 'Min = ',psmn
         call tplot(xhead+0.25d0*dy,ycor-1.85d0*dy-6./xdv,yy,15,1)
 
-        write(yy, '(3hX =,1p,1e9.2)' ) xpsn(1)
+        write(yy, '(a3,1p,1e9.2)' ) 'X =',xpsn(1)
         call tplot(xhead ,ycor - 2.35d0*dy - 6./xdv,yy,12,1)
-        write(yy, '(3hY =,1p,1e9.2)' ) xpsn(2)
+        write(yy, '(a3,1p,1e9.2)' ) 'Y =',xpsn(2)
         call tplot(xhead ,ycor - 2.85d0*dy - 6./xdv,yy,12,1)
         if(ndm.eq.3) then
-          write(yy, '(3hZ =,1p,1e9.2)' ) xpsn(3)
+          write(yy, '(a3,1p,1e9.2)' ) 'Z =',xpsn(3)
           call tplot(xhead ,ycor - 3.35d0*dy - 6./xdv,yy,12,1)
         endif
 
 !       Display max for current view - with coords
-        write(yy, '(6hMax = ,1p1e9.2)' ) psmx
+        write(yy, '(a6,1p1e9.2)' ) 'Max = ',psmx
         call tplot(xhead+0.25d0*dy,ycor-3.85d0*dy-6./xdv,yy,15,1)
 
-        write(yy, '(3hX =,1p,1e9.2)' ) xpsx(1)
+        write(yy, '(a3,1p,1e9.2)' ) 'X =',xpsx(1)
         call tplot(xhead ,ycor - 4.35d0*dy - 6./xdv,yy,12,1)
-        write(yy, '(3hY =,1p,1e9.2)' ) xpsx(2)
+        write(yy, '(a3,1p,1e9.2)' ) 'Y =',xpsx(2)
         call tplot(xhead ,ycor - 4.85d0*dy - 6./xdv,yy,12,1)
         if(ndm.eq.3) then
-          write(yy, '(3hZ =,1p,1e9.2)' ) xpsx(3)
+          write(yy, '(a3,1p,1e9.2)' ) 'Z =',xpsx(3)
           call tplot(xhead ,ycor - 5.35d0*dy - 6./xdv,yy,12,1)
         endif
 

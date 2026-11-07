@@ -3,17 +3,22 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2024: Regents of the University of California
+!....  Copyright (c) 1984-2026: Regents of the University of California
 !                               All rights reserved
 
       implicit  none
 
       include 'eldata.h'
+      include 'iofile.h'
       include 'umac1.h'                    ! utx(1)
 
       integer       :: ndf , ndm , nst , isw
       integer       :: ix(*)
       real (kind=8) :: d(*), ul(*), xl(*), tl(*), s(*), p(*)
+
+!     Remove following arguments when used in coding element
+      if(.false.) write(iow,*) d(1),ul(1),xl(1),ix(1),tl(1),s(1),p(1),
+     &                         ndf,ndm,nst
 
       if(isw.lt.0) then
 !       utx(1) = 'Name_U_Want'  ! 15 character naming option

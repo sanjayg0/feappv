@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2024: Regents of the University of California
+!....  Copyright (c) 1984-2026: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -31,9 +31,6 @@
       logical       :: pcomp,error
       integer       :: i,ii,j,jj,k,kk,nn,nex
       real (kind=8) :: padd,psub,val,v(*)
-      real (kind=8) :: sind, cosd, tand, acosd, asind, atand
-
-      external      :: sind, cosd, tand, acosd, asind, atand
 
       save
 

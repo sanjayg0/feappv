@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2024: Regents of the University of California
+!....  Copyright (c) 1984-2026: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -20,6 +20,7 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit  none
 
+      include  'iofile.h'
       include  'umac1.h'
 
       character (len=15) :: lct
@@ -27,6 +28,9 @@
       real (kind=8) :: ctl(3)
 
       save
+
+!     Remove following arguments when used in coding element
+      if(.false.) write(iow,*) lct,ctl(1)
 
 !     Set command word
 

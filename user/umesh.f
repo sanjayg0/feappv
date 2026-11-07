@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2024: Regents of the University of California
+!....  Copyright (c) 1984-2026: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -28,6 +28,9 @@
       character (len=15) :: tx(*)
       character (len=4)  :: cc
       logical       :: prt,pcomp
+
+!     Remove following arguments when used in coding element
+      if(.false.) write(iow,*) tx(1)
 
 !     Match on 'USER':  Can add as many checks as desired with 'user'
 !                       replaced by 4-character word for each command.

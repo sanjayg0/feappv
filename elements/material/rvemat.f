@@ -33,6 +33,8 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit   none
 
+      include   'iofile.h'
+
       integer       :: nh,isw
       real (kind=8) :: ta
       real (kind=8) :: d(*),f(3,3),detf,hn(nh),hn1(nh), sig(*),dd(6,*)
@@ -40,6 +42,10 @@
 !     Compute and output stress (sig) and (moduli)
 
       save
+
+!     Remove following arguments when used in coding element
+      if(.false.) write(iow,*) d(1),f(1,1),detf,ta,hn(1),hn1(1),
+     &                         sig(1),dd(1,1),isw
 
 !     DUMMY MODULE:  Multi-scale use only from 'openmpi'
 

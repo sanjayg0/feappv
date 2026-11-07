@@ -33,6 +33,8 @@
 !-----[--.----+----.----+----.-----------------------------------------]
       implicit   none
 
+      include   'iofile.h'
+
       integer       :: nh,isw
       real (kind=8) :: ta
       real (kind=8) :: d(*),eps(6),hn(nh),hn1(nh), sig(*),dd(6,*)
@@ -42,5 +44,9 @@
       save
 
 !     DUMMY MODULE:  Multi-scale use only from 'openmpi'
+
+!     Remove following arguments when used in coding element
+      if(.false.) write(iow,*) d(1),eps(1),ta,hn(1),hn1(1),
+     &                         sig(1),dd(1,1), isw
 
       end subroutine srvemat

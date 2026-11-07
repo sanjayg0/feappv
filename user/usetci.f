@@ -3,7 +3,7 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2024: Regents of the University of California
+!....  Copyright (c) 1984-2026: Regents of the University of California
 !                               All rights reserved
 
 !-----[--.----+----.----+----.-----------------------------------------]
@@ -23,8 +23,13 @@
 
       implicit  none
 
+      include  'iofile.h'
+
       real (kind=8) :: dt,cc1,cc2,cc3,theta(3),gtan(3)
 
       save
+
+!     Remove following arguments when used in coding element
+      if(.false.) write(iow,*) dt,cc1,cc2,cc3,theta(1),gtan(1)
 
       end subroutine usetci

@@ -3,14 +3,14 @@
 
 !      * * F E A P * * A Finite Element Analysis Program
 
-!....  Copyright (c) 1984-2024: Regents of the University of California
+!....  Copyright (c) 1984-2026: Regents of the University of California
 !                               All rights reserved
 
 !-----[--+---------+---------+---------+---------+---------+---------+-]
 !     Purpose:  Open file for input of saved input data
 
 !     Inputs:
-!        filnam   - Character name of calling routine
+!        filnm    - Character name of calling routine
 !        fext     - Extender name of file
 
 !     Outputs:
@@ -41,6 +41,9 @@
       integer        :: isw, iosave
 
       save
+
+!     Remove following arguments when used in coding element
+      if(.false.) write(iow,*) filnm(1)
 
 !     Open unit for data saves
       if(isw.eq.1) then

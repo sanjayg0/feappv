@@ -202,7 +202,7 @@
           fp(2)  = nau
           fp(3)  = nal
           fp(4)  = np(21)
-          call psolve(hr(np(26)),fp,.false.,.true.,.true.,prnt)
+          call psolve(ittyp,hr(np(26)),fp,.false.,.true.,.true.,prnt)
         endif
 
 !       Update iteration counter
@@ -936,7 +936,7 @@
         ittyo  =  ittyp
         ittyp  =  0
         fp(1)  =  np(13)
-        call psolve(hr(np(26)),fp,.false.,.true.,.false.,prnt)
+        call psolve(ittyp,hr(np(26)),fp,.false.,.true.,.false.,prnt)
         ittyp  =  ittyo
         go to 2
       else

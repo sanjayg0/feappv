@@ -35,16 +35,14 @@
       save
 
 !     Loop through equations to form Gu' = A_inv * Gu
-
       do mm = 1,neqg
 
 !       Solve linear equations with Gu as right-hand side
-
         fp(1) = na
         fp(2) = nau
         fp(3) = nal
         fp(4) = np(21)
-        call psolve(g(1,mm,1),fp,.false.,.true.,.true.,prnt)
+        call psolve(ittyp,g(1,mm,1),fp,.false.,.true.,.true.,prnt)
 
         do nn = 1,neqg
           do i = 1,neq

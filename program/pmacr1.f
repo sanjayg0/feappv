@@ -305,7 +305,7 @@
         fp(4)  = np(21)
         factor = ct(1,l).ge.0.0d0
 
-        call psolve(hr(np(26)),fp,factor,f8o,cfr, prnt)
+        call psolve(ittyp,hr(np(26)),fp,factor,f8o,cfr, prnt)
         if(factor) then
 
 !         Timing for factorization

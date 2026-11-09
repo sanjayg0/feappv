@@ -1,5 +1,5 @@
 !$Id:$
-      subroutine psolve(b,fp,factor,solve,cfr, prnt)
+      subroutine psolve(stype,b,fp,factor,solve,cfr, prnt)
 
 !      * * F E A P * * A Finite Element Analysis Program
 
@@ -39,16 +39,15 @@
       include   'comblk.h'
 
       logical       :: factor,solve,cfr,prnt, setvar,palloc,flags(5)
-      integer       :: naur,njpr, i
+      integer       :: stype,i
       real (kind=4) :: etime, tt,tary(2)
       real (kind=8) :: rn, rsdi, b(*)
 
       if(solver) then
 
 !       Factor tangent matrix
-
         if(factor) then
-          if(ittyp.le.-1) then
+          if(stype.le.-1) then
             tt    = etime(tary)
             tdiff = tary(1)
 
@@ -56,6 +55,7 @@
 
             tt    = etime(tary)
             tdiff = tary(1) - tdiff  ! save for timing solutions
+          
             if(prnt) then
               write(iow,2001) tary
               if(ior.lt.0) then
@@ -66,12 +66,10 @@
         endif
 
 !       Solve equations
-
         if(solve) then
 
 !         Diagonal solution
-
-          if(ittyp.eq.0) then
+          if(stype.eq.0) then
 
             aengy = 0.0d0
             do i = 0,neq-1
@@ -83,20 +81,18 @@
             end do ! i
 
 !         Direct solution
-
-          elseif(ittyp.le.-1) then
+          elseif(stype.le.-1) then
 
             call dasol (hr(fp(3)),hr(fp(2)),hr(fp(1)),b,
      &                  mr(fp(4)),neqs,neq,aengy)
 
 !         Conjugate gradient solver
-
           else
             if(rnmax.eq.0.0d0) then
               rn0 = rnorm*rnorm
             endif
-            njpr = 1
-            naur = 1
+c           njpr = 1
+c           naur = 1
 
             setvar = palloc(111,'TEMP1',5*neq,2) ! allocate temp storage
             fp(6) = np(111)
@@ -126,7 +122,6 @@
         endif
 
 !     User supplied solver routine
-
       else
         flags(1) = .false.
         flags(2) =  factor

@@ -43,6 +43,8 @@
       real (kind=4) :: etime, tt,tary(2)
       real (kind=8) :: rn, rsdi, b(*)
 
+      save
+
       if(solver) then
 
 !       Factor tangent matrix
